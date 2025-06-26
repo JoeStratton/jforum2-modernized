@@ -1,0 +1,95 @@
+{
+  "featureName": "ManageTopicPostIds",
+  "description": "Manages first and last post IDs for a topic to maintain proper thread navigation and display.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory): Numeric identifier for the topic\n   - Collect postId (mandatory): Numeric identifier for the post\n   - System will determine operation type (set first post or set last post)\n\n2. Data Validation:\n   - Validate topicId:\n      * Must be a positive integer\n      * Must refer to an existing topic in the system\n      * Error message if topic does not exist: \"Topic not found\"\n   - Validate postId:\n      * Must be a positive integer\n      * Must refer to an existing post in the system\n      * Post must belong to the specified topic\n      * Error message if post does not exist: \"Post not found\"\n      * Error message if post does not belong to topic: \"Post does not belong to the specified topic\"\n\n3. Business Rule Processing:\n   - Verify topic status:\n      * IF topic is locked and user is not a moderator, THEN reject operation\n      * IF topic is deleted, THEN reject operation\n   - Verify post status:\n      * IF post is deleted, THEN reject operation\n   - Determine operation type:\n      * IF setting first post ID:\n         - Verify this is the chronologically earliest post in the topic\n         - IF not earliest and not performed by moderator, THEN reject operation\n      * IF setting last post ID:\n         - Verify this is the chronologically latest post in the topic\n         - IF not latest and not performed by moderator, THEN reject operation\n\n4. Core Operation Execution:\n   - FOR setting first post ID:\n      * Update topic record with new first post ID\n      * Update topic metadata (creation date if necessary)\n      * IF operation fails, THEN rollback changes and report error\n   - FOR setting last post ID:\n      * Update topic record with new last post ID\n      * Update topic metadata (last updated date)\n      * Update forum last post information if necessary\n      * IF operation fails, THEN rollback changes and report error\n   - FOR fixing both first and last post IDs:\n      * Query for earliest post in topic to determine first post ID\n      * Query for latest post in topic to determine last post ID\n      * Update topic record with both IDs\n      * Update related metadata\n      * IF operation fails, THEN rollback changes and report error\n\n5. Response Generation:\n   - On success:\n      * Return confirmation message\n      * Include updated topic information\n   - On failure:\n      * Return appropriate error message\n      * Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Topic must exist in the system",
+    "Post must exist in the system",
+    "Post must belong to the specified topic",
+    "User must have permission to modify topic metadata",
+    "First post ID must be the earliest post in the topic unless modified by moderator",
+    "Last post ID must be the latest post in the topic unless modified by moderator"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "firstPostId": {
+          "type": "number"
+        },
+        "lastPostId": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "status": {
+          "type": "number"
+        },
+        "totalReplies": {
+          "type": "number"
+        },
+        "totalViews": {
+          "type": "number"
+        },
+        "creationDate": {
+          "type": "date"
+        },
+        "lastUpdated": {
+          "type": "date"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "forumId"
+      ]
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "date"
+        },
+        "status": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "topicId",
+        "userId"
+      ]
+    }
+  }
+}

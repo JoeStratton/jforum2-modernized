@@ -1,0 +1,96 @@
+{
+  "featureName": "RequestManualActivation",
+  "description": "Provides interface for manual account activation when automatic activation fails.",
+  "inputValues": [
+    "username-string-User",
+    "email-string-User",
+    "activationKey-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n      a. Username (mandatory string)\n      b. Email address (mandatory string)\n      c. Activation key (mandatory string)\n   - System retrieves current date/time (system-generated)\n\n2. Data Validation:\n   - Validate username:\n      a. Check if username is not empty\n      b. Verify username exists in the system\n      c. Display error message if username is invalid\n   - Validate email address:\n      a. Check if email is not empty\n      b. Verify email format is valid\n      c. Confirm email matches the one associated with the username\n      d. Display error message if email is invalid\n   - Validate activation key:\n      a. Check if activation key is not empty\n      b. Display error message if activation key is empty\n\n3. Business Rule Processing:\n   - Check account status:\n      a. Verify the account is not already activated\n      b. IF account is already active THEN\n         i. Display message that account is already active\n         ii. Provide link to login page\n         iii. End process\n      c. ELSE continue\n   - Check activation request eligibility:\n      a. Verify the account was created within the allowed timeframe for activation\n      b. IF account creation date exceeds allowed activation period THEN\n         i. Display message that activation period has expired\n         ii. Provide instructions for contacting support\n         iii. End process\n      c. ELSE continue\n\n4. Core Operation Execution:\n   - Process manual activation request:\n      a. Create activation request record with:\n         i. Username\n         ii. Email\n         iii. Activation key\n         iv. Request timestamp\n         v. Request status set to 'Pending'\n      b. Generate unique request reference number\n      c. Notify administrators of pending activation request\n      d. IF request creation fails THEN\n         i. Log error details\n         ii. Display system error message\n         iii. Provide alternative contact method\n         iv. End process\n      e. ELSE continue\n\n5. Response Generation:\n   - Display confirmation page:\n      a. Show success message with request reference number\n      b. Provide estimated processing time information\n      c. Include instructions for checking request status\n      d. Offer alternative contact options if urgent\n   - Send confirmation email:\n      a. Include request reference number\n      b. Provide estimated processing time\n      c. Include contact information for support",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_activation_requests"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must exist in the system",
+    "Email must not be empty",
+    "Email must be in valid format",
+    "Email must match the one associated with the username",
+    "Activation key must not be empty",
+    "Account must not be already activated",
+    "Account must be within allowed timeframe for activation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "activationKey": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "registrationDate": {
+          "type": "date"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "activationKey"
+      ]
+    },
+    "ActivationRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "activationKey": {
+          "type": "string"
+        },
+        "requestDate": {
+          "type": "date"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Pending",
+            "Approved",
+            "Rejected"
+          ]
+        },
+        "referenceNumber": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "activationKey",
+        "requestDate",
+        "status"
+      ]
+    }
+  }
+}

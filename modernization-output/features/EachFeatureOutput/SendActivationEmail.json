@@ -1,0 +1,47 @@
+{
+  "featureName": "SendActivationEmail",
+  "description": "Sends account activation emails to users with activation key links and manual activation options.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user object (mandatory) containing:\n     * User ID\n     * Email address\n     * Username\n     * Activation key\n\n2. Data Validation:\n   - Validate user object:\n     * Check if user object is not null\n     * Verify user ID is valid\n     * Ensure email address is properly formatted\n     * Confirm activation key exists\n   - IF any validation fails THEN:\n     * Generate appropriate error message\n     * Terminate the process\n\n3. Business Rule Processing:\n   - Check system configuration:\n     * Verify email functionality is enabled\n     * Confirm email templates exist\n     * Ensure forum URL configuration is available\n   - Generate activation URLs:\n     * Create direct activation URL using user's activation key and ID\n     * Create manual activation URL as fallback option\n   - Prepare email parameters:\n     * Add activation URL to email parameters\n     * Add manual activation URL to email parameters\n     * Add user details to email parameters\n\n4. Core Operation Execution:\n   - Retrieve email templates:\n     * Get activation email subject template\n     * Get activation email body template\n   - Process email templates:\n     * Replace placeholders with actual values\n     * Format email content appropriately\n   - Send activation email:\n     * Set recipient as user's email address\n     * Set email subject\n     * Set email body with activation instructions\n     * Send the email\n   - Handle sending failures:\n     * Log any errors encountered\n     * Store failed email attempts for retry if applicable\n\n5. Response Generation:\n   - On successful email sending:\n     * Generate success confirmation\n     * Include timestamp of email dispatch\n   - On failure:\n     * Generate detailed error information\n     * Provide troubleshooting suggestions\n     * Suggest alternative activation methods",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User object must not be null",
+    "User must have a valid ID",
+    "User must have a valid email address",
+    "User must have an activation key",
+    "Email system must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "activationKey": {
+          "type": "string",
+          "description": "Key used to activate the user account"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "activationKey"
+      ]
+    }
+  }
+}

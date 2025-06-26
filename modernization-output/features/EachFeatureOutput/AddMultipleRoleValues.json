@@ -1,0 +1,39 @@
+{
+  "featureName": "AddMultipleRoleValues",
+  "description": "Adds multiple RoleValue objects from another collection to the current RoleValueCollection.",
+  "inputValues": [
+    "sourceCollection-object-Collection"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the source collection containing RoleValue objects\n       1.1.1. The source collection is mandatory\n       1.1.2. The source collection must implement the Collection interface\n\n2. Data Validation:\n   2.1. Validate the source collection\n       2.1.1. Check if the source collection is not null\n       2.1.2. IF source collection is null THEN\n             - Generate an error indicating invalid input\n             - Abort the operation\n       2.1.3. Check if the source collection is not empty\n       2.1.4. IF source collection is empty THEN\n             - No action needed, return success with no changes made\n\n3. Business Rule Processing:\n   3.1. Verify compatibility of source collection items\n       3.1.1. FOR EACH item in the source collection DO\n             - Check if the item is an instance of RoleValue\n             - IF item is not a RoleValue THEN\n               * Flag the item as invalid\n               * Prepare appropriate error message\n       3.1.2. IF any invalid items were found THEN\n             - Generate an error indicating incompatible collection items\n             - Abort the operation\n\n4. Core Operation Execution:\n   4.1. Process each item in the source collection\n       4.1.1. Initialize a status flag to track overall success\n       4.1.2. FOR EACH item in the source collection DO\n             - Attempt to add the item to the current collection\n             - IF addition fails (e.g., duplicate item) THEN\n               * Update status flag to indicate partial success\n       4.1.3. Track the number of successfully added items\n\n5. Response Generation:\n   5.1. Generate appropriate response based on operation outcome\n       5.1.1. IF all items were added successfully THEN\n             - Return true indicating complete success\n       5.1.2. IF some items failed to be added THEN\n             - Return status flag indicating partial success\n       5.1.3. Include count of successfully added items in the response",
+  "databaseEntities": [],
+  "validationRules": [
+    "Source collection must not be null",
+    "All items in source collection must be RoleValue objects",
+    "Duplicate RoleValue objects will not be added again"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Collection": {
+      "type": "object",
+      "description": "A collection of RoleValue objects",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/RoleValue"
+          }
+        }
+      }
+    },
+    "RoleValue": {
+      "type": "object",
+      "description": "Represents a security role value",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The name or identifier of the role value"
+        }
+      }
+    }
+  }
+}

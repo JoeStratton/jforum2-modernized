@@ -1,0 +1,45 @@
+{
+  "featureName": "DeletePrivateMessage",
+  "description": "Deletes private messages from a user's inbox or sent items with permission validation.",
+  "inputValues": [
+    "messageIds-object-PrivateMessage",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - messageIds (array of message IDs to delete, mandatory)\n     - userId (ID of the user requesting deletion, mandatory)\n     - System will determine current user authentication status\n\n2. Data Validation\n   - Validate user authentication:\n     - Check if user is logged in\n     - IF user is not logged in THEN\n       - Redirect to login page\n       - Exit the deletion process\n   - Validate message IDs:\n     - IF messageIds is empty or null THEN\n       - Return error message \"No messages selected for deletion\"\n     - FOR EACH messageId in messageIds:\n       - Verify messageId is a valid positive integer\n       - IF any messageId is invalid THEN\n         - Return error message \"Invalid message ID format\"\n   - Validate user ID:\n     - Verify userId is a valid positive integer\n     - IF userId is invalid THEN\n       - Return error message \"Invalid user ID\"\n     - Verify user exists in the system\n     - IF user does not exist THEN\n       - Return error message \"User not found\"\n\n3. Business Rule Processing\n   - Initialize counters:\n     - Set unreadCount to 0 to track deleted unread messages\n   - Verify user permissions:\n     - FOR EACH messageId in messageIds:\n       - Retrieve the complete message details from storage\n       - IF message does not exist THEN\n         - Skip this message and continue with next\n       - Check if the user is either the sender or recipient of the message\n       - IF user is neither sender nor recipient THEN\n         - Skip this message and continue with next\n       - IF message type is NEW (unread) THEN\n         - Increment unreadCount\n       - Add message to deleteList for processing\n\n4. Core Operation Execution\n   - Process message deletions:\n     - IF deleteList is not empty THEN\n       - Begin transaction\n       - Delete all messages in deleteList for the specified user\n       - Commit transaction\n     - Update user's unread message count:\n       - Retrieve current user's total private message count\n       - Subtract unreadCount from total\n       - IF result is negative THEN\n         - Set total to 0\n       - Update user's private message count to new total\n\n5. Response Generation\n   - Prepare deletion confirmation:\n     - Generate success message \"Messages have been deleted successfully\"\n     - Include link to return to inbox\n   - Display confirmation to user:\n     - Show deletion confirmation message\n     - Provide navigation options for user to continue",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must be either the sender or recipient of the message to delete it",
+    "Message IDs must be valid and exist in the system",
+    "User ID must be valid and exist in the system",
+    "At least one message must be selected for deletion",
+    "User must be logged in to delete messages"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the private message"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of message (new, read, sent, etc.)"
+        },
+        "fromUser": {
+          "type": "object",
+          "description": "User who sent the message"
+        },
+        "toUser": {
+          "type": "object",
+          "description": "User who received the message"
+        }
+      }
+    }
+  }
+}

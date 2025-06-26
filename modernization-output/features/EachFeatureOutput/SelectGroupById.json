@@ -1,0 +1,25 @@
+{
+  "featureName": "SelectGroupById",
+  "description": "Retrieves a specific group by its ID.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the groupId (number, mandatory) from the request\n   - No optional fields are required for this operation\n   - No default values are applicable\n\n2. Data Validation:\n   - Validate groupId:\n     a. Check if groupId is provided\n     b. Verify groupId is a positive integer\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify if the current user has permission to view group information\n     b. If permission check fails, prepare access denied response\n   - Check if the system is in a valid state for group retrieval\n\n4. Core Operation Execution:\n   - Search for the group in the system:\n     a. Query the group repository using the provided groupId\n     b. IF group is found:\n        i. Retrieve all group attributes (id, name, description, parentId)\n        ii. Create a Group object with the retrieved attributes\n        iii. Prepare success response with group details\n     c. IF group is not found:\n        i. Return an empty Group object\n        ii. Log the failed retrieval attempt\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Format the group data in the appropriate structure\n     b. Include all relevant group attributes (id, name, description, parentId)\n     c. Return the Group object with the information\n   - For failed retrieval:\n     a. Return an empty Group object\n     b. Include specific error details if applicable\n     c. Provide appropriate status indication",
+  "databaseEntities": [
+    "Group",
+    "User"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "User must have permission to view group information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "AddCacheItem",
+    "description": "Adds an item to the cache using a key-value pair"
+  },
+  {
+    "featureName": "AddNestedCacheItem",
+    "description": "Adds a nested item to the cache using a fully qualified name, key and value"
+  },
+  {
+    "featureName": "GetCacheItem",
+    "description": "Retrieves an item from the cache using a key"
+  },
+  {
+    "featureName": "GetNestedCacheItem",
+    "description": "Retrieves a nested item from the cache using a fully qualified name and key"
+  },
+  {
+    "featureName": "GetCacheValues",
+    "description": "Retrieves all values for a specific fully qualified name in the cache"
+  },
+  {
+    "featureName": "InitializeCache",
+    "description": "Initializes the cache by creating a new empty HashMap"
+  },
+  {
+    "featureName": "RemoveCacheItem",
+    "description": "Removes an item from the cache using a key"
+  },
+  {
+    "featureName": "RemoveNestedCacheItem",
+    "description": "Removes a nested item from the cache using a fully qualified name and key"
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "featureName": "ListTopicPosts",
+  "description": "Displays posts within a topic with pagination, access control, and view tracking.",
+  "inputValues": [
+    "topic_id-number-Topic",
+    "post_id-number-Post",
+    "start-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topic_id (mandatory) to identify which topic's posts to display\n   - Collect start parameter (optional) for pagination purposes\n   - Collect post_id (optional) for direct navigation to specific post\n\n2. Data Validation:\n   - Validate topic_id exists in the system\n      * IF topic does not exist THEN display topic not found message\n      * IF topic exists THEN proceed with retrieval\n   - Validate user has permission to view the topic\n      * IF user is not logged in AND forum is not publicly accessible THEN redirect to login\n      * IF user is logged in AND does not have access to the forum THEN show access denied\n      * IF user has proper access THEN proceed\n\n3. Business Rule Processing:\n   - Check topic moderation status\n      * IF topic is moderated AND no posts are approved THEN show moderation pending message\n      * IF topic is not moderated OR has approved posts THEN proceed\n   - Determine user permissions for the topic\n      * Check if user can download attachments\n      * Check if user can vote on polls\n      * Check if user can edit posts\n      * Check if user can remove posts\n      * Check if user can post anonymously\n\n4. Core Operation Execution:\n   - Calculate pagination parameters\n      * Determine posts per page from system configuration\n      * Calculate starting post based on pagination parameters\n   - Retrieve topic information\n      * Get topic details including title, status, and view count\n      * IF topic has a poll THEN retrieve poll information\n   - Retrieve posts for the topic\n      * Get posts for the specified page range\n      * Include post content, author information, and timestamps\n   - Process post-related information\n      * Retrieve attachment information for posts\n      * Prepare user signatures and avatars\n      * Get karma/voting information if enabled\n   - Mark topic as read for the current user\n      * Update read status in user's session\n      * Record timestamp of viewing\n   - Increment topic view counter\n      * Update total views for the topic\n\n5. Response Generation:\n   - Prepare display data\n      * Format posts with proper author information\n      * Include pagination information (current page, total pages)\n      * Include topic information (title, status, total replies)\n      * Include forum context (forum name, category)\n      * Include poll information if applicable\n   - Generate navigation elements\n      * Create pagination links\n      * Include topic subscription status\n   - Display the complete topic view\n      * Show posts in chronological order\n      * Highlight the specific post if post_id was provided\n      * Include moderation options for authorized users",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_attachments",
+    "jforum_karma",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Topic must exist in the system",
+    "User must have permission to view the forum containing the topic",
+    "Posts must be approved if moderation is enabled",
+    "Pagination parameters must be valid numbers",
+    "User must be logged in to view restricted forums",
+    "User must have permission to vote on polls",
+    "User must not have already voted on the poll to be able to vote"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "status": "number",
+      "totalReplies": "number",
+      "totalViews": "number",
+      "isVote": "boolean",
+      "voteId": "number",
+      "isModerated": "boolean"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "text": "string",
+      "time": "date",
+      "hasAttachments": "boolean"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "categoryId": "number",
+      "description": "string"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "karma": "number",
+      "avatar": "string",
+      "signature": "string"
+    },
+    "Poll": {
+      "id": "number",
+      "question": "string",
+      "options": "object",
+      "voteCount": "number"
+    }
+  }
+}

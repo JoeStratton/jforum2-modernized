@@ -1,0 +1,57 @@
+{
+  "featureName": "AddResponseCookie",
+  "description": "Adds a cookie to the HTTP response.",
+  "inputValues": [
+    "cookie-object-Cookie"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the cookie object with the following properties:\n     - name: The name of the cookie (mandatory)\n     - value: The value to store in the cookie (mandatory)\n     - maxAge: The maximum age of the cookie in seconds (optional)\n     - path: The path on the server where the cookie will be available (optional)\n     - domain: The domain where the cookie will be available (optional)\n     - secure: Whether the cookie should only be transmitted over secure protocol (optional, default: false)\n     - httpOnly: Whether the cookie should be accessible only through HTTP protocol (optional, default: false)\n\n2. Data Validation:\n   - Validate cookie name:\n     - Check if the name is not null or empty\n     - Verify the name does not contain invalid characters or spaces\n     - Ensure the name complies with cookie naming conventions\n     - IF validation fails, THEN generate appropriate error message\n   - Validate cookie value:\n     - Check if the value is properly formatted\n     - Ensure the value does not exceed maximum allowed length\n     - IF validation fails, THEN generate appropriate error message\n   - Validate optional parameters if provided:\n     - Ensure maxAge is a valid integer\n     - Verify path follows valid URL path format\n     - Check domain follows valid domain name format\n     - Confirm secure and httpOnly are boolean values\n     - IF any validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check system cookie policy compliance:\n     - Verify the cookie complies with the system's cookie policy\n     - Check if similar cookies already exist that might conflict\n     - Determine if cookie size is within acceptable limits\n     - IF any policy is violated, THEN generate appropriate error message\n   - Apply system-specific cookie settings:\n     - Apply default path if not specified\n     - Apply default domain if not specified\n     - Apply default security settings based on system configuration\n     - Apply default expiration settings if not specified\n\n4. Core Operation Execution:\n   - Create the cookie object with all validated parameters\n   - Add the cookie to the HTTP response\n   - Record cookie creation in system logs if required\n   - IF cookie cannot be added to response, THEN:\n     - Generate appropriate error message\n     - Log the failure\n     - Notify the caller of the failure\n\n5. Response Generation:\n   - Generate success response:\n     - Indicate the cookie was successfully added\n     - Include cookie details in the response if required\n     - Provide any additional information about the cookie's behavior\n   - IF operation failed, THEN:\n     - Include detailed error information\n     - Provide suggestions for resolving the issue\n     - Include support information if needed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Cookie name must not be null or empty",
+    "Cookie name must follow valid naming conventions",
+    "Cookie value must not exceed maximum allowed length",
+    "Cookie path must be a valid URL path if specified",
+    "Cookie domain must be a valid domain name if specified",
+    "Cookie maxAge must be a valid integer if specified"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Cookie": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the cookie"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value to store in the cookie"
+        },
+        "maxAge": {
+          "type": "integer",
+          "description": "The maximum age of the cookie in seconds"
+        },
+        "path": {
+          "type": "string",
+          "description": "The path on the server where the cookie will be available"
+        },
+        "domain": {
+          "type": "string",
+          "description": "The domain where the cookie will be available"
+        },
+        "secure": {
+          "type": "boolean",
+          "description": "Whether the cookie should only be transmitted over secure protocol"
+        },
+        "httpOnly": {
+          "type": "boolean",
+          "description": "Whether the cookie should be accessible only through HTTP protocol"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

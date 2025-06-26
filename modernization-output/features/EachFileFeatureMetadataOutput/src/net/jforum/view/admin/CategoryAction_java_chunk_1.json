@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "ListCategories",
+    "description": "Displays a list of all forum categories with repository information"
+  },
+  {
+    "featureName": "InsertCategory",
+    "description": "Prepares the form for creating a new forum category"
+  },
+  {
+    "featureName": "SaveNewCategory",
+    "description": "Creates a new forum category with moderation settings and security permissions"
+  },
+  {
+    "featureName": "EditCategory",
+    "description": "Prepares the form for editing an existing forum category"
+  },
+  {
+    "featureName": "UpdateCategory",
+    "description": "Saves changes to an existing forum category including moderation settings"
+  },
+  {
+    "featureName": "DeleteCategories",
+    "description": "Removes selected forum categories with validation to prevent deletion of non-empty categories"
+  },
+  {
+    "featureName": "ChangeCategoryOrder",
+    "description": "Moves categories up or down in the display order sequence"
+  }
+]

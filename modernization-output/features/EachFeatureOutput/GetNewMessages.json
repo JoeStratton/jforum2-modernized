@@ -1,0 +1,66 @@
+{
+  "featureName": "GetNewMessages",
+  "description": "Retrieves topics with new messages based on a list of topic IDs.",
+  "inputValues": [
+    "topicIds-object-TopicIdList"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the list of topic IDs from the user\n     1.1. Verify that the input is properly formatted as a collection\n     1.2. Check if the collection is accessible and readable\n\n2. Data Validation\n   - Validate the input topic IDs\n     2.1. Check if the list of topic IDs is not empty\n     2.2. Verify that each topic ID is a valid identifier\n     2.3. IF the list is empty THEN\n          2.3.1. Return an empty result set\n          2.3.2. End processing\n     2.4. IF any ID is invalid THEN\n          2.4.1. Filter out invalid IDs\n          2.4.2. Log warning about invalid IDs\n\n3. Business Rule Processing\n   - Check access permissions for topics\n     3.1. Verify the current user has permission to view the requested topics\n     3.2. Filter out any topics the user doesn't have access to\n     3.3. IF user has no access to any topics THEN\n          3.3.1. Return empty result set\n          3.3.2. End processing\n\n4. Core Operation Execution\n   - Retrieve topics with new messages\n     4.1. Format the list of topic IDs for processing\n     4.2. Query the system for topics matching the provided IDs\n     4.3. For each topic found:\n          4.3.1. Retrieve basic topic information (title, ID, status)\n          4.3.2. Retrieve posting information (time, views, replies)\n          4.3.3. Retrieve user information for the topic creator\n          4.3.4. Retrieve information about the last post in the topic\n     4.4. IF any errors occur during retrieval THEN\n          4.4.1. Log the error details\n          4.4.2. Return appropriate error message\n\n5. Response Generation\n   - Format and return the topic information\n     5.1. Organize topics in a structured format\n     5.2. Include all relevant topic details:\n          5.2.1. Topic title and identifier\n          5.2.2. Creation timestamp\n          5.2.3. Topic status and type\n          5.2.4. View and reply counts\n          5.2.5. Information about the topic creator\n          5.2.6. Information about the last post\n     5.3. Return the formatted list of topics with new messages",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic IDs list must not be empty",
+    "Each topic ID must be a valid identifier",
+    "User must have permission to view the requested topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TopicIdList": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Unique identifier for a topic"
+      }
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation time of the topic"
+        },
+        "status": {
+          "type": "integer",
+          "description": "Status code of the topic"
+        },
+        "views": {
+          "type": "integer",
+          "description": "Number of views for the topic"
+        },
+        "replies": {
+          "type": "integer",
+          "description": "Number of replies to the topic"
+        },
+        "postedBy": {
+          "type": "object",
+          "description": "User who created the topic"
+        },
+        "lastPostBy": {
+          "type": "object",
+          "description": "User who made the last post in the topic"
+        }
+      }
+    }
+  }
+}

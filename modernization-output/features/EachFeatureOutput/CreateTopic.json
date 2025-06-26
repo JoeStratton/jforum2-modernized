@@ -1,0 +1,46 @@
+{
+  "featureName": "CreateTopic",
+  "description": "Creates a new topic in the forum system and returns its ID.",
+  "inputValues": [
+    "title-string-Topic",
+    "content-string-Topic",
+    "forumId-number-Forum",
+    "userId-number-User",
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - title (string): The title of the new topic\n       - content (string): The initial post content for the topic\n       - forumId (number): The ID of the forum where the topic will be created\n       - userId (number): The ID of the user creating the topic\n   1.2. System will generate:\n       - creationDate (date): Current system timestamp\n       - status (number): Default status (typically unlocked)\n       - type (number): Default type (typically normal)\n       - viewCount (number): Initialized to 0\n       - replyCount (number): Initialized to 0\n\n2. Data Validation:\n   2.1. Validate topic title:\n       - IF title is empty or null THEN\n           - Return error: \"Topic title cannot be empty\"\n       - IF title length exceeds maximum allowed length THEN\n           - Return error: \"Topic title exceeds maximum allowed length\"\n   2.2. Validate content:\n       - IF content is empty or null THEN\n           - Return error: \"Topic content cannot be empty\"\n       - IF content length exceeds maximum allowed length THEN\n           - Return error: \"Topic content exceeds maximum allowed length\"\n   2.3. Validate forum ID:\n       - IF forumId is invalid or does not exist THEN\n           - Return error: \"Invalid forum selected\"\n   2.4. Validate user ID:\n       - IF userId is invalid or does not exist THEN\n           - Return error: \"Invalid user credentials\"\n\n3. Business Rule Processing:\n   3.1. Check forum permissions:\n       - Verify if the user has permission to create topics in the specified forum\n       - IF user does not have permission THEN\n           - Return error: \"User does not have permission to create topics in this forum\"\n   3.2. Check forum status:\n       - IF forum is locked or inactive THEN\n           - Return error: \"Cannot create topic in a locked or inactive forum\"\n   3.3. Check user status:\n       - IF user account is suspended or inactive THEN\n           - Return error: \"User account is not active\"\n   3.4. Check moderation settings:\n       - Determine if the forum requires topic moderation\n       - IF forum requires moderation THEN\n           - Set topic moderation flag to true\n       - ELSE\n           - Set topic moderation flag to false\n\n4. Core Operation Execution:\n   4.1. Create topic record:\n       - Create a new Topic object with the collected inputs\n       - Set the creation date to current timestamp\n       - Set initial view count to 0\n       - Set initial reply count to 0\n       - Set appropriate status and type flags\n   4.2. Create initial post:\n       - Create a new Post object with the topic content\n       - Associate the post with the new topic\n       - Set the post creation date to current timestamp\n       - Set the post author to the current user\n   4.3. Save topic and post:\n       - Save the topic record to the database\n       - Save the post record to the database\n       - Update the topic with first post ID and last post ID\n   4.4. Update forum statistics:\n       - Increment the total topics count for the forum\n       - Update the forum's last post information\n\n5. Response Generation:\n   5.1. For successful creation:\n       - Return the newly created topic ID\n       - Include basic topic information (title, creation date, forum ID)\n       - Include the ID of the initial post\n   5.2. For creation failure:\n       - Return appropriate error message based on the failure reason\n       - Include guidance on how to correct the issue\n       - Log the failure details for system administrators",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic title must not be empty",
+    "Topic content must not be empty",
+    "Forum ID must be valid and exist in the system",
+    "User must have permission to create topics in the specified forum",
+    "Forum must be active and unlocked",
+    "User account must be active",
+    "Topic title length must not exceed maximum allowed characters",
+    "Topic content length must not exceed maximum allowed characters"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "userId": "number",
+      "creationDate": "date",
+      "lastPostId": "number",
+      "firstPostId": "number",
+      "status": "number",
+      "type": "number",
+      "viewCount": "number",
+      "replyCount": "number",
+      "moderated": "boolean"
+    }
+  }
+}

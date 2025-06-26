@@ -1,0 +1,28 @@
+{
+  "featureName": "GetUserSessionById",
+  "description": "Retrieves a user session from the database by user ID.",
+  "inputValues": [
+    "userId-number-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory) - The unique identifier of the user whose session is being retrieved\n   - System will determine the connection context for database access\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a valid positive number\n     c. IF validation fails, THEN prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify system is operational and database is accessible\n     b. Check if user sessions are currently being tracked by the system\n     c. IF system is in maintenance mode, THEN return appropriate notification\n\n4. Core Operation Execution:\n   - Create a session query context:\n     a. Prepare session lookup parameters using the provided userId\n     b. Access the session storage mechanism\n     c. Retrieve session data associated with the userId\n     d. IF no session exists for the userId, THEN record the absence of session data\n\n5. Response Generation:\n   - Process the retrieved session data:\n     a. IF session data was found:\n        i. Format the session information for return\n        ii. Include session metadata (creation time, last activity)\n     b. IF session data was not found:\n        i. Prepare a \"no active session\" response\n   - Return the session information or appropriate notification",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive number",
+    "User ID must reference an existing user",
+    "Session must be associated with the specified user ID"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "userId": "number",
+      "sessionId": "string",
+      "creationTime": "date",
+      "lastAccessTime": "date",
+      "isActive": "boolean",
+      "ipAddress": "string"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "featureName": "CheckGroupDeletionEligibility",
+  "description": "Verifies if a specific group can be deleted from the system.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the groupId (mandatory) to identify the group to check for deletion eligibility\n   - System will use the provided groupId to perform eligibility checks\n\n2. Data Validation:\n   - Validate groupId:\n     a. Verify groupId is not null or empty\n     b. Verify groupId is a positive integer\n     c. IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check if group exists in the system:\n     a. Verify the group with the provided groupId exists in the database\n     b. IF group does not exist, THEN return error indicating group not found\n   - Check if group is a system-reserved group:\n     a. Verify if the group is marked as a system-reserved group\n     b. IF group is system-reserved, THEN mark as ineligible for deletion\n   - Check for user associations:\n     a. Query the database to check if any users are associated with the group\n     b. IF the total count of associated users is greater than zero, THEN mark as ineligible for deletion\n   - Check for parent-child relationships:\n     a. Verify if the group serves as a parent group for other groups\n     b. IF group has child groups, THEN mark as ineligible for deletion\n   - Check for forum associations:\n     a. Verify if the group has any forum moderation privileges\n     b. IF group has moderation privileges, THEN mark as ineligible for deletion\n   - Check for other dependencies:\n     a. Verify if the group is referenced in any other critical system functions\n     b. IF other dependencies exist, THEN mark as ineligible for deletion\n\n4. Core Operation Execution:\n   - Determine final eligibility status based on all checks:\n     a. IF any check failed (system-reserved, user associations, forum associations, other dependencies), THEN set eligibility status to false\n     b. ELSE set eligibility status to true\n   - Record the reason for ineligibility if applicable:\n     a. Store the specific reason why the group cannot be deleted\n     b. This information will be used in the response\n\n5. Response Generation:\n   - Prepare the deletion eligibility response:\n     a. Include the eligibility status (boolean: true/false)\n     b. IF ineligible, THEN include the reason for ineligibility\n     c. Include the group ID and basic group information for reference\n   - Return the final response to the caller",
+  "databaseEntities": [
+    "Group",
+    "User",
+    "UserGroup",
+    "ModeratorGroup",
+    "Forum"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "System-reserved groups cannot be deleted",
+    "Groups with associated users cannot be deleted",
+    "Groups with forum moderation privileges cannot be deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number",
+      "isSystemReserved": "boolean"
+    },
+    "UserGroup": {
+      "userId": "number",
+      "groupId": "number"
+    },
+    "ModeratorGroup": {
+      "groupId": "number",
+      "forumId": "number"
+    }
+  }
+}

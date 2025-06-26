@@ -1,0 +1,44 @@
+{
+  "featureName": "EditSmilie",
+  "description": "Displays the form for editing an existing smilie and processes the update.",
+  "inputValues": [
+    "id-number-Smilie",
+    "code-string-Smilie",
+    "smilie_img-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - id (mandatory): The unique identifier of the smilie to be edited\n     - code (mandatory): The text code that represents the smilie\n     - smilie_img (optional): The image file for the smilie\n\n2. Data Validation:\n   - Validate smilie ID:\n     - IF id is not provided or invalid THEN\n       - Display error message \"Valid smilie ID is required\"\n       - Abort operation\n     - ENDIF\n   - Validate smilie code:\n     - IF code is empty THEN\n       - Display error message \"Smilie code cannot be empty\"\n       - Abort operation\n     - ENDIF\n   - Validate image file (if provided):\n     - IF image file is provided THEN\n       - Check if file is a valid image format\n       - IF file is not a valid image THEN\n         - Display error message \"Invalid image format\"\n         - Abort operation\n       - ENDIF\n       - Check if file size is within allowed limits\n       - IF file size exceeds limit THEN\n         - Display error message \"Image file size exceeds maximum allowed\"\n         - Abort operation\n       - ENDIF\n     - ENDIF\n\n3. Business Rule Processing:\n   - Check if smilie exists:\n     - Retrieve smilie record using the provided ID\n     - IF smilie does not exist THEN\n       - Display error message \"Smilie not found\"\n       - Abort operation\n     - ENDIF\n   - Check if system allows smilie modification:\n     - Verify user has appropriate permissions to modify smilies\n     - IF user lacks permission THEN\n       - Display error message \"Insufficient permissions to edit smilies\"\n       - Abort operation\n     - ENDIF\n\n4. Core Operation Execution:\n   - Load existing smilie data:\n     - Retrieve current smilie information from database\n     - Populate edit form with existing values\n   - Process form submission when user saves changes:\n     - Update smilie code with new value\n     - IF new image is provided THEN\n       - Process image upload:\n         - Generate unique name for image file\n         - Save uploaded file to smilie directory\n         - Update smilie record with new image information\n     - ENDIF\n     - Save updated smilie information to database\n     - Refresh smilie repository cache\n\n5. Response Generation:\n   - IF update operation succeeds THEN\n     - Display success message \"Smilie updated successfully\"\n     - Redirect to smilie listing page\n   - ELSE\n     - Display appropriate error message\n     - Return to edit form with entered values preserved\n   - ENDIF",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie ID must be a valid integer",
+    "Smilie code must not be empty",
+    "Image file must be a valid image format if provided",
+    "Image file size must be within system limits if provided",
+    "User must have permission to edit smilies"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Original filename of the uploaded file"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the uploaded file"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the uploaded file in bytes"
+        },
+        "content": {
+          "type": "binary",
+          "description": "Binary content of the uploaded file"
+        }
+      }
+    }
+  }
+}

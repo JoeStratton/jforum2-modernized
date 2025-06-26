@@ -1,0 +1,45 @@
+{
+  "featureName": "SendPrivateMessageToUser",
+  "description": "Initiates a private message composition to a specific user.",
+  "inputValues": [
+    "recipientUsername-string-User",
+    "recipientId-number-User",
+    "messageSubject-string-PrivateMessage",
+    "messageContent-string-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. Recipient information (either username or user ID)\n     b. Message subject (mandatory)\n     c. Message content (mandatory)\n     d. System automatically captures sender information from current session\n\n2. Data Validation:\n   a. Authentication Validation:\n      - Verify user is logged in\n      - IF user is not authenticated THEN\n         - Redirect to login page\n         - Exit process\n\n   b. Recipient Validation:\n      - IF recipient ID is provided THEN\n         - Verify recipient ID exists in the system\n      - ELSE IF recipient username is provided THEN\n         - Search for user by username\n         - IF user found THEN\n            - Use found user's ID as recipient ID\n         - ELSE\n            - Display error message \"User not found\"\n            - Exit process\n      - IF no recipient information provided THEN\n         - Display error message \"Recipient is required\"\n         - Exit process\n\n   c. Message Content Validation:\n      - Verify message subject is not empty\n      - Verify message content is not empty\n      - IF either validation fails THEN\n         - Display appropriate error message\n         - Return to composition form preserving entered data\n\n3. Business Rule Processing:\n   a. Permission Verification:\n      - Verify sender has permission to send private messages\n      - Verify recipient accepts private messages\n      - IF any permission check fails THEN\n         - Display appropriate error message\n         - Exit process\n\n   b. Message Limit Check:\n      - Check if recipient's inbox has reached maximum capacity\n      - IF inbox is full THEN\n         - Display error message \"Recipient's inbox is full\"\n         - Exit process\n\n4. Core Operation Execution:\n   a. Message Preparation:\n      - Create new private message object\n      - Set message type as NEW\n      - Set sender information from current user session\n      - Set recipient information from validated recipient\n      - Set message subject and content\n      - Set current timestamp\n\n   b. Message Storage:\n      - IF preview mode requested THEN\n         - Prepare message preview\n         - Display composition form with preview\n         - Exit process without saving\n      - ELSE\n         - Save message to database\n         - Update sender's sent items folder\n         - Update recipient's inbox\n\n   c. Notification Processing:\n      - IF recipient has email notifications enabled THEN\n         - Generate email notification\n         - Send notification to recipient's email address\n      - IF recipient is currently online THEN\n         - Update recipient's session with new message count\n\n5. Response Generation:\n   a. Success Response:\n      - Display confirmation message \"Message sent successfully\"\n      - Provide link to inbox\n      - Provide option to compose another message\n\n   b. Error Response:\n      - Display specific error message based on failure point\n      - Preserve entered data where possible\n      - Provide guidance on how to correct the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to send a private message",
+    "Recipient must exist in the system",
+    "Message subject cannot be empty",
+    "Message content cannot be empty",
+    "Sender must have permission to send private messages",
+    "Recipient must accept private messages",
+    "Recipient's inbox must not be full"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "type": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "post": {
+        "subject": "string",
+        "text": "string",
+        "time": "date"
+      }
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

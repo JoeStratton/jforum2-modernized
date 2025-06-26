@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ListUsers",
+    "description": "Retrieves a list of all users in the system"
+  },
+  {
+    "featureName": "CreateUser",
+    "description": "Creates a new user with username, email and password with validation checks"
+  },
+  {
+    "featureName": "AuthenticateApiRequest",
+    "description": "Validates API requests using API key authentication"
+  }
+]

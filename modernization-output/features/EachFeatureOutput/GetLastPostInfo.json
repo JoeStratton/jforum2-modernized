@@ -1,0 +1,64 @@
+{
+  "featureName": "GetLastPostInfo",
+  "description": "Retrieves information about the most recent post in a forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "tryFix-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number, mandatory) to identify the forum\n   - Collect tryFix (boolean, optional) to determine if the system should attempt to fix inconsistent data\n     a. Default value is true if not provided\n   - System will generate a LastPostInfo object to hold the results\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. Return error message if validation fails\n   - Validate tryFix parameter:\n     a. If provided, ensure it's a boolean value\n     b. If not provided, use default value (true)\n\n3. Business Rule Processing:\n   - Check if forum exists:\n     a. IF forum with provided forumId does not exist THEN\n        i. Return empty LastPostInfo object\n     b. Check if forum has any posts:\n        i. IF forum has no posts THEN\n           1. Return empty LastPostInfo object\n   - Check forum accessibility:\n     a. IF forum is not accessible to current user THEN\n        i. Return empty LastPostInfo object\n   - Check cache status:\n     a. IF forum's last post information is already cached THEN\n        i. Verify if cached information is valid and complete\n        ii. IF cached information is valid THEN\n            1. Return cached LastPostInfo object\n\n4. Core Operation Execution:\n   - Retrieve last post information:\n     a. Query for the most recent post in the specified forum\n     b. IF post information is found THEN\n        i. Populate LastPostInfo object with:\n           1. Username of post author\n           2. User ID of post author\n           3. Post date (formatted according to system settings)\n           4. Post ID\n           5. Topic ID\n           6. Post timestamp\n           7. Topic reply count\n           8. Set hasInfo flag to true\n        ii. Verify topic consistency:\n            1. Retrieve topic by ID\n            2. IF topic is invalid or inconsistent THEN\n               a. IF tryFix is true THEN\n                  i. Attempt to fix the topic data\n                  ii. Recursively call the function with tryFix set to false to prevent infinite loops\n               b. ELSE\n                  i. Return the potentially inconsistent LastPostInfo object\n     c. ELSE IF no post information is found THEN\n        i. Attempt data recovery:\n           1. Find maximum post ID for the forum\n           2. Find latest topic ID for the forum\n           3. IF recovery data is found THEN\n              a. Update topic with correct latest post information\n              b. Update forum with correct latest post information\n              c. Retry retrieving last post information\n           4. ELSE\n              a. Return empty LastPostInfo object\n     d. Update forum cache with the retrieved last post information\n\n5. Response Generation:\n   - Return populated LastPostInfo object containing:\n     a. Username of post author\n     b. User ID\n     c. Formatted post date\n     d. Post ID\n     e. Topic ID\n     f. Post timestamp\n     g. Topic reply count\n     h. hasInfo flag indicating if information was found\n   - In case of errors during database operations:\n     a. Log the error details\n     b. Return appropriate error information to the caller",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_users",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Post information must be consistent with topic data",
+    "tryFix parameter must be a boolean value if provided",
+    "User must have access permissions to view the forum",
+    "Forum must belong to an accessible category"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "LastPostInfo": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Username of the post author"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "postDate": {
+          "type": "string",
+          "description": "Formatted date of the post"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic containing the post"
+        },
+        "postTimeMillis": {
+          "type": "number",
+          "description": "Post timestamp in milliseconds"
+        },
+        "topicReplies": {
+          "type": "number",
+          "description": "Number of replies in the topic"
+        },
+        "hasInfo": {
+          "type": "boolean",
+          "description": "Indicates if post information was found"
+        }
+      }
+    }
+  }
+}

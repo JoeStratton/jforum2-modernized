@@ -1,0 +1,23 @@
+{
+  "featureName": "GetSmilies",
+  "description": "Retrieves the list of smilies with properly formatted URLs for display in the forum.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal configuration values\n\n2. Data Validation:\n   - Verify cache system is properly initialized\n   - IF cache is not initialized THEN\n     - Log error\n     - Prepare error response\n   - END IF\n\n3. Business Rule Processing:\n   - Check if smilies are already loaded in cache\n   - IF smilies are not in cache THEN\n     - Trigger smilies loading process\n   - END IF\n   - Check if URLs in smilies need context formatting\n   - IF context formatting is needed THEN\n     - Mark for URL processing in next step\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve smilies list from cache storage\n   - IF smilies list is empty THEN\n     - Log warning about missing smilies\n     - Return empty list\n   - END IF\n   - IF context formatting is needed THEN\n     - Retrieve forum link from system configuration\n     - FOR EACH smilie in the list\n       - Replace context placeholders in URL with actual forum link\n       - Remove escape characters from URL\n     - END FOR\n     - Update cache with contextualized smilies\n     - Mark smilies as contextualized\n   - END IF\n\n5. Response Generation:\n   - Prepare response with complete list of smilies\n   - Each smilie in response contains:\n     - Smilie ID\n     - Smilie code (text representation)\n     - Properly formatted URL to smilie image\n     - Display information\n   - Return formatted smilies list to caller",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Cache system must be properly initialized",
+    "Forum link configuration must be available for URL formatting",
+    "Smilies must be loaded from database before retrieval"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "id": "number",
+      "code": "string",
+      "url": "string",
+      "diskName": "string"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "featureName": "CheckUserForumSubscription",
+  "description": "Verifies if a user is subscribed to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory, number): The unique identifier of the forum to check\n   - Collect userId (mandatory, number): The unique identifier of the user to check\n   - System will use these identifiers to verify subscription status\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF forumId is invalid or missing, THEN return error message indicating invalid forum identifier\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF userId is invalid or missing, THEN return error message indicating invalid user identifier\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     a. Check if the specified forum exists in the system\n     b. IF forum does not exist, THEN return error message indicating forum not found\n   - Verify user existence:\n     a. Check if the specified user exists in the system\n     b. IF user does not exist, THEN return error message indicating user not found\n   - Verify user access permissions:\n     a. Check if the user has permission to access the specified forum\n     b. IF user lacks access permissions, THEN return error message indicating insufficient permissions\n\n4. Core Operation Execution:\n   - Query subscription records:\n     a. Search for subscription record matching both forumId and userId\n     b. Determine if a matching subscription record exists\n     c. IF record exists, THEN set subscription status to true\n     d. IF record does not exist, THEN set subscription status to false\n\n5. Response Generation:\n   - Success response:\n     a. Return subscription status (true/false)\n     b. Include forum information (name, category)\n     c. Include subscription details if subscribed (date subscribed)\n   - Error response:\n     a. Return appropriate error message based on validation or processing failures\n     b. Include error code and suggested resolution steps",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must exist in the system",
+    "User must have permission to access the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

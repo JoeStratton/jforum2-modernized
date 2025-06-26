@@ -1,0 +1,37 @@
+{
+  "featureName": "SelectPollById",
+  "description": "Retrieves a poll and its options by poll ID.",
+  "inputValues": [
+    "pollId-number-Poll"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required input:\n     a. pollId (number): The unique identifier of the poll to retrieve\n\n2. Data Validation\n   - Validate the poll ID input:\n     a. Check if pollId is provided\n        IF pollId is missing or null THEN\n           Return error message: \"Poll ID is required\"\n     b. Check if pollId is a valid number\n        IF pollId is not a valid number THEN\n           Return error message: \"Poll ID must be a valid number\"\n     c. Check if pollId is positive\n        IF pollId is not positive THEN\n           Return error message: \"Poll ID must be a positive number\"\n\n3. Business Rule Processing\n   - Verify poll existence:\n     a. Check if a poll with the provided ID exists in the system\n        IF poll does not exist THEN\n           Return error message: \"Poll not found with the provided ID\"\n\n4. Core Operation Execution\n   - Retrieve poll data:\n     a. Fetch the basic poll information using the provided pollId\n        - Retrieve poll ID, topic ID, poll label, start time, and length\n   - Retrieve poll options:\n     a. Fetch all options associated with the poll\n        - For each option, retrieve:\n          i. Option ID\n          ii. Option text\n          iii. Vote count\n   - Assemble complete poll data:\n     a. Create a poll object with the retrieved basic information\n     b. Add all retrieved options to the poll object\n\n5. Response Generation\n   - Prepare success response:\n     a. Include the complete poll object with all its properties:\n        - Poll ID\n        - Topic ID\n        - Poll label/question\n        - Start time\n        - Length (duration)\n        - List of all poll options with their respective:\n          i. Option ID\n          ii. Option text\n          iii. Vote count\n   - Handle potential errors:\n     a. If any database errors occur during retrieval:\n        - Log the error details\n        - Return appropriate error message: \"Unable to retrieve poll data\"\n        - Include support information if needed",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_polls",
+    "jforum_poll_options",
+    "jforum_poll_votes"
+  ],
+  "validationRules": [
+    "Poll ID must be provided",
+    "Poll ID must be a valid positive number",
+    "Poll must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "label": "string",
+      "startTime": "date",
+      "length": "number",
+      "options": [
+        {
+          "id": "number",
+          "pollId": "number",
+          "text": "string",
+          "voteCount": "number"
+        }
+      ]
+    }
+  }
+}

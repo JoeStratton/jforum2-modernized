@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "CreateRssDocument",
+    "description": "Creates a new RSS document with title, description, encoding and link information"
+  },
+  {
+    "featureName": "AddRssItem",
+    "description": "Adds a new item entry to an RSS document"
+  },
+  {
+    "featureName": "RetrieveRssItems",
+    "description": "Retrieves all item entries associated with an RSS document"
+  },
+  {
+    "featureName": "GetRssDocumentProperties",
+    "description": "Retrieves RSS document properties including title, description, encoding and link"
+  }
+]

@@ -1,0 +1,110 @@
+{
+  "featureName": "CreateRSS",
+  "description": "Generates RSS feed content by processing a template with RSS data.",
+  "inputValues": [
+    "rssData-object-RSS"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect RSS data object containing feed information\n     - Channel information (title, description, link)\n     - Feed items (entries with title, description, link, publication date)\n     - Feed metadata (language, copyright, publication date)\n   - Template location for RSS rendering\n   - Character encoding for the output\n\n2. Data Validation:\n   - Validate RSS data object\n     - Verify RSS object is not null\n     - Ensure required channel properties are present (title, link, description)\n     - Validate that at least one feed item exists in the collection\n     - Check that each feed item has required properties (title, link)\n   - Validate template availability\n     - Ensure the RSS template file exists\n     - Verify the template has proper format for RSS generation\n   - Validate character encoding\n     - Ensure specified encoding is supported\n     - Default to system encoding if not specified\n\n3. Business Rule Processing:\n   - Apply content formatting rules\n     - Format dates according to RSS specification\n     - Ensure content descriptions follow allowed HTML guidelines\n     - Apply character limits if configured\n   - Apply system configuration settings\n     - Use system-defined template directory\n     - Apply configured encoding settings\n   - Prepare template processing context\n     - Create context with all required variables\n     - Add RSS object to template context\n     - Add encoding information to template context\n\n4. Core Operation Execution:\n   - Initialize template engine\n     - Load template configuration\n     - Locate the RSS template file\n   - Prepare output writer\n     - Create string writer for output collection\n   - Process template with RSS data\n     - Combine template with RSS data context\n     - Generate formatted XML output\n     - Capture complete output in string format\n   - Handle processing exceptions\n     - Catch any template processing errors\n     - Wrap technical exceptions in appropriate business exceptions\n     - Include error details for troubleshooting\n\n5. Response Generation:\n   - Format final RSS output\n     - Ensure proper XML formatting\n     - Validate against RSS specification requirements\n   - Return generated RSS content\n     - Provide complete XML string\n     - Include appropriate content type information\n   - Handle error scenarios\n     - Return appropriate error messages for validation failures\n     - Provide troubleshooting information for template processing errors",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "RSS data object must not be null",
+    "RSS channel must have a title",
+    "RSS channel must have a description",
+    "RSS channel must have a link",
+    "RSS feed must contain at least one item",
+    "Each RSS item must have a title and link",
+    "Template file must exist and be accessible",
+    "Character encoding must be supported by the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RSS": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The title of the RSS feed"
+            },
+            "link": {
+              "type": "string",
+              "description": "The URL to the website corresponding to the feed"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of the feed"
+            },
+            "language": {
+              "type": "string",
+              "description": "The language the feed is written in"
+            },
+            "pubDate": {
+              "type": "string",
+              "description": "Publication date of the feed"
+            },
+            "lastBuildDate": {
+              "type": "string",
+              "description": "The last time the content was updated"
+            },
+            "copyright": {
+              "type": "string",
+              "description": "Copyright notice for the feed content"
+            }
+          },
+          "required": [
+            "title",
+            "link",
+            "description"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "The title of the item"
+              },
+              "link": {
+                "type": "string",
+                "description": "The URL to the item"
+              },
+              "description": {
+                "type": "string",
+                "description": "The item synopsis"
+              },
+              "author": {
+                "type": "string",
+                "description": "Email address of the author"
+              },
+              "pubDate": {
+                "type": "string",
+                "description": "Publication date of the item"
+              },
+              "guid": {
+                "type": "string",
+                "description": "Unique identifier for the item"
+              }
+            },
+            "required": [
+              "title",
+              "link"
+            ]
+          }
+        }
+      },
+      "required": [
+        "channel",
+        "items"
+      ]
+    }
+  }
+}

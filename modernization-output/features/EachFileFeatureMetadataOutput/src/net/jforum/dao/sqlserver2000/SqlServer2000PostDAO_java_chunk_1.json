@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "SelectPostsByTopicWithPagination",
+    "description": "Retrieves posts for a specific topic with pagination support"
+  },
+  {
+    "featureName": "SelectPostsByUserWithPagination",
+    "description": "Retrieves posts made by a specific user with pagination support"
+  },
+  {
+    "featureName": "SelectLatestForumPostsForRSS",
+    "description": "Retrieves latest posts from a specific forum formatted for RSS feeds"
+  },
+  {
+    "featureName": "SelectHotPostsForRSS",
+    "description": "Retrieves popular posts across forums formatted for RSS feeds"
+  }
+]

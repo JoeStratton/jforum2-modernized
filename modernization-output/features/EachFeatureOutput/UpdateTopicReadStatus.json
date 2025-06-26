@@ -1,0 +1,47 @@
+{
+  "featureName": "UpdateTopicReadStatus",
+  "description": "Updates the read status of a topic for a specific user.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User",
+    "readStatus-boolean-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. topicId (number): The unique identifier of the topic to update\n     b. userId (number): The unique identifier of the user whose read status is being updated\n     c. readStatus (boolean): The new read status to set (true for read, false for unread)\n\n2. Data Validation:\n   - Validate topicId:\n     a. Verify topicId is a positive integer\n     b. IF topicId is missing or invalid, THEN generate an error message indicating invalid topic identifier\n   - Validate userId:\n     a. Verify userId is a positive integer\n     b. IF userId is missing or invalid, THEN generate an error message indicating invalid user identifier\n   - Validate readStatus:\n     a. Verify readStatus is a boolean value\n     b. IF readStatus is not a boolean, THEN generate an error message indicating invalid read status format\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if the topic with the provided topicId exists in the system\n     b. IF topic does not exist, THEN generate an error message indicating topic not found\n   - Verify user existence:\n     a. Check if the user with the provided userId exists in the system\n     b. IF user does not exist, THEN generate an error message indicating user not found\n   - Verify user access permissions:\n     a. Check if the user has permission to access the topic\n     b. IF user does not have access permissions, THEN generate an error message indicating insufficient permissions\n\n4. Core Operation Execution:\n   - Check for existing read status record:\n     a. Query the database to find if a read status record already exists for this topic-user combination\n     b. IF record exists, THEN update the existing record with the new read status\n     c. IF record does not exist, THEN create a new read status record with the provided information\n   - Update the read status:\n     a. Set the read status of the topic for the user to the provided readStatus value\n     b. Record the timestamp of when the status was updated\n   - Update related statistics if necessary:\n     a. IF changing from unread to read, THEN update user's unread topic count\n     b. Update any cached information related to user's topic read status\n\n5. Response Generation:\n   - For successful update:\n     a. Generate a success response indicating the topic read status was updated successfully\n     b. Include the updated topic information in the response\n     c. Include the timestamp of when the update occurred\n   - For failed update:\n     a. Generate an appropriate error response based on the failure reason\n     b. Include guidance on how to resolve the issue\n     c. Provide support information if necessary",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users",
+    "jforum_topic_read_status"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Read status must be a boolean value",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must have permission to access the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "lastPostId": "number",
+      "firstPostId": "number",
+      "status": "number",
+      "totalViews": "number",
+      "totalReplies": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    },
+    "TopicReadStatus": {
+      "topicId": "number",
+      "userId": "number",
+      "readStatus": "boolean",
+      "lastUpdated": "date"
+    }
+  }
+}

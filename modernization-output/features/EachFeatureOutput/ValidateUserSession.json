@@ -1,0 +1,52 @@
+{
+  "featureName": "ValidateUserSession",
+  "description": "Validates if a user session is still valid based on remote user information.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "request-object-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - userSession (mandatory): Contains current user session information\n     - request (mandatory): Contains the current request context\n\n2. Data Validation\n   - Validate userSession input:\n     - IF userSession is null THEN\n       - Return validation failure\n       - Include error message indicating session information is required\n     - END IF\n   - Validate request input:\n     - IF request is null THEN\n       - Return validation failure\n       - Include error message indicating request context is required\n     - END IF\n\n3. Business Rule Processing\n   - Extract remote user information:\n     - Retrieve remoteUser value from the request context\n     - Retrieve current userId from userSession\n     - Retrieve anonymousUserId from system configuration\n     - Retrieve username from userSession\n\n4. Core Operation Execution\n   - Determine session validity based on the following conditions:\n     - IF remoteUser is null AND userId is not equal to anonymousUserId THEN\n       - Session is invalid (user has logged out)\n       - Return false\n     - ELSE IF remoteUser is not null AND userId equals anonymousUserId THEN\n       - Session is invalid (user has logged in)\n       - Return false\n     - ELSE IF remoteUser is not null AND remoteUser does not equal username THEN\n       - Session is invalid (user has changed)\n       - Return false\n     - ELSE\n       - Session is valid\n       - Return true\n     - END IF\n\n5. Response Generation\n   - Return session validity result (boolean):\n     - true: Session is valid and can continue\n     - false: Session is invalid and requires re-authentication",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "UserSession object must not be null",
+    "RequestContext object must not be null",
+    "Session is invalid if remote user is null but session user is not anonymous",
+    "Session is invalid if remote user exists but session user is anonymous",
+    "Session is invalid if remote user exists but doesn't match session username"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The user ID associated with this session"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username associated with this session"
+        }
+      },
+      "required": [
+        "userId",
+        "username"
+      ]
+    },
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "remoteUser": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The remote user identifier, null if not authenticated"
+        }
+      }
+    }
+  }
+}

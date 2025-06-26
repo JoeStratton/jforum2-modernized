@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "AddNewPostText",
+    "description": "Adds text content for a new forum post with subject and body"
+  },
+  {
+    "featureName": "UpdatePostText",
+    "description": "Updates the subject and text content of an existing forum post"
+  },
+  {
+    "featureName": "GetPostText",
+    "description": "Retrieves the text content of a forum post from the database"
+  },
+  {
+    "featureName": "SelectPostsByTopicWithPagination",
+    "description": "Retrieves paginated posts for a specific forum topic"
+  },
+  {
+    "featureName": "SelectPostsByUserWithPagination",
+    "description": "Retrieves paginated posts created by a specific user"
+  }
+]

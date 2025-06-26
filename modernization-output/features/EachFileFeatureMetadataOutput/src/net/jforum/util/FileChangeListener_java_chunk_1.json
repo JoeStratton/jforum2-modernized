@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "FileChangeNotification",
+    "description": "Notifies listeners when a file has been changed by providing the filename"
+  }
+]

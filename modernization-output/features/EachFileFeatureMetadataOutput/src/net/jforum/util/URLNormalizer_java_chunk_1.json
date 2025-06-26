@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "NormalizeUrl",
+    "description": "Normalizes URLs by replacing spaces with underscores and removing special characters"
+  },
+  {
+    "featureName": "NormalizeUrlWithLimits",
+    "description": "Normalizes URLs with customizable character limits and truncation options"
+  }
+]

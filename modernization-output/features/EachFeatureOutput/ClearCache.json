@@ -1,0 +1,12 @@
+{
+  "featureName": "ClearCache",
+  "description": "Clears the internal cache of previously expanded variable strings.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - This is a system-initiated operation\n\n2. Data Validation:\n   - No input validation required as there are no user inputs\n\n3. Business Rule Processing:\n   - Verify that the cache system is currently active\n   - IF cache system is not initialized THEN\n     - Log warning that cache clearing was attempted on inactive cache\n     - Skip operation\n   - END IF\n\n4. Core Operation Execution:\n   - Access the internal cache storage mechanism\n   - Remove all entries from the cache container\n   - Release any resources associated with cached items\n   - Reset cache statistics if applicable\n   - IF cache clearing operation fails THEN\n     - Log error details\n     - Attempt recovery of cache to stable state\n   - END IF\n\n5. Response Generation:\n   - Indicate successful cache clearing operation\n   - Return confirmation that cache has been emptied\n   - Include statistics about number of items cleared if available",
+  "databaseEntities": [],
+  "validationRules": [
+    "Cache system must be initialized before clearing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

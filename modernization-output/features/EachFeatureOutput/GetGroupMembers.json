@@ -1,0 +1,19 @@
+{
+  "featureName": "GetGroupMembers",
+  "description": "Retrieves the list of user IDs belonging to a specific group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the group ID (mandatory) from the request\n   - System will use the current database connection (system-generated)\n\n2. Data Validation:\n   - Validate group ID:\n     a. Check if group ID is provided\n     b. Verify group ID is a positive integer\n     c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify group existence:\n     a. Check if the specified group exists in the system\n     b. IF group does not exist, THEN return an empty list\n     c. IF group exists, THEN proceed with member retrieval\n\n4. Core Operation Execution:\n   - Retrieve group members:\n     a. Access the user-group relationship records for the specified group ID\n     b. Extract all user IDs associated with the group\n     c. Compile the list of user IDs into a collection\n     d. IF any database error occurs during retrieval:\n        i. Log the error details\n        ii. Handle the exception appropriately\n        iii. Return error response\n\n5. Response Generation:\n   - Format the response:\n     a. Return the list of user IDs as integers in a collection\n     b. IF the operation was successful but no members found, return an empty list\n     c. IF an error occurred during processing, return appropriate error information",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group ID must reference an existing group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

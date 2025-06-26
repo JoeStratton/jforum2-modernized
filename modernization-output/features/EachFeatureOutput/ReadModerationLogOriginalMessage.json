@@ -1,0 +1,37 @@
+{
+  "featureName": "ReadModerationLogOriginalMessage",
+  "description": "Retrieves the original message content from moderation logs stored in the system.",
+  "inputValues": [
+    "logId-number-ModerationLog"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the moderation log ID (logId) from the user request\n   - Verify the logId is provided and is a valid number\n   - System will use the current user's session information for access control\n\n2. Data Validation:\n   - Validate that logId is a positive integer\n     * IF logId is not a positive integer THEN\n       - Return an error message indicating invalid log ID format\n     * END IF\n   - Verify the log entry exists in the system\n     * IF log entry does not exist THEN\n       - Return an error message indicating the log was not found\n     * END IF\n   - Verify the current user has permission to view moderation logs\n     * IF user does not have sufficient permissions THEN\n       - Return an access denied error message\n     * END IF\n\n3. Business Rule Processing:\n   - Check if the user has appropriate role to view moderation logs\n     * IF user is not an administrator or moderator THEN\n       - Return an access denied error message\n     * END IF\n   - Verify the log entry contains an original message\n     * IF original message field is null or empty THEN\n       - Return a notification that no original message exists for this log\n     * END IF\n\n4. Core Operation Execution:\n   - Retrieve the moderation log record using the provided logId\n   - Extract the original message content from the log record\n   - Format the original message for proper display\n     * Process any special characters or formatting\n     * Prepare the content for presentation\n   - Record the access to the log in the system audit trail\n     * Store user ID, timestamp, and action type\n\n5. Response Generation:\n   - Prepare the response containing:\n     * Log ID\n     * Original message content\n     * Timestamp of when the log was created\n     * User who performed the moderation action\n     * Type of moderation action performed\n   - Return the formatted response to the user\n   - IF any errors occurred during retrieval THEN\n     * Return appropriate error message with error code\n     * Include support contact information if needed\n   - END IF",
+  "databaseEntities": [
+    "ModerationLog",
+    "User"
+  ],
+  "validationRules": [
+    "Log ID must be a positive integer",
+    "User must have administrator or moderator permissions to view moderation logs",
+    "The requested log entry must exist in the system",
+    "The log entry must contain an original message"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationLog": {
+      "id": "number",
+      "userId": "number",
+      "timestamp": "date",
+      "type": "number",
+      "postId": "number",
+      "topicId": "number",
+      "posterUserId": "number",
+      "description": "string",
+      "originalMessage": "string"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "permissions": "object"
+    }
+  }
+}

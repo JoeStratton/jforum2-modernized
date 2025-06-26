@@ -1,0 +1,38 @@
+{
+  "featureName": "RemoveForum",
+  "description": "Removes a forum from the cache system.",
+  "inputValues": [
+    "forum-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Forum object that needs to be removed from the cache\n     1.1. Ensure the Forum object contains at least the forum ID\n     1.2. Ensure the Forum object contains the category ID it belongs to\n\n2. Data Validation\n   - Validate the forum object and its properties\n     2.1. Verify the forum object is not null\n     2.2. Verify the forum ID is a valid positive integer\n     2.3. Verify the category ID is a valid positive integer\n     2.4. IF any validation fails, THEN generate appropriate error message and terminate the operation\n\n3. Business Rule Processing\n   - Check if the forum exists in the cache\n     3.1. Retrieve the relation map from the cache\n     3.2. Check if the forum ID exists as a key in the relation map\n     3.3. IF the forum ID does not exist in the relation map, THEN generate a \"Forum not found\" message and terminate the operation\n\n4. Core Operation Execution\n   - Remove the forum from the cache system\n     4.1. Convert the forum ID to string format for cache operations\n     4.2. Retrieve the relation map from the cache\n     4.3. Remove the forum ID entry from the relation map\n     4.4. Update the relation map in the cache\n     4.5. Convert the category ID to string format\n     4.6. Retrieve the category object from the cache using the category ID\n     4.7. Remove the forum from the category's forum collection\n     4.8. Update the category object in the cache\n     4.9. Retrieve the categories set from the cache\n     4.10. Update the categories set in the cache to reflect the changes\n\n5. Response Generation\n   - Complete the operation and provide appropriate feedback\n     5.1. IF all operations completed successfully, THEN generate success message indicating the forum was successfully removed from the cache\n     5.2. IF any errors occurred during the removal process, THEN generate appropriate error message with details about what went wrong\n     5.3. Return the operation status to the caller",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Forum ID must be a positive integer",
+    "Category ID must be a positive integer",
+    "Forum must exist in the cache system",
+    "Category must exist in the cache system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostInfo": "object"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    }
+  }
+}

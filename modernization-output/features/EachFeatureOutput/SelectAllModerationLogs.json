@@ -1,0 +1,41 @@
+{
+  "featureName": "SelectAllModerationLogs",
+  "description": "Retrieves a paginated list of moderation log entries with user and post details.",
+  "inputValues": [
+    "start-number-ModerationLog",
+    "count-number-ModerationLog"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - start: The starting index for pagination (mandatory, number)\n     - count: The maximum number of records to retrieve (mandatory, number)\n   - System will use these parameters to determine which portion of the moderation logs to retrieve\n\n2. Data Validation\n   - Validate pagination parameters:\n     - IF start is negative THEN return error message \"Starting index cannot be negative\"\n     - IF count is less than or equal to zero THEN return error message \"Count must be greater than zero\"\n     - IF count exceeds system-defined maximum page size THEN set count to maximum allowed value\n\n3. Business Rule Processing\n   - Check user permissions:\n     - IF current user does not have moderation privileges THEN return access denied error\n     - IF system is in maintenance mode THEN verify user has administrative access\n   - Verify database connection is available\n     - IF connection is unavailable THEN return system unavailable error\n\n4. Core Operation Execution\n   - Calculate total number of moderation log entries in the system\n     - Query the database for total count of moderation log records\n     - Store this value for pagination metadata\n   - Retrieve moderation log entries:\n     - Query the database for moderation logs with the following information:\n       - Log ID and timestamp\n       - Log description and original message\n       - Log type and associated post/topic IDs\n       - Moderator user information (ID, username)\n       - Post author user information (ID, username)\n     - Apply pagination using start and count parameters\n     - Sort results by timestamp in descending order (newest first)\n   - For each retrieved log entry:\n     - Create a moderation log object with all retrieved data\n     - Format timestamp to system standard format\n     - Add the log entry to the result collection\n\n5. Response Generation\n   - Prepare the response with:\n     - Collection of moderation log entries\n     - Pagination metadata:\n       - Total number of records\n       - Current page information\n       - More pages indicator\n     - IF no records found THEN include appropriate empty result indicator\n     - IF error occurred during processing THEN include error details and suggestions\n   - Return the complete response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "Pagination start index must be zero or positive",
+    "Pagination count must be greater than zero",
+    "User must have moderation privileges to view logs",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationLog": {
+      "id": "number",
+      "description": "string",
+      "originalMessage": "string",
+      "type": "number",
+      "date": "date",
+      "postId": "number",
+      "topicId": "number",
+      "user": {
+        "id": "number",
+        "username": "string"
+      },
+      "posterUser": {
+        "id": "number",
+        "username": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "featureName": "EditPost",
+  "description": "Provides functionality to edit existing posts with permission checks.",
+  "inputValues": [
+    "post_id-number-Post",
+    "post_content-string-Post",
+    "subject-string-Post",
+    "notify-boolean-Post",
+    "attachments-object-Attachment",
+    "topic_type-number-Topic",
+    "poll-object-Poll",
+    "preview-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. post_id (mandatory): Unique identifier of the post to edit\n     b. post_content (mandatory): Updated content for the post\n     c. subject (mandatory for first posts in topics): Updated subject line\n     d. notify (optional): Boolean indicating if user wants notifications\n     e. attachments (optional): Files to be attached to the post\n     f. topic_type (optional): Type of topic (normal, sticky, announcement)\n     g. poll (optional): Poll information if the post is the first in a topic\n     h. preview (optional): Boolean indicating if user wants to preview before saving\n\n2. Data Validation\n   - Validate post existence\n     a. Check if post with given post_id exists in the system\n     b. IF post not found, THEN\n        i. Display \"Post not found\" message\n        ii. End process\n   - Validate input fields\n     a. Ensure post_content is not empty\n     b. IF post is the first post in a topic, THEN\n        i. Ensure subject is not empty\n        ii. Validate subject length (minimum 2 characters, maximum 100 characters)\n     c. Validate attachments\n        i. Check if attachments are enabled for the forum\n        ii. Verify attachment size against quota limits\n        iii. Verify number of attachments against maximum allowed\n        iv. Validate file types against allowed extensions\n     d. Validate poll data if provided\n        i. Ensure poll has at least two options\n        ii. Verify poll question is not empty\n\n3. Business Rule Processing\n   - Permission verification\n     a. Determine if current user is the post author\n     b. Determine if current user has moderation privileges\n     c. IF user is neither post author nor moderator, THEN\n        i. Display \"Cannot edit post\" message\n        ii. End process\n   - Topic status verification\n     a. Retrieve topic information for the post\n     b. IF topic is locked AND user is not a moderator, THEN\n        i. Display \"Topic locked\" message\n        ii. End process\n   - Forum access verification\n     a. Check if user has access to the forum containing the post\n     b. IF user does not have access, THEN\n        i. Display access denied message\n        ii. End process\n   - Time limit verification\n     a. IF system has edit time limits AND user is not a moderator, THEN\n        i. Calculate time elapsed since post creation\n        ii. IF time elapsed exceeds allowed edit time, THEN\n           1. Display \"Edit time expired\" message\n           2. End process\n   - Special permissions checking\n     a. IF post is first post in topic AND topic_type is changed, THEN\n        i. Verify user has permission to create sticky/announcement topics\n     b. IF poll is being added or modified, THEN\n        i. Verify user has permission to create polls\n     c. IF HTML is used in post_content, THEN\n        i. Verify user has permission to use HTML in posts\n\n4. Core Operation Execution\n   - Preview handling\n     a. IF preview is requested, THEN\n        i. Prepare post with new content for display\n        ii. Show edit form with preview of post\n        iii. Retain all user inputs for further editing\n        iv. End process (no database changes)\n   - Prepare post data\n     a. Update post content with new post_content\n     b. IF post is first post in topic AND subject was changed, THEN\n        i. Update topic title as well\n     c. Set last edit time to current time\n     d. Set last edit user to current user\n     e. IF moderation logging is enabled AND user is a moderator editing another user's post, THEN\n        i. Store original message for moderation log\n        ii. Create moderation log entry\n   - Handle attachments\n     a. IF attachments feature is enabled, THEN\n        i. Process any new attachments uploaded\n        ii. Remove any attachments marked for deletion\n   - Handle poll changes\n     a. IF post is first post in topic, THEN\n        i. IF new poll provided AND topic didn't have poll before, THEN\n           1. Create new poll and associate with topic\n        ii. IF poll provided AND topic already had poll, THEN\n           1. Update existing poll with new options\n        iii. IF no poll provided AND topic had poll before, THEN\n           1. Delete existing poll\n   - Handle topic type changes\n     a. IF post is first post in topic AND topic_type changed, THEN\n        i. Update topic type in database\n   - Update notification preferences\n     a. IF notify parameter is present, THEN\n        i. Update user notification settings for this topic\n     b. IF notify parameter is not present, THEN\n        i. Remove any existing notification subscription\n   - Save changes\n     a. Update post record in database\n     b. IF post is first post in topic AND subject or topic type changed, THEN\n        i. Update topic record in database\n     c. IF operation fails at any point, THEN\n        i. Roll back any partial changes\n        ii. Display error message\n        iii. End process\n\n5. Response Generation\n   - Generate success response\n     a. Prepare confirmation message\n     b. Determine appropriate redirect location\n        i. Redirect to topic view showing the edited post\n     c. Include any warning messages about attachments if applicable\n     d. Include any information about moderation if post requires approval",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_forums",
+    "jforum_polls",
+    "jforum_vote_results",
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "User must be logged in to edit posts",
+    "User must be either the post author or a moderator to edit a post",
+    "Post content cannot be empty",
+    "Subject cannot be empty for first posts in topics",
+    "Cannot edit posts in locked topics unless user is a moderator",
+    "User must have access to the forum containing the post",
+    "Attachments must comply with size and quantity limits",
+    "Attachments must be of allowed file types",
+    "Only users with appropriate permissions can create sticky or announcement topics",
+    "Only users with appropriate permissions can create or edit polls",
+    "Polls must have at least two options",
+    "HTML usage in posts is restricted to users with HTML permission"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the attachment"
+        },
+        "filename": {
+          "type": "string",
+          "description": "Original name of the uploaded file"
+        },
+        "fileContent": {
+          "type": "string",
+          "description": "Binary content of the file"
+        },
+        "filesize": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "deleteAttachment": {
+          "type": "boolean",
+          "description": "Flag indicating if attachment should be deleted"
+        }
+      }
+    },
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll"
+        },
+        "question": {
+          "type": "string",
+          "description": "The poll question"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Poll option text"
+          },
+          "description": "Available options for the poll"
+        },
+        "length": {
+          "type": "number",
+          "description": "Duration of the poll in days"
+        }
+      }
+    }
+  }
+}

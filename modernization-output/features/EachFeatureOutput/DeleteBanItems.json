@@ -1,0 +1,27 @@
+{
+  "featureName": "DeleteBanItems",
+  "description": "Removes selected ban entries from the system.",
+  "inputValues": [
+    "banlist_id-string-Banlist"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. banlist_id (mandatory): Array of identifiers for ban entries to be deleted\n\n2. Data Validation:\n   - Validate banlist_id input:\n     a. Check if banlist_id array is not null\n     b. Check if banlist_id array is not empty\n     c. IF validation fails, THEN:\n        i. Display error message indicating no items were selected for deletion\n        ii. Return to ban list view without performing deletion\n\n3. Business Rule Processing:\n   - Verify user permissions:\n     a. Check if current user has administrative privileges to delete ban entries\n     b. IF user lacks required permissions, THEN:\n        i. Display access denied message\n        ii. Log unauthorized deletion attempt\n        iii. Return to previous page\n   - Verify system state:\n     a. Check if ban list repository is available\n     b. IF repository is unavailable, THEN:\n        i. Display system error message\n        ii. Log the system error\n        iii. Return to previous page\n\n4. Core Operation Execution:\n   - Process each selected ban entry:\n     a. FOR EACH banlist_id in the input array:\n        i. Parse the string ID to numeric format\n        ii. Locate the ban entry in the system by ID\n        iii. IF entry exists, THEN:\n             1. Remove entry from persistent storage\n             2. Remove entry from system cache/repository\n        iv. IF entry does not exist, THEN:\n             1. Log warning about attempting to delete non-existent entry\n             2. Continue with next entry\n   - Handle operation results:\n     a. Track successful and failed deletions\n     b. IF any deletions failed, THEN:\n        i. Prepare partial success message with details\n     c. ELSE:\n        i. Prepare complete success message\n\n5. Response Generation:\n   - Generate appropriate response:\n     a. IF all selected entries were successfully deleted, THEN:\n        i. Display success message indicating number of entries removed\n     b. IF some entries failed to delete, THEN:\n        i. Display partial success message with details of failures\n     c. IF all entries failed to delete, THEN:\n        i. Display error message with failure reason\n   - Refresh ban list view:\n     a. Retrieve updated list of ban entries\n     b. Display updated ban list to user",
+  "databaseEntities": [
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "At least one ban item must be selected for deletion",
+    "User must have administrative privileges to delete ban entries",
+    "Selected ban items must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "id": "number",
+      "type": "string",
+      "value": "string",
+      "email": "string",
+      "userId": "number",
+      "ip": "string"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SendActivationEmail",
+    "description": "Sends account activation emails to users with activation key links and manual activation options"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "featureName": "SendRedirect",
+  "description": "Redirects client to a new URL with support for absolute path configuration.",
+  "inputValues": [
+    "location-string-RedirectLocation"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the target location URL (string) to redirect the client to\n   - Determine if absolute path configuration is enabled (system setting)\n   - If absolute paths are enabled, retrieve the base URL from system configuration\n\n2. Data Validation:\n   - Validate that the location string is not null or empty\n     * IF location is null or empty THEN\n       - Generate an error indicating invalid redirect location\n       - Abort the redirect operation\n     * END IF\n   - Validate that the location string is properly formatted\n     * IF location contains invalid URL characters THEN\n       - Generate an error indicating malformed URL\n       - Abort the redirect operation\n     * END IF\n\n3. Business Rule Processing:\n   - Check if absolute path configuration is enabled\n     * IF absolute path configuration is enabled THEN\n       - Parse the provided location as a URI\n       - Check if the URI is already absolute\n         * IF URI is not absolute THEN\n           - Prepend the system-configured base URL to the location\n         * END IF\n     * END IF\n   - Determine if URL encoding is required for the redirect\n     * IF URL contains special characters that need encoding THEN\n       - Apply URL encoding to ensure proper redirect handling\n     * END IF\n\n4. Core Operation Execution:\n   - Prepare the final redirect URL with all necessary modifications\n   - Set any required response headers for the redirect operation\n   - Execute the redirect operation to the target location\n   - Handle any potential errors during the redirect process\n     * IF redirect operation fails THEN\n       - Log the failure reason\n       - Generate appropriate error response\n     * END IF\n\n5. Response Generation:\n   - Set the appropriate HTTP status code for redirect (typically 302)\n   - Include the Location header with the final redirect URL\n   - Ensure all browser cache directives are properly set\n   - Complete the response processing\n     * IF successful THEN\n       - Client will be redirected to the target location\n     * ELSE\n       - Return error details to the client\n     * END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Redirect location must not be null or empty",
+    "Redirect location must be a properly formatted URL",
+    "If absolute paths are enabled, non-absolute URLs must be prefixed with the base URL"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RedirectLocation": {
+      "type": "string",
+      "description": "The URL to which the client will be redirected"
+    }
+  }
+}

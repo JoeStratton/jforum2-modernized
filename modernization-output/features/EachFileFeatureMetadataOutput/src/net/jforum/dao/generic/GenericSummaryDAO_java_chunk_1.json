@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SelectLastPosts",
+    "description": "Retrieves posts within a specified date range with detailed post information"
+  },
+  {
+    "featureName": "ListRecipients",
+    "description": "Retrieves email addresses of all recipients in the system"
+  }
+]

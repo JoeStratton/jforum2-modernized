@@ -1,0 +1,24 @@
+{
+  "featureName": "UpdateReadStatus",
+  "description": "Updates the read/unread status of a topic for a specific user.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User",
+    "readStatus-boolean-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId (mandatory): Unique identifier for the topic\n     b. userId (mandatory): Unique identifier for the user\n     c. readStatus (mandatory): Boolean flag indicating whether the topic is read (true) or unread (false)\n\n2. Data Validation\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate readStatus:\n     a. Check if readStatus is provided\n     b. Verify readStatus is a boolean value\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing\n   - Check if topic exists:\n     a. Verify the topic with the provided topicId exists in the system\n     b. IF topic does not exist, THEN return error message indicating invalid topic\n   - Check if user exists:\n     a. Verify the user with the provided userId exists in the system\n     b. IF user does not exist, THEN return error message indicating invalid user\n   - Check if user is subscribed to the topic:\n     a. Verify if the user is subscribed to the topic\n     b. IF user is not subscribed, THEN return error message indicating user is not subscribed to the topic\n\n4. Core Operation Execution\n   - Update read status:\n     a. Convert boolean readStatus to numeric value (1 for read, 0 for unread)\n     b. Update the subscription record for the specified user and topic with the new read status\n     c. IF update operation fails, THEN:\n        i. Log the error details\n        ii. Generate appropriate error message\n        iii. Roll back any partial changes\n\n5. Response Generation\n   - For successful update:\n     a. Generate success response indicating the read status was updated successfully\n     b. Include the topicId and new read status in the response\n   - For failed update:\n     a. Generate error response with appropriate error message\n     b. Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Read status must be a boolean value",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must be subscribed to the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

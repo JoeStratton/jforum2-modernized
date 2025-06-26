@@ -1,0 +1,15 @@
+{
+  "featureName": "CountModerationLogs",
+  "description": "Returns the total number of moderation log records in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use existing authentication context to verify access rights\n\n2. Data Validation:\n   - Verify user authorization\n     a. Check if current user has administrator privileges\n     b. IF user is not authorized THEN\n        i. Generate access denied error\n        ii. Terminate process\n     c. ELSE continue to next step\n\n3. Business Rule Processing:\n   - Verify system state\n     a. Check if the moderation log functionality is enabled in system settings\n     b. IF moderation logging is disabled THEN\n        i. Return zero as count\n        ii. Terminate process\n     c. ELSE continue to next step\n\n4. Core Operation Execution:\n   - Count moderation log records\n     a. Access the moderation log storage\n     b. Count all moderation log entries regardless of type or date\n     c. IF counting operation fails THEN\n        i. Log system error\n        ii. Generate appropriate error message\n        iii. Terminate process\n     d. ELSE continue to next step\n\n5. Response Generation:\n   - Prepare count result\n     a. Format the count as an integer number\n     b. Return the total count of moderation log records\n     c. IF display formatting is required THEN\n        i. Apply any necessary formatting (thousands separators, etc.)\n     d. Return the final count value to the caller",
+  "databaseEntities": [
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to access moderation log counts",
+    "Moderation logging must be enabled in system settings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

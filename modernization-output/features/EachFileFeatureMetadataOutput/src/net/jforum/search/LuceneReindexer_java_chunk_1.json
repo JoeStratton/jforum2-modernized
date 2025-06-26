@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ReindexSearchContent",
+    "description": "Reindexes forum content in Lucene search engine with options for full or incremental updates"
+  },
+  {
+    "featureName": "StartBackgroundIndexing",
+    "description": "Initiates search indexing as a background process to avoid blocking the main application"
+  },
+  {
+    "featureName": "RecreateSearchIndex",
+    "description": "Creates a new search index directory when performing a full reindex operation"
+  }
+]

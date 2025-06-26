@@ -1,0 +1,21 @@
+{
+  "featureName": "ClearTopicCache",
+  "description": "Clears the cache for a specific topic to ensure that the latest data is retrieved from the database on subsequent requests.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topicId (number) of the topic whose cache needs to be cleared\n   - Verify that topicId is provided as a mandatory field\n   - No default values are applicable for this operation\n\n2. Data Validation\n   - Validate that topicId is a positive integer\n     * IF topicId is not a positive integer THEN\n       - Generate an error message indicating invalid topic ID format\n       - Abort the operation\n     * END IF\n   - Verify that topicId represents an existing topic\n     * IF topic does not exist THEN\n       - Generate an error message indicating topic not found\n       - Abort the operation\n     * END IF\n\n3. Business Rule Processing\n   - Check if the topic has cached data\n     * IF no cached data exists for the topic THEN\n       - Log information that no cache exists for the specified topic\n       - Skip to Response Generation with appropriate message\n     * END IF\n   - Verify user has appropriate permissions to clear cache\n     * IF user does not have required permissions THEN\n       - Generate an error message indicating insufficient permissions\n       - Abort the operation\n     * END IF\n   - Check if caching is enabled in the system\n     * IF topic caching is disabled THEN\n       - Log information that caching is disabled\n       - Skip to Response Generation with appropriate message\n     * END IF\n\n4. Core Operation Execution\n   - Identify the cache storage location for the topic\n     * Determine the cache key based on the topic ID\n     * Locate the cache entry in the system cache\n   - Remove the topic's cached data from the cache storage\n     * Delete all cached posts associated with the topic ID\n     * Update cache metadata to reflect the removal\n   - Log the cache clearing operation\n     * Record the topic ID, timestamp, and user who performed the operation\n     * Include the reason for cache clearing if provided\n\n5. Response Generation\n   - Generate success response\n     * Include confirmation that the topic cache was successfully cleared\n     * Provide the topic ID that was affected\n     * Include timestamp of when the operation was completed\n   - IF operation failed at any point THEN\n     * Generate error response with specific failure reason\n     * Include guidance on how to resolve the issue\n     * Provide support contact information if needed\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have appropriate permissions to clear cache",
+    "Cache operation must be logged for audit purposes",
+    "System must have topic caching enabled for operation to be meaningful"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

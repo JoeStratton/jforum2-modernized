@@ -1,0 +1,35 @@
+{
+  "featureName": "GenerateForumTopicsRSS",
+  "description": "Generates RSS feed for the latest topics in a specified forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory) - The unique identifier of the forum to generate RSS feed for\n   - System will use configuration values for number of topics to include\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided and is a valid number\n     b. Verify forumId exists in the system\n     c. Generate error message if forumId is invalid or not found\n   - Validate user access permissions:\n     a. Check if the current user has access rights to the specified forum\n     b. IF user does not have access rights, THEN\n        i. Request authentication\n        ii. Terminate further processing\n\n3. Business Rule Processing:\n   - Verify forum visibility:\n     a. Check if the forum is active and visible\n     b. IF forum is not active or visible, THEN return appropriate error message\n   - Apply content filtering rules:\n     a. Filter out any topics that should not appear in public feeds\n     b. Apply any content moderation policies\n\n4. Core Operation Execution:\n   - Retrieve forum information:\n     a. Get forum details including name and description\n     b. Prepare forum metadata for RSS header\n   - Fetch latest topics:\n     a. Retrieve the latest topics from the specified forum based on system configuration limit\n     b. For each topic, collect required information (title, content preview, author, date)\n     c. Sort topics by publication date (newest first)\n   - Generate RSS content:\n     a. Create RSS header with forum information\n     b. For each topic, create an RSS item entry with appropriate metadata\n     c. Format the complete RSS feed according to standard specifications\n   - Increment view counters:\n     a. Update forum view statistics\n\n5. Response Generation:\n   - Set content type to XML format\n   - Return the generated RSS feed content\n   - IF any errors occurred during processing, THEN\n     a. Generate appropriate error response in XML format\n     b. Include error details and suggestions for resolution\n   - Include appropriate caching headers for RSS feed",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid number",
+    "Forum must exist in the system",
+    "User must have access rights to the specified forum",
+    "Forum must be active and visible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "postDate": "date",
+      "forumId": "number",
+      "authorId": "number"
+    }
+  }
+}

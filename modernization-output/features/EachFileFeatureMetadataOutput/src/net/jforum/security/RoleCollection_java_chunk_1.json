@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "AddRole",
+    "description": "Adds a security role to the collection for access control management"
+  },
+  {
+    "featureName": "GetRole",
+    "description": "Retrieves a security role by name from the collection"
+  },
+  {
+    "featureName": "DisplayRoles",
+    "description": "Generates a string representation of all roles in the collection"
+  }
+]

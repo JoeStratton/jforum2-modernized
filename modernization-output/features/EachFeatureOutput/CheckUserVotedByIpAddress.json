@@ -1,0 +1,38 @@
+{
+  "featureName": "CheckUserVotedByIpAddress",
+  "description": "Verifies if a vote has been cast from a specific IP address on a poll.",
+  "inputValues": [
+    "pollId-number-Poll",
+    "ipAddress-string-IpAddress"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. pollId (number): The unique identifier of the poll to check\n     b. ipAddress (string): The IP address to verify for previous votes\n   - Both fields are mandatory and must be provided by the caller\n\n2. Data Validation:\n   - Validate pollId:\n     a. Verify pollId is a positive integer\n     b. IF pollId is missing or invalid THEN\n        i. Generate validation error: \"Poll identifier must be a valid positive number\"\n     c. Verify pollId corresponds to an existing poll\n     d. IF poll does not exist THEN\n        i. Generate validation error: \"The specified poll does not exist\"\n   - Validate ipAddress:\n     a. Verify ipAddress is not empty\n     b. IF ipAddress is missing THEN\n        i. Generate validation error: \"IP address must be provided\"\n     c. Verify ipAddress follows a valid IP address format\n     d. IF ipAddress format is invalid THEN\n        i. Generate validation error: \"Invalid IP address format\"\n\n3. Business Rule Processing:\n   - Check system configuration:\n     a. Verify if IP-based vote tracking is enabled in the system\n     b. IF IP-based vote tracking is disabled THEN\n        i. Return false (indicating no vote found) and exit process\n   - Check poll status:\n     a. Verify if the poll is active and accepting votes\n     b. IF poll is closed or expired THEN\n        i. Log attempt to check votes on inactive poll\n        ii. Continue with the verification process regardless\n\n4. Core Operation Execution:\n   - Search for vote records:\n     a. Query the vote tracking system for records matching both:\n        i. The specified pollId\n        ii. The specified ipAddress\n     b. IF matching vote record is found THEN\n        i. Set result flag to true (vote exists)\n     c. ELSE\n        i. Set result flag to false (no vote exists)\n   - Record verification activity:\n     a. Log the verification attempt with timestamp, poll identifier, and IP address\n     b. Update poll access statistics if required\n\n5. Response Generation:\n   - Prepare the response:\n     a. Return the boolean result flag indicating whether a vote was found\n     b. IF true THEN\n        i. Indicate that the specified IP address has already voted on this poll\n     c. IF false THEN\n        i. Indicate that no vote from the specified IP address was found for this poll\n   - Include additional context if needed:\n     a. IF configured to provide details, include timestamp of found vote\n     b. IF configured to provide details, include the selected option if a vote was found",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_polls",
+    "jforum_vote_results",
+    "jforum_vote_voters"
+  ],
+  "validationRules": [
+    "Poll ID must be a positive integer",
+    "Poll must exist in the system",
+    "IP address must not be empty",
+    "IP address must follow valid format",
+    "IP-based vote tracking must be enabled to perform check"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "label": "string",
+      "options": "array",
+      "voteCount": "number",
+      "isActive": "boolean",
+      "expirationDate": "date"
+    },
+    "IpAddress": {
+      "value": "string",
+      "timestamp": "date"
+    }
+  }
+}

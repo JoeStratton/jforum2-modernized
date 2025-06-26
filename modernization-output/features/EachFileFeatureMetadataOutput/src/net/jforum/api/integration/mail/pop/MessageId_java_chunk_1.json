@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "BuildMessageId",
+    "description": "Creates a unique message identifier for forum posts with post, topic, and forum information"
+  },
+  {
+    "featureName": "BuildInReplyTo",
+    "description": "Generates an In-Reply-To header for forum post replies based on topic information"
+  },
+  {
+    "featureName": "ParseMessageId",
+    "description": "Extracts topic ID from message headers using regex pattern matching"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "featureName": "CheckFileInMemory",
+  "description": "Determines if file contents are stored in memory or on disk.",
+  "inputValues": [
+    "fileItem-object-DiskFileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the DiskFileItem object that contains file data\n   - The DiskFileItem must be properly initialized with:\n     * Field name\n     * Content type\n     * Form field flag\n     * File name\n     * Size threshold\n     * Repository location\n\n2. Data Validation:\n   - Validate that the DiskFileItem object is not null\n     * IF DiskFileItem is null THEN return an error indicating invalid input\n   - Validate that the DiskFileItem has been properly initialized\n     * IF the internal deferred file output stream is not initialized THEN return an error indicating the file item is in an invalid state\n\n3. Business Rule Processing:\n   - Check system configuration for memory threshold settings\n     * Verify the configured size threshold value is valid (must be a positive number)\n     * Determine if the current system has sufficient memory resources available\n   - Evaluate file storage policy based on file attributes\n     * Consider file size in relation to the configured threshold\n     * Consider file type and any special handling requirements\n\n4. Core Operation Execution:\n   - Check if the file data is currently stored in memory\n     * Access the deferred file output stream object\n     * Query the stream's internal state to determine storage location\n     * IF the deferred file output stream reports data is in memory THEN\n       > Set result flag to true indicating in-memory storage\n     * ELSE\n       > Set result flag to false indicating on-disk storage\n   - Record the storage state for reference\n     * Update any monitoring or tracking information as needed\n     * Log the storage decision if required by the system\n\n5. Response Generation:\n   - Return the memory storage status\n     * Provide boolean result indicating whether file is in memory (true) or on disk (false)\n     * Include any additional metadata about the file if requested\n     * IF an error occurred during processing THEN provide appropriate error details",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "DiskFileItem object must not be null",
+    "DiskFileItem must be properly initialized with a deferred file output stream",
+    "Size threshold must be a positive integer value",
+    "Repository location must be a valid directory path if file is stored on disk"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DiskFileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field as provided by the browser"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type passed by the browser"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether or not this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "integer",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored, if stored on disk"
+        }
+      },
+      "required": [
+        "fieldName",
+        "isFormField",
+        "sizeThreshold"
+      ]
+    }
+  }
+}

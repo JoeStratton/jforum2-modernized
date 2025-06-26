@@ -1,0 +1,59 @@
+{
+  "featureName": "CheckUnreadPosts",
+  "description": "Checks if a forum has unread messages based on user tracking and last visit time.",
+  "inputValues": [
+    "forum-object-Forum",
+    "tracking-object-Map",
+    "lastVisit-number-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forum object containing forum information\n   - Collect the tracking map containing topic read timestamps\n   - Collect the lastVisit timestamp representing user's last visit time\n   - Determine if the user is logged in\n\n2. Data Validation:\n   - Verify forum object is not null\n     * IF forum is null THEN return without processing\n   - Check if forum contains last post information\n     * IF last post information is null THEN mark forum as having no unread posts and return\n   - Validate tracking map if provided\n     * IF tracking map is provided THEN verify it contains valid timestamp entries\n   - Ensure lastVisit timestamp is valid\n     * IF lastVisit is negative THEN set to default value of 0\n\n3. Business Rule Processing:\n   - Extract last post information from the forum\n     * Get the topic ID of the last post\n     * Get the timestamp of the last post\n   - Determine user's read status for the forum\n     * IF user is not logged in THEN mark forum as having no unread posts\n     * IF user is logged in THEN proceed with unread status check\n   - Check if the forum should be marked as containing unread posts\n     * IF tracking map contains the topic ID of the last post THEN\n       - Compare the last post timestamp with the read timestamp from tracking\n       - IF last post timestamp is greater than read timestamp THEN mark forum as unread\n       - ELSE mark forum as read\n     * ELSE\n       - Compare the last post timestamp with the user's last visit timestamp\n       - IF last post timestamp is greater than last visit timestamp THEN mark forum as unread\n       - ELSE mark forum as read\n\n4. Core Operation Execution:\n   - Update the forum's unread status flag based on the comparison results\n     * Set forum.unread to true if unread posts exist\n     * Set forum.unread to false if all posts have been read\n   - Store the updated forum status for display purposes\n     * Update the forum object with the new unread status\n\n5. Response Generation:\n   - Return the updated forum object with correct unread status\n   - Ensure the forum object contains all necessary information for display\n   - Provide visual indication of unread status for user interface rendering",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Last post information must be available to determine unread status",
+    "User tracking map must contain valid timestamp entries",
+    "Last visit timestamp must be a valid positive number",
+    "Topic ID must be a valid integer value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "lastPostInfo": {
+          "type": "object",
+          "properties": {
+            "topicId": {
+              "type": "number"
+            },
+            "postTimeMillis": {
+              "type": "number"
+            }
+          }
+        },
+        "unread": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Map": {
+      "type": "object",
+      "description": "A collection of topic IDs mapped to read timestamps"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "featureName": "ListForums",
+  "description": "Displays all forums organized by categories for administration.",
+  "inputValues": [
+    "lang-string-Language"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Optional language parameter ('lang') may be provided for guest users\n   - System will retrieve all necessary data automatically including:\n     - Categories and forums data\n     - System configuration values\n     - User session information\n\n2. Data Validation:\n   - Verify administrator access permissions\n   - IF user does not have administrator privileges THEN\n     - Display access denied message\n     - Redirect to appropriate error page\n   - END IF\n   - IF optional language parameter is provided THEN\n     - Verify language exists in the system\n     - IF language does not exist THEN\n       - Ignore the parameter and use default language\n     - END IF\n   - END IF\n\n3. Business Rule Processing:\n   - Verify system state for forum listing\n   - Check if categories exist in the system\n     - IF no categories exist THEN\n       - Prepare empty category list for display\n       - Add notification message about no categories\n     - ELSE\n       - Proceed with normal category and forum retrieval\n     - END IF\n   - Calculate system statistics\n     - Total messages in the system\n     - Total registered users\n     - Last registered user information\n     - Current date and time\n     - User's last visit timestamp\n\n4. Core Operation Execution:\n   - Retrieve all categories from the database\n     - Sort categories according to their defined order\n   - For EACH category:\n     - Retrieve all forums belonging to the category\n     - Sort forums according to their defined order within the category\n     - Collect forum metadata (name, description, moderation status)\n   - Prepare forum repository data structure\n     - Organize forums hierarchically under their respective categories\n     - Include forum counts and status information\n   - Process online user information\n     - Count total online users\n     - Count registered online users\n     - Count anonymous users\n     - Prepare list of online user sessions\n     - IF only guest users are online THEN\n       - Register a single guest user for display\n     - END IF\n   - Check for record online user count\n     - IF current online users count > most users ever online THEN\n       - Update most users ever online record with new count\n       - Update timestamp of the record\n     - END IF\n\n5. Response Generation:\n   - Prepare administrative view of forums\n     - Display categories as main grouping elements\n     - Under each category, list all associated forums\n     - For each forum display:\n       - Forum name\n       - Forum description\n       - Moderation status\n       - Order position controls (up/down arrows)\n       - Edit and delete options\n   - Include administrative controls:\n     - Option to create new forums\n     - Option to delete selected forums\n     - Option to reorder forums\n   - Display system statistics:\n     - Total messages\n     - Total registered users\n     - Last registered user\n     - Current date/time\n     - User's last visit time\n   - Display online users information:\n     - Total users online\n     - Number of registered users online\n     - Number of anonymous users\n     - List of online users\n     - Most users ever online record\n   - Display confirmation of successful operation if applicable",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to access forum listing",
+    "Categories must be displayed in their correct order",
+    "Forums must be displayed under their respective categories",
+    "Forums must be displayed in their correct order within each category",
+    "If language parameter is provided, it must exist in the system",
+    "Only authenticated users can see detailed online user information",
+    "System statistics must be accurate and up-to-date"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Language": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Language code identifier"
+        }
+      }
+    }
+  }
+}

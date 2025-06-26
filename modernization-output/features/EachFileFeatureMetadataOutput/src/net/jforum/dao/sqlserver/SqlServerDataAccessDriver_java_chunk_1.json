@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "CreatePostDataAccess",
+    "description": "Provides data access functionality for forum posts in SQL Server environment"
+  },
+  {
+    "featureName": "CreateTopicDataAccess",
+    "description": "Provides data access functionality for forum topics in SQL Server environment"
+  },
+  {
+    "featureName": "CreateUserDataAccess",
+    "description": "Provides data access functionality for forum users in SQL Server environment"
+  },
+  {
+    "featureName": "CreatePrivateMessageDataAccess",
+    "description": "Provides data access functionality for private messages in SQL Server environment"
+  },
+  {
+    "featureName": "CreateKarmaDataAccess",
+    "description": "Provides data access functionality for karma system in SQL Server environment"
+  }
+]

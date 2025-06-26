@@ -1,0 +1,38 @@
+{
+  "featureName": "CheckBannerDeletionEligibility",
+  "description": "Verifies if a specific banner can be deleted based on system rules and dependencies.",
+  "inputValues": [
+    "bannerId-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the bannerId (mandatory, numeric identifier)\n   - System retrieves the current user's authorization level\n\n2. Data Validation:\n   - Validate bannerId:\n     a. Check if bannerId is provided\n     b. Verify bannerId is a positive integer\n     c. If validation fails, generate appropriate error message\n   - Validate user permissions:\n     a. Check if current user has banner management privileges\n     b. If user lacks permissions, return access denied message\n\n3. Business Rule Processing:\n   - Check banner existence:\n     a. Verify the banner with the provided ID exists in the system\n     b. IF banner not found, THEN return error indicating banner does not exist\n   - Check banner dependencies:\n     a. Check if banner is currently active in any placement\n     b. Check if banner is referenced by any active campaign\n     c. Check if banner is part of any scheduled promotion\n     d. IF any dependency is found, record the specific dependency type\n\n4. Core Operation Execution:\n   - Determine deletion eligibility:\n     a. IF no dependencies were found, THEN mark banner as eligible for deletion\n     b. ELSE mark banner as ineligible for deletion and compile list of blocking dependencies\n   - Record verification attempt:\n     a. Log the verification attempt with timestamp, user, and result\n     b. Update banner metadata with last verification date\n\n5. Response Generation:\n   - Prepare eligibility response:\n     a. Include boolean result indicating if banner can be deleted\n     b. IF banner cannot be deleted, include list of blocking dependencies\n     c. Include banner information summary\n   - Return formatted response to caller",
+  "databaseEntities": [
+    "Banner",
+    "BannerPlacement",
+    "Campaign",
+    "Promotion"
+  ],
+  "validationRules": [
+    "Banner ID must be a positive integer",
+    "Banner must exist in the system",
+    "User must have banner management privileges",
+    "Banner must not be active in any placement",
+    "Banner must not be referenced by any active campaign",
+    "Banner must not be part of any scheduled promotion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "active": "boolean",
+      "placement": "number",
+      "lastVerified": "date"
+    },
+    "DeletionEligibilityResponse": {
+      "eligible": "boolean",
+      "banner": "object",
+      "blockingDependencies": "array"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "LoadJavaScriptFile",
+    "description": "Loads and parses JavaScript files with FreeMarker Template Language statements from the js directory"
+  }
+]

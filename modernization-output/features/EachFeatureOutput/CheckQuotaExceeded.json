@@ -1,0 +1,49 @@
+{
+  "featureName": "CheckQuotaExceeded",
+  "description": "Checks if a given file size exceeds the configured quota limit.",
+  "inputValues": [
+    "fileSize-number-File",
+    "quotaLimit-object-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect fileSize (number): Size of the file to be checked\n   - Collect quotaLimit (object): The quota limit configuration object containing:\n     * size (number): The numeric value of the size limit\n     * type (number): The unit type of the size limit (KB or MB)\n   - System will use constants KB=1 and MB=2 for type identification\n\n2. Data Validation:\n   - Validate fileSize:\n     * Ensure fileSize is a positive number\n     * IF fileSize is negative or zero THEN\n       > Return error message \"File size must be a positive number\"\n   - Validate quotaLimit object:\n     * Ensure quotaLimit object is not null\n     * IF quotaLimit is null THEN\n       > Return error message \"Quota limit configuration is missing\"\n     * Ensure quotaLimit.size is a positive number\n     * IF quotaLimit.size is negative or zero THEN\n       > Return error message \"Quota size must be a positive number\"\n     * Ensure quotaLimit.type is either KB (1) or MB (2)\n     * IF quotaLimit.type is not KB or MB THEN\n       > Return error message \"Invalid quota type specified\"\n\n3. Business Rule Processing:\n   - Determine the quota limit in bytes:\n     * IF quotaLimit.type equals KB THEN\n       > Set quotaLimitInBytes = quotaLimit.size * 1024\n     * ELSE IF quotaLimit.type equals MB THEN\n       > Set quotaLimitInBytes = quotaLimit.size * 1024 * 1024\n   - Check system constraints:\n     * Verify the system can handle the comparison operation\n     * IF system memory is insufficient THEN\n       > Return error message \"System cannot process this request at this time\"\n\n4. Core Operation Execution:\n   - Compare file size with quota limit:\n     * IF fileSize > quotaLimitInBytes THEN\n       > Set quotaExceeded = true\n     * ELSE\n       > Set quotaExceeded = false\n   - Calculate remaining quota:\n     * Set remainingQuota = quotaLimitInBytes - fileSize\n     * IF remainingQuota < 0 THEN\n       > Set remainingQuota = 0\n\n5. Response Generation:\n   - Prepare the quota check result:\n     * Include the quotaExceeded status (boolean)\n     * Include the original file size (number)\n     * Include the quota limit in bytes (number)\n     * Include the remaining quota in bytes (number)\n   - IF quotaExceeded is true THEN\n     * Include a message indicating the quota has been exceeded\n     * Include the amount by which the quota was exceeded\n   - ELSE\n     * Include a message indicating the file is within quota limits\n     * Include the percentage of quota used\n   - Return the complete quota check result",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File size must be a positive number",
+    "Quota limit configuration must not be null",
+    "Quota size must be a positive number",
+    "Quota type must be either KB (1) or MB (2)"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one default quota limit record exists in jforum_quota_limit table"
+  ],
+  "schema": {
+    "QuotaLimit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the quota limit"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the quota limit"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size value of the quota limit"
+        },
+        "type": {
+          "type": "number",
+          "description": "Unit type of the size (1 for KB, 2 for MB)"
+        }
+      },
+      "required": [
+        "size",
+        "type"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "MatchBanlistEntry",
+    "description": "Determines if a banlist entry matches another based on user ID, email, or IP address patterns"
+  },
+  {
+    "featureName": "CompareIpAddresses",
+    "description": "Compares IP addresses with support for wildcard matching patterns"
+  }
+]

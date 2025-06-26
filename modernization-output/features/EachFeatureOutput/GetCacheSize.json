@@ -1,0 +1,18 @@
+{
+  "featureName": "GetCacheSize",
+  "description": "Returns the total number of cached topics or posts within a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. topicId (number, optional): The identifier of the specific topic to check cache size for\n\n2. Data Validation\n   - Validate the topicId input:\n     a. IF topicId is provided:\n        i. Check that topicId is a positive integer\n        ii. IF topicId is not a positive integer THEN\n            - Generate an error message indicating invalid topic ID format\n            - Terminate the operation\n\n3. Business Rule Processing\n   - Check cache system availability:\n     a. Verify that the cache system is properly initialized\n     b. IF cache system is not available THEN\n        i. Generate an error message indicating cache system unavailability\n        ii. Terminate the operation\n\n4. Core Operation Execution\n   - Determine the type of cache size request:\n     a. IF topicId is provided THEN\n        i. Retrieve the collection of posts for the specified topic from cache\n        ii. IF collection exists THEN\n            - Count the number of posts in the collection\n            - Store this count as the result\n        iii. ELSE\n            - Set result to zero (indicating no cached posts for this topic)\n     b. ELSE (no topicId provided)\n        i. Retrieve the entire cache map of all topics\n        ii. IF map exists THEN\n            - Count the number of topics in the cache map\n            - Store this count as the result\n        iii. ELSE\n            - Set result to zero (indicating no cached topics)\n\n5. Response Generation\n   - Prepare the response with the cache size information:\n     a. IF topicId was provided THEN\n        i. Format response to indicate the number of cached posts for the specified topic\n     b. ELSE\n        i. Format response to indicate the total number of cached topics\n     c. Return the cache size result to the caller",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer if provided",
+    "Cache system must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

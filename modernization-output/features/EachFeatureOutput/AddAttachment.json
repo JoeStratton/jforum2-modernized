@@ -1,0 +1,122 @@
+{
+  "featureName": "AddAttachment",
+  "description": "Adds a new attachment to a post.",
+  "inputValues": [
+    "attachment-object-Attachment",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     1.1. attachment (Attachment object): Contains all attachment information\n     1.2. postId (number): The ID of the post to attach the file to\n   - System will generate:\n     1.3. attachmentId (number): Unique identifier for the attachment\n     1.4. uploadDate (date): Current timestamp when attachment is added\n\n2. Data Validation:\n   2.1. Validate Post Existence:\n      2.1.1. Check if postId exists in the system\n      2.1.2. IF post does not exist, THEN\n         2.1.2.1. Generate error message: \"Invalid post ID\"\n         2.1.2.2. Abort operation\n   2.2. Validate Attachment Object:\n      2.2.1. Check if attachment object contains required fields:\n         - fileName (string): Must not be empty\n         - fileContent (binary data): Must not be empty\n         - fileSize (number): Must be greater than 0\n         - fileComment (string): Optional\n         - fileExtension (string): Must not be empty\n      2.2.2. IF any required field is missing, THEN\n         2.2.2.1. Generate error message: \"Incomplete attachment information\"\n         2.2.2.2. Abort operation\n   2.3. Validate File Extension:\n      2.3.1. Check if the file extension is allowed in the system\n      2.3.2. IF extension is not allowed, THEN\n         2.3.2.1. Generate error message: \"File extension not allowed\"\n         2.3.2.2. Abort operation\n   2.4. Validate File Mimetype:\n      2.4.1. Check if the file mimetype is consistent with the extension\n      2.4.2. IF mimetype is inconsistent or invalid, THEN\n         2.4.2.1. Generate error message: \"Invalid file type\"\n         2.4.2.2. Abort operation\n\n3. Business Rule Processing:\n   3.1. Check User Permissions:\n      3.1.1. Verify current user has permission to add attachments to the post\n      3.1.2. IF user lacks permission, THEN\n         3.1.2.1. Generate error message: \"Insufficient permissions to add attachments\"\n         3.1.2.2. Abort operation\n   3.2. Check Quota Limits:\n      3.2.1. Retrieve quota limit for user's group\n      3.2.2. Calculate total size of user's existing attachments\n      3.2.3. IF (existing attachments size + new attachment size) > quota limit, THEN\n         3.2.3.1. Generate error message: \"Quota limit exceeded\"\n         3.2.3.2. Abort operation\n   3.3. Check File Security:\n      3.3.1. Scan file for potential security threats\n      3.3.2. IF security threat detected, THEN\n         3.3.3.1. Generate error message: \"Security check failed\"\n         3.3.3.2. Abort operation\n   3.4. Check Extension Group Download Mode:\n      3.4.1. Determine if the file extension group uses physical download mode\n      3.4.2. Set appropriate download handling based on extension group settings\n\n4. Core Operation Execution:\n   4.1. Prepare Attachment Record:\n      4.1.1. Generate unique identifier for attachment\n      4.1.2. Set upload timestamp to current time\n      4.1.3. Associate attachment with provided postId and current userId\n      4.1.4. Set initial download count to zero\n   4.2. Store Attachment:\n      4.2.1. Generate a unique physical filename for storage\n      4.2.2. Save attachment file to storage system\n      4.2.3. Create database record with attachment metadata including:\n         - Physical filename (system-generated)\n         - Real filename (original user filename)\n         - Comment\n         - Mimetype\n         - Filesize\n         - Upload timestamp\n         - Extension ID\n      4.2.4. Link attachment record to post record\n   4.3. Update Post Record:\n      4.3.1. Increment attachment count for the post\n      4.3.2. Update post record to indicate it has attachments\n      4.3.3. IF update fails, THEN\n         4.3.3.1. Delete saved attachment file\n         4.3.3.2. Remove attachment database record\n         4.3.3.3. Generate error message: \"Failed to update post record\"\n         4.3.3.4. Abort operation\n\n5. Response Generation:\n   5.1. Success Response:\n      5.1.1. Generate success message: \"Attachment added successfully\"\n      5.1.2. Include attachment details in response:\n         - attachmentId\n         - fileName\n         - fileSize\n         - uploadDate\n   5.2. Error Response:\n      5.2.1. Include specific error message from validation or processing steps\n      5.2.2. Include error code for system identification\n      5.2.3. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts",
+    "jforum_extension_groups",
+    "jforum_quota_limit",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post must exist in the system",
+    "File name must not be empty",
+    "File content must not be empty",
+    "File size must be greater than 0",
+    "File extension must be allowed in the system",
+    "File mimetype must be consistent with the extension",
+    "User must have permission to add attachments",
+    "Total attachment size must not exceed quota limit for user's group"
+  ],
+  "dbSeedingOperations": [
+    "Ensure extension groups are defined",
+    "Ensure quota limits are configured",
+    "Ensure user permissions for attachments are set",
+    "Ensure allowed file extensions are configured"
+  ],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the attachment"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post this attachment belongs to"
+        },
+        "privmsgsId": {
+          "type": "number",
+          "description": "ID of the private message this attachment belongs to (if applicable)"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who uploaded the attachment"
+        },
+        "info": {
+          "type": "object",
+          "description": "Detailed information about the attachment",
+          "properties": {
+            "physicalFilename": {
+              "type": "string",
+              "description": "System-generated name for storing the file"
+            },
+            "realFilename": {
+              "type": "string",
+              "description": "Original name of the uploaded file"
+            },
+            "comment": {
+              "type": "string",
+              "description": "Optional comment about the attachment"
+            },
+            "mimetype": {
+              "type": "string",
+              "description": "MIME type of the file"
+            },
+            "filesize": {
+              "type": "number",
+              "description": "Size of the file in bytes"
+            },
+            "uploadTime": {
+              "type": "date",
+              "description": "Date and time when the attachment was uploaded"
+            },
+            "downloadCount": {
+              "type": "number",
+              "description": "Number of times the attachment has been downloaded"
+            },
+            "extension": {
+              "type": "object",
+              "description": "Information about the file extension",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "description": "ID of the extension record"
+                },
+                "extension": {
+                  "type": "string",
+                  "description": "The file extension"
+                },
+                "allow": {
+                  "type": "boolean",
+                  "description": "Whether this extension is allowed"
+                },
+                "comment": {
+                  "type": "string",
+                  "description": "Description of the extension"
+                },
+                "extensionGroupId": {
+                  "type": "number",
+                  "description": "ID of the extension group this extension belongs to"
+                },
+                "uploadIcon": {
+                  "type": "string",
+                  "description": "Icon to display for this file type"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "info"
+      ]
+    }
+  }
+}

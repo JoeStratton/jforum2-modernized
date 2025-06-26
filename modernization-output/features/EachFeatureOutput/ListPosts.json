@@ -1,0 +1,71 @@
+{
+  "featureName": "ListPosts",
+  "description": "Retrieves forum posts from a specified date range for inclusion in summaries.",
+  "inputValues": [
+    "firstDate-date-Date",
+    "lastDate-date-Date"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - firstDate (mandatory): The start date of the period to retrieve posts from\n     - lastDate (mandatory): The end date of the period to retrieve posts from\n     - If not explicitly provided, system will calculate default values:\n       - firstDate: Current date minus configurable number of days (default: 7 days)\n       - lastDate: Current date\n\n2. Data Validation:\n   - Validate firstDate:\n     - Must be a valid date format\n     - Must not be null\n     - Must be earlier than or equal to lastDate\n     - Error message if invalid: \"First date must be a valid date and earlier than or equal to last date\"\n   - Validate lastDate:\n     - Must be a valid date format\n     - Must not be null\n     - Must be later than or equal to firstDate\n     - Error message if invalid: \"Last date must be a valid date and later than or equal to first date\"\n\n3. Business Rule Processing:\n   - Check system configuration for summary settings:\n     - Verify summary feature is enabled\n     - Retrieve configured number of days for default period if needed\n   - Verify database connection is available\n   - Check if there are any forum categories or sections excluded from summaries\n   - Apply any configured post filters (e.g., excluding posts from certain users or with specific flags)\n\n4. Core Operation Execution:\n   - Query the database for posts within the specified date range:\n     - Filter posts created between firstDate and lastDate (inclusive)\n     - Sort posts by date (newest first) or by configured preference\n     - Apply any additional filtering based on system configuration\n   - Process retrieved posts:\n     - Format post data for presentation\n     - Group posts by relevant categories (forums, topics, etc.)\n     - Apply any content transformations required for summary display\n   - Handle potential failure scenarios:\n     - If database query fails, log error and return empty result\n     - If post processing fails, attempt to return raw post data\n\n5. Response Generation:\n   - For successful execution:\n     - Return the list of posts matching the criteria\n     - Include metadata such as total count and date range\n     - Format according to required output structure\n   - For error scenarios:\n     - Return appropriate error message\n     - Include error code and description\n     - Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "First date must be a valid date format",
+    "Last date must be a valid date format",
+    "First date must be earlier than or equal to last date",
+    "Last date must be later than or equal to first date",
+    "Date range must not exceed system-configured maximum period"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the post"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the post was created"
+        },
+        "authorId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Name of the user who created the post"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum where the post was created"
+        },
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum where the post was created"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic the post belongs to"
+        },
+        "topicTitle": {
+          "type": "string",
+          "description": "Title of the topic the post belongs to"
+        }
+      }
+    }
+  }
+}

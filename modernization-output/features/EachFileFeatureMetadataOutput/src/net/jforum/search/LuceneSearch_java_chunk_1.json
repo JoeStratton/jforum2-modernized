@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SearchForumContent",
+    "description": "Searches forum content based on keywords, forum ID, and date range criteria"
+  },
+  {
+    "featureName": "FindDocumentByPostId",
+    "description": "Retrieves a specific document from the search index using a post ID"
+  },
+  {
+    "featureName": "HandleNewDocumentAddition",
+    "description": "Updates the search index when new documents are added to maintain search accuracy"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "featureName": "SkipPreamble",
+  "description": "Finds the beginning of the first encapsulation in a multipart stream.",
+  "inputValues": [
+    "stream-object-InputStream",
+    "boundary-object-ByteArray",
+    "boundaryLength-number-Integer"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the input stream containing multipart data\n   - Obtain the boundary marker that separates encapsulations\n   - Determine the boundary length for processing\n\n2. Data Validation:\n   - Verify the input stream is not null\n   - Validate that the boundary marker is properly formatted\n   - Ensure the boundary length is a positive value\n   - Check that the stream is accessible and readable\n   - IF any validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Prepare the boundary for preamble skipping:\n     - Copy the boundary bytes, excluding the first two bytes (CR and LF)\n     - Adjust the boundary length accordingly\n   - Verify the stream has sufficient data for processing\n   - Ensure the buffer has enough capacity to hold the boundary\n\n4. Core Operation Execution:\n   - Discard all data in the stream up to the first boundary delimiter\n     - Read data from the stream into the buffer\n     - Search for boundary marker in the buffer\n     - IF boundary not found in current buffer segment, THEN:\n       - Retain a portion of the buffer for potential partial matches\n       - Read more data into the buffer\n       - Continue searching\n     - ELSE:\n       - Position the stream at the found boundary\n   - Attempt to read the boundary:\n     - Read the boundary marker from the current position\n     - Verify it matches the expected boundary pattern\n     - IF successful, THEN an encapsulation was found\n\n5. Response Generation:\n   - Restore the original boundary configuration:\n     - Copy the boundary bytes back to their original positions\n     - Reset the boundary length to its original value\n     - Restore the CR and LF bytes at the beginning\n   - Return a boolean result:\n     - TRUE if an encapsulation was successfully found\n     - FALSE if no encapsulation was found or an error occurred\n   - Ensure all resources are properly managed regardless of outcome",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input stream must not be null",
+    "Boundary marker must be properly formatted",
+    "Boundary length must be a positive value",
+    "Stream must be accessible and readable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "function",
+          "description": "Reads bytes from the stream into a buffer"
+        }
+      }
+    },
+    "ByteArray": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      },
+      "description": "Array of byte values representing the boundary marker"
+    }
+  }
+}

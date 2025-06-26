@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "StartPOP3IntegrationJob",
+    "description": "Initializes and schedules a POP3 mail integration job using Quartz scheduler based on system configuration"
+  }
+]

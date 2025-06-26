@@ -1,0 +1,42 @@
+{
+  "featureName": "ReviewPrivateMessage",
+  "description": "Displays a private message in review mode for users to examine message content before taking further actions.",
+  "inputValues": [
+    "messageId-number-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect messageId (mandatory): The unique identifier of the private message to be reviewed\n   - System will determine current user from active session (system-generated)\n\n2. Data Validation:\n   - Validate User Authentication:\n     a. Check if user is currently logged in\n     b. IF user is not logged in, THEN\n        i. Redirect to login page\n        ii. END process\n   - Validate Message ID:\n     a. Verify messageId is a valid number\n     b. Verify messageId exists in the system\n     c. IF messageId is invalid or not found, THEN\n        i. Display error message indicating invalid message reference\n        ii. END process\n\n3. Business Rule Processing:\n   - Verify Access Permissions:\n     a. Retrieve message details using messageId\n     b. Determine if current user is either the sender or recipient of the message\n     c. IF user is neither sender nor recipient, THEN\n        i. Display access denied message\n        ii. END process\n   - Check Message Status:\n     a. IF message was previously unread AND current user is recipient, THEN\n        i. Update message status to read\n        ii. Decrement user's unread message count\n\n4. Core Operation Execution:\n   - Prepare Message Content:\n     a. Retrieve complete message content including:\n        i. Subject line\n        ii. Message body\n        iii. Sender information\n        iv. Timestamp\n        v. Any formatting or special content\n     b. Process sender's signature if applicable\n     c. Format message for display in review mode\n   - Update User Interface Context:\n     a. Add message object to display context\n     b. Set template to review mode template\n\n5. Response Generation:\n   - Display Review Interface:\n     a. Present message in review format showing all message details\n     b. Show sender information with appropriate formatting\n     c. Display message content with proper formatting\n     d. Provide action options appropriate for review mode\n     e. IF any errors occurred during processing, THEN\n        i. Display appropriate error message\n        ii. Provide navigation options to return to message list",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to review messages",
+    "User must be either the sender or recipient of the message",
+    "Message ID must exist in the system",
+    "Message ID must be a valid number"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object-User",
+      "toUser": "object-User",
+      "post": "object-Post",
+      "type": "number",
+      "sentDate": "date"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "signature": "string",
+      "privateMessages": "number"
+    },
+    "Post": {
+      "subject": "string",
+      "text": "string",
+      "date": "date"
+    }
+  }
+}

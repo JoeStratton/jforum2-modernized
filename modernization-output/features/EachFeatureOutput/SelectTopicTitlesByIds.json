@@ -1,0 +1,40 @@
+{
+  "featureName": "SelectTopicTitlesByIds",
+  "description": "Retrieves topic titles for a collection of topic IDs.",
+  "inputValues": [
+    "idList-object-Collection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect a list of topic IDs (idList) as a Collection object\n   - The idList is mandatory and must contain valid topic identifiers\n   - System will process this collection to retrieve corresponding topic titles\n\n2. Data Validation:\n   - Validate that the idList is not null\n     IF idList is null THEN\n       Return an empty list\n     END IF\n   - Validate that the idList is not empty\n     IF idList is empty THEN\n       Return an empty list\n     END IF\n   - Validate that all IDs in the collection are valid integers\n     FOR EACH id IN idList\n       IF id is not a valid integer THEN\n         Skip this ID in processing\n       END IF\n     END FOR\n\n3. Business Rule Processing:\n   - Check system access permissions\n     IF user does not have permission to view topics THEN\n       Return empty list or appropriate error\n     END IF\n   - Verify that the topics exist in the system\n     FOR EACH id IN idList\n       IF topic with id does not exist THEN\n         Skip this ID in processing\n       END IF\n     END FOR\n\n4. Core Operation Execution:\n   - Prepare to retrieve topic titles\n   - Convert the collection of IDs into a comma-separated string\n     Initialize a string buffer\n     FOR EACH id IN idList\n       Append id and comma to string buffer\n     END FOR\n     Remove the trailing comma if present\n   - Query the database for topic titles using the prepared string of IDs\n   - Create a result list to store topic information\n   - FOR EACH retrieved topic\n     Create a map containing topic ID and title\n     Add map to result list\n   END FOR\n\n5. Response Generation:\n   - IF operation successful THEN\n     Return list of maps containing topic IDs and titles\n   - ELSE\n     Return appropriate error message or empty list\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "The input collection must not be null",
+    "The input collection must contain at least one topic ID",
+    "All IDs must be valid integers",
+    "User must have permission to view the requested topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Collection": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Topic ID"
+      }
+    },
+    "ResultItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Topic ID"
+        },
+        "title": {
+          "type": "string",
+          "description": "Topic title"
+        }
+      }
+    }
+  }
+}

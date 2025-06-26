@@ -1,0 +1,89 @@
+{
+  "featureName": "CreatePrivateMessageDataAccess",
+  "description": "Provides data access functionality for private messages in the system.",
+  "inputValues": [
+    "messageContent-string-PrivateMessage",
+    "sender-object-User",
+    "recipient-object-User",
+    "subject-string-PrivateMessage",
+    "sendDate-date-PrivateMessage",
+    "messageType-number-PrivateMessage",
+    "attachments-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect required input fields:\n     1.1. messageContent (string, mandatory): The content of the private message\n     1.2. sender (object, mandatory): The user sending the message\n     1.3. recipient (object, mandatory): The user receiving the message\n     1.4. subject (string, mandatory): The subject line of the message\n     1.5. sendDate (date, mandatory): The date and time when the message is sent\n     1.6. messageType (number, mandatory): The type of private message\n     1.7. attachments (object, optional): Any files attached to the message\n\n2. Data Validation:\n   - Validate each input field:\n     2.1. messageContent validation:\n         a. Check if messageContent is not empty\n         b. Verify messageContent length is within allowed limits\n         c. IF validation fails, THEN return appropriate error message\n     2.2. sender validation:\n         a. Verify sender exists in the system\n         b. Check if sender has permission to send messages\n         c. IF validation fails, THEN return appropriate error message\n     2.3. recipient validation:\n         a. Verify recipient exists in the system\n         b. Check if recipient can receive messages\n         c. Verify recipient is not blocking messages from sender\n         d. IF validation fails, THEN return appropriate error message\n     2.4. subject validation:\n         a. Check if subject is not empty\n         b. Verify subject length is within allowed limits\n         c. IF validation fails, THEN return appropriate error message\n     2.5. sendDate validation:\n         a. Verify sendDate is a valid date format\n         b. Check if sendDate is not in the future\n         c. IF validation fails, THEN return appropriate error message\n     2.6. messageType validation:\n         a. Verify messageType is a valid type code\n         b. IF validation fails, THEN return appropriate error message\n     2.7. attachments validation (if provided):\n         a. Check if attachment size is within allowed limits\n         b. Verify attachment format is supported\n         c. IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Verify system state and constraints:\n     3.1. Check if the private messaging system is enabled\n     3.2. Verify sender has not exceeded their message quota\n     3.3. Check if recipient's inbox has available space\n     3.4. Verify any content filtering rules:\n         a. Check message content against prohibited content list\n         b. Scan attachments for potential security issues\n     3.5. IF any business rule fails, THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Process the private message data:\n     4.1. Create new private message record:\n         a. Generate unique identifier for the message\n         b. Store message metadata (sender, recipient, subject, date, type)\n         c. Store message content in appropriate storage\n     4.2. Process attachments if present:\n         a. Store attachment data\n         b. Link attachments to the message\n     4.3. Update related records:\n         a. Update sender's sent messages count\n         b. Update recipient's unread messages count\n     4.4. IF any operation fails:\n         a. Rollback any partial data changes\n         b. Log the failure details\n         c. Return appropriate error message\n\n5. Response Generation:\n   - Prepare the operation result:\n     5.1. For successful operation:\n         a. Return success status\n         b. Include the created message identifier\n         c. Provide confirmation details\n     5.2. For failed operation:\n         a. Return failure status\n         b. Include specific error code\n         c. Provide detailed error message\n         d. Include suggestions for resolution if applicable",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Message content must not be empty",
+    "Subject must not be empty",
+    "Sender must be a valid user in the system",
+    "Recipient must be a valid user in the system",
+    "Message type must be a valid type code",
+    "Send date must be a valid date not in the future",
+    "Attachment size must be within allowed limits",
+    "Attachment format must be supported by the system",
+    "Sender must not have exceeded their message quota",
+    "Recipient's inbox must have available space"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "messageQuota": {
+          "type": "number",
+          "description": "Maximum number of messages allowed"
+        }
+      },
+      "required": [
+        "id",
+        "username"
+      ]
+    },
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the attachment"
+        },
+        "filename": {
+          "type": "string",
+          "description": "Name of the attached file"
+        },
+        "filesize": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the attachment"
+        },
+        "data": {
+          "type": "string",
+          "description": "Binary content of the attachment"
+        }
+      },
+      "required": [
+        "filename",
+        "data"
+      ]
+    }
+  }
+}

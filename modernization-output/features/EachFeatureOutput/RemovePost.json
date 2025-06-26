@@ -1,0 +1,23 @@
+{
+  "featureName": "RemovePost",
+  "description": "Removes a specific post from a topic in the cache.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number): The identifier of the topic containing the post\n   - Collect postId (mandatory, number): The identifier of the post to be removed\n   - System will use these identifiers to locate and remove the specific post\n\n2. Data Validation:\n   - Validate topicId:\n     * Ensure topicId is provided\n     * Verify topicId is a positive integer\n     * Confirm topicId exists in the system\n     * If validation fails, generate appropriate error message\n   - Validate postId:\n     * Ensure postId is provided\n     * Verify postId is a positive integer\n     * Confirm postId exists in the system\n     * If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if the topic exists in the cache:\n     * IF topic is not found in cache, no action is needed\n     * IF topic is found, continue with removal process\n   - Verify user permissions:\n     * Ensure the current user has permission to remove posts from this topic\n     * IF user lacks permission, generate access denied error\n   - Check system state:\n     * Ensure the system is not in maintenance mode\n     * Verify the cache system is operational\n\n4. Core Operation Execution:\n   - Acquire synchronization lock to prevent concurrent modifications\n   - Convert topicId to string format for cache lookup\n   - Retrieve the list of posts for the specified topic from cache\n   - IF post list exists in cache:\n     * Create a temporary post object with the specified postId\n     * Remove the matching post from the list\n     * Update the cache with the modified post list\n     * Release synchronization lock\n   - IF post list does not exist in cache:\n     * No action needed as the post is not cached\n     * Release synchronization lock\n\n5. Response Generation:\n   - For successful removal:\n     * Generate success response indicating post was removed from cache\n     * Include topicId and postId in the response for reference\n   - For unsuccessful removal:\n     * Generate appropriate error response\n     * Include reason for failure (post not found, topic not cached, etc.)\n     * Provide guidance for next steps if applicable",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Topic must exist in the system",
+    "Post must exist within the specified topic",
+    "User must have permission to remove posts from the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

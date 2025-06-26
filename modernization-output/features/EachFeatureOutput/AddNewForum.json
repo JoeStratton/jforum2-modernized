@@ -1,0 +1,40 @@
+{
+  "featureName": "AddNewForum",
+  "description": "Creates a new forum with specified details and assigns it an order position.",
+  "inputValues": [
+    "name-string-Forum",
+    "description-string-Forum",
+    "categoryId-number-Category",
+    "isModerated-boolean-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. name (string): The name of the forum to be created\n     b. description (string): A detailed description of the forum's purpose\n     c. categoryId (number): The ID of the category to which this forum belongs\n     d. isModerated (boolean): Whether the forum requires moderation\n\n2. Data Validation:\n   - Validate forum name:\n     a. Check if name is not empty\n     b. Check if name length is within acceptable limits\n     c. IF validation fails, THEN return appropriate error message\n   - Validate forum description:\n     a. Check if description is not empty\n     b. Check if description length is within acceptable limits\n     c. IF validation fails, THEN return appropriate error message\n   - Validate category ID:\n     a. Check if categoryId is a positive number\n     b. Check if the specified category exists in the system\n     c. IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Verify user permissions:\n     a. Check if the current user has administrator privileges\n     b. IF user lacks required permissions, THEN return access denied error\n   - Verify category status:\n     a. Check if the selected category is active and available\n     b. IF category is not available, THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Determine forum order position:\n     a. Retrieve the maximum order value from existing forums\n     b. Set the new forum's order to (maximum order + 1)\n   - Create forum record:\n     a. Create a new forum object with the provided information\n     b. Set initial values for forum statistics (topics count = 0, posts count = 0)\n     c. Set last post ID to 0 (no posts yet)\n     d. Save the forum record to the database\n     e. Retrieve and store the generated forum ID\n   - Set up forum permissions:\n     a. Apply default permission settings for the new forum\n     b. IF forum is moderated, THEN set up moderation flags\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include the newly created forum ID\n     b. Include confirmation message about successful forum creation\n     c. Include the assigned order position\n   - IF any errors occurred during the process:\n     a. Generate appropriate error message\n     b. Include information about which step failed\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum name must not be empty",
+    "Forum description must not be empty",
+    "Category ID must reference an existing category",
+    "User must have administrator privileges to create a forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "order": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostId": "number",
+      "isModerated": "boolean"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number"
+    }
+  }
+}

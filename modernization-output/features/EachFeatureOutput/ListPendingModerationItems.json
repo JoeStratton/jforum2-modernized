@@ -1,0 +1,30 @@
+{
+  "featureName": "ListPendingModerationItems",
+  "description": "Displays a list of categories with pending moderation items.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect user identification information\n     1.1. Retrieve userId from the current session\n     1.2. No additional input parameters are required from the user\n\n2. Data Validation\n   - Validate user permissions\n     2.1. Verify the user has administrator or moderator privileges\n     2.2. IF user does not have required permissions THEN\n          2.2.1. Generate access denied error message\n          2.2.2. Redirect user to appropriate error page\n          2.2.3. Log unauthorized access attempt\n     2.3. IF user has required permissions THEN\n          2.3.1. Proceed to next step\n\n3. Business Rule Processing\n   - Prepare data for display\n     3.1. Check system configuration for moderation settings\n     3.2. Verify moderation feature is enabled\n     3.3. IF moderation is disabled THEN\n          3.3.1. Display notification that moderation is not active\n          3.3.2. End process\n     3.4. IF moderation is enabled THEN\n          3.4.1. Proceed to retrieve moderation data\n\n4. Core Operation Execution\n   - Retrieve pending moderation items\n     4.1. Query the database for categories with pending moderation items\n     4.2. For each category with pending items:\n          4.2.1. Retrieve forum information within the category\n          4.2.2. Count number of pending topics per forum\n          4.2.3. Collect metadata about pending posts (creation date, author)\n     4.3. Organize the data hierarchically by category and forum\n     4.4. Sort categories and forums according to system configuration\n     4.5. Prepare summary statistics (total pending items, oldest pending item)\n\n5. Response Generation\n   - Display moderation list interface\n     5.1. Generate category listing with pending moderation counts\n     5.2. For each category:\n          5.2.1. Display category name\n          5.2.2. Show number of pending items\n          5.2.3. Provide link to view detailed forum listing\n     5.3. Include action buttons for bulk operations if applicable\n     5.4. Display timestamp of when the list was generated\n     5.5. Provide refresh option to update the list",
+  "databaseEntities": [
+    "User",
+    "Category",
+    "Forum",
+    "Topic",
+    "Post"
+  ],
+  "validationRules": [
+    "User must have administrator or moderator privileges",
+    "Moderation feature must be enabled in system configuration",
+    "Only posts marked for moderation should be included in the list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationInfo": {
+      "categoryId": "number",
+      "categoryName": "string",
+      "forumId": "number",
+      "forumName": "string",
+      "pendingCount": "number"
+    }
+  }
+}

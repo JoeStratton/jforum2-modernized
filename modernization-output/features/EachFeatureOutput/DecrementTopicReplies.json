@@ -1,0 +1,20 @@
+{
+  "featureName": "DecrementTopicReplies",
+  "description": "Decrements the reply count for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topicId (mandatory) from the request\n   - System will use this identifier to locate the specific topic\n\n2. Data Validation:\n   - Validate topicId:\n      a. Check if topicId is provided\n      b. Verify topicId is a positive integer\n      c. Return appropriate error if validation fails\n   - Verify topic existence:\n      a. Check if a topic with the provided topicId exists in the system\n      b. If topic does not exist, return appropriate error message\n\n3. Business Rule Processing:\n   - Check current reply count:\n      a. Retrieve the current reply count for the topic\n      b. Verify the reply count is greater than zero\n      c. If reply count is already zero, return appropriate message indicating no action needed\n   - Check user permissions:\n      a. Verify the current user has permission to modify topic statistics\n      b. If permission is denied, return appropriate error message\n\n4. Core Operation Execution:\n   - Update topic statistics:\n      a. Decrement the total reply count for the topic by one\n      b. Update the last modified timestamp for the topic\n      c. If the topic has no more replies, update the topic status accordingly\n   - Update related forum statistics if necessary:\n      a. Check if forum statistics need updating\n      b. Update forum post count if required\n   - Handle transaction integrity:\n      a. Ensure all updates are performed within a single transaction\n      b. Roll back changes if any part of the operation fails\n\n5. Response Generation:\n   - Success response:\n      a. Return confirmation message that reply count was decremented\n      b. Include the updated reply count in the response\n      c. Include the topic information in the response\n   - Error response:\n      a. Return appropriate error message if operation failed\n      b. Include error details and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic must have at least one reply before decrementing",
+    "User must have permission to modify topic statistics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

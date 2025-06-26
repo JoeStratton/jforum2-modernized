@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "SelectAllByTopicByLimit",
+    "description": "Retrieves a paginated list of posts for a specific topic with caching support"
+  },
+  {
+    "featureName": "RemovePost",
+    "description": "Removes a specific post from a topic in the cache"
+  },
+  {
+    "featureName": "UpdatePost",
+    "description": "Updates a post in the cache for a specific topic"
+  },
+  {
+    "featureName": "AppendPost",
+    "description": "Adds a new post to a topic in the cache if it doesn't already exist"
+  },
+  {
+    "featureName": "ClearTopicCache",
+    "description": "Clears the cache for a specific topic"
+  },
+  {
+    "featureName": "GetCachedTopics",
+    "description": "Retrieves a collection of all cached topics"
+  },
+  {
+    "featureName": "GetCacheSize",
+    "description": "Returns the total number of cached topics or posts within a specific topic"
+  }
+]

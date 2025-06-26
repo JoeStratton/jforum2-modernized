@@ -1,0 +1,46 @@
+{
+  "featureName": "ProcessAttachmentUploads",
+  "description": "Validates and processes file attachments for forum posts with security and quota checks.",
+  "inputValues": [
+    "files-object-FileAttachment",
+    "postId-number-Post",
+    "forumId-number-Forum",
+    "userId-number-User",
+    "comments-object-AttachmentComment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect file attachments from user submission\n   - Collect attachment comments for each file\n   - Retrieve post ID for attachment association\n   - Retrieve forum ID for permission checking\n   - Retrieve user ID from current session\n   - System generates current timestamp\n\n2. Data Validation:\n   - Validate permission access:\n     * Check if attachments are enabled for the specified forum\n     * Verify user has permission to upload attachments\n     * IF permissions are not valid, THEN abort processing\n   - Validate attachment count:\n     * Verify at least one file is being uploaded\n     * Check if total files exceed maximum allowed per post\n     * IF files exceed limit, THEN limit to maximum allowed\n   - Validate each file:\n     * Check for null characters in filenames for security\n     * Verify file extension is allowed based on system configuration\n     * Ensure file comment length does not exceed 254 characters\n     * Calculate total size of all attachments\n   - Validate quota limits:\n     * Retrieve quota limit for the user based on their group membership\n     * Check if total attachment size exceeds user's quota limit\n     * IF quota exceeded, THEN reject upload with appropriate message\n\n3. Business Rule Processing:\n   - Process file security:\n     * Extract file extension from each attachment\n     * Check extension against allowed/denied extension list\n     * Determine if extension is explicitly allowed, denied, or follows default rule\n     * IF extension is denied, THEN reject with appropriate message\n   - Process file metadata:\n     * Extract filename without path information\n     * Generate unique storage filename based on timestamp and user ID\n     * Create directory structure based on current date (year/month/day)\n     * Determine if thumbnail generation is required for image files\n\n4. Core Operation Execution:\n   - For each valid attachment:\n     * Create attachment record with user ID and post ID\n     * Store file metadata (size, comment, mimetype, filename)\n     * Save physical file to storage location\n     * IF file is an image type AND thumbnail generation is enabled, THEN:\n       - Generate thumbnail with configured dimensions\n       - Save thumbnail alongside original image\n   - Update post record to indicate it has attachments\n   - Store all attachment records in the database\n\n5. Response Generation:\n   - IF any validation errors occurred:\n     * Return appropriate error message indicating the specific validation failure\n     * Include details about file size limits, extension restrictions, or quota issues\n   - IF processing completed successfully:\n     * Return success indicator\n     * Include list of successfully processed attachments\n     * Provide attachment IDs for future reference",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "User must have permission to upload attachments in the specified forum",
+    "Number of attachments must not exceed maximum allowed per post",
+    "File extensions must be in the allowed list and not in the denied list",
+    "Filenames must not contain null characters",
+    "Attachment comments must not exceed 254 characters",
+    "Total attachment size must not exceed user's quota limit",
+    "Attachment storage directories must exist or be created"
+  ],
+  "dbSeedingOperations": [
+    "Ensure extension groups are defined with proper security settings",
+    "Configure quota limits for user groups",
+    "Set up allowed and denied file extensions"
+  ],
+  "schema": {
+    "FileAttachment": {
+      "name": "string",
+      "size": "number",
+      "contentType": "string",
+      "content": "object"
+    },
+    "AttachmentComment": {
+      "fileIndex": "number",
+      "text": "string"
+    }
+  }
+}

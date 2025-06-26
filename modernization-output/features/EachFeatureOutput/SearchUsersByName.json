@@ -1,0 +1,25 @@
+{
+  "featureName": "SearchUsersByName",
+  "description": "Finds users by matching part or all of their username.",
+  "inputValues": [
+    "searchTerm-string-User",
+    "exactMatch-boolean-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - searchTerm (string, mandatory): The text to search for in usernames\n     - exactMatch (boolean, mandatory): Whether to search for exact username match or partial match\n     - Default value for exactMatch is false if not specified\n\n2. Data Validation\n   - Validate searchTerm:\n     - IF searchTerm is empty or null THEN\n       - Return validation error: \"Search term cannot be empty\"\n     - IF searchTerm contains special characters THEN\n       - Return validation error: \"Search term contains invalid characters\"\n     - IF searchTerm length is less than minimum required characters (2) THEN\n       - Return validation error: \"Search term must be at least 2 characters long\"\n\n3. Business Rule Processing\n   - Check system state:\n     - IF user database is not accessible THEN\n       - Return system error: \"User database is currently unavailable\"\n   - Apply search restrictions:\n     - IF current user does not have permission to search users THEN\n       - Return permission error: \"You do not have permission to search users\"\n\n4. Core Operation Execution\n   - Prepare search parameters:\n     - Format searchTerm to handle case sensitivity\n     - Set search mode based on exactMatch parameter\n   - Execute user search:\n     - IF exactMatch is TRUE THEN\n       - Search for users where username exactly matches the searchTerm\n     - ELSE\n       - Search for users where username contains the searchTerm as a substring\n     - Limit results to maximum allowed number of results (e.g., 50)\n   - Process search results:\n     - For each matching user:\n       - Extract user ID and username\n       - Add to results collection\n     - IF no users found THEN\n       - Set empty result list\n\n5. Response Generation\n   - Format success response:\n     - Include total count of matching users\n     - Include list of matching users with their IDs and usernames\n     - Sort results alphabetically by username\n   - Handle potential errors:\n     - IF search execution failed THEN\n       - Return system error: \"Failed to complete user search\"\n     - IF results exceed maximum allowed THEN\n       - Include notification that results were truncated",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Search term cannot be empty",
+    "Search term must be at least 2 characters long",
+    "Search term cannot contain special characters",
+    "User must have permission to search users"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

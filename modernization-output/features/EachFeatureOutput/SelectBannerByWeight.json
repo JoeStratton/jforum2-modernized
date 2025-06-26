@@ -1,0 +1,30 @@
+{
+  "featureName": "SelectBannerByWeight",
+  "description": "Retrieves the appropriate banner based on weighted random selection and updates view count.",
+  "inputValues": [
+    "placement-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect placement number (mandatory) that identifies the position where the banner will be displayed\n   - System will use this placement to retrieve relevant banners\n\n2. Data Validation:\n   - Validate that placement is a positive integer\n     * IF placement is not a positive integer, THEN return error message indicating invalid placement value\n   - Check if active banners exist for the specified placement\n     * IF no active banners exist for the placement, THEN return empty result\n\n3. Business Rule Processing:\n   - Verify banner display eligibility\n     * Check if there are any active banners for the specified placement\n     * IF no active banners exist, THEN end process and return null\n   - Prepare for weighted random selection\n     * Ensure all banners have assigned weights\n     * Weights should ideally sum to 99 for the placement group\n\n4. Core Operation Execution:\n   - Generate a random number between 0 and 98 (inclusive)\n   - Perform weighted selection algorithm:\n     * Initialize weightFrom = 0 and weightTo = 0\n     * FOR each banner in the active banners list:\n       - Add current banner's weight to weightTo\n       - IF random number is between weightFrom and weightTo-1 (inclusive), THEN\n         * Select this banner\n         * Exit the loop\n       - Set weightFrom = weightTo\n     * IF no banner was selected (random number exceeded total weight), THEN\n       - Select the banner with the highest weight\n   - Update the selected banner's view count\n     * Increment the view count by 1\n     * Save the updated banner information\n\n5. Response Generation:\n   - Return the selected banner object with all its properties\n   - IF no banner could be selected, THEN return null\n   - Include updated view count in the returned banner object",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Placement must be a positive integer",
+    "At least one active banner must exist for the specified placement",
+    "Each banner must have a defined weight value",
+    "Banner weights should ideally sum to 99 for each placement group"
+  ],
+  "dbSeedingOperations": [
+    "Seed sample banners with different weights for testing"
+  ],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "placement": "number",
+      "weight": "number",
+      "views": "number",
+      "active": "boolean",
+      "content": "string"
+    }
+  }
+}

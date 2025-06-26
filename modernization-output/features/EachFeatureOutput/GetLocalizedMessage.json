@@ -1,0 +1,39 @@
+{
+  "featureName": "GetLocalizedMessage",
+  "description": "Retrieves internationalized messages with optional parameter formatting.",
+  "inputValues": [
+    "messageName-string-Message",
+    "localeName-string-Locale",
+    "parameters-object-Parameters"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. messageName (mandatory): The key identifier for the message to retrieve\n     b. localeName (optional): The language/locale identifier\n     c. parameters (optional): Values to be inserted into message placeholders\n   - If localeName is not provided, determine the current user's language preference\n   - If parameters are not provided, use the message as-is without formatting\n\n2. Data Validation:\n   - Validate messageName:\n     a. Check if messageName is not null or empty\n     b. Verify messageName exists in the message repository\n     c. If invalid, prepare appropriate error message\n   - Validate localeName (if provided):\n     a. Check if localeName is registered in the system\n     b. Verify if localization files exist for the specified locale\n     c. If invalid, fall back to the default language\n   - Validate parameters (if provided):\n     a. Ensure parameters match the expected format for the message template\n     b. Verify parameter count matches placeholder count in the message\n     c. If parameters are invalid, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Determine the appropriate locale to use:\n     a. IF localeName is provided and valid, use it\n     b. ELSE IF current user has a language preference set, use that\n     c. ELSE use the system default language\n   - Check if the determined locale is already loaded:\n     a. IF not loaded, load the locale resource files\n     b. IF loading fails, fall back to default locale\n   - Handle locale inheritance:\n     a. IF the locale has a parent locale defined, ensure parent messages are available\n     b. Prepare for message fallback to parent locale if needed\n\n4. Core Operation Execution:\n   - Retrieve the raw message template:\n     a. Look up the message by messageName in the appropriate locale resource bundle\n     b. IF message not found in specified locale, check parent locale\n     c. IF still not found, check system default locale\n     d. IF still not found, return an error indicator or the message key itself\n   - Process the message template:\n     a. IF parameters are provided:\n        i. Format the message by replacing placeholders with parameter values\n        ii. Handle any special formatting requirements (dates, numbers, etc.)\n     b. ELSE return the raw message template\n   - Handle any encoding or character set requirements\n\n5. Response Generation:\n   - Prepare the final localized message:\n     a. Ensure proper encoding of special characters\n     b. Apply any text direction requirements (left-to-right or right-to-left)\n   - Return the formatted message to the caller\n   - IF any errors occurred during processing:\n     a. Log appropriate error information\n     b. Return a fallback message or error indicator\n     c. Include information about the failure reason",
+  "databaseEntities": [],
+  "validationRules": [
+    "Message name must not be empty",
+    "Locale name must be registered in the system if provided",
+    "Parameters must match the expected format for the message template",
+    "Message must exist in at least the default locale"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The value to insert into the message template"
+          },
+          "type": {
+            "type": "string",
+            "description": "Optional type information for formatting (date, number, etc.)"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+    }
+  }
+}

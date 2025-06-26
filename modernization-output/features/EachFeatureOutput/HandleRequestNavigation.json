@@ -1,0 +1,39 @@
+{
+  "featureName": "HandleRequestNavigation",
+  "description": "Manages action and module parameters for determining navigation flow in the application.",
+  "inputValues": [
+    "parameter-string-RequestParameter",
+    "value-object-ParameterValue",
+    "action-string-ActionName",
+    "module-string-ModuleName",
+    "newAction-string-ActionName"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect request parameters:\n     a. parameter name (string, mandatory)\n     b. parameter value (object, mandatory)\n     c. action name (string, optional)\n     d. module name (string, optional)\n     e. new action name (string, optional for action change)\n\n2. Data Validation:\n   - Validate parameter name:\n     a. IF parameter name is null or empty THEN\n        i. Return error message indicating parameter name is required\n     b. ELSE continue processing\n   - Validate parameter value:\n     a. Value can be null for retrieval operations\n     b. For parameter addition operations, value must not be null\n     c. IF operation requires value and value is null THEN\n        i. Return error message indicating parameter value is required\n     d. ELSE continue processing\n\n3. Business Rule Processing:\n   - Determine operation type:\n     a. IF operation is parameter retrieval THEN\n        i. Check if parameter exists in query collection\n        ii. IF parameter does not exist THEN\n            1. Return null or appropriate default value\n        iii. ELSE continue to retrieve value\n     b. IF operation is parameter addition THEN\n        i. Check if parameter already exists\n        ii. IF parameter exists THEN\n            1. Check if current value is a list\n            2. IF not a list THEN convert to list and add new value\n            3. ELSE add new value to existing list\n        iii. ELSE add parameter with value directly\n     c. IF operation is parameter replacement THEN\n        i. Replace existing parameter value regardless of previous state\n     d. IF operation is action retrieval THEN\n        i. Return the value associated with \"action\" parameter\n     e. IF operation is action change THEN\n        i. Remove existing action parameter if present\n        ii. Add new action parameter with provided value\n     f. IF operation is module retrieval THEN\n        i. Return the value associated with \"module\" parameter\n\n4. Core Operation Execution:\n   - Execute the determined operation:\n     a. For parameter retrieval:\n        i. Get value from query collection using parameter name\n        ii. Convert value to appropriate type if needed (string, int, object)\n        iii. Return the retrieved value\n     b. For parameter addition:\n        i. IF parameter doesn't exist THEN\n           1. Add parameter with value to query collection\n        ii. ELSE\n           1. Get current value\n           2. IF current value is not a list THEN\n              a. Create new list\n              b. Add current value to list\n              c. Add new value to list\n              d. Update parameter with list\n           3. ELSE\n              a. Add new value to existing list\n              b. Update parameter with modified list\n     c. For parameter replacement:\n        i. Put parameter with new value in query collection\n     d. For action retrieval:\n        i. Return value of \"action\" parameter\n     e. For action change:\n        i. Remove existing \"action\" parameter if present\n        ii. Add \"action\" parameter with new value\n     f. For module retrieval:\n        i. Return value of \"module\" parameter\n\n5. Response Generation:\n   - Generate appropriate response based on operation:\n     a. For retrieval operations:\n        i. Return requested parameter value\n        ii. Return null or default if parameter not found\n     b. For modification operations:\n        i. Return success indicator\n        ii. Return updated parameter collection if needed\n     c. For action/module operations:\n        i. Return action or module value\n        ii. Return success indicator for action change",
+  "databaseEntities": [],
+  "validationRules": [
+    "Parameter name must not be null or empty",
+    "Parameter value must not be null for addition operations",
+    "Action parameter must be a valid string",
+    "Module parameter must be a valid string",
+    "New action name must not be null or empty when changing actions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestParameter": {
+      "type": "string",
+      "description": "Name of the parameter to retrieve or modify"
+    },
+    "ParameterValue": {
+      "type": "object",
+      "description": "Value associated with a parameter, can be string, number, or complex object"
+    },
+    "ActionName": {
+      "type": "string",
+      "description": "Name of an action that determines application flow"
+    },
+    "ModuleName": {
+      "type": "string",
+      "description": "Name of a module that groups related functionality"
+    }
+  }
+}

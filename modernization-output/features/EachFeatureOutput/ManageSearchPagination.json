@@ -1,0 +1,87 @@
+{
+  "featureName": "ManageSearchPagination",
+  "description": "Manages pagination of search results with configurable starting position and count.",
+  "inputValues": [
+    "initialRecord-number-SearchArgs",
+    "fetchCount-number-SearchArgs",
+    "keywords-string-SearchArgs",
+    "matchAllKeywords-boolean-SearchArgs",
+    "author-number-SearchArgs",
+    "forumId-number-SearchArgs",
+    "orderBy-string-SearchArgs",
+    "orderDir-string-SearchArgs",
+    "fromDate-date-SearchArgs",
+    "toDate-date-SearchArgs",
+    "matchType-string-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search parameters:\n     a. initialRecord (number): Starting position for pagination (mandatory)\n     b. fetchCount (number): Number of results per page (system-generated from configuration)\n     c. keywords (string): Search terms entered by user (optional)\n     d. matchAllKeywords (boolean): Whether to match all keywords or any keyword (optional, default: false)\n     e. author (number): ID of the post author to filter by (optional)\n     f. forumId (number): ID of the forum to search within (optional)\n     g. orderBy (string): Field to sort results by (optional)\n     h. orderDir (string): Direction of sorting (optional, default: \"DESC\")\n     i. fromDate (date): Start date for filtering results (optional)\n     j. toDate (date): End date for filtering results (optional)\n     k. matchType (string): Type of matching to perform (optional)\n\n2. Data Validation:\n   - Validate initialRecord:\n     a. Check if initialRecord is a non-negative integer\n     b. IF initialRecord is negative, set to 0\n     c. Error message: \"Starting position must be a non-negative number\"\n   - Validate fetchCount:\n     a. Ensure fetchCount is a positive integer\n     b. IF fetchCount is not provided or invalid, retrieve from system configuration\n     c. Error message: \"Results per page must be a positive number\"\n   - Validate keywords:\n     a. Check if keywords string is properly formatted\n     b. Trim whitespace from keywords\n     c. Split keywords into array for processing\n     d. Error message: \"Invalid keyword format\"\n   - Validate orderDir:\n     a. Check if orderDir is either \"ASC\" or \"DESC\"\n     b. IF invalid, default to \"DESC\"\n     c. Error message: \"Sort direction must be either ASC or DESC\"\n   - Validate date range:\n     a. IF both fromDate and toDate are provided, ensure fromDate is before toDate\n     b. Error message: \"Start date must be before end date\"\n\n3. Business Rule Processing:\n   - Process pagination parameters:\n     a. Calculate end record position (initialRecord + fetchCount)\n     b. Ensure pagination boundaries are within available results\n     c. IF end record exceeds total results, adjust accordingly\n   - Process search constraints:\n     a. IF forumId is provided, verify forum exists and user has access permissions\n     b. IF author is provided, verify author exists in the system\n     c. IF date range is provided, apply as filter criteria\n   - Process keyword matching rules:\n     a. IF matchAllKeywords is true, configure search to require all terms\n     b. IF matchAllKeywords is false, configure search to match any term\n     c. Apply matchType rules to keyword processing\n\n4. Core Operation Execution:\n   - Prepare search query:\n     a. Incorporate all validated parameters into search criteria\n     b. Apply forum filtering if forumId is specified\n     c. Apply author filtering if author is specified\n     d. Apply date range filtering if dates are specified\n   - Execute paginated search:\n     a. Retrieve only the specified range of results (from initialRecord to initialRecord + fetchCount)\n     b. Apply specified sorting (orderBy and orderDir)\n     c. Format results for display\n   - Handle search execution errors:\n     a. IF search execution fails, prepare error information\n     b. Log search failure details\n     c. Prepare fallback response\n\n5. Response Generation:\n   - Generate success response:\n     a. Include array of search results within requested pagination range\n     b. Include pagination metadata (current page, total pages, total results)\n     c. Include search parameters used for the query\n     d. Format response according to display requirements\n   - Generate error response if needed:\n     a. Include specific error code and message\n     b. Include guidance for correcting search parameters\n     c. Provide alternative search suggestions when appropriate",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Initial record position must be a non-negative integer",
+    "Fetch count must be a positive integer",
+    "Order direction must be either ASC or DESC",
+    "If date range is provided, start date must be before end date",
+    "Forum ID must reference an existing forum",
+    "Author ID must reference an existing user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Space-separated search terms"
+        },
+        "author": {
+          "type": "integer",
+          "description": "ID of the post author"
+        },
+        "orderDir": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DESC"
+          ],
+          "description": "Direction of result sorting"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "matchAllKeywords": {
+          "type": "boolean",
+          "description": "Whether to match all keywords or any keyword"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "ID of the forum to search within"
+        },
+        "initialRecord": {
+          "type": "integer",
+          "description": "Starting position for pagination"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for filtering results"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for filtering results"
+        },
+        "matchType": {
+          "type": "string",
+          "description": "Type of matching to perform"
+        }
+      }
+    }
+  }
+}

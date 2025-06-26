@@ -1,0 +1,66 @@
+{
+  "featureName": "StartBackgroundIndexing",
+  "description": "Initiates search indexing as a background process to avoid blocking the main application.",
+  "inputValues": [
+    "settings-object-LuceneSettings",
+    "args-object-LuceneReindexArgs",
+    "recreate-boolean-Boolean"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect LuceneSettings object containing indexing configuration\n   - Collect LuceneReindexArgs object containing indexing parameters\n   - Collect recreate flag (boolean) indicating whether to recreate the index\n   - System will use configuration values for batch size and index paths\n\n2. Data Validation\n   - Validate LuceneSettings object is properly initialized\n     * Verify index directory paths are valid\n     * Ensure write permissions exist for index locations\n   - Validate LuceneReindexArgs object\n     * Verify date ranges if filtering by date\n     * Verify post ID ranges if filtering by message\n   - Validate system resources\n     * Check available memory for indexing operations\n     * Verify disk space for index storage\n\n3. Business Rule Processing\n   - Check if indexing is already in progress\n     * IF another indexing process is running THEN\n       * Generate appropriate notification\n       * Exit the process\n     * ELSE\n       * Set indexing status flag to active\n   - Determine indexing approach based on parameters\n     * IF recreate flag is true THEN\n       * Plan for complete index recreation\n     * ELSE\n       * Plan for incremental index update\n   - Calculate resource requirements\n     * Estimate memory usage based on batch size\n     * Estimate disk space requirements\n\n4. Core Operation Execution\n   - Create background thread for indexing process\n     * Initialize new thread with indexing task\n     * Set thread priority to minimize impact on main application\n   - Start background indexing process\n     * Launch thread to execute independently\n     * Store thread reference for status checking\n   - Set system status indicators\n     * Update system configuration to indicate indexing is in progress\n     * Record start time of indexing process\n   - Implement monitoring mechanism\n     * Create status tracking for progress reporting\n     * Set up cancellation capability\n\n5. Response Generation\n   - Generate success response\n     * Confirm background process has started\n     * Provide process identifier for status checking\n   - Provide estimated completion information\n     * Include approximate time to completion if calculable\n     * Include number of records to be processed\n   - Include status checking instructions\n     * How to check indexing progress\n     * How to cancel indexing if needed",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Indexing process must not already be running",
+    "Index directory must be writable",
+    "Sufficient disk space must be available for index creation",
+    "Date ranges must be valid if filtering by date",
+    "Post ID ranges must be valid if filtering by message"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "LuceneSettings": {
+      "type": "object",
+      "properties": {
+        "indexDirectory": {
+          "type": "string",
+          "description": "Path to the index directory"
+        },
+        "writeDirectory": {
+          "type": "string",
+          "description": "Path to the write directory for index creation"
+        }
+      }
+    },
+    "LuceneReindexArgs": {
+      "type": "object",
+      "properties": {
+        "fromDate": {
+          "type": "date",
+          "description": "Start date for filtering posts to index"
+        },
+        "toDate": {
+          "type": "date",
+          "description": "End date for filtering posts to index"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "First post ID to include in indexing"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "Last post ID to include in indexing"
+        },
+        "filterByMessage": {
+          "type": "boolean",
+          "description": "Whether to filter by message ID range"
+        },
+        "avoidDuplicatedRecords": {
+          "type": "boolean",
+          "description": "Whether to check for and avoid duplicate records"
+        }
+      }
+    }
+  }
+}

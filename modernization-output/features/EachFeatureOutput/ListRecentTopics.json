@@ -1,0 +1,62 @@
+{
+  "featureName": "ListRecentTopics",
+  "description": "Displays a paginated list of recent forum topics accessible to the current user.",
+  "inputValues": [
+    "pageNumber-number-Pagination",
+    "postsPerPage-number-SystemConfig",
+    "topicsPerPage-number-SystemConfig",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pageNumber (optional, defaults to 1)\n   - System retrieves postsPerPage from system configuration\n   - System retrieves topicsPerPage from system configuration\n   - Collect userId (optional, for user-specific topic listing)\n\n2. Data Validation:\n   - Validate pageNumber:\n     * IF pageNumber is provided, THEN ensure it is a positive integer\n     * IF pageNumber is not provided, THEN default to 1\n   - Validate userId (when provided for user-specific listing):\n     * Ensure userId exists in the system\n     * IF userId does not exist, THEN display user not found message\n\n3. Business Rule Processing:\n   - Determine listing mode:\n     * IF userId is provided, THEN set mode to user-specific topics\n     * ELSE set mode to general recent topics\n   - Calculate pagination parameters:\n     * Calculate startIndex based on pageNumber and topicsPerPage\n     * Determine total pages based on total topics count and topicsPerPage\n\n4. Core Operation Execution:\n   - Retrieve topics based on mode:\n     * IF in general recent topics mode:\n       > Retrieve recent topics from repository\n       > Filter topics based on user access permissions\n       > FOR EACH topic in the list:\n         - Check if user has access to the forum containing the topic\n         - IF user does not have access, THEN remove topic from list\n     * IF in user-specific mode:\n       > Retrieve topics created by the specified user\n       > Apply pagination parameters (startIndex, topicsPerPage)\n       > Count total topics by user for pagination calculation\n   - Prepare topic data for display:\n     * FOR EACH topic in filtered list:\n       > Retrieve associated forum information\n       > Format creation date and last post date\n       > Calculate and include reply count\n       > Include author information\n\n5. Response Generation:\n   - Prepare display context:\n     * Include list of topics with their details\n     * Include associated forums information\n     * Include pagination information:\n       > Current page number\n       > Total pages\n       > Total topics\n     * Include page title based on mode\n   - Generate appropriate view:\n     * IF in general recent topics mode, THEN use recent topics template\n     * IF in user-specific mode, THEN use user topics template\n     * IF user not found, THEN use user not found template",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Page number must be a positive integer",
+    "User must exist in the system when filtering by user",
+    "User must have access permissions to view topics in a forum",
+    "Topics per page must not exceed system-defined maximum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "userId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "replyCount": "number",
+      "viewCount": "number",
+      "status": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "lastPostDate": "date",
+      "topicCount": "number",
+      "postCount": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "postCount": "number"
+    },
+    "Pagination": {
+      "currentPage": "number",
+      "totalPages": "number",
+      "totalItems": "number",
+      "itemsPerPage": "number"
+    },
+    "SystemConfig": {
+      "postsPerPage": "number",
+      "topicsPerPage": "number"
+    }
+  }
+}

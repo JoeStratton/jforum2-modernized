@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ListHottestTopics",
+    "description": "Displays a list of the hottest forum topics with pagination and access control"
+  },
+  {
+    "featureName": "ShowTopicsByUser",
+    "description": "Retrieves and displays all topics created by a specific user with pagination"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "featureName": "GetRole",
+  "description": "Retrieves a security role by name from the collection of roles.",
+  "inputValues": [
+    "roleName-string-Role"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following input:\n     - roleName (string, mandatory): The name of the role to retrieve\n   - No default values are provided\n   - No system-generated fields are required\n\n2. Data Validation\n   - Validate roleName input:\n     - Check if roleName is provided\n       IF roleName is null or empty THEN\n         Generate an error message: \"Role name must be provided\"\n     - Check if roleName is a valid string\n       IF roleName is not a valid string THEN\n         Generate an error message: \"Role name must be a valid string\"\n\n3. Business Rule Processing\n   - Check if the role collection is initialized\n     IF role collection is not initialized THEN\n       Generate an error message: \"Role collection is not available\"\n   - Verify that the system is in a valid state to retrieve roles\n     IF system is not in a valid state THEN\n       Generate an error message: \"System is not ready to perform role operations\"\n\n4. Core Operation Execution\n   - Search for the requested role in the collection\n     - Look up the role using the provided roleName as the key\n     - IF role is found THEN\n       - Prepare the role data for return\n     - ELSE\n       - Set result to null indicating role was not found\n\n5. Response Generation\n   - IF role was found THEN\n     - Return the role object with its properties\n     - Include the role name and associated permissions\n   - ELSE\n     - Return null or appropriate indicator that role was not found\n     - Provide information that the requested role does not exist in the collection",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Role name must not be empty",
+    "Role collection must be initialized before retrieval",
+    "System must be in a valid state to perform role operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Role": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique name of the security role"
+        },
+        "permissions": {
+          "type": "array",
+          "description": "List of permissions associated with this role",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

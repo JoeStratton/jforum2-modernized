@@ -1,0 +1,108 @@
+{
+  "featureName": "ParseMultipartRequest",
+  "description": "Processes RFC 1867 compliant multipart/form-data streams into FileItem instances.",
+  "inputValues": [
+    "requestContext-object-RequestContext",
+    "contentType-string-RequestHeader",
+    "contentLength-number-RequestHeader",
+    "inputStream-object-InputStream",
+    "fileItemFactory-object-FileItemFactory"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect HttpServletRequest object containing the multipart request information\n     - HttpServletRequest must contain content type header\n     - HttpServletRequest must contain content length information\n     - HttpServletRequest must provide access to the input stream\n   - System configuration parameters:\n     - Maximum allowed file size (sizeMax)\n     - Header encoding preference\n     - FileItemFactory implementation for creating FileItem instances\n     - FileItemFactory must be configured before parsing\n\n2. Data Validation:\n   - Validate Request\n     - Check if HttpServletRequest is not null\n     - IF HttpServletRequest is null THEN\n       - Generate error: \"Request cannot be null\"\n     - END IF\n   - Validate Request Method\n     - Check if request method is POST\n     - IF request method is not POST THEN\n       - Generate error: \"Request method must be POST for multipart requests\"\n     - END IF\n   - Validate Content Type\n     - Extract content type from request headers\n     - IF content type is null THEN\n       - Generate error: \"Missing content type header\"\n     - END IF\n     - IF content type does not start with \"multipart/\" THEN\n       - Generate error: \"Invalid content type: not a multipart request\"\n     - END IF\n   - Validate Content Length\n     - Extract content length from request headers\n     - IF content length is -1 (unknown) THEN\n       - Generate error: \"Request rejected: unknown size\"\n     - END IF\n     - IF maximum size is configured (sizeMax >= 0) AND content length exceeds maximum size THEN\n       - Generate error: \"Request rejected: size exceeds allowed limit\"\n     - END IF\n   - Validate FileItemFactory\n     - Check if FileItemFactory has been configured\n     - IF FileItemFactory is null THEN\n       - Generate error: \"FileItemFactory must be configured before parsing\"\n     - END IF\n\n3. Business Rule Processing:\n   - Extract Multipart Boundary\n     - Parse content type header to extract boundary marker\n     - IF boundary cannot be determined THEN\n       - Generate error: \"Request rejected: no multipart boundary found\"\n     - END IF\n   - Prepare Processing Environment\n     - Create collection to store parsed file items\n     - Configure multipart stream processor with:\n       - Boundary information\n       - Header encoding settings\n       - Size limitations\n     - Create ServletRequestContext wrapper around HttpServletRequest\n     - Obtain input stream from request context\n\n4. Core Operation Execution:\n   - Initialize Multipart Stream\n     - Create multipart stream with input stream and boundary\n     - Apply header encoding if specified\n   - Process Multipart Parts\n     - WHILE more parts are available in the stream DO\n       - Read part headers\n       - Determine if current part is a form field or file upload\n       - IF part is a form field THEN\n         - Extract field name and value\n         - Create form field item using configured FileItemFactory\n       - ELSE (part is a file)\n         - Extract file name, content type, and field name\n         - Create file item using configured FileItemFactory\n         - Stream file content to storage location determined by factory\n       - END IF\n       - Add created item to collection\n     - END WHILE\n   - Handle Processing Exceptions\n     - IF I/O error occurs during processing THEN\n       - Clean up temporary resources\n       - Generate appropriate error message\n     - END IF\n\n5. Response Generation:\n   - Success Response\n     - Return List of FileItem objects containing:\n       - Form fields with their values\n       - File uploads with their content and metadata\n     - Items are ordered as they appeared in the original request\n   - Error Response\n     - Return appropriate exception with detailed message:\n       - InvalidContentTypeException for content type problems\n       - SizeLimitExceededException for size violations\n       - UnknownSizeException for unknown content length\n       - FileUploadException for general processing errors",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request must not be null",
+    "Request method must be POST for multipart requests",
+    "Content type header must be present",
+    "Content type must start with 'multipart/'",
+    "Content length must be known (not -1)",
+    "Request size must not exceed maximum allowed size if specified",
+    "Multipart boundary must be present in content type header",
+    "FileItemFactory must be configured before parsing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The content type header of the request"
+        },
+        "contentLength": {
+          "type": "number",
+          "description": "The content length of the request in bytes"
+        },
+        "inputStream": {
+          "type": "object",
+          "description": "The input stream containing the request data"
+        }
+      },
+      "required": [
+        "contentType",
+        "contentLength",
+        "inputStream"
+      ]
+    },
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the file"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether the item is a regular form field or a file upload"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the client's filesystem"
+        },
+        "size": {
+          "type": "number",
+          "description": "The size of the file in bytes"
+        },
+        "content": {
+          "type": "object",
+          "description": "The contents of the file or form field"
+        }
+      },
+      "required": [
+        "fieldName",
+        "isFormField"
+      ]
+    },
+    "FileItemFactory": {
+      "type": "object",
+      "description": "Factory for creating FileItem instances",
+      "properties": {
+        "sizeThreshold": {
+          "type": "number",
+          "description": "The threshold beyond which files are written to disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which temporary files will be created"
+        }
+      }
+    },
+    "ServletRequestContext": {
+      "type": "object",
+      "description": "Wrapper for HttpServletRequest providing access to request parameters",
+      "properties": {
+        "request": {
+          "type": "object",
+          "description": "The wrapped HttpServletRequest"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  }
+}

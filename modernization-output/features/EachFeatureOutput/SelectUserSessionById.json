@@ -1,0 +1,48 @@
+{
+  "featureName": "SelectUserSessionById",
+  "description": "Retrieves user session information by user ID.",
+  "inputValues": [
+    "userId-number-User",
+    "sessionId-string-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): A unique numeric identifier for the user\n   - Collect sessionId (mandatory): A unique string identifier for the session\n   - System will use current connection for database operations\n\n2. Data Validation:\n   - Validate userId:\n     a. Ensure userId is provided\n     b. Verify userId is a positive integer\n     c. Return error if validation fails\n   - Validate sessionId:\n     a. Ensure sessionId is provided\n     b. Verify sessionId is not empty\n     c. Return error if validation fails\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify the requesting entity has permission to access session data\n     b. If permission check fails, return appropriate error message\n   - Verify system state:\n     a. Ensure the system is in a valid state to process session queries\n     b. If system is in maintenance mode, return appropriate notification\n\n4. Core Operation Execution:\n   - Prepare session query:\n     a. Create query parameters using the provided userId\n     b. Set up data retrieval mechanism\n   - Execute session lookup:\n     a. Search for session record matching the userId\n     b. If no record is found, return null indicating no active session\n     c. If record is found, retrieve session details\n   - Process session data:\n     a. Extract session time information\n     b. Extract session start timestamp\n     c. Populate session object with retrieved data\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Return populated session object with all session details\n     b. Include session time and start time in the response\n   - For unsuccessful retrieval:\n     a. Return null if no session exists for the user\n     b. Include appropriate status information\n   - Handle any unexpected conditions:\n     a. Generate appropriate error messages for system failures\n     b. Provide guidance for resolving any issues encountered",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Session ID must be a non-empty string",
+    "User must exist in the system",
+    "Session record must contain valid timestamp data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the user session"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "User identifier associated with this session"
+        },
+        "startTime": {
+          "type": "object",
+          "description": "Timestamp when the session started"
+        },
+        "sessionTime": {
+          "type": "integer",
+          "description": "Duration of the session in milliseconds"
+        }
+      },
+      "required": [
+        "sessionId",
+        "userId",
+        "startTime"
+      ]
+    }
+  }
+}

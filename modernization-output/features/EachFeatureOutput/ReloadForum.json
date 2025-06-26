@@ -1,0 +1,48 @@
+{
+  "featureName": "ReloadForum",
+  "description": "Reloads forum information in the cache to ensure data consistency and up-to-date forum details.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory) - Numeric identifier of the forum to reload\n   - System will generate current timestamp (system-generated)\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. Return appropriate error message if validation fails\n   - Verify forum exists:\n     a. Check if the forum with given forumId exists in the system\n     b. Return appropriate error message if forum does not exist\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify if current user has permission to reload forum data\n     b. IF user lacks permission THEN\n        i. Generate access denied error\n        ii. Log unauthorized access attempt\n        iii. Return error response\n   - Check system state:\n     a. Verify if cache system is operational\n     b. IF cache system is not available THEN\n        i. Log system error\n        ii. Return system unavailable error\n\n4. Core Operation Execution:\n   - Retrieve latest forum data:\n     a. Fetch complete forum information from the database using forumId\n     b. IF database retrieval fails THEN\n        i. Log retrieval error\n        ii. Attempt retry (maximum 3 attempts)\n        iii. Return system error if all attempts fail\n   - Update cache with new forum data:\n     a. Acquire synchronization lock to prevent concurrent modifications\n     b. Check if forum exists in cache relation mapping\n     c. IF forum exists in cache THEN\n        i. Retrieve associated category for the forum\n        ii. Reset forum's last post information\n        iii. Fetch updated last post information\n        iv. Update forum in the category\n        v. Update category in cache\n        vi. Update categories set in cache\n     d. Update total message count in the system\n     e. Release synchronization lock\n   - Handle related data:\n     a. Update any dependent cache entries\n     b. Ensure consistency across related data objects\n\n5. Response Generation:\n   - Success response:\n     a. Generate confirmation message\n     b. Include timestamp of cache refresh\n     c. Include summary of updated forum information\n   - Error response:\n     a. Include specific error code and message\n     b. Provide troubleshooting information\n     c. Suggest alternative actions if applicable",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to reload forum data",
+    "Cache system must be operational",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "lastPostInfo": "object",
+      "totalTopics": "number",
+      "totalPosts": "number"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "LastPostInfo": {
+      "postId": "number",
+      "postDate": "string",
+      "postTimeMillis": "number",
+      "topicId": "number",
+      "topicReplies": "number",
+      "userId": "number",
+      "username": "string"
+    }
+  }
+}

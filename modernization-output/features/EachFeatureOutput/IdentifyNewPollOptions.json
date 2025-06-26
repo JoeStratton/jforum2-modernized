@@ -1,0 +1,57 @@
+{
+  "featureName": "IdentifyNewPollOptions",
+  "description": "Detects newly added poll options in the updated poll version.",
+  "inputValues": [
+    "firstPoll-object-Poll",
+    "secondPoll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. firstPoll (mandatory): The complete, most recent poll version, typically from the database\n     b. secondPoll (mandatory): The poll to compare with, typically containing updated data\n\n2. Data Validation:\n   - Validate poll objects:\n     a. Check if firstPoll is not null\n        IF firstPoll is null THEN\n           Return error message indicating original poll is required\n     b. Check if secondPoll is not null\n        IF secondPoll is null THEN\n           Return error message indicating updated poll is required\n     c. Verify both polls have valid structures with options lists\n        IF either poll has invalid structure THEN\n           Return error message indicating invalid poll format\n\n3. Business Rule Processing:\n   - Initialize tracking lists:\n     a. Create empty list for new options\n     b. Create empty list for deleted options\n     c. Create empty list for changed options\n   - Compare poll metadata:\n     a. Compare poll labels\n        IF first poll label does not match second poll label THEN\n           Mark that changes exist\n     b. Compare poll length (duration)\n        IF first poll length does not match second poll length THEN\n           Mark that changes exist\n\n4. Core Operation Execution:\n   - Process existing options:\n     a. FOR EACH option in the first poll's options list:\n        i. Search for matching option by ID in second poll's options list\n        ii. IF matching option found THEN\n            - Compare option text\n            - IF text is different THEN\n              * Add to changed options list\n        iii. IF no matching option found THEN\n            - Add to deleted options list\n   - Identify new options:\n     a. FOR EACH option in the second poll's options list:\n        i. Search for matching option by ID in first poll's options list\n        ii. IF no matching option found THEN\n            - Add to new options list\n   - Determine if any changes exist:\n     a. IF any of these conditions are true, mark that changes exist:\n        - Poll metadata (label, length) differs\n        - New options list is not empty\n        - Changed options list is not empty\n        - Deleted options list is not empty\n\n5. Response Generation:\n   - Prepare response with the following information:\n     a. List of new poll options identified\n     b. List of changed poll options\n     c. List of deleted poll options\n     d. Boolean flag indicating whether any changes were detected\n   - Return the complete change summary",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Both poll objects must not be null",
+    "Poll options must have valid IDs for comparison",
+    "Poll options must have text content for comparison"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll"
+        },
+        "label": {
+          "type": "string",
+          "description": "The title or question of the poll"
+        },
+        "length": {
+          "type": "number",
+          "description": "Duration of the poll in days"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "List of options available in the poll"
+        }
+      }
+    },
+    "PollOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll option"
+        },
+        "text": {
+          "type": "string",
+          "description": "The text content of the poll option"
+        }
+      }
+    }
+  }
+}

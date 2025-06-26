@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "FilterSearch",
+    "description": "Displays search filters interface with categories for forum search"
+  },
+  {
+    "featureName": "SearchNewMessages",
+    "description": "Searches for new messages in the forum using specialized search operation"
+  },
+  {
+    "featureName": "SearchContent",
+    "description": "Performs content search in forums based on keywords, author, date range and other criteria"
+  },
+  {
+    "featureName": "ListSearchFilters",
+    "description": "Shows the search filters page as the default list action"
+  }
+]

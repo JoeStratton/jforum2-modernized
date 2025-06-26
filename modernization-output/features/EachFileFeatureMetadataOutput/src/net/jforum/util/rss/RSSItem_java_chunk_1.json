@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ManageRssItemContent",
+    "description": "Manages RSS item content with properties like author, title, description, and publication date"
+  },
+  {
+    "featureName": "AddRssItemCategory",
+    "description": "Associates categories with RSS items to enable content classification"
+  }
+]

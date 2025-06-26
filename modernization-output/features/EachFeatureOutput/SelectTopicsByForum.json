@@ -1,0 +1,97 @@
+{
+  "featureName": "SelectTopicsByForum",
+  "description": "Retrieves all topics associated with a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number, mandatory) - Unique identifier of the forum\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     a. Check if forum with provided forumId exists in the system\n     b. If forum does not exist, generate \"Forum not found\" error\n   - Verify user access permissions:\n     a. Check if current user has permission to view the specified forum\n     b. If user lacks permission, generate \"Access denied\" error\n\n4. Core Operation Execution:\n   - Retrieve topics data:\n     a. Fetch all topics associated with the specified forumId\n     b. For each topic, collect:\n        i. Topic ID\n        ii. Topic title\n        iii. Creation date\n        iv. Last post date\n        v. Total views\n        vi. Total replies\n        vii. Status (locked/unlocked)\n        viii. Creator information\n        ix. Last poster information\n     c. Sort topics according to system's default sorting criteria (typically by last post date)\n   - Handle empty results:\n     a. If no topics are found for the forum, prepare empty result set\n\n5. Response Generation:\n   - Success response:\n     a. Return collection of topic objects with all retrieved data\n     b. Include pagination metadata if applicable\n   - Error response:\n     a. Return appropriate error message based on validation or business rule failures\n     b. Include error code and description",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to view the forum",
+    "Topics must be sorted by system's default sorting criteria"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the topic was created"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date of the last post in the topic"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Number of times the topic was viewed"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Number of replies in the topic"
+        },
+        "status": {
+          "type": "number",
+          "description": "Status of the topic (locked/unlocked)"
+        },
+        "creator": {
+          "type": "object",
+          "description": "Information about the topic creator",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "username": {
+              "type": "string"
+            }
+          }
+        },
+        "lastPoster": {
+          "type": "object",
+          "description": "Information about the last poster",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "username": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        }
+      }
+    }
+  }
+}

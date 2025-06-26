@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "MatchBanlistEntries",
+    "description": "Validates if banlist entries match based on user ID, email, or IP address patterns"
+  }
+]

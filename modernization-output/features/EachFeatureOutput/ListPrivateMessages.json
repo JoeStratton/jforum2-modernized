@@ -1,0 +1,42 @@
+{
+  "featureName": "ListPrivateMessages",
+  "description": "Displays a list of private messages for the logged-in user in their inbox.",
+  "inputValues": [
+    "userId-number-User",
+    "pageNumber-number-Pagination",
+    "itemsPerPage-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, system-generated from current session)\n   - Collect pageNumber (optional, defaults to 1)\n   - Collect itemsPerPage (optional, defaults to system configuration value)\n\n2. Data Validation:\n   - Validate user authentication status\n     * IF user is not logged in THEN\n       - Redirect to login page\n       - Exit process\n     * END IF\n   - Validate pageNumber\n     * IF pageNumber is less than 1 THEN\n       - Set pageNumber to 1\n     * END IF\n   - Validate itemsPerPage\n     * IF itemsPerPage is less than 1 THEN\n       - Set itemsPerPage to default system value\n     * END IF\n\n3. Business Rule Processing:\n   - Verify user has permission to view private messages\n     * IF user does not have permission THEN\n       - Display access denied message\n       - Exit process\n     * END IF\n   - Check system status for private messaging functionality\n     * IF private messaging is disabled THEN\n       - Display feature unavailable message\n       - Exit process\n     * END IF\n\n4. Core Operation Execution:\n   - Retrieve total count of private messages for the user\n   - Calculate pagination parameters\n     * totalPages = ceiling(totalMessages / itemsPerPage)\n     * startIndex = (pageNumber - 1) * itemsPerPage\n   - Retrieve private messages for the current user\n     * Get messages where toUserId equals current userId\n     * Apply pagination (startIndex, itemsPerPage)\n     * Sort by date received (newest first)\n   - Process message list\n     * For each message:\n       - Determine message status (read/unread)\n       - Format date and time information\n       - Prepare sender information\n   - Update unread message count in user session if needed\n\n5. Response Generation:\n   - Prepare inbox view with the following information:\n     * List of private messages with:\n       - Message subject\n       - Sender name\n       - Date/time received\n       - Read/unread status\n     * Pagination controls\n       - Current page number\n       - Total pages\n       - Next/previous page links if applicable\n     * Message management options\n       - Delete selected messages\n       - Mark as read/unread\n     * Compose new message option\n   - Display inbox view to user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "User must be logged in to view private messages",
+    "User can only view their own private messages",
+    "Page number must be a positive integer",
+    "Items per page must be a positive integer within system limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "privateMessages": "number"
+    },
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "post": "object",
+      "type": "number",
+      "date": "date"
+    },
+    "Pagination": {
+      "pageNumber": "number",
+      "itemsPerPage": "number",
+      "totalPages": "number"
+    }
+  }
+}

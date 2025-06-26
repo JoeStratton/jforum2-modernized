@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "SearchForPollChanges",
+    "description": "Identifies changes between two poll versions including modified, deleted, and new options"
+  },
+  {
+    "featureName": "TrackPollOptionChanges",
+    "description": "Tracks modifications to existing poll options by comparing text values"
+  },
+  {
+    "featureName": "DetectDeletedPollOptions",
+    "description": "Identifies poll options that have been removed between poll versions"
+  },
+  {
+    "featureName": "IdentifyNewPollOptions",
+    "description": "Detects newly added poll options in the updated poll version"
+  }
+]

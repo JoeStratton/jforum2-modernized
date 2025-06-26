@@ -1,0 +1,61 @@
+{
+  "featureName": "GetAllUsers",
+  "description": "Retrieves a list of all users in the system.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. startFrom (number, optional): The starting index for pagination\n     b. count (number, optional): The maximum number of users to retrieve\n\n2. Data Validation\n   - Validate input parameters:\n     a. IF startFrom is provided:\n        i. Ensure startFrom is a non-negative integer\n        ii. IF startFrom is negative, set to 0\n     b. IF count is provided:\n        i. Ensure count is a non-negative integer\n        ii. IF count is negative, set to 0\n\n3. Business Rule Processing\n   - Check system state:\n     a. Verify the user database is accessible\n     b. Verify the requesting user has permission to view user list\n     c. IF system is in maintenance mode:\n        i. Check if requesting user has administrative privileges\n        ii. IF not, return appropriate error message\n\n4. Core Operation Execution\n   - Retrieve user records:\n     a. IF both startFrom and count are specified:\n        i. Retrieve limited set of users starting from the specified index\n        ii. Limit results to the specified count\n     b. ELSE:\n        i. Retrieve all users in the system\n     c. For each user record:\n        i. Extract basic user information (ID, username, email, registration date, etc.)\n        ii. Exclude sensitive information based on user permissions\n        iii. Format data for response\n     d. IF no users are found:\n        i. Return empty list\n\n5. Response Generation\n   - Prepare the response:\n     a. Format the list of users with the following information for each user:\n        i. User ID\n        ii. Username\n        iii. Email address (if viewable based on permissions)\n        iv. Registration date\n        v. Total posts count\n        vi. Karma points\n        vii. User status (active/deleted)\n     b. Include metadata in response:\n        i. Total number of users in the system\n        ii. Pagination information if applicable\n     c. Return the formatted user list",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Start index must be a non-negative integer",
+    "Count must be a non-negative integer",
+    "User must have permission to view user list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "registrationDate": {
+          "type": "date"
+        },
+        "totalPosts": {
+          "type": "number"
+        },
+        "karma": {
+          "type": "object",
+          "properties": {
+            "karmaPoints": {
+              "type": "number"
+            }
+          }
+        },
+        "deleted": {
+          "type": "number"
+        },
+        "from": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "viewEmailEnabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "featureName": "EditUserProfile",
+  "description": "Displays form for editing user profile information and allows users to update their personal details.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User",
+    "email-string-User",
+    "signature-string-User",
+    "avatar-string-User",
+    "website-string-User",
+    "location-string-User",
+    "biography-string-User",
+    "password-string-User",
+    "avatarExternalUrl-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user identifier (userId) from the request\n   - System retrieves the following user profile information:\n     * Username (mandatory)\n     * Email address (mandatory)\n     * Password (for verification)\n     * Signature (optional)\n     * Avatar image URL (optional)\n     * Website URL (optional)\n     * Location (optional)\n     * Biography/personal information (optional)\n   - System determines if external avatar URLs are allowed based on system configuration\n   - Default values are populated from the user's existing profile data\n\n2. Data Validation:\n   - Validate user access permissions:\n     * Verify the user is logged in\n     * Verify the user is editing their own profile or has administrative rights\n     * If validation fails, redirect to profile view instead of edit mode\n   - For each input field, perform appropriate validation:\n     * Username: Verify it's not empty and does not exceed maximum length\n     * Username: Verify it doesn't contain invalid characters (like < or >)\n     * Email: Verify it's a valid email format\n     * Email: Verify it's not already associated with another account\n     * Password: Verify it meets minimum security requirements if changed\n     * Website: If provided, verify it's a valid URL format\n     * Avatar URL: If external URLs are allowed and one is provided, verify it's a valid image URL\n   - Generate appropriate error messages for any validation failures\n\n3. Business Rule Processing:\n   - Verify the user account exists and is active\n   - Check if the user has permission to edit their profile\n   - Determine which profile fields can be modified based on system configuration\n   - If changing username, verify the new username is not already taken by another user\n   - If changing email, verify the new email is not already associated with another account\n   - Apply any system-wide restrictions on profile content (e.g., prohibited words, content filtering)\n\n4. Core Operation Execution:\n   - Display the user profile edit form with current values pre-populated\n   - When form is submitted:\n     * Validate all input fields according to validation rules\n     * If validation passes, update the user record with the new information\n     * If avatar was changed, update the avatar information\n     * Record the modification timestamp\n   - If any errors occur during the update:\n     * Maintain the entered values in the form\n     * Display appropriate error messages\n     * Allow the user to correct and resubmit\n\n5. Response Generation:\n   - Upon successful update:\n     * Redirect to a confirmation page indicating the profile was updated successfully\n     * Provide option to view the updated profile\n   - If update fails:\n     * Display specific error messages for each validation or processing failure\n     * Maintain the form state with entered values\n     * Provide guidance on how to resolve the issues",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to edit profile",
+    "User can only edit their own profile unless they have administrative rights",
+    "Username must not be empty",
+    "Username must not exceed maximum allowed length",
+    "Username must not contain invalid characters (< or >)",
+    "Email must be in valid format",
+    "Email must not already be associated with another account",
+    "Password must meet minimum security requirements if changed",
+    "Website URL must be in valid format if provided",
+    "Avatar URL must be in valid format if external URLs are allowed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

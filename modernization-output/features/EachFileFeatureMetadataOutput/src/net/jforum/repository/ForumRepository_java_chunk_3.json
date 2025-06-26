@@ -1,0 +1,82 @@
+[
+  {
+    "featureName": "GetAllCategories",
+    "description": "Retrieves all forum categories accessible to the current user"
+  },
+  {
+    "featureName": "ReloadCategory",
+    "description": "Updates a category's name and order in the cache"
+  },
+  {
+    "featureName": "RefreshCategory",
+    "description": "Refreshes a category entry in the cache"
+  },
+  {
+    "featureName": "RefreshForum",
+    "description": "Updates a forum within its parent category in the cache"
+  },
+  {
+    "featureName": "RemoveCategory",
+    "description": "Removes a category from the cache"
+  },
+  {
+    "featureName": "AddCategory",
+    "description": "Adds a new category to the cache"
+  },
+  {
+    "featureName": "GetForum",
+    "description": "Retrieves a specific forum if it exists and is accessible to the user"
+  },
+  {
+    "featureName": "IsForumAccessible",
+    "description": "Checks if a forum is accessible to a specific user"
+  },
+  {
+    "featureName": "AddForum",
+    "description": "Adds a new forum to the cache repository"
+  },
+  {
+    "featureName": "RemoveForum",
+    "description": "Removes a forum from the cache"
+  },
+  {
+    "featureName": "ReloadForum",
+    "description": "Reloads forum information in the cache"
+  },
+  {
+    "featureName": "UpdateForumStats",
+    "description": "Updates forum statistics when a new post is added"
+  },
+  {
+    "featureName": "GetLastPostInfo",
+    "description": "Retrieves information about the last message posted in a forum"
+  },
+  {
+    "featureName": "GetModeratorList",
+    "description": "Retrieves the list of moderators for a specific forum"
+  },
+  {
+    "featureName": "ClearModeratorList",
+    "description": "Clears the cached moderator list"
+  },
+  {
+    "featureName": "GetLastRegisteredUser",
+    "description": "Retrieves the most recently registered user"
+  },
+  {
+    "featureName": "SetLastRegisteredUser",
+    "description": "Updates the most recently registered user"
+  },
+  {
+    "featureName": "GetTotalUsers",
+    "description": "Retrieves the total number of users in the forum"
+  },
+  {
+    "featureName": "IncrementTotalUsers",
+    "description": "Increments the total user count when a new user registers"
+  },
+  {
+    "featureName": "GetTotalMessages",
+    "description": "Retrieves the total number of messages across the entire forum"
+  }
+]

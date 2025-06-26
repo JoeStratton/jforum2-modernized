@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "StoreSessionData",
+    "description": "Persists user session information to the database with connection management"
+  },
+  {
+    "featureName": "StoreSessionDataWithConnection",
+    "description": "Persists user session information using a provided database connection"
+  }
+]

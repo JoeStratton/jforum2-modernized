@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CountPreviousPosts",
+    "description": "Counts the number of posts that precede a specific post in a topic"
+  },
+  {
+    "featureName": "SelectLatestByForumForRSS",
+    "description": "Retrieves the latest posts from a specific forum for RSS feed generation"
+  },
+  {
+    "featureName": "SelectHotForRSS",
+    "description": "Retrieves popular posts across forums for RSS feed generation"
+  }
+]

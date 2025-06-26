@@ -1,0 +1,31 @@
+{
+  "featureName": "ClearSessionCache",
+  "description": "Clears all user session data from the cache to refresh system state and free up resources.",
+  "inputValues": [
+    "confirmAction-boolean-CacheAction"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect confirmation input (confirmAction) from the administrator\n   - System identifies the current user as an administrator with appropriate permissions\n   - No additional inputs required as this is a system-wide operation\n\n2. Data Validation:\n   - Validate that the user has administrative privileges\n     * IF user is not an administrator THEN\n       - Generate access denied error\n       - Terminate the operation\n     * END IF\n   - Validate the confirmation flag is set to true\n     * IF confirmation is not provided or false THEN\n       - Display confirmation request to the administrator\n       - Terminate the operation until confirmation is received\n     * END IF\n\n3. Business Rule Processing:\n   - Check if there are any critical system processes running\n     * IF critical processes are running THEN\n       - Generate warning message about potential impact\n       - Request additional confirmation\n     * END IF\n   - Verify system stability for cache clearing operation\n     * IF system is in unstable state THEN\n       - Generate warning about potential system impact\n       - Log the attempt with warning status\n     * END IF\n\n4. Core Operation Execution:\n   - Prepare system for session cache clearing\n     * Log the initiation of cache clearing operation\n     * Record the current number of active sessions for reporting\n   - Execute session cache clearing\n     * Remove all user session data from memory\n     * Release associated resources\n     * Reset session counters and tracking mechanisms\n   - Handle any exceptions during clearing process\n     * IF exceptions occur during clearing THEN\n       - Log the specific error details\n       - Attempt partial clearing if possible\n       - Prepare error report for administrator\n     * END IF\n\n5. Response Generation:\n   - Generate success response\n     * Include count of cleared sessions\n     * Include timestamp of operation\n     * Include system performance metrics before and after clearing\n   - Prepare cache status report\n     * Show current memory usage\n     * Show available system resources\n     * Display cache statistics after clearing\n   - Provide next steps information\n     * Suggest monitoring system performance\n     * Note that users will need to log in again\n     * Provide option to view system logs for detailed operation results",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to clear session cache",
+    "Confirmation must be provided before clearing session cache",
+    "System must be in a stable state for cache clearing operation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CacheAction": {
+      "type": "object",
+      "properties": {
+        "confirmAction": {
+          "type": "boolean",
+          "description": "Flag indicating administrator confirmation to clear the session cache"
+        }
+      },
+      "required": [
+        "confirmAction"
+      ]
+    }
+  }
+}

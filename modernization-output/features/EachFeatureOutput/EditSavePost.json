@@ -1,0 +1,77 @@
+{
+  "featureName": "EditSavePost",
+  "description": "Saves edited post content with attachments and handles poll modifications.",
+  "inputValues": [
+    "post_id-number-Post",
+    "message-string-Post",
+    "subject-string-Post",
+    "topic_type-number-Topic",
+    "notify-boolean-Notification",
+    "poll-object-Poll",
+    "attachments-object-Attachments"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post_id (mandatory): Identifier of the post being edited\n   - Collect message (mandatory): The updated content of the post\n   - Collect subject (mandatory): The updated title of the post\n   - Collect topic_type (optional): The type of topic (normal, sticky, announcement)\n   - Collect notify (optional): Boolean indicating if user wants notifications\n   - Collect poll information (optional): Poll title, options, and settings\n   - Collect attachments (optional): Files to be attached to the post\n\n2. Data Validation:\n   - Validate post existence:\n     2.1. Check if post with provided post_id exists\n     2.2. IF post not found, THEN display error message and exit\n   - Validate edit permissions:\n     2.3. Check if current user has permission to edit the post\n     2.4. IF user cannot edit, THEN display permission error and exit\n   - Validate message content:\n     2.5. Check if message is not empty\n     2.6. Check if message meets minimum length requirements\n     2.7. Check if message meets maximum length requirements\n   - Validate subject:\n     2.8. Check if subject is not empty\n     2.9. Check if subject meets length requirements\n   - Validate attachments:\n     2.10. Check if attachments are within size limits\n     2.11. Check if number of attachments is within allowed limit\n     2.12. Verify attachment file types are permitted\n   - Validate poll (if provided):\n     2.13. Check if poll has a title\n     2.14. Verify poll has at least two options\n     2.15. Check if poll options are not empty\n\n3. Business Rule Processing:\n   - Check topic accessibility:\n     3.1. Retrieve topic associated with the post\n     3.2. Check if user has access to the forum containing the topic\n     3.3. IF forum is not accessible, THEN display error and exit\n   - Check topic lock status:\n     3.4. Check if topic is locked\n     3.5. IF topic is locked AND user is not a moderator, THEN display locked message and exit\n   - Check post moderation status:\n     3.6. Check if post requires moderation\n     3.7. IF post needs moderation, THEN handle accordingly\n   - Process poll modifications (if first post):\n     3.8. Check if post is the first post of the topic\n     3.9. IF first post, THEN check if poll should be added, modified, or removed\n\n4. Core Operation Execution:\n   - Update post data:\n     4.1. Update post content with new message\n     4.2. Update post subject if changed\n     4.3. Save updated post to database\n   - Process attachments:\n     4.4. Process any new attachments uploaded with the edit\n     4.5. Remove any attachments marked for deletion\n     4.6. Associate remaining and new attachments with the post\n   - Handle topic updates (if first post):\n     4.7. IF post is first post of topic, THEN update topic title\n     4.8. IF user has permission AND topic type changed, THEN update topic type\n   - Process poll changes (if applicable):\n     4.9. IF new poll added, THEN create poll and associate with topic\n     4.10. IF existing poll modified, THEN update poll options and settings\n     4.11. IF poll removed, THEN delete poll from database\n   - Handle notification preferences:\n     4.12. Update user notification settings for this topic based on input\n   - Log moderation activity (if applicable):\n     4.13. IF editor is moderator AND not post owner, THEN log moderation action\n\n5. Response Generation:\n   - Generate success response:\n     5.1. Prepare confirmation message about successful edit\n     5.2. Determine correct page to display after edit\n     5.3. Generate navigation link to return to topic view\n   - Handle preview mode:\n     5.4. IF preview requested, THEN format post for display\n     5.5. Show preview with edit form to allow further changes\n   - Error response handling:\n     5.6. IF any errors occurred, THEN display appropriate error message\n     5.7. Preserve user input to allow correction and resubmission",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "User must have permission to edit the post",
+    "Post must exist in the system",
+    "Message content cannot be empty",
+    "Subject cannot be empty",
+    "Topic must not be locked unless user is a moderator",
+    "Forum must be accessible to the user",
+    "Attachments must not exceed size quota",
+    "Number of attachments must not exceed maximum allowed",
+    "Poll must have at least two options if included",
+    "Only the first post of a topic can have a poll",
+    "Only users with appropriate permissions can create sticky or announcement topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "voteId": {
+          "type": "number"
+        }
+      }
+    },
+    "Attachments": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "deletedAttachments": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

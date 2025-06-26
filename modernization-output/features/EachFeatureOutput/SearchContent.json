@@ -1,0 +1,51 @@
+{
+  "featureName": "SearchContent",
+  "description": "Performs content search in forums based on keywords, author, date range and other criteria.",
+  "inputValues": [
+    "keywords-string-SearchArgs",
+    "author-number-SearchArgs",
+    "orderBy-string-SearchArgs",
+    "orderDir-string-SearchArgs",
+    "matchType-string-SearchArgs",
+    "fromDate-date-SearchArgs",
+    "toDate-date-SearchArgs",
+    "forumId-number-SearchArgs",
+    "startFrom-number-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect search parameters from the user:\n       1.1.1. keywords (string): Search terms entered by the user\n       1.1.2. author (number, optional): User ID of the post author to filter by\n       1.1.3. orderBy (string, optional): Field to sort results by\n       1.1.4. orderDir (string, optional): Sort direction (ascending or descending)\n       1.1.5. matchType (string, optional): Type of keyword matching (all or any)\n       1.1.6. fromDate (date, optional): Start date for filtering posts by date range\n       1.1.7. toDate (date, optional): End date for filtering posts by date range\n       1.1.8. forumId (number, optional): Specific forum ID to limit search to\n       1.1.9. startFrom (number, optional): Pagination starting point\n   1.2. Set default values for optional parameters if not provided:\n       1.2.1. IF orderBy is not specified THEN set to default sort field\n       1.2.2. IF orderDir is not specified THEN set to descending\n       1.2.3. IF matchType is not specified THEN set to \"any\"\n       1.2.4. IF startFrom is not specified THEN set to 0\n\n2. Data Validation:\n   2.1. Validate keywords input:\n       2.1.1. IF keywords is empty or null THEN return error message \"Search keywords are required\"\n       2.1.2. IF keywords length is less than minimum allowed THEN return error message \"Search term must be at least X characters long\"\n   2.2. Validate author input (if provided):\n       2.2.1. IF author is provided THEN verify author ID exists in the system\n       2.2.2. IF author ID is invalid THEN return error message \"Invalid author specified\"\n   2.3. Validate date range (if provided):\n       2.3.1. IF fromDate is provided AND toDate is provided THEN:\n           2.3.1.1. Verify fromDate is not after toDate\n           2.3.1.2. IF fromDate is after toDate THEN return error message \"Start date cannot be after end date\"\n   2.4. Validate forum ID (if provided):\n       2.4.1. IF forumId is provided THEN verify forum exists\n       2.4.2. IF forum does not exist THEN return error message \"Invalid forum specified\"\n\n3. Business Rule Processing:\n   3.1. Check user permissions:\n       3.1.1. Verify current user has permission to search content\n       3.1.2. IF user lacks search permission THEN return error message \"You do not have permission to search\"\n   3.2. Check forum access permissions:\n       3.2.1. IF forumId is specified THEN verify user has access to that forum\n       3.2.2. IF user cannot access the specified forum THEN exclude it from search\n   3.3. Apply search rate limiting:\n       3.3.1. Check if user has performed too many searches in a short time period\n       3.3.2. IF search rate limit exceeded THEN return error message \"Search rate limit exceeded. Please try again later.\"\n   3.4. Determine search operation type:\n       3.4.1. IF search is for new messages THEN use NewMessagesSearchOperation\n       3.4.2. ELSE use ContentSearchOperation for regular searches\n\n4. Core Operation Execution:\n   4.1. Prepare search arguments:\n       4.1.1. Create a SearchArgs object with all validated parameters\n       4.1.2. IF matchType is \"all\" THEN configure search to match all keywords\n       4.1.3. Set pagination parameters based on system configuration\n   4.2. Execute search operation:\n       4.2.1. Perform the search using the appropriate search operation\n       4.2.2. Collect matching posts/topics based on search criteria\n       4.2.3. IF no results found THEN prepare empty result set\n   4.3. Process search results:\n       4.3.1. Filter results based on user permissions\n       4.3.2. Sort results according to orderBy and orderDir parameters\n       4.3.3. Apply pagination to limit number of results per page\n   4.4. Handle any search execution errors:\n       4.4.1. IF search execution fails THEN log error details\n       4.4.2. Return appropriate error message to user\n\n5. Response Generation:\n   5.1. Prepare search results for display:\n       5.1.1. Format each result item with relevant information (title, content snippet, author, date)\n       5.1.2. Include highlighting of matched keywords in results\n       5.1.3. Calculate total number of matching results\n   5.2. Generate pagination information:\n       5.2.1. Calculate total number of pages based on results count and page size\n       5.2.2. Determine current page number\n       5.2.3. Create navigation links for previous/next pages\n   5.3. Prepare additional context information:\n       5.3.1. Include forum categories for filtering options\n       5.3.2. Include original search parameters for form repopulation\n       5.3.3. Include any system messages or notifications\n   5.4. Return complete search results view to user:\n       5.4.1. IF successful search THEN display results page with findings\n       5.4.2. IF search had errors THEN display error message with search form\n       5.4.3. IF no results found THEN display \"No results found\" message with search form",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Search keywords must not be empty",
+    "Author ID must exist in the system if specified",
+    "From date must not be after to date if date range is specified",
+    "Forum ID must exist if specified",
+    "User must have permission to search content",
+    "User must have access to specified forum if forum ID is provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "keywords": "string",
+      "author": "number",
+      "orderBy": "string",
+      "orderDir": "string",
+      "matchType": "string",
+      "fromDate": "date",
+      "toDate": "date",
+      "forumId": "number",
+      "startFrom": "number"
+    },
+    "SearchResult": {
+      "results": "array",
+      "numberOfHits": "number",
+      "executionTime": "number"
+    }
+  }
+}

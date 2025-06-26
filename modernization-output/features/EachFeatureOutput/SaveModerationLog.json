@@ -1,0 +1,75 @@
+{
+  "featureName": "SaveModerationLog",
+  "description": "Records moderation actions in the system log.",
+  "inputValues": [
+    "log-object-ModerationLog"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the moderation log object with the following attributes:\n     a. User ID (mandatory) - The ID of the moderator performing the action\n     b. Description (mandatory) - Description of the moderation action\n     c. Original Message (optional) - The original content before moderation\n     d. Type (mandatory) - The type of moderation action performed\n     e. Post ID (optional) - The ID of the post being moderated\n     f. Topic ID (optional) - The ID of the topic being moderated\n     g. Poster User ID (optional) - The ID of the user who created the content being moderated\n\n2. Data Validation\n   - Validate the moderation log data:\n     a. Verify user ID is present and valid\n        IF user ID is missing or invalid THEN\n          Return error message \"Invalid moderator user ID\"\n     b. Verify description is provided\n        IF description is empty THEN\n          Return error message \"Moderation action description is required\"\n     c. Verify moderation type is valid\n        IF type is not a recognized moderation action type THEN\n          Return error message \"Invalid moderation action type\"\n     d. Verify at least one content reference exists\n        IF both post ID and topic ID are null THEN\n          Return error message \"Either post ID or topic ID must be specified\"\n\n3. Business Rule Processing\n   - Check user permissions for moderation\n     a. Verify the user has proper moderation privileges\n        IF user does not have moderation permission THEN\n          Return error message \"User does not have moderation privileges\"\n     b. Verify the user has specific permission for the action type\n        IF user does not have permission for this specific action THEN\n          Return error message \"User does not have permission for this moderation action\"\n\n4. Core Operation Execution\n   - Process the moderation log entry:\n     a. Set the current timestamp for the log entry\n     b. Create a new moderation log record with all provided information\n     c. Store the moderation log entry in the system\n     d. IF storage operation fails THEN\n          Return error message \"Failed to save moderation log entry\"\n\n5. Response Generation\n   - Generate appropriate response:\n     a. IF log entry was successfully saved THEN\n          Return success status with log entry ID\n     b. ELSE\n          Return failure status with error details\n     c. Include timestamp of when the moderation action was logged",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User ID must be present and valid",
+    "Description must not be empty",
+    "Moderation type must be a valid action type",
+    "Either post ID or topic ID must be specified",
+    "User must have moderation privileges",
+    "User must have permission for the specific moderation action"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationLog": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "ID of the moderator performing the action"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the moderation action"
+        },
+        "originalMessage": {
+          "type": "string",
+          "description": "The original content before moderation"
+        },
+        "type": {
+          "type": "integer",
+          "description": "The type of moderation action performed"
+        },
+        "postId": {
+          "type": "integer",
+          "description": "ID of the post being moderated"
+        },
+        "topicId": {
+          "type": "integer",
+          "description": "ID of the topic being moderated"
+        },
+        "posterUser": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "ID of the user who created the content being moderated"
+            }
+          }
+        }
+      },
+      "required": [
+        "user",
+        "description",
+        "type"
+      ]
+    }
+  }
+}

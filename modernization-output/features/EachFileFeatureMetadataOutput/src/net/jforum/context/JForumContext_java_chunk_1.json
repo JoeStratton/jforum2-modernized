@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "EncodeURL",
+    "description": "Encodes URLs with context path and extension, handling special cases for bots"
+  },
+  {
+    "featureName": "DetectBotRequests",
+    "description": "Identifies if the current request is from a bot based on request attributes"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/api/rest/RESTAuthentication.java\n\n Original Content: /*\n * Created on 04/09/2006 21:59:39\n */\npackage net.jforum.api.rest;\n\nimport net.jforum.dao.ApiDAO;\nimport net.jforum.dao.DataAccessDriver;\n\n/**\n * @author Rafael Steil\n * @version $Id: RESTAuthentication.java,v 1.2 2006/10/10 00:49:04 rafaelsteil Exp $\n */\npublic class RESTAuthentication\n{\n\tpublic boolean validateApiKey(String apiKey)\n\t{\n\t\tApiDAO dao = DataAccessDriver.getInstance().newApiDAO();\n\t\treturn dao.isValid(apiKey);\n\t}\n}",
+  "metadata": {
+    "fileId": "RESTAuthentication_java_chunk_1",
+    "fileName": "RESTAuthentication.java",
+    "filePath": "src/net/jforum/api/rest/RESTAuthentication.java"
+  }
+}

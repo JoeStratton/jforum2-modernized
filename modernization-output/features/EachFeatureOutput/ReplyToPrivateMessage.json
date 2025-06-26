@@ -1,0 +1,40 @@
+{
+  "featureName": "ReplyToPrivateMessage",
+  "description": "Creates a reply to an existing private message with prefixed subject.",
+  "inputValues": [
+    "messageId-number-PrivateMessage",
+    "replyContent-string-Post",
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - messageId (mandatory): Identifier of the private message being replied to\n       - replyContent (mandatory): Content of the reply message\n       - user (system-generated): Current logged-in user information\n\n2. Data Validation:\n   2.1. Validate user authentication:\n       - IF user is not logged in THEN\n           - Redirect to login page\n           - Exit process\n   2.2. Validate message ID:\n       - IF messageId is not provided or invalid THEN\n           - Display error message \"Invalid message identifier\"\n           - Exit process\n   2.3. Validate reply content:\n       - IF replyContent is empty THEN\n           - Display error message \"Reply content cannot be empty\"\n           - Exit process\n\n3. Business Rule Processing:\n   3.1. Verify message access permissions:\n       - Retrieve the original private message using messageId\n       - IF current user is neither the sender nor the recipient of the original message THEN\n           - Display access denied message\n           - Exit process\n   3.2. Prepare reply message:\n       - Create new reply message object\n       - Set the sender as the current user\n       - Set the recipient as the sender of the original message\n       - Prefix the subject with reply indicator (e.g., \"Re: \")\n       - Include the reply content\n\n4. Core Operation Execution:\n   4.1. Process the reply message:\n       - Create new private message record\n       - Associate the reply with the original message\n       - Set message status to NEW for recipient\n       - Update recipient's unread message count\n   4.2. Handle any processing failures:\n       - IF message creation fails THEN\n           - Display error notification\n           - Preserve user input for correction\n           - Exit process\n\n5. Response Generation:\n   5.1. On successful reply:\n       - Display confirmation message that reply was sent\n       - Provide option to return to inbox\n       - Update message thread to include the new reply\n   5.2. On failure:\n       - Display appropriate error message\n       - Provide option to retry or cancel",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "User must be authenticated to reply to messages",
+    "User must be either the sender or recipient of the original message",
+    "Reply content cannot be empty",
+    "Message ID must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "signature": "string"
+    },
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "post": "object",
+      "type": "string"
+    },
+    "Post": {
+      "subject": "string",
+      "text": "string"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/exceptions/APIException.java\n\n Original Content: /*\n * Created on 04/09/2006 21:32:40\n */\npackage net.jforum.exceptions;\n\n/**\n * @author Rafael Steil\n * @version $Id: APIException.java,v 1.1 2006/09/05 00:53:32 rafaelsteil Exp $\n */\npublic class APIException extends RuntimeException\n{\n\tpublic APIException(String message)\n\t{\n\t\tsuper(message);\n\t}\n}",
+  "metadata": {
+    "fileId": "APIException_java_chunk_1",
+    "fileName": "APIException.java",
+    "filePath": "src/net/jforum/exceptions/APIException.java"
+  }
+}

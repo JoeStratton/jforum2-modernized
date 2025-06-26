@@ -1,0 +1,55 @@
+{
+  "featureName": "HandleNewDocumentAddition",
+  "description": "Updates the search index when new documents are added to maintain search accuracy.",
+  "inputValues": [
+    "document-object-Document"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. document (mandatory): The new document that has been added to the system\n     1.2. indexDirectory (system-generated): The directory where the search index is stored\n     1.3. analyzer (system-generated): The text analyzer used for processing document content\n\n2. Data Validation\n   - Validate the inputs:\n     2.1. Check if document is not null\n        IF document is null THEN\n          Generate error: \"Document cannot be null\"\n     2.2. Verify document has required fields\n        IF required fields are missing THEN\n          Generate error: \"Document is missing required fields\"\n     2.3. Verify indexDirectory is accessible\n        IF indexDirectory is not accessible THEN\n          Generate error: \"Search index directory is not accessible\"\n\n3. Business Rule Processing\n   - Verify system state for indexing:\n     3.1. Check if search functionality is enabled\n        IF search is disabled THEN\n          Exit process without error\n     3.2. Check if index is locked by another operation\n        IF index is locked THEN\n          Wait for lock to be released or timeout after predefined period\n          IF timeout occurs THEN\n            Generate error: \"Index is currently locked by another operation\"\n     3.3. Check available disk space for index update\n        IF insufficient disk space THEN\n          Generate error: \"Insufficient disk space for index update\"\n\n4. Core Operation Execution\n   - Update the search index:\n     4.1. Close existing search resources\n        Close current index searcher to release resources\n        IF closing fails THEN\n          Log error but continue process\n     4.2. Open new search index\n        Create new index searcher with updated index directory\n        IF opening fails THEN\n          Generate error: \"Failed to open updated search index\"\n          Attempt to restore previous search state\n     4.3. Update search-related caches\n        Clear any cached search results that may be affected\n        Update any statistics related to indexed content\n     4.4. Verify index integrity\n        Perform quick validation of index structure\n        IF index is corrupted THEN\n          Log warning and flag for maintenance\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. For successful index update:\n        Return success status\n        Include timestamp of index update\n     5.2. For failed index update:\n        Return failure status\n        Include specific error details\n        Provide guidance on resolving the issue\n        Include support information if problem persists",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Document must not be null",
+    "Search index directory must be accessible",
+    "Search functionality must be enabled",
+    "Index must not be locked by another operation",
+    "Sufficient disk space must be available for index update"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the document"
+        },
+        "contents": {
+          "type": "string",
+          "description": "The textual content to be indexed"
+        },
+        "postId": {
+          "type": "number",
+          "description": "Associated post identifier"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Forum where the document belongs"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the document was created"
+        }
+      },
+      "required": [
+        "id",
+        "contents",
+        "postId"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ProcessUrlPattern",
+    "description": "Processes URL patterns by splitting and storing variables for forum navigation"
+  },
+  {
+    "featureName": "GetUrlPatternComponents",
+    "description": "Retrieves pattern name, variables, and size for URL routing in the forum system"
+  }
+]

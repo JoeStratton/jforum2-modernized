@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "CompareTopicsByType",
+    "description": "Compares topics by type and last post date for sorting purposes"
+  }
+]

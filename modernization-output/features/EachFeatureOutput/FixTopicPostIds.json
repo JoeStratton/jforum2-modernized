@@ -1,0 +1,19 @@
+{
+  "featureName": "FixTopicPostIds",
+  "description": "Fixes the first and last post IDs for a topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topic ID (topicId) from the user or system request\n   - Validate that topicId is a required field\n   - No default values are provided for this operation\n\n2. Data Validation:\n   - Validate that topicId is a positive integer\n   - Verify that topicId exists in the system\n   - IF topicId is invalid or not found THEN\n     - Generate appropriate error message\n     - Terminate the operation\n   - END IF\n\n3. Business Rule Processing:\n   - Check if the topic has any posts\n   - IF topic has no posts THEN\n     - Set both first and last post IDs to null/zero\n     - Skip to Response Generation step\n   - END IF\n   - Verify that the topic is in a valid state for updating post IDs\n   - Check if the topic belongs to an active forum\n\n4. Core Operation Execution:\n   - Retrieve all posts associated with the specified topic\n   - Sort posts by creation date/time in ascending order\n   - Identify the first post in the topic (earliest created)\n     - Extract the ID of this post as firstPostId\n   - Identify the last post in the topic (most recently created)\n     - Extract the ID of this post as lastPostId\n   - Update the topic record with the correct firstPostId\n   - Update the topic record with the correct lastPostId\n   - IF any database operation fails THEN\n     - Roll back all changes\n     - Log the error details\n     - Prepare error response\n   - END IF\n\n5. Response Generation:\n   - IF operation completed successfully THEN\n     - Return success status\n     - Include the updated topic information with corrected post IDs\n   - ELSE\n     - Return error status\n     - Include specific error details and suggestions for resolution\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic must have at least one post to set valid IDs"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

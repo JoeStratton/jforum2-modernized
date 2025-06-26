@@ -1,0 +1,43 @@
+{
+  "featureName": "UpdateUserKarma",
+  "description": "Updates the karma status for a user in the system based on received votes.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - Identifier of the user whose karma needs to be updated\n   - System will generate currentTimestamp (date, system-generated) - Time of karma update\n\n2. Data Validation:\n   - Validate userId:\n      * Check if userId is provided\n      * Verify userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid or not found THEN\n         - Generate appropriate error message\n         - Terminate process\n\n3. Business Rule Processing:\n   - Check system access permissions:\n      * Verify the requesting entity has permission to update karma\n      * IF permission check fails THEN\n         - Generate unauthorized access error\n         - Log access attempt\n         - Terminate process\n   - Check if user has any karma records:\n      * Verify if the user has received any karma points\n      * IF no karma records exist THEN\n         - Set default karma value to zero\n         - Skip calculation and proceed to update user record\n\n4. Core Operation Execution:\n   - Retrieve all karma points for the user:\n      * Collect all karma points received by the user\n      * Count total number of votes received\n   - Calculate karma average:\n      * Initialize totalPoints to 0\n      * Initialize totalRecords to 0\n      * FOR each karma record associated with the user:\n         - Add points/votes ratio to totalPoints\n         - Increment totalRecords counter\n      * Calculate final karma score as totalPoints/totalRecords\n      * IF calculation results in Not-a-Number (NaN) THEN\n         - Set karma points to 0\n   - Update user record:\n      * Set user's karma value to the calculated average\n      * Save updated user record\n      * IF update operation fails THEN\n         - Log error details\n         - Attempt rollback if applicable\n         - Generate system error message\n         - Terminate process\n\n5. Response Generation:\n   - On successful update:\n      * Generate success confirmation message\n      * Include updated karma value in response\n      * Include timestamp of update\n   - On failure:\n      * Generate appropriate error message\n      * Include error details for troubleshooting\n      * Provide guidance on next steps or retry options",
+  "databaseEntities": [
+    "User",
+    "Karma"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must exist in the system",
+    "Requesting entity must have permission to update karma",
+    "Karma calculation must follow the formula: average of (points/votes) for all karma records",
+    "If calculation results in NaN, karma value defaults to 0"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "karmaPoints": {
+          "type": "number",
+          "description": "The calculated karma points for the user"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Total karma points received"
+        },
+        "votesReceived": {
+          "type": "number",
+          "description": "Total number of votes received"
+        },
+        "votesGiven": {
+          "type": "number",
+          "description": "Total number of votes given by the user"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "featureName": "GetUsersByGroup",
+  "description": "Retrieves users belonging to a specific group with pagination support.",
+  "inputValues": [
+    "groupId-number-Group",
+    "startPosition-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupId (mandatory): Numeric identifier of the group to retrieve users from\n     b. startPosition (mandatory): Numeric value indicating the starting position for pagination\n     c. count (mandatory): Numeric value indicating the maximum number of users to retrieve\n\n2. Data Validation:\n   - Validate groupId:\n     a. Ensure groupId is provided\n     b. Verify groupId is a positive integer\n     c. IF groupId is invalid or missing, THEN return error message \"Invalid group identifier\"\n   - Validate pagination parameters:\n     a. Ensure startPosition is a non-negative integer\n     b. Ensure count is a positive integer\n     c. IF pagination parameters are invalid, THEN return error message \"Invalid pagination parameters\"\n\n3. Business Rule Processing:\n   - Verify group existence:\n     a. Check if the specified group exists in the system\n     b. IF group does not exist, THEN return error message \"Group not found\"\n   - Verify user access permissions:\n     a. Check if the current user has permission to view users in this group\n     b. IF user lacks permission, THEN return error message \"Insufficient permissions to view group members\"\n\n4. Core Operation Execution:\n   - Retrieve total count of users in the group:\n     a. Count all users belonging to the specified group\n     b. Store this count for pagination metadata\n   - Retrieve paginated user list:\n     a. Query user records that belong to the specified group\n     b. Apply pagination using startPosition and count parameters\n     c. For each user record, extract relevant user information\n     d. IF no users are found, THEN return empty list with pagination metadata\n   - Process user data:\n     a. For each user, collect standard profile information\n     b. Format user data according to response requirements\n     c. Exclude sensitive information based on system privacy settings\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include list of retrieved users with their information\n     b. Include pagination metadata:\n        i. Total number of users in the group\n        ii. Current page information\n        iii. Indication if more users are available\n     c. Include group information summary\n   - Handle potential errors:\n     a. Database connectivity issues: Return appropriate error message\n     b. Permission errors: Return access denied message\n     c. System errors: Return generic error with support information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Group must exist in the system",
+    "User must have permission to view group members"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "totalPosts": {
+          "type": "number",
+          "description": "Total number of posts by the user"
+        },
+        "karma": {
+          "type": "object",
+          "description": "User's karma information"
+        },
+        "from": {
+          "type": "string",
+          "description": "User's location"
+        },
+        "website": {
+          "type": "string",
+          "description": "User's website URL"
+        },
+        "viewEmailEnabled": {
+          "type": "boolean",
+          "description": "Whether user's email is visible to others"
+        },
+        "deleted": {
+          "type": "number",
+          "description": "Indicates if user account is deleted"
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "totalUsers": {
+          "type": "number",
+          "description": "Total number of users in the group"
+        },
+        "startPosition": {
+          "type": "number",
+          "description": "Starting position of current page"
+        },
+        "count": {
+          "type": "number",
+          "description": "Number of users per page"
+        },
+        "hasMore": {
+          "type": "boolean",
+          "description": "Indicates if more users are available"
+        }
+      }
+    }
+  }
+}

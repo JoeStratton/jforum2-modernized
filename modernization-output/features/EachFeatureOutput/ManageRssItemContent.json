@@ -1,0 +1,72 @@
+{
+  "featureName": "ManageRssItemContent",
+  "description": "Manages RSS item content with properties like author, title, description, and publication date.",
+  "inputValues": [
+    "author-string-RSSItem",
+    "title-string-RSSItem",
+    "description-string-RSSItem",
+    "link-string-RSSItem",
+    "contentType-string-RSSItem",
+    "publishDate-string-RSSItem",
+    "category-string-RSSItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following input fields:\n       - author (string, optional): Name of the content creator\n       - title (string, mandatory): Title of the RSS item\n       - description (string, mandatory): Content description of the RSS item\n       - link (string, mandatory): URL reference to the original content\n       - contentType (string, optional): Format of the description content (default: \"text/html\")\n       - publishDate (string, optional): Publication date and time of the content\n       - category (string, optional): Category classification for the content\n\n2. Data Validation:\n   2.1. Validate title field:\n       - IF title is empty or null THEN\n           - Generate error message: \"Title is required for RSS item\"\n       - IF title exceeds maximum allowed length (200 characters) THEN\n           - Generate error message: \"Title exceeds maximum allowed length\"\n   2.2. Validate description field:\n       - IF description is empty or null THEN\n           - Generate error message: \"Description is required for RSS item\"\n   2.3. Validate link field:\n       - IF link is empty or null THEN\n           - Generate error message: \"Link is required for RSS item\"\n       - IF link format is invalid (not a proper URL) THEN\n           - Generate error message: \"Link must be a valid URL\"\n   2.4. Validate contentType field (if provided):\n       - IF contentType is provided AND not one of the allowed values (\"text/html\", \"text/plain\") THEN\n           - Generate error message: \"Content type must be either text/html or text/plain\"\n       - IF contentType is not provided THEN\n           - Set contentType to default value \"text/html\"\n   2.5. Validate publishDate format (if provided):\n       - IF publishDate is provided AND format is invalid THEN\n           - Generate error message: \"Publish date must be in a valid date format\"\n\n3. Business Rule Processing:\n   3.1. Check system state for RSS functionality:\n       - IF RSS functionality is disabled in system settings THEN\n           - Generate error message: \"RSS functionality is currently disabled\"\n   3.2. Verify user permissions (if applicable):\n       - IF current user does not have permission to create/modify RSS content THEN\n           - Generate error message: \"Insufficient permissions to manage RSS content\"\n   3.3. Check content restrictions:\n       - IF description contains blocked content or exceeds size limits THEN\n           - Generate error message: \"Content contains restricted material or exceeds size limits\"\n\n4. Core Operation Execution:\n   4.1. Create or update RSS item object:\n       - Create new RSS item instance if not exists\n       - Set author property with provided author value\n       - Set title property with provided title value\n       - Set description property with provided description value\n       - Set link property with provided link value\n       - Set contentType property with provided or default contentType value\n       - Set publishDate property with provided publishDate value\n   4.2. Process categories:\n       - IF category is provided THEN\n           - Add category to the RSS item's categories collection\n       - IF multiple categories are provided THEN\n           - Add each category to the RSS item's categories collection\n   4.3. Finalize RSS item:\n       - Ensure all required properties are set\n       - Format content according to RSS specifications\n\n5. Response Generation:\n   5.1. For successful operation:\n       - Return success status\n       - Include the complete RSS item object with all properties\n       - Include any generated identifiers or timestamps\n   5.2. For failed operation:\n       - Return error status\n       - Include specific error messages for each validation or processing failure\n       - Provide guidance on how to correct the issues",
+  "databaseEntities": [],
+  "validationRules": [
+    "Title must not be empty",
+    "Description must not be empty",
+    "Link must not be empty",
+    "Link must be a valid URL",
+    "Content type must be either text/html or text/plain if provided",
+    "Publish date must be in a valid date format if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RSSItem": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Name of the content creator"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the RSS item"
+        },
+        "description": {
+          "type": "string",
+          "description": "Content description of the RSS item"
+        },
+        "link": {
+          "type": "string",
+          "description": "URL reference to the original content"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Format of the description content",
+          "enum": [
+            "text/html",
+            "text/plain"
+          ],
+          "default": "text/html"
+        },
+        "publishDate": {
+          "type": "string",
+          "description": "Publication date and time of the content"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of categories associated with the RSS item"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "link"
+      ]
+    }
+  }
+}

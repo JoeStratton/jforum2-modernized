@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ListPOPMessages",
+    "description": "Retrieves email messages from a POP server"
+  },
+  {
+    "featureName": "OpenPOPConnection",
+    "description": "Opens a connection to a POP email server"
+  },
+  {
+    "featureName": "ClosePOPConnection",
+    "description": "Closes an active connection to a POP email server"
+  }
+]

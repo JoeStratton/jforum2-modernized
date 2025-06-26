@@ -1,0 +1,35 @@
+{
+  "featureName": "TestSendMails",
+  "description": "Tests sending summary emails to recipients with posts from a specified time period.",
+  "inputValues": [
+    "recipients-object-RecipientList",
+    "startDate-date-Date",
+    "endDate-date-Date"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. recipients: List of email addresses to receive the summary (mandatory)\n     b. startDate: Beginning date for post collection period (mandatory)\n     c. endDate: Ending date for post collection period (mandatory, defaults to current date if not provided)\n\n2. Data Validation:\n   - Validate recipient list:\n     a. IF recipient list is empty or null THEN\n        i. Generate error message \"Recipient list cannot be empty\"\n        ii. Halt process and return error\n     b. FOR EACH recipient in the list:\n        i. Validate email format\n        ii. IF email format is invalid THEN mark recipient as invalid\n   - Validate date range:\n     a. IF startDate is after endDate THEN\n        i. Generate error message \"Start date must be before end date\"\n        ii. Halt process and return error\n     b. IF startDate is null THEN\n        i. Generate error message \"Start date is required\"\n        ii. Halt process and return error\n     c. IF endDate is null THEN\n        i. Set endDate to current system date\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify email service is available\n     b. IF email service is unavailable THEN\n        i. Log error \"Email service unavailable\"\n        ii. Halt process and return error\n   - Check post availability:\n     a. Query post repository for posts between startDate and endDate\n     b. IF no posts found THEN\n        i. Log message \"No posts found in the specified date range\"\n        ii. Proceed with empty post list\n\n4. Core Operation Execution:\n   - Retrieve posts for the summary:\n     a. Query database for all posts created between startDate and endDate\n     b. Sort posts by date (newest first)\n     c. Group posts by forum or topic as needed\n   - Generate summary content:\n     a. Create email subject line with date range information\n     b. Format email body with post information including:\n        i. Post titles\n        ii. Post authors\n        iii. Post dates\n        iv. Brief content excerpts\n   - Send emails to recipients:\n     a. FOR EACH valid recipient:\n        i. Create personalized email with the summary content\n        ii. Send email to recipient\n        iii. Track delivery status\n     b. IF any email fails to send THEN\n        i. Log the failure with recipient information\n        ii. Continue with next recipient\n\n5. Response Generation:\n   - Generate success report:\n     a. Count of emails successfully sent\n     b. Count of posts included in summary\n     c. Date range of the summary\n   - Generate error report if applicable:\n     a. List of recipients with failed deliveries\n     b. Specific error messages for each failure\n   - Return complete status report",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Recipient list must not be empty",
+    "Each recipient email must be in valid format",
+    "Start date must be before end date",
+    "Start date is required",
+    "Email service must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RecipientList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "email",
+        "description": "Email address of a recipient"
+      }
+    }
+  }
+}

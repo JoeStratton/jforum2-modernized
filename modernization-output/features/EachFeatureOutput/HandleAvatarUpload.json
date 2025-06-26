@@ -1,0 +1,45 @@
+{
+  "featureName": "HandleAvatarUpload",
+  "description": "Processes avatar image uploads with resizing, format conversion, and validation against size limits.",
+  "inputValues": [
+    "avatarFile-object-AvatarImage",
+    "userId-number-User",
+    "avatarUrl-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. Avatar file (optional): User-uploaded image file\n     b. Avatar URL (optional): External URL to an image\n     c. User ID (mandatory): Identifier of the user updating avatar\n     d. Avatar deletion flag (optional): Indicates if avatar should be removed\n     e. System configuration parameters (system-generated):\n        i. Maximum avatar width\n        ii. Maximum avatar height\n        iii. Allowed file formats\n        iv. External URL permission flag\n\n2. Data Validation:\n   a. Avatar Source Validation:\n      - IF avatar deletion flag is set THEN\n        i. Skip other avatar validations\n      - ELSE IF both avatar file and avatar URL are provided THEN\n        i. Return error indicating only one avatar source is allowed\n      - ELSE IF neither avatar file nor avatar URL are provided THEN\n        i. Skip remaining validations (no avatar change requested)\n   \n   b. File Upload Validation (when avatar file is provided):\n      - Validate file format is one of the allowed types (jpg, jpeg, gif, png)\n        i. IF format is not supported THEN return error message\n      - Validate file can be processed as an image\n        i. IF file cannot be read as an image THEN return error message\n   \n   c. External URL Validation (when avatar URL is provided):\n      - Validate system allows external avatar URLs\n        i. IF external URLs not allowed THEN return error message\n      - Validate URL starts with \"http://\"\n        i. IF URL doesn't start with \"http://\" THEN return error message\n      - Validate URL points to an accessible image\n        i. IF URL doesn't point to a readable image THEN return error message\n\n3. Business Rule Processing:\n   a. Image Dimension Validation:\n      - FOR the provided avatar (file or URL):\n        i. Load the image and determine its dimensions\n        ii. IF width exceeds maximum allowed width OR height exceeds maximum allowed height THEN\n           - Return error indicating avatar dimensions are too large\n   \n   b. File Format Conversion Rules:\n      - IF image format is GIF THEN\n        i. Mark for conversion to PNG format\n      - IF image format is not supported for storage THEN\n        i. Return error indicating unsupported format\n\n4. Core Operation Execution:\n   a. Avatar Deletion Processing:\n      - IF avatar deletion flag is set THEN\n        i. Locate the current avatar file in storage\n        ii. Delete the file from the storage system\n        iii. Set user's avatar reference to null\n        iv. Skip remaining processing steps\n   \n   b. Avatar File Processing:\n      - IF avatar file is provided THEN\n        i. Generate a unique filename based on user ID\n        ii. Save the uploaded file to a temporary location\n        iii. Resize the image to fit within maximum dimensions while maintaining aspect ratio\n        iv. Convert the image format if necessary (e.g., GIF to PNG)\n        v. Save the processed image to the final avatar storage location\n        vi. Delete the temporary file\n        vii. Update user's avatar reference to the new filename\n   \n   c. Avatar URL Processing:\n      - IF avatar URL is provided THEN\n        i. Verify the image at the URL fits within maximum dimensions\n        ii. Update user's avatar reference to the validated URL\n\n5. Response Generation:\n   a. Success Response:\n      - Return success status\n      - Include the updated avatar reference (filename or URL)\n   \n   b. Error Response:\n      - Return failure status\n      - Include specific error message describing the validation or processing failure\n      - Include guidance on allowed avatar parameters (formats, dimensions)",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Avatar file must be in jpg, jpeg, gif, or png format",
+    "Avatar dimensions must not exceed maximum allowed width and height",
+    "External avatar URL must start with 'http://'",
+    "External avatar URL must point to an accessible image",
+    "External avatar URL is only allowed if system configuration permits",
+    "Only one avatar source (file or URL) can be provided at a time"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AvatarImage": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "binary",
+          "description": "Binary content of the uploaded image file"
+        },
+        "filename": {
+          "type": "string",
+          "description": "Original filename of the uploaded image"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the uploaded image"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the uploaded file in bytes"
+        }
+      }
+    }
+  }
+}

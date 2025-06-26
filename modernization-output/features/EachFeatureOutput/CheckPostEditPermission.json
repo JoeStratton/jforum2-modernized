@@ -1,0 +1,71 @@
+{
+  "featureName": "CheckPostEditPermission",
+  "description": "Determines if the current user has permission to edit a specific post.",
+  "inputValues": [
+    "post-object-Post",
+    "currentUser-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the post object containing post details including userId\n   - Obtain current user information from the session\n   - Determine if the user is logged in\n\n2. Data Validation:\n   - Verify post object is valid and contains required information\n     - Check that post has a valid userId\n     - Ensure post exists in the system\n   - Validate current user session\n     - Confirm user session is active\n     - Verify user authentication status\n\n3. Business Rule Processing:\n   - Check user authorization level\n     - IF user is not logged in THEN\n       - Return false (no permission)\n     - ELSE\n       - Continue permission evaluation\n   - Evaluate ownership condition\n     - IF post creator (userId) matches current user's ID THEN\n       - Mark as potential permission grant (ownership condition met)\n     - ELSE\n       - Ownership condition not met, proceed to moderation check\n   - Check moderation privileges\n     - Verify if current user has post moderation rights\n     - IF user has moderation privileges THEN\n       - Mark as potential permission grant (moderation condition met)\n     - ELSE\n       - Moderation condition not met\n\n4. Core Operation Execution:\n   - Determine final permission status\n     - IF ownership condition OR moderation condition is met THEN\n       - Grant edit permission\n     - ELSE\n       - Deny edit permission\n   - Apply any time-based restrictions\n     - Check if post editing timeframe has expired (if applicable)\n     - Adjust permission accordingly\n\n5. Response Generation:\n   - Return the permission result (boolean)\n     - True: User can edit the post\n     - False: User cannot edit the post\n   - Include reason code for permission denial if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User must be logged in to edit any post",
+    "User can edit their own posts",
+    "Users with moderation privileges can edit any post",
+    "Post must exist in the system",
+    "User session must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject/title of the post"
+        },
+        "time": {
+          "type": "date",
+          "description": "When the post was created"
+        },
+        "canEdit": {
+          "type": "boolean",
+          "description": "Flag indicating if post can be edited"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "isLogged": {
+          "type": "boolean",
+          "description": "Whether the user is currently logged in"
+        }
+      }
+    }
+  }
+}

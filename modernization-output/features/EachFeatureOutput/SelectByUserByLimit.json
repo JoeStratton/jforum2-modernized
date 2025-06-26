@@ -1,0 +1,67 @@
+{
+  "featureName": "SelectByUserByLimit",
+  "description": "Retrieves paginated posts made by a specific user with limit and offset parameters.",
+  "inputValues": [
+    "userId-number-User",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Unique identifier of the user whose posts are being retrieved\n   - Collect startFrom (mandatory): Starting position for pagination (zero-based index)\n   - Collect count (mandatory): Maximum number of posts to retrieve\n\n2. Data Validation:\n   - Validate userId:\n     a. Verify userId is not null\n     b. Verify userId is a positive integer\n     c. IF userId is invalid THEN return error message \"Invalid user identifier provided\"\n   - Validate pagination parameters:\n     a. Verify startFrom is not null\n     b. Verify startFrom is a non-negative integer\n     c. Verify count is not null\n     d. Verify count is a positive integer\n     e. IF startFrom is negative THEN return error message \"Starting position cannot be negative\"\n     f. IF count is less than or equal to zero THEN return error message \"Count must be greater than zero\"\n\n3. Business Rule Processing:\n   - Verify user existence:\n     a. Check if user with provided userId exists in the system\n     b. IF user does not exist THEN return error message \"User not found\"\n   - Verify user access permissions:\n     a. Check if the requesting user has permission to view posts by the specified user\n     b. IF permission check fails THEN return error message \"Insufficient permissions to view these posts\"\n\n4. Core Operation Execution:\n   - Prepare query parameters:\n     a. Set userId parameter to filter posts by specific user\n     b. Set startFrom parameter to determine starting position\n     c. Set count parameter to limit number of results\n   - Execute post retrieval operation:\n     a. Retrieve posts made by the specified user\n     b. Apply pagination using startFrom and count parameters\n     c. Order posts by creation date (newest first)\n     d. Include necessary post metadata (title, creation date, forum information)\n   - Process retrieved posts:\n     a. Format post data for presentation\n     b. Calculate total post count for pagination information\n     c. IF no posts found THEN set empty result list but continue execution\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include list of retrieved posts with their details\n     b. Include pagination metadata (current page, total pages, total posts)\n     c. Include user information summary\n   - Handle potential errors:\n     a. IF database error occurs during retrieval THEN return error message \"Unable to retrieve posts at this time\"\n     b. Include appropriate status code with response",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Starting position must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must exist in the system",
+    "Requesting user must have permission to view the specified user's posts"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "date"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "currentPage": {
+          "type": "number"
+        },
+        "totalPages": {
+          "type": "number"
+        },
+        "totalPosts": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

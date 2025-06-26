@@ -1,0 +1,17 @@
+{
+  "featureName": "CheckBoardVersion",
+  "description": "Verifies if the forum software is up-to-date by comparing the current version with the latest available version.",
+  "inputValues": [
+    "currentVersion-string-System",
+    "latestVersion-string-RemoteServer"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect currentVersion (string) from the system configuration\n   - Collect latestVersion (string) from the remote version server\n   - Both inputs are system-generated and required\n   - Version format should be in semantic versioning (e.g., \"1.2.3\")\n\n2. Data Validation:\n   - Validate currentVersion:\n     * VERIFY that currentVersion is not empty\n     * VERIFY that currentVersion follows semantic versioning format (X.Y.Z)\n     * IF currentVersion is invalid THEN display error message \"Current version information is invalid\"\n   - Validate latestVersion:\n     * VERIFY that latestVersion was successfully retrieved from remote server\n     * VERIFY that latestVersion follows semantic versioning format (X.Y.Z)\n     * IF latestVersion is empty or invalid THEN set system as \"development version\" and exit process\n\n3. Business Rule Processing:\n   - Parse version components:\n     * Split currentVersion into major, minor, and revision components\n     * Split latestVersion into major, minor, and revision components\n     * IF currentVersion contains development suffix (e.g., \"-dev\") THEN remove suffix for comparison\n   - Check for development version:\n     * IF currentVersion contains \"-dev\" suffix THEN mark system as \"development version\"\n\n4. Core Operation Execution:\n   - Compare version components in order of importance (major, minor, revision):\n     * IF latestVersion major > currentVersion major THEN mark as \"not up to date\"\n     * ELSE IF latestVersion minor > currentVersion minor THEN mark as \"not up to date\"\n     * ELSE IF latestVersion revision > currentVersion revision THEN mark as \"not up to date\"\n     * ELSE mark as \"up to date\"\n   - Process version notes:\n     * Extract version notes from remote server response\n     * Format notes for display\n\n5. Response Generation:\n   - Prepare version comparison results:\n     * Include currentVersion value\n     * Include latestVersion value\n     * Include up-to-date status (boolean)\n     * Include development version status (boolean)\n     * Include version notes if available\n   - Display results to administrator:\n     * Show version comparison information\n     * IF not up to date THEN highlight available update\n     * IF development version THEN display appropriate notice",
+  "databaseEntities": [],
+  "validationRules": [
+    "Current version must follow semantic versioning format (X.Y.Z)",
+    "Latest version must be successfully retrieved from remote server",
+    "Latest version must follow semantic versioning format (X.Y.Z)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

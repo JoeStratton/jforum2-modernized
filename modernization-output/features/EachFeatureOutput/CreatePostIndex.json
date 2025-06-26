@@ -1,0 +1,39 @@
+{
+  "featureName": "CreatePostIndex",
+  "description": "Indexes a single forum post for search functionality.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Post object with the following attributes:\n     - id: Unique identifier for the post\n     - forumId: Identifier of the forum containing the post\n     - topicId: Identifier of the topic containing the post\n     - userId: Identifier of the user who created the post\n     - time: Date and time when the post was created\n     - subject: Title or subject of the post\n     - text: Content or body of the post\n\n2. Data Validation\n   - Validate Post object integrity\n     - Verify the Post object is not null\n     - Verify the Post ID is valid and greater than zero\n     - Verify the Forum ID is valid and greater than zero\n     - Verify the Topic ID is valid and greater than zero\n     - Verify the User ID is valid and greater than zero\n     - Verify the post subject is not null\n     - Verify the post text is not null\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Terminate the indexing process\n\n3. Business Rule Processing\n   - Check if search indexing is enabled in the system\n     - IF search indexing is disabled THEN\n       - Log information about skipped indexing\n       - Exit the process successfully without indexing\n   - Check if the post is eligible for indexing\n     - IF post is in a forum that should not be indexed THEN\n       - Skip the indexing process\n       - Log information about skipped indexing\n       - Exit the process successfully\n   - Check if the search index directory is accessible\n     - IF directory is not accessible THEN\n       - Log error about inaccessible index directory\n       - Terminate the indexing process with appropriate error\n   - Check if there are any existing lock files on the index\n     - IF lock file exists THEN\n       - Attempt to remove the lock file\n       - IF lock removal fails THEN\n         - Log error about locked index\n         - Terminate the indexing process with appropriate error\n\n4. Core Operation Execution\n   - Create a document for indexing\n     - Extract post ID and store it as a keyword field\n     - Extract forum ID and store it as a keyword field\n     - Extract topic ID and store it as a keyword field\n     - Extract user ID and store it as a keyword field\n     - Format and store the post creation date\n     - Combine post subject and text for content indexing\n   - Add the document to the search index\n     - Acquire synchronization lock to prevent concurrent modifications\n     - Open the index writer\n     - Add the document to the index\n     - IF the number of documents reaches optimization threshold THEN\n       - Perform index optimization\n     - Flush and close the index writer\n   - Update related index statistics\n     - Increment the count of indexed documents\n     - Update last indexing timestamp\n\n5. Response Generation\n   - Notify registered listeners about the new indexed document\n   - IF indexing was successful THEN\n     - Log successful indexing operation\n     - Return success status\n   - ELSE\n     - Log details about indexing failure\n     - Return failure status with error information",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Post subject must not be null",
+    "Post text must not be null",
+    "Search indexing must be enabled in system settings",
+    "Search index directory must be accessible",
+    "Index must not be locked by another process"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "forumId": "number",
+      "topicId": "number",
+      "userId": "number",
+      "time": "date",
+      "subject": "string",
+      "text": "string"
+    }
+  }
+}

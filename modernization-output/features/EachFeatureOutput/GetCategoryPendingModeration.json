@@ -1,0 +1,62 @@
+{
+  "featureName": "GetCategoryPendingModeration",
+  "description": "Retrieves information about categories and forums with posts awaiting moderation.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current user's authentication context\n\n2. Data Validation:\n   - Validate user permissions\n     - IF user does not have moderation privileges THEN\n       - Generate permission denied error\n       - Exit process\n     - END IF\n\n3. Business Rule Processing:\n   - Check system configuration for moderation settings\n     - IF moderation feature is disabled system-wide THEN\n       - Return empty result set\n       - Exit process\n     - END IF\n   - Determine user's moderation scope\n     - IF user is global moderator THEN\n       - Set scope to all categories and forums\n     - ELSE\n       - Retrieve list of forums user has moderation rights for\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve pending moderation information\n     - Query database for categories containing forums with pending posts\n     - For each category:\n       - Retrieve basic category information (ID, name, description)\n       - Identify forums within category that have pending posts\n       - For each forum with pending posts:\n         - Retrieve forum information (ID, name, description)\n         - Count number of topics with pending posts\n         - Count total number of pending posts\n     - Organize data hierarchically by category and forum\n     - Process results sequentially:\n       - Track the last processed category ID\n       - Create new category information object when ID changes\n       - Add forum information to the current category object\n       - Add completed category to the results list\n   - Apply user's moderation scope filter\n     - IF user is not global moderator THEN\n       - Filter results to only include forums user can moderate\n     - END IF\n\n5. Response Generation:\n   - Prepare moderation summary data\n     - Format category and forum information\n     - Include pending post counts for each forum\n     - Include total pending post count across all accessible forums\n   - Return structured moderation data\n     - Categories with pending moderation\n     - Forums within each category with pending moderation\n     - Count of pending posts per forum\n     - Total count of pending posts",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_moderator_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have moderation privileges",
+    "Moderation feature must be enabled in system settings",
+    "Only return categories and forums with at least one post pending moderation",
+    "Only return forums the user has permission to moderate"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationPendingInfo": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "integer",
+          "description": "Unique identifier for the category"
+        },
+        "categoryName": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "forums": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forumId": {
+                "type": "integer",
+                "description": "Unique identifier for the forum"
+              },
+              "forumName": {
+                "type": "string",
+                "description": "Name of the forum"
+              },
+              "pendingPostsCount": {
+                "type": "integer",
+                "description": "Number of posts awaiting moderation in this forum"
+              }
+            }
+          }
+        },
+        "totalPendingPosts": {
+          "type": "integer",
+          "description": "Total number of posts awaiting moderation in this category"
+        }
+      }
+    }
+  }
+}

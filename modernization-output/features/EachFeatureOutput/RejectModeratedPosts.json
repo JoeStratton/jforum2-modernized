@@ -1,0 +1,32 @@
+{
+  "featureName": "RejectModeratedPosts",
+  "description": "Rejects and deletes posts from the moderation queue including their attachments.",
+  "inputValues": [
+    "postIds-object-PostIdList",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. postIds (mandatory): List of post identifiers to be rejected\n     b. forumId (mandatory): Identifier of the forum containing the posts\n\n2. Data Validation\n   - Validate post identifiers:\n     a. Check if postIds array is not empty\n        IF postIds array is empty THEN\n          Return error message \"No posts selected for rejection\"\n     b. Verify each postId is a valid number\n        FOR EACH postId in postIds\n          IF postId is not a valid number THEN\n            Return error message \"Invalid post identifier format\"\n   - Validate forum identifier:\n     a. Check if forumId is provided\n        IF forumId is not provided THEN\n          Return error message \"Forum identifier is required\"\n     b. Verify forumId is a valid number\n        IF forumId is not a valid number THEN\n          Return error message \"Invalid forum identifier format\"\n\n3. Business Rule Processing\n   - Verify user permissions:\n     a. Check if current user has moderation privileges for the specified forum\n        IF user does not have moderation privileges THEN\n          Return error message \"Insufficient permissions to moderate this forum\"\n   - Verify forum exists:\n     a. Check if forum with forumId exists in the system\n        IF forum does not exist THEN\n          Return error message \"Forum not found\"\n   - Verify posts are in moderation queue:\n     a. FOR EACH postId in postIds\n        Check if post exists and is awaiting moderation\n        IF post does not exist THEN\n          Skip this post and continue with next\n        IF post is not awaiting moderation THEN\n          Skip this post and continue with next\n\n4. Core Operation Execution\n   - Process each post for rejection:\n     a. FOR EACH postId in postIds\n        i. Retrieve post details from database\n        ii. Delete any attachments associated with the post\n           - Identify all attachments linked to the post\n           - Remove attachment files from storage\n           - Delete attachment records from database\n        iii. Delete the post content from database\n        iv. Check if this was the only post in its topic\n            IF topic has no remaining posts THEN\n              Delete the topic\n              Update forum statistics to reflect removed topic\n            ELSE\n              Update topic statistics (post count, last post information)\n        v. Update forum statistics to reflect removed post\n\n5. Response Generation\n   - Prepare success response:\n     a. Count of successfully rejected posts\n     b. Count of topics that were deleted (if any)\n     c. Updated forum statistics\n   - Handle potential errors:\n     a. IF any posts failed to be rejected\n        Include details of which posts could not be processed and why\n   - Return confirmation message:\n     a. \"Successfully rejected [count] posts from moderation queue\"",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_attachments",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "User must have moderation privileges for the forum",
+    "Post IDs must be valid and exist in the system",
+    "Posts must be in the moderation queue awaiting approval",
+    "Forum ID must be valid and exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PostIdList": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "description": "Unique identifier of a post"
+      }
+    }
+  }
+}

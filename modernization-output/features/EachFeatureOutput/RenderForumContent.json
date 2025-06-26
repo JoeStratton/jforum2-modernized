@@ -1,0 +1,77 @@
+{
+  "featureName": "RenderForumContent",
+  "description": "Renders forum content using templates and handles response encoding.",
+  "inputValues": [
+    "request-object-RequestContext",
+    "response-object-ResponseContext",
+    "templateContext-object-TemplateContext",
+    "moduleClass-string-ModuleClass",
+    "encoding-string-Encoding"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. request (RequestContext): Contains user request data including module and action information\n     b. response (ResponseContext): Used for sending the rendered content back to the user\n     c. templateContext (TemplateContext): Contains template variables and context data\n     d. moduleClass (String): The class name of the module to be executed\n     e. encoding (String): Character encoding to be used for the response\n\n2. Data Validation:\n   - Validate request object:\n     a. Check if request is not null\n     b. Verify that module information is available\n     c. Ensure action information is present\n   - Validate response object:\n     a. Verify response is not null and can be written to\n   - Validate moduleClass:\n     a. Check if moduleClass is not null or empty\n     b. Verify that the moduleClass exists in the system\n   - Validate encoding:\n     a. Ensure encoding is a valid character encoding\n     b. If encoding is not specified, use system default encoding\n\n3. Business Rule Processing:\n   - Check user session status:\n     a. Verify if user is logged in\n     b. Load security permissions for the current user\n   - Check IP ban status:\n     a. Retrieve user's IP address\n     b. Check if the IP is in the ban list\n     c. IF IP is banned THEN\n        i. Change module to display ban message\n        ii. IF system is configured to send forbidden status THEN\n            - Set response to forbidden status\n            - Skip further processing\n   - Prepare template context:\n     a. Add module name to context\n     b. Add action name to context\n     c. Add user language to context\n     d. Add user session information to context\n     e. Add request and response objects to context\n\n4. Core Operation Execution:\n   - Retrieve command instance:\n     a. Load the module class using reflection\n     b. Create a new instance of the command\n   - Process the command:\n     a. Execute the command with the request, response, and context\n     b. Retrieve the resulting template\n   - Check for redirect:\n     a. IF redirect is specified THEN\n        i. Store redirect URL for later processing\n        ii. Skip content rendering\n     b. ELSE continue with content rendering\n   - Render content:\n     a. Determine content type:\n        i. IF custom content type is specified THEN use it\n        ii. ELSE use \"text/html\" with specified encoding\n     b. Set content type on response\n     c. IF not custom content THEN\n        i. Create output writer with proper encoding\n        ii. Process template with context\n        iii. Flush output buffer\n\n5. Response Generation:\n   - Finalize response:\n     a. Close output writer if open\n     b. Check for pending redirect:\n        i. IF redirect URL exists THEN\n           - IF encoding is disabled THEN send redirect without encoding\n           - ELSE send redirect with proper URL encoding\n     c. Complete execution context:\n        i. Release any resources\n        ii. Finalize database operations\n   - Handle exceptions:\n     a. IF any exception occurs during processing THEN\n        i. Enable transaction rollback\n        ii. Set content type for error response\n        iii. Write exception details to output\n        iv. Complete execution context",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_sessions",
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "Request object must not be null",
+    "Response object must not be null",
+    "Module class must exist in the system",
+    "Encoding must be a valid character encoding",
+    "User IP must be checked against ban list before rendering content",
+    "Content type must be set before writing response",
+    "Template must be processed with proper context data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "module": {
+          "type": "string",
+          "description": "The requested module name"
+        },
+        "action": {
+          "type": "string",
+          "description": "The requested action name"
+        },
+        "contextPath": {
+          "type": "string",
+          "description": "The application context path"
+        },
+        "remoteAddr": {
+          "type": "string",
+          "description": "The remote IP address"
+        }
+      }
+    },
+    "ResponseContext": {
+      "type": "object",
+      "properties": {
+        "outputStream": {
+          "type": "object",
+          "description": "The output stream for writing response"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the response"
+        }
+      }
+    },
+    "TemplateContext": {
+      "type": "object",
+      "properties": {
+        "variables": {
+          "type": "object",
+          "description": "Template variables for rendering"
+        }
+      }
+    }
+  }
+}

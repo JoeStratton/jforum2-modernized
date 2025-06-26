@@ -1,0 +1,50 @@
+{
+  "featureName": "StartDatabase",
+  "description": "Initializes the database connection and verifies connectivity.",
+  "inputValues": [
+    "configSettings-object-DatabaseConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database configuration settings (configSettings-object-DatabaseConfig)\n     - Connection string parameters (required)\n     - Authentication credentials (required)\n     - Connection pool settings (optional)\n     - Timeout settings (optional, system default if not provided)\n\n2. Data Validation:\n   - Validate database configuration parameters\n     - Check if connection string is properly formatted\n     - Verify credentials are provided and properly formatted\n     - Validate that pool settings are within acceptable ranges\n     - Ensure timeout values are positive numbers\n   - IF any validation fails THEN\n     - Generate appropriate validation error message\n     - Halt initialization process\n     - Return error status with details\n\n3. Business Rule Processing:\n   - Check system readiness for database operations\n     - Verify system has sufficient resources for database connection\n     - Check if required system libraries are available\n     - Ensure no conflicting database processes are running\n   - IF system is not ready THEN\n     - Log detailed diagnostics information\n     - Generate appropriate error message\n     - Return error status with system state information\n\n4. Core Operation Execution:\n   - Initialize database connection implementation\n     - Create database connection instance\n     - Apply configuration settings to connection\n     - Initialize connection pools if configured\n   - Establish test connection to verify connectivity\n     - Open connection to database\n     - Execute simple validation query\n     - Release connection back to pool\n   - IF connection fails THEN\n     - Attempt connection retry with exponential backoff (up to 3 attempts)\n     - IF all retries fail THEN\n       - Release all allocated resources\n       - Log detailed connection failure information\n       - Return error status with connectivity details\n\n5. Response Generation:\n   - IF connection successful THEN\n     - Log successful database initialization\n     - Record connection statistics (connection time, pool status)\n     - Return success status with connection details\n   - ELSE\n     - Return detailed error information\n     - Include troubleshooting suggestions\n     - Provide support contact information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Database configuration must contain valid connection parameters",
+    "Database credentials must be properly formatted and non-empty",
+    "Connection pool settings must be within acceptable ranges",
+    "System must have sufficient resources for database operations",
+    "Database must be accessible from the current network environment",
+    "Database version must be compatible with the application"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseConfig": {
+      "connectionString": "string",
+      "username": "string",
+      "password": "string",
+      "poolMinSize": "number",
+      "poolMaxSize": "number",
+      "connectionTimeout": "number",
+      "idleTimeout": "number",
+      "retryAttempts": "number"
+    }
+  }
+}

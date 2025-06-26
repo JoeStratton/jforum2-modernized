@@ -1,0 +1,17 @@
+{
+  "featureName": "FirstPostId",
+  "description": "Retrieves the ID of the first post in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will automatically determine the first post ID\n\n2. Data Validation:\n   - Verify system access permissions\n   - Validate that the posts repository is accessible\n   - Check that the database connection is active\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Terminate operation\n   - END IF\n\n3. Business Rule Processing:\n   - Check if post records exist in the system\n   - IF no posts exist in the system THEN\n     - Return appropriate indication that no posts are available\n     - Terminate operation\n   - END IF\n   - Verify post data integrity\n   - Ensure post ID sequence is valid\n\n4. Core Operation Execution:\n   - Query the posts repository for the lowest post ID value\n   - Order all posts by ID in ascending order\n   - Select the first record from the ordered list\n   - Extract the ID value from the selected record\n   - Store the ID value for return\n   - IF retrieval operation fails THEN\n     - Log the failure reason\n     - Prepare error response\n     - Terminate operation\n   - END IF\n\n5. Response Generation:\n   - Format the post ID as required by the calling system\n   - Return the first post ID value\n   - IF operation was successful THEN\n     - Include success status in response\n   - ELSE\n     - Include error details in response\n     - Provide troubleshooting information\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "System must have access to post records",
+    "Database connection must be active",
+    "Post repository must contain at least one record for successful retrieval",
+    "Post ID must be a positive integer value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

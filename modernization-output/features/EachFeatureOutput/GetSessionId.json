@@ -1,0 +1,17 @@
+{
+  "featureName": "GetSessionId",
+  "description": "Retrieves the unique identifier for the current session.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will use internally stored session information\n\n2. Data Validation:\n   - Check if session context exists\n     - IF session context does not exist THEN\n       - Return appropriate error message indicating no active session\n     - END IF\n   - Verify session ID is present in the session context\n     - IF session ID is missing THEN\n       - Log session corruption warning\n       - Return error indicating session data integrity issue\n     - END IF\n\n3. Business Rule Processing:\n   - Check session validity\n     - IF session has expired THEN\n       - Return error indicating expired session\n     - END IF\n   - Verify session access permissions\n     - IF current user is not authorized to access this session THEN\n       - Return permission denied error\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve session ID from session context storage\n   - Format session ID according to system requirements\n   - Record session access timestamp for auditing purposes\n\n5. Response Generation:\n   - Return the session ID as response\n   - Include session metadata if verbose mode is enabled\n   - IF any errors occurred during processing THEN\n     - Return appropriate error message\n     - Include troubleshooting information when applicable\n   - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session context must exist",
+    "Session ID must be present in the session context",
+    "Session must not be expired",
+    "User must have permission to access the session"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

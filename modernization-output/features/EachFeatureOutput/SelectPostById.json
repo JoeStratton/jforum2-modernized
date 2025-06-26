@@ -1,0 +1,48 @@
+{
+  "featureName": "SelectPostById",
+  "description": "Retrieves a post by its ID with all associated data.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the post ID (postId) as a required input\n   - The post ID must be a positive integer\n\n2. Data Validation\n   - Validate that the post ID is provided\n     - IF post ID is missing or null THEN\n       - Generate an error message: \"Post ID is required\"\n       - Return error response\n     - END IF\n   - Validate that the post ID is a positive integer\n     - IF post ID is not a positive integer THEN\n       - Generate an error message: \"Post ID must be a positive integer\"\n       - Return error response\n     - END IF\n\n3. Business Rule Processing\n   - Check if the user has permission to view the post\n     - IF user does not have permission to view the post THEN\n       - Generate an error message: \"Insufficient permissions to view this post\"\n       - Return error response\n     - END IF\n   - Check if the post exists in the system\n     - IF post does not exist THEN\n       - Generate an error message: \"Post not found\"\n       - Return error response\n     - END IF\n   - Prepare the database connection for retrieving the post\n     - IF connection preparation fails THEN\n       - Generate an error message: \"Database connection error\"\n       - Return error response\n     - END IF\n\n4. Core Operation Execution\n   - Retrieve the post record using the provided post ID\n     - Fetch the basic post information (ID, topic ID, forum ID, user ID)\n     - Fetch the post metadata (creation time, IP address, formatting options)\n     - Fetch the post content (subject, text)\n     - Fetch the post author information (username)\n     - Fetch attachment information (has attachments flag)\n     - Fetch moderation status\n   - Format the post timestamp according to system date/time format\n   - Retrieve karma information for the post\n   - Assemble all post data into a complete post object\n     - IF any error occurs during data retrieval THEN\n       - Log the error details for system administrators\n       - Generate an error message: \"Error retrieving post data\"\n       - Return error response\n     - END IF\n   - Release database resources after retrieval\n     - Ensure all connections and resources are properly closed\n     - IF resource cleanup fails THEN\n       - Log the cleanup failure\n     - END IF\n\n5. Response Generation\n   - Prepare the success response with the complete post object\n     - Include all post details (ID, topic ID, forum ID, user ID)\n     - Include post metadata (creation time, IP address, formatting options)\n     - Include post content (subject, text)\n     - Include post author information (username)\n     - Include attachment information\n     - Include moderation status\n     - Include formatted timestamp\n     - Include karma information\n   - Return the complete post object to the caller\n   - IF post was not found (empty post object) THEN\n     - Return an empty post object\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_karma",
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Post ID must be provided",
+    "Post ID must be a positive integer",
+    "User must have permission to view the post",
+    "Post must exist in the system",
+    "Database connection must be available",
+    "Database resources must be properly released after use"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "editCount": "number",
+      "editTime": "date",
+      "subject": "string",
+      "text": "string",
+      "postUsername": "string",
+      "hasAttachments": "boolean",
+      "moderate": "boolean",
+      "formatedTime": "string",
+      "karma": "object"
+    }
+  }
+}

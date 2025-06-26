@@ -1,0 +1,55 @@
+{
+  "featureName": "ResizeImage",
+  "description": "Resizes an image to specified dimensions while maintaining aspect ratio.",
+  "inputValues": [
+    "imagePath-string-Image",
+    "imageType-number-ImageType",
+    "maxWidth-number-Dimension",
+    "maxHeight-number-Dimension"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. imagePath: Path to the image file (mandatory)\n     b. imageType: Type of image (mandatory) - can be JPEG, PNG, or GIF\n     c. maxWidth: Maximum width for the resized image (mandatory)\n     d. maxHeight: Maximum height for the resized image (mandatory)\n   - System will use these inputs to resize the image while maintaining its aspect ratio\n\n2. Data Validation:\n   - Validate image path:\n     a. Check if the path is not empty\n     b. Verify the path points to an existing file\n     c. If validation fails, generate appropriate error message\n   - Validate image type:\n     a. Ensure image type is one of the supported types (JPEG, PNG, GIF)\n     b. If validation fails, generate appropriate error message\n   - Validate dimensions:\n     a. Ensure maxWidth is a positive integer\n     b. Ensure maxHeight is a positive integer\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check system resources:\n     a. Verify sufficient memory is available for image processing\n     b. Ensure the system has appropriate permissions to read the source image\n     c. IF any resource check fails, THEN abort operation and return appropriate error\n   - Determine if resizing is necessary:\n     a. IF original image dimensions are already smaller than maxWidth and maxHeight, THEN\n        no resizing is needed\n     b. ELSE calculate new dimensions while preserving aspect ratio\n\n4. Core Operation Execution:\n   - Load the source image:\n     a. Open the image file from the provided path\n     b. IF loading fails, THEN generate appropriate error\n   - Calculate new dimensions:\n     a. Get original image width and height\n     b. Calculate aspect ratio (width/height)\n     c. IF width > maxWidth OR height > maxHeight, THEN\n        i. IF maxWidth/maxHeight > aspect ratio, THEN\n           - Set new width = maxHeight * aspect ratio\n           - Set new height = maxHeight\n        ii. ELSE\n           - Set new width = maxWidth\n           - Set new height = maxWidth / aspect ratio\n     d. ELSE keep original dimensions\n   - Perform image resizing:\n     a. Create a new image with calculated dimensions\n     b. Apply smooth scaling algorithm to maintain image quality\n     c. Transfer pixel data from source to resized image\n   - Handle transparency:\n     a. IF original image has transparency AND output type supports it, THEN\n        preserve transparency in resized image\n\n5. Response Generation:\n   - Success response:\n     a. Return the resized image object\n     b. Include information about new dimensions\n     c. Include original and new file sizes\n   - Error response:\n     a. Provide specific error message based on failure point\n     b. Include suggestions for resolving common issues\n     c. Log detailed error information for troubleshooting",
+  "databaseEntities": [],
+  "validationRules": [
+    "Image path must not be empty",
+    "Image file must exist at the specified path",
+    "Image type must be one of the supported types (JPEG, PNG, GIF)",
+    "Maximum width must be a positive integer",
+    "Maximum height must be a positive integer",
+    "System must have sufficient memory for image processing",
+    "System must have read permissions for the source image"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Image": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to the image file"
+        },
+        "width": {
+          "type": "number",
+          "description": "Width of the image in pixels"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the image in pixels"
+        }
+      }
+    },
+    "ImageType": {
+      "type": "number",
+      "enum": [
+        -1,
+        0,
+        1,
+        2
+      ],
+      "description": "Type of image: -1 (UNKNOWN), 0 (JPEG), 1 (PNG), 2 (GIF)"
+    },
+    "Dimension": {
+      "type": "number",
+      "description": "Size dimension in pixels"
+    }
+  }
+}

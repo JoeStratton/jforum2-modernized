@@ -1,0 +1,31 @@
+{
+  "featureName": "AddQuotaLimit",
+  "description": "Adds a new quota limit for attachments with description, size and type.",
+  "inputValues": [
+    "description-string-QuotaLimit",
+    "size-number-QuotaLimit",
+    "type-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     1.1. description (string): A descriptive name for the quota limit\n     1.2. size (number): The maximum size allowed for attachments in this quota\n     1.3. type (number): The type identifier for this quota limit\n   - All fields are mandatory\n   - No default values are provided\n\n2. Data Validation\n   2.1. Validate description\n       - Check if description is not empty\n       - Check if description length is within acceptable range (3-100 characters)\n       - IF validation fails, THEN return appropriate error message\n   \n   2.2. Validate size\n       - Check if size is a positive number\n       - Check if size is within acceptable range (minimum 1, maximum system-defined limit)\n       - IF validation fails, THEN return appropriate error message\n   \n   2.3. Validate type\n       - Check if type is a valid quota type identifier\n       - Check if type exists in the system\n       - IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing\n   3.1. Check system state\n       - Verify the system allows creation of new quota limits\n       - Check if user has permission to create quota limits\n       - IF any check fails, THEN return appropriate error message\n   \n   3.2. Check for duplicates\n       - Check if a quota limit with identical description already exists\n       - IF duplicate found, THEN return error indicating duplicate quota limit\n\n4. Core Operation Execution\n   4.1. Create new quota limit record\n       - Prepare the quota limit data with provided inputs\n       - Create a new quota limit record in the system\n       - IF creation fails, THEN handle the error and return appropriate message\n   \n   4.2. Associate with default groups if applicable\n       - IF system is configured to associate new quotas with default groups, THEN\n         - Identify default groups\n         - Create associations between the new quota limit and default groups\n       - IF association fails, THEN log the error but continue\n\n5. Response Generation\n   5.1. Generate success response\n       - Include confirmation message that quota limit was created successfully\n       - Include the details of the created quota limit (id, description, size, type)\n       - Include any relevant next steps or related actions\n   \n   5.2. IF any errors occurred during the process, THEN\n       - Generate appropriate error response\n       - Include specific error details and suggestions for resolution\n       - Provide support information if needed",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Description must not be empty",
+    "Description must be within acceptable length range",
+    "Size must be a positive number",
+    "Size must be within acceptable range",
+    "Type must be a valid quota type identifier",
+    "Quota limit description must be unique"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

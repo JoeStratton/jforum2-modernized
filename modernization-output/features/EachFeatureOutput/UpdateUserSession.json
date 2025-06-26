@@ -1,0 +1,53 @@
+{
+  "featureName": "UpdateUserSession",
+  "description": "Updates an existing user session information in the database.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "connection-object-Connection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect UserSession object with session data\n     - Session ID (mandatory)\n     - User ID (mandatory)\n     - Start time (mandatory)\n     - Session time (system calculated)\n   - Collect database Connection object (mandatory)\n\n2. Data Validation:\n   - Validate UserSession object\n     - Verify Session ID is not null or empty\n     - Verify User ID is a valid positive integer\n     - Verify Start time is a valid date/time value\n   - Validate Connection object is active and valid\n   - IF any validation fails THEN\n     - Generate appropriate validation error message\n     - Terminate the update process\n\n3. Business Rule Processing:\n   - Check if session exists in the system\n     - Query the database using User ID to find existing session\n     - IF session does not exist THEN\n       - Create a new session record instead\n       - Skip to step 4b (Add Operation)\n     - ELSE\n       - Proceed with update operation\n   - Verify session data integrity\n     - Ensure timestamps are logically consistent\n     - Verify session belongs to the specified user\n\n4. Core Operation Execution:\n   - Prepare session data for update\n     - Format timestamp for database storage\n     - Calculate session duration if needed\n   - Update session record in database\n     - Use prepared statement with session parameters\n     - Set updated start time\n     - Set updated session time\n     - Filter by session ID and user ID\n     - Execute update operation\n     - IF update operation fails THEN\n       - Attempt to rollback changes if applicable\n       - Generate update failure error\n       - Terminate the update process\n   - 4b. Add Operation (if session doesn't exist)\n     - Create new session record with provided data\n     - Execute insert operation\n     - IF insert operation fails THEN\n       - Generate insert failure error\n       - Terminate the process\n\n5. Response Generation:\n   - IF update/insert successful THEN\n     - Return success status\n     - Include updated session information if needed\n   - ELSE\n     - Include detailed error information\n     - Provide error code and message",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session ID must not be empty",
+    "User ID must be a valid positive integer",
+    "Start time must be a valid date/time value",
+    "Database connection must be valid and active",
+    "Session time must be a non-negative value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "ID of the user associated with this session"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the session started"
+        },
+        "sessionTime": {
+          "type": "integer",
+          "description": "Duration of the session in milliseconds"
+        }
+      },
+      "required": [
+        "sessionId",
+        "userId",
+        "startTime"
+      ]
+    },
+    "Connection": {
+      "type": "object",
+      "description": "Database connection object"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "featureName": "SearchNewMessages",
+  "description": "Searches for new messages in the forum using specialized search operation.",
+  "inputValues": [
+    "search_keywords-string-SearchCriteria",
+    "search_author-number-User",
+    "sort_by-string-SortOption",
+    "sort_dir-string-SortDirection",
+    "match_type-string-MatchType",
+    "from_date-date-DateRange",
+    "to_date-date-DateRange",
+    "forum-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following search parameters from the user:\n     a. Keywords (mandatory): Text to search for in messages\n     b. Author ID (optional): Numeric identifier of the message author\n     c. Sort criteria (optional): Field to sort results by\n     d. Sort direction (optional): Ascending or descending order\n     e. Match type (optional): How to match keywords (all keywords or any keyword)\n     f. Date range (optional): From date and to date to limit search period\n     g. Forum ID (optional): Specific forum to search within\n   - System will use default values for any missing optional parameters\n\n2. Data Validation:\n   - Validate search keywords:\n     a. IF keywords are provided THEN verify they meet minimum length requirements\n     b. IF keywords contain special characters THEN ensure they are properly formatted\n     c. Generate appropriate error message if validation fails\n   - Validate author ID:\n     a. IF author ID is provided THEN verify it exists in the system\n     b. Generate appropriate error message if validation fails\n   - Validate date range:\n     a. IF date range is provided THEN verify from_date is before or equal to to_date\n     b. Generate appropriate error message if validation fails\n   - Validate forum ID:\n     a. IF forum ID is provided THEN verify it exists in the system\n     b. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify user has permission to search for new messages:\n     a. Check if user is logged in\n     b. Check if user has appropriate access rights\n     c. IF user lacks permission THEN return appropriate error message\n   - Determine search scope based on inputs:\n     a. IF forum ID is provided THEN limit search to specified forum\n     b. IF no forum ID is provided THEN search across all forums user has access to\n   - Apply system constraints:\n     a. Check if search operation would exceed system resource limits\n     b. IF limits would be exceeded THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Initialize new messages search operation:\n     a. Set up search parameters based on validated inputs\n     b. Configure pagination settings (start position and records per page)\n   - Execute search for new messages:\n     a. Query database for messages matching all criteria\n     b. Filter results to include only messages posted since user's last visit\n     c. Sort results according to specified sort criteria and direction\n     d. Apply pagination to limit number of results returned\n   - Process search results:\n     a. Format each result with relevant message details\n     b. Group results by forum and topic as needed\n     c. Calculate total number of matching messages\n     d. IF search fails THEN prepare appropriate error information\n\n5. Response Generation:\n   - Prepare search results for display:\n     a. Format message content snippets showing matched keywords\n     b. Include metadata (author, date, forum, topic) for each result\n     c. Generate pagination information (current page, total pages)\n   - Generate success response:\n     a. Include formatted search results\n     b. Include total count of matching messages\n     c. Include pagination details for navigation\n     d. Include search criteria used for reference\n   - IF no results found THEN:\n     a. Provide appropriate message indicating no new messages match criteria\n     b. Suggest alternative search terms or broader criteria",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Search keywords must meet minimum length requirements if provided",
+    "Author ID must exist in the system if provided",
+    "From date must be before or equal to to date if date range is provided",
+    "Forum ID must exist in the system if provided",
+    "User must have permission to access the specified forum",
+    "User must be logged in to search for new messages"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchCriteria": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Text to search for in messages"
+        },
+        "authorId": {
+          "type": "number",
+          "description": "ID of the message author"
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "sortDirection": {
+          "type": "string",
+          "description": "Direction of sorting (ascending or descending)"
+        },
+        "matchType": {
+          "type": "string",
+          "description": "How to match keywords (all or any)"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for search range"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for search range"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of forum to search within"
+        }
+      }
+    }
+  }
+}

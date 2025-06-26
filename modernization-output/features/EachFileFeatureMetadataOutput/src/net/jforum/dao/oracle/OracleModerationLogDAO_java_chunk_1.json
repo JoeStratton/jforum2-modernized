@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "AddModerationLog",
+    "description": "Creates a new moderation log entry with user actions, timestamps, and message content"
+  },
+  {
+    "featureName": "SelectAllModerationLogs",
+    "description": "Retrieves moderation log entries with pagination support"
+  },
+  {
+    "featureName": "ReadModerationLogDescription",
+    "description": "Reads moderation log description content from Oracle BLOB fields"
+  },
+  {
+    "featureName": "ReadModerationLogOriginalMessage",
+    "description": "Retrieves the original message content from moderation logs stored in Oracle BLOB fields"
+  }
+]

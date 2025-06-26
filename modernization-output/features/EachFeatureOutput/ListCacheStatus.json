@@ -1,0 +1,24 @@
+{
+  "featureName": "ListCacheStatus",
+  "description": "Displays the status of various system caches in the admin interface.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for initial display\n   - System will gather cache information automatically\n\n2. Data Validation:\n   - No user input validation required for initial display\n   - System will verify access permissions\n     - IF user is not an administrator THEN\n       - Display access denied message\n       - End process\n     - END IF\n\n3. Business Rule Processing:\n   - System checks availability of all cache repositories\n     - Verify BBCode repository is accessible\n     - Verify Modules repository is accessible\n     - Verify Ranking repository is accessible\n     - Verify Smilies repository is accessible\n     - Verify Security repository is accessible\n     - Verify Forum repository is accessible\n     - Verify Topic repository is accessible\n     - Verify Session repository is accessible\n     - Verify Posts repository is accessible\n   - IF any repository is not accessible THEN\n     - Record error information for display\n   - END IF\n\n4. Core Operation Execution:\n   - System retrieves status information from each cache repository:\n     - For BBCode repository:\n       - Retrieve number of cached items\n       - Retrieve last update timestamp\n     - For Modules repository:\n       - Retrieve list of loaded modules\n       - Retrieve configuration status\n     - For Ranking repository:\n       - Retrieve number of rank definitions\n       - Retrieve last update timestamp\n     - For Smilies repository:\n       - Retrieve number of smilies cached\n       - Retrieve last update timestamp\n     - For Security repository:\n       - Retrieve security configuration status\n     - For Forum repository:\n       - Retrieve number of forums cached\n       - Retrieve categories information\n     - For Topic repository:\n       - Retrieve number of topics in cache\n       - Retrieve cache hit statistics if available\n     - For Session repository:\n       - Retrieve number of active sessions\n       - Retrieve session timeout settings\n     - For Posts repository:\n       - Retrieve number of cached posts\n       - Retrieve cache efficiency statistics if available\n\n5. Response Generation:\n   - System prepares cache status display:\n     - Format cache information in a structured layout\n     - For each cache repository:\n       - Display name and current status (active/inactive)\n       - Display item count and memory usage if available\n       - Display last update timestamp if applicable\n       - Provide reload/clear buttons for each cache type\n     - IF detailed information is requested for Topics cache THEN\n       - Display additional information organized by categories\n       - Show forum-specific topic cache statistics\n       - Provide forum-specific cache clearing options\n     - END IF\n     - IF detailed information is requested for Posts cache THEN\n       - Display cached topics list with post counts\n       - Show post cache hit statistics if available\n       - Provide topic-specific cache clearing options\n     - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_smilies",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to access cache management",
+    "Cache repositories must be properly initialized before status can be displayed",
+    "Topic cache must be enabled to view detailed topic cache information",
+    "Posts cache must be enabled to view detailed post cache information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

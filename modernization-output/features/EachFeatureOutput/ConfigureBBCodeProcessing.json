@@ -1,0 +1,53 @@
+{
+  "featureName": "ConfigureBBCodeProcessing",
+  "description": "Configures BBCode processing options including quote removal and always-process settings.",
+  "inputValues": [
+    "tagName-string-BBCode",
+    "regex-string-BBCode",
+    "replace-string-BBCode",
+    "removeQuotes-boolean-BBCode",
+    "alwaysProcess-boolean-BBCode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. tagName (string, mandatory): The name of the BBCode tag to be configured\n     1.2. regex (string, mandatory): The regular expression pattern for matching the BBCode\n     1.3. replace (string, mandatory): The replacement string for the BBCode\n     1.4. removeQuotes (boolean, optional): Flag indicating whether quotes should be removed\n     1.5. alwaysProcess (boolean, optional): Flag indicating whether the BBCode should always be processed\n\n2. Data Validation:\n   2.1. Validate tagName:\n      - Check if tagName is not empty\n      - Verify tagName follows the proper format for BBCode tags\n      - IF tagName is empty or invalid THEN\n        - Generate error message: \"Tag name cannot be empty and must follow proper BBCode format\"\n      - END IF\n   2.2. Validate regex:\n      - Check if regex is not empty\n      - Verify regex is a valid regular expression pattern\n      - IF regex is empty or invalid THEN\n        - Generate error message: \"Regular expression pattern cannot be empty and must be valid\"\n      - END IF\n   2.3. Validate replace:\n      - Check if replace is not null (can be empty string)\n      - IF replace is null THEN\n        - Generate error message: \"Replacement string cannot be null\"\n      - END IF\n   2.4. Validate removeQuotes:\n      - Ensure removeQuotes is a boolean value if provided\n      - IF removeQuotes is provided but not a boolean THEN\n        - Generate error message: \"Remove quotes flag must be a boolean value\"\n      - END IF\n   2.5. Validate alwaysProcess:\n      - Ensure alwaysProcess is a boolean value if provided\n      - IF alwaysProcess is provided but not a boolean THEN\n        - Generate error message: \"Always process flag must be a boolean value\"\n      - END IF\n\n3. Business Rule Processing:\n   3.1. Check for existing BBCode with the same tagName:\n      - Search for existing BBCode with the provided tagName\n      - IF existing BBCode found THEN\n        - Determine if this is an update operation\n        - Verify user has permission to update existing BBCode\n      - END IF\n   3.2. Verify system state allows BBCode configuration:\n      - Check if BBCode processing is enabled in the system\n      - IF BBCode processing is disabled THEN\n        - Generate warning: \"BBCode processing is currently disabled in the system\"\n      - END IF\n   3.3. Validate compatibility of settings:\n      - IF both removeQuotes and alwaysProcess are true THEN\n        - Verify this combination is allowed by business rules\n        - Generate warning if needed: \"Using both remove quotes and always process may cause unexpected behavior\"\n      - END IF\n\n4. Core Operation Execution:\n   4.1. Create or update BBCode configuration:\n      - IF updating existing BBCode THEN\n        - Retrieve the existing BBCode object\n      - ELSE\n        - Create a new BBCode object\n      - END IF\n      - Set the tagName property to the provided tagName\n      - Set the regex property to the provided regex\n      - Set the replace property to the provided replace\n      - IF removeQuotes is true THEN\n        - Enable quote removal for this BBCode\n      - END IF\n      - IF alwaysProcess is true THEN\n        - Enable always process for this BBCode\n      - END IF\n   4.2. Save the BBCode configuration:\n      - Store the BBCode configuration in the system\n      - IF save operation fails THEN\n        - Revert any changes made\n        - Generate error message: \"Failed to save BBCode configuration\"\n      - END IF\n   4.3. Update related caches:\n      - Clear any caches related to BBCode processing\n      - Rebuild BBCode processing rules if necessary\n\n5. Response Generation:\n   5.1. Generate success response:\n      - Include confirmation message: \"BBCode configuration for [tagName] has been successfully saved\"\n      - Include summary of configured settings\n      - Provide information about how the BBCode will be processed\n   5.2. Handle error responses:\n      - For validation errors, include specific field errors\n      - For business rule violations, include explanation\n      - For system errors, include appropriate error codes\n   5.3. Include next steps:\n      - Suggest testing the BBCode in a preview environment\n      - Provide link to BBCode management interface\n      - Offer option to configure additional BBCodes",
+  "databaseEntities": [],
+  "validationRules": [
+    "Tag name must not be empty",
+    "Regular expression pattern must be valid",
+    "Replacement string must not be null",
+    "Remove quotes flag must be a boolean value",
+    "Always process flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCode": {
+      "type": "object",
+      "properties": {
+        "tagName": {
+          "type": "string",
+          "description": "The name of the BBCode tag"
+        },
+        "regex": {
+          "type": "string",
+          "description": "Regular expression pattern for matching the BBCode"
+        },
+        "replace": {
+          "type": "string",
+          "description": "Replacement string for the BBCode"
+        },
+        "removeQuotes": {
+          "type": "boolean",
+          "description": "Flag indicating whether quotes should be removed"
+        },
+        "alwaysProcess": {
+          "type": "boolean",
+          "description": "Flag indicating whether the BBCode should always be processed"
+        }
+      },
+      "required": [
+        "tagName",
+        "regex",
+        "replace"
+      ]
+    }
+  }
+}

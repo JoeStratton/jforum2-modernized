@@ -1,0 +1,56 @@
+{
+  "featureName": "MakeAnonymous",
+  "description": "Converts the current user session to an anonymous session.",
+  "inputValues": [
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the current UserSession object\n   - No additional user inputs required as this is a system-initiated operation\n   - The operation will use system-defined anonymous user ID\n\n2. Data Validation:\n   - Verify the UserSession object is valid and not null\n   - Verify the system has a properly configured anonymous user ID\n   - IF the session is already anonymous THEN\n     - Skip further processing\n     - Return with no changes\n   - END IF\n\n3. Business Rule Processing:\n   - Check if there are any pending operations that require authentication\n   - IF user has unsaved data or operations in progress THEN\n     - Determine if these operations should be preserved or discarded\n     - Prepare warning messages if applicable\n   - END IF\n   - Verify the anonymous user ID exists in the system\n   - Check if the current session has special permissions that will be lost\n\n4. Core Operation Execution:\n   - Update session start time to current system time\n   - Update last visit time to current system time\n   - Set user ID to the system's anonymous user ID\n   - Remove auto-login cookies if present\n     - Clear the auto-login cookie\n     - Set the user data cookie to anonymous user ID\n   - Mark session as not logged in\n   - Reset any user-specific session attributes\n   - Preserve session ID to maintain the same browser session\n\n5. Response Generation:\n   - Return updated UserSession with anonymous status\n   - Include information about the session change\n   - Provide any relevant messages about lost permissions or data\n   - Return navigation options for anonymous users",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "UserSession object must not be null",
+    "System must have a valid anonymous user ID configured",
+    "Session cookies must be properly updated to reflect anonymous status"
+  ],
+  "dbSeedingOperations": [
+    "Ensure anonymous user exists in jforum_users table",
+    "Ensure anonymous user has appropriate permissions configured"
+  ],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the user session"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "User identifier associated with the session"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username associated with the session"
+        },
+        "startTime": {
+          "type": "date",
+          "description": "Session start timestamp"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Last visit timestamp"
+        },
+        "sessionTime": {
+          "type": "number",
+          "description": "Duration of the session in milliseconds"
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "description": "Flag indicating if auto-login is enabled"
+        }
+      }
+    }
+  }
+}

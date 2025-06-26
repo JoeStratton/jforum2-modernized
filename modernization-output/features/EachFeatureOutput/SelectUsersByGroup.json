@@ -1,0 +1,80 @@
+{
+  "featureName": "SelectUsersByGroup",
+  "description": "Retrieves users belonging to a specific group with pagination support.",
+  "inputValues": [
+    "groupId-number-Group",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupId (mandatory): Numeric identifier of the group to filter users by\n     b. startFrom (mandatory): Numeric value indicating the starting position for pagination\n     c. count (mandatory): Numeric value indicating the maximum number of users to return\n\n2. Data Validation:\n   - Validate groupId:\n     a. Verify groupId is a positive integer\n     b. IF groupId is missing or invalid THEN\n        i. Generate appropriate error message\n        ii. Terminate operation\n   - Validate pagination parameters:\n     a. Verify startFrom is a non-negative integer\n     b. Verify count is a positive integer\n     c. IF any pagination parameter is invalid THEN\n        i. Generate appropriate error message\n        ii. Terminate operation\n\n3. Business Rule Processing:\n   - Verify group existence:\n     a. Check if the specified group exists in the system\n     b. IF group does not exist THEN\n        i. Generate \"Group not found\" error message\n        ii. Terminate operation\n   - Verify user access permissions:\n     a. Check if the current user has permission to view users in the specified group\n     b. IF user lacks permission THEN\n        i. Generate \"Insufficient permissions\" error message\n        ii. Terminate operation\n\n4. Core Operation Execution:\n   - Prepare user retrieval operation:\n     a. Formulate query to select users belonging to the specified group\n     b. Apply pagination parameters (startFrom and count) to limit results\n     c. Execute the query to retrieve matching user records\n     d. IF query execution fails THEN\n        i. Log the error details\n        ii. Generate system error message\n        iii. Terminate operation\n   - Process retrieved user records:\n     a. For each user record retrieved:\n        i. Extract user information (ID, username, registration date, etc.)\n        ii. Format user data according to system requirements\n        iii. Add formatted user data to result collection\n     b. IF no users found in the specified group THEN\n        i. Return empty result collection\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include the collection of user records\n     b. Include pagination metadata:\n        i. Total number of users in the group\n        ii. Current page information\n        iii. Indication if more users are available\n     c. Return formatted response to caller\n   - Handle error scenarios:\n     a. For validation errors, return specific error messages\n     b. For system errors, return appropriate error codes and messages\n     c. Include support information for troubleshooting",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Group must exist in the system",
+    "User must have permission to view group members"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "startFrom": {
+          "type": "number",
+          "description": "Starting position for pagination"
+        },
+        "count": {
+          "type": "number",
+          "description": "Maximum number of records to return"
+        },
+        "total": {
+          "type": "number",
+          "description": "Total number of records available"
+        }
+      }
+    }
+  }
+}

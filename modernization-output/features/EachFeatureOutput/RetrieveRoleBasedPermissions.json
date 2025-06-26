@@ -1,0 +1,69 @@
+{
+  "featureName": "RetrieveRoleBasedPermissions",
+  "description": "Retrieves and processes role-based permissions from database using SQL templates.",
+  "inputValues": [
+    "roleId-string-Role",
+    "permissionId-string-Permission",
+    "permissionType-string-Permission"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect roleId (mandatory): The identifier of the role to retrieve permissions for\n   - Collect permissionId (mandatory): The identifier of the permission to check\n   - Collect permissionType (mandatory): The type of permission (e.g., 'single', 'multiple')\n   - System will use predefined SQL templates for permission retrieval\n\n2. Data Validation:\n   - Validate roleId:\n     a. Check if roleId is not empty\n     b. Verify roleId exists in the system\n     c. Return error if roleId is invalid: \"Invalid role identifier provided\"\n   - Validate permissionId:\n     a. Check if permissionId is not empty\n     b. Verify permissionId exists in the permission registry\n     c. Return error if permissionId is invalid: \"Invalid permission identifier provided\"\n   - Validate permissionType:\n     a. Check if permissionType is either 'single' or 'multiple'\n     b. Return error if permissionType is invalid: \"Permission type must be 'single' or 'multiple'\"\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify permission system is initialized\n     b. Verify database connection is available\n     c. IF permission system is not initialized, THEN initialize it\n   - Verify permission configuration:\n     a. Check if XML permission definitions are loaded\n     b. IF not loaded, THEN load XML permission configurations\n     c. Verify the requested permission exists in the configuration\n   - Determine query template:\n     a. Select appropriate SQL template based on permissionId and permissionType\n     b. IF template does not exist, THEN return error: \"Permission query template not found\"\n\n4. Core Operation Execution:\n   - Retrieve role information:\n     a. Load role data using roleId\n     b. Extract role values collection from the role\n     c. IF role not found, THEN create empty role values collection\n   - Execute permission query:\n     a. Prepare SQL query using the selected template\n     b. Execute query to retrieve permission data\n     c. Process query results into permission data structure\n     d. For each result row:\n        i. Extract value field and caption field\n        ii. Create selection data entry\n        iii. Check if the permission is granted for the role\n        iv. Mark selection as selected based on permission status\n   - Build permission section:\n     a. Create permission section with appropriate title and identifier\n     b. Add permission items to the section\n     c. Associate permission data with each permission item\n\n5. Response Generation:\n   - Prepare success response:\n     a. Format permission data into structured response\n     b. Include section information (title, id)\n     c. Include permission items (name, id, type)\n     d. Include selection options with selected status\n   - Handle potential errors:\n     a. Database connection errors: \"Unable to connect to permission database\"\n     b. XML parsing errors: \"Error parsing permission configuration\"\n     c. Permission retrieval errors: \"Error retrieving role permissions\"\n   - Return complete permission data structure",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Role identifier must exist in the system",
+    "Permission identifier must exist in the permission registry",
+    "Permission type must be either 'single' or 'multiple'",
+    "XML permission configuration must be properly formatted",
+    "Database connection must be available for permission retrieval"
+  ],
+  "dbSeedingOperations": [
+    "Ensure basic role types exist (Administrator, Moderator, User)",
+    "Ensure permission types are defined in the system",
+    "Ensure permission-role relationships are initialized"
+  ],
+  "schema": {
+    "Role": {
+      "id": "string",
+      "name": "string",
+      "values": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": "string",
+            "value": "string"
+          }
+        }
+      }
+    },
+    "Permission": {
+      "id": "string",
+      "name": "string",
+      "type": "string",
+      "options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": "string",
+            "value": "string",
+            "selected": "boolean"
+          }
+        }
+      }
+    },
+    "PermissionSection": {
+      "title": "string",
+      "id": "string",
+      "permissions": {
+        "type": "array",
+        "items": {
+          "$ref": "#/Permission"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "featureName": "TestLoadRecipients",
+  "description": "Tests loading of summary email recipients from the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current application state and database\n\n2. Data Validation:\n   - Verify database connection is available\n     - IF database connection fails, THEN display error message and abort operation\n   - Verify summary recipient data exists in the system\n     - IF no recipient data exists, THEN log warning but continue process\n\n3. Business Rule Processing:\n   - Initialize the summary model component\n     - Create new instance of summary model\n     - Prepare model for recipient retrieval\n   - Verify user permissions and system configuration\n     - Check if summary email functionality is enabled in system settings\n     - Verify current user has permission to access recipient information\n     - IF permissions are insufficient, THEN abort operation and display error\n\n4. Core Operation Execution:\n   - Retrieve recipient list from the system\n     - Query the database for all users who have subscribed to summary emails\n     - Collect email addresses and user preferences for each recipient\n     - Format recipient data in appropriate structure for display\n   - Process recipient information\n     - Count total number of recipients found\n     - Log recipient retrieval operation completion\n     - Display recipient information for verification purposes\n   - Verify recipient list integrity\n     - Check that recipient list contains at least one entry\n     - Validate email format for each recipient\n     - IF recipient list is empty, THEN log warning message\n\n5. Response Generation:\n   - Display recipient information\n     - For each recipient, output relevant information to console or log\n     - Show total count of recipients found\n   - Verify operation success\n     - Assert that recipient list contains at least one entry\n     - IF assertion passes, THEN mark test as successful\n     - IF assertion fails, THEN mark test as failed and log error",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Database connection must be available",
+    "Summary email functionality must be enabled in system settings",
+    "User must have permission to access recipient information",
+    "Recipient list must contain at least one entry",
+    "Each recipient must have a valid email address"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one user with summary email subscription exists in jforum_users"
+  ],
+  "schema": {}
+}

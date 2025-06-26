@@ -1,0 +1,17 @@
+{
+  "featureName": "RequestBasicAuthentication",
+  "description": "Triggers HTTP basic authentication for securing forum access.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No explicit user inputs required\n   - System-generated authentication request\n\n2. Data Validation:\n   - No input validation required as this is a system-initiated process\n\n3. Business Rule Processing:\n   - Verify current user authentication status\n     3.1. Check if user is already authenticated\n     3.2. IF user is authenticated, THEN skip authentication request\n     3.3. IF user is not authenticated, THEN proceed with authentication request\n   - Determine if the requested resource requires authentication\n     3.4. Check access control rules for the requested resource\n     3.5. IF resource does not require authentication, THEN skip authentication request\n     3.6. IF resource requires authentication, THEN proceed with authentication request\n\n4. Core Operation Execution:\n   - Prepare authentication challenge\n     4.1. Create authentication header with realm information\n     4.2. Set realm name to \"JForum\"\n   - Send authentication challenge to user\n     4.3. Set HTTP response status code to 401 (Unauthorized)\n     4.4. Add WWW-Authenticate header to the response\n     4.5. Mark the response as containing custom content\n   - Handle potential errors\n     4.6. IF error occurs while sending the authentication challenge\n          4.6.1. Log the error details\n          4.6.2. Convert to appropriate system exception\n\n5. Response Generation:\n   - Authentication challenge response\n     5.1. Browser receives 401 status code with WWW-Authenticate header\n     5.2. Browser displays authentication dialog to the user\n     5.3. User enters credentials or cancels the authentication\n   - Post-authentication handling\n     5.4. IF user provides credentials\n          5.4.1. System will receive credentials in a subsequent request\n          5.4.2. Credentials will be validated in a separate process\n     5.5. IF user cancels authentication\n          5.5.1. User will not gain access to the protected resource",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Authentication challenge must include the realm name",
+    "HTTP response status must be set to 401 (Unauthorized)",
+    "Custom content flag must be enabled to prevent default error pages"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

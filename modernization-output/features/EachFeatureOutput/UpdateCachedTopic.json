@@ -1,0 +1,62 @@
+{
+  "featureName": "UpdateCachedTopic",
+  "description": "Updates an existing topic in the cache while maintaining cache integrity.",
+  "inputValues": [
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Topic object with updated information\n   - Required fields: topic ID, forum ID, and updated topic properties\n   - System will use the cache configuration settings from system preferences\n\n2. Data Validation:\n   - Validate Topic object exists\n     * IF Topic object is null THEN return error \"Topic object cannot be null\"\n     * IF Topic ID is not set or invalid THEN return error \"Invalid Topic ID\"\n     * IF Forum ID is not set or invalid THEN return error \"Invalid Forum ID\"\n   - Validate cache is enabled\n     * IF topic caching is disabled in system preferences THEN exit process without error (no action needed)\n\n3. Business Rule Processing:\n   - Check if topic exists in cache\n     * IF topic is not in cache THEN no update is needed\n   - Verify forum relationship\n     * IF topic's forum ID has changed THEN handle as a topic move operation\n     * IF forum cache is not initialized THEN initialize forum cache\n\n4. Core Operation Execution:\n   - Acquire synchronization lock to prevent concurrent modifications\n     * Lock the forum cache to ensure thread safety\n   - Locate the topic in the cache\n     * Retrieve the forum's topic list from cache using forum ID\n     * Find the topic's index in the list using topic ID\n     * IF topic found in list THEN:\n       > Replace the old topic instance with the updated topic instance\n       > Maintain the topic's position in the list\n       > Ensure topic type ordering is preserved\n     * IF topic not found in list THEN:\n       > No action required as topic is not cached\n   - Update related cache entries\n     * Update any relationship mappings if needed\n     * Update recent topics list if applicable\n   - Release synchronization lock\n\n5. Response Generation:\n   - Return success indicator\n   - No specific response data needed as this is a cache maintenance operation\n   - Log cache update operation if logging is enabled",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "Topic ID must be valid",
+    "Forum ID must be valid",
+    "Cache must be enabled for operation to proceed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this topic belongs to"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in this topic"
+        },
+        "lastPostTime": {
+          "type": "date",
+          "description": "Date and time of the last post"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of the topic for sorting purposes"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Count of replies in this topic"
+        },
+        "status": {
+          "type": "number",
+          "description": "Current status of the topic"
+        }
+      },
+      "required": [
+        "id",
+        "forumId"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "featureName": "AddUserBookmark",
+  "description": "Creates a bookmark for a specific user with title and description.",
+  "inputValues": [
+    "userId-number-User",
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "publicVisible-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. userId (number, mandatory): The ID of the user to bookmark\n     b. title (string, optional): Custom title for the bookmark, defaults to username of bookmarked user\n     c. description (string, optional): Custom description for the bookmark\n     d. publicVisible (boolean, optional): Whether the bookmark is visible to other users, defaults to false\n\n2. Data Validation:\n   - Validate user authentication:\n     a. IF current user is not authenticated (anonymous) THEN\n        i. Return error message \"Anonymous users cannot create bookmarks\"\n     b. Check if bookmark feature is enabled in system\n        i. IF bookmark feature is disabled THEN\n           1. Return error message \"Bookmark feature is disabled\"\n   - Validate userId:\n     a. IF userId is not provided or invalid THEN\n        i. Return error message \"Invalid user ID\"\n     b. IF user with provided userId does not exist THEN\n        i. Return error message \"User not found\"\n   - Validate title:\n     a. IF title is provided THEN\n        i. Ensure title is properly sanitized to prevent security issues\n        ii. IF title exceeds maximum length THEN\n            1. Return error message \"Title exceeds maximum allowed length\"\n   - Validate description:\n     a. IF description is provided THEN\n        i. Ensure description is properly sanitized to prevent security issues\n        ii. IF description exceeds maximum length THEN\n            1. Return error message \"Description exceeds maximum allowed length\"\n\n3. Business Rule Processing:\n   - Check for existing bookmark:\n     a. Query database for existing bookmark with same userId and current user as owner\n     b. IF bookmark already exists THEN\n        i. Prepare for update operation instead of creation\n        ii. Pre-populate form fields with existing bookmark data\n   - Verify user permissions:\n     a. IF current user does not have permission to create bookmarks THEN\n        i. Return error message \"You don't have permission to create bookmarks\"\n\n4. Core Operation Execution:\n   - Prepare bookmark data:\n     a. Set relation type to USER type constant\n     b. Set relation ID to the provided userId\n     c. Set owner ID to current user's ID\n     d. IF title is not provided THEN\n        i. Set title to bookmarked user's username\n     e. Set description to provided description or empty if not provided\n     f. Set public visibility flag based on provided input\n   - Save bookmark:\n     a. IF updating existing bookmark THEN\n        i. Update bookmark record in database\n     b. ELSE\n        i. Create new bookmark record in database\n     c. IF database operation fails THEN\n        i. Roll back any changes\n        ii. Return error message \"Failed to save bookmark\"\n\n5. Response Generation:\n   - On success:\n     a. Generate success message \"Bookmark successfully saved\"\n     b. Provide link to view all bookmarks\n     c. Provide link to view bookmarked user's profile\n   - On failure:\n     a. Display appropriate error message from validation or processing steps\n     b. Maintain user input values for correction\n     c. Provide option to retry operation",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must be authenticated to create bookmarks",
+    "Bookmark feature must be enabled in the system",
+    "User ID must be valid and exist in the system",
+    "Title and description must be properly sanitized",
+    "Title and description must not exceed maximum allowed length"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

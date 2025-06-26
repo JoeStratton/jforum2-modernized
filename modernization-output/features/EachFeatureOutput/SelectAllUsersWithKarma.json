@@ -1,0 +1,49 @@
+{
+  "featureName": "SelectAllUsersWithKarma",
+  "description": "Retrieves users with their karma information and pagination support.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - startFrom (number): The starting index for pagination (mandatory)\n     - count (number): The maximum number of users to retrieve (mandatory)\n\n2. Data Validation:\n   - Validate startFrom parameter:\n     - IF startFrom is negative THEN\n       - Generate error message: \"Starting index must be a non-negative number\"\n     - END IF\n   - Validate count parameter:\n     - IF count is negative THEN\n       - Generate error message: \"Count must be a non-negative number\"\n     - END IF\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify database connection is available\n     - IF database connection is unavailable THEN\n       - Generate error: \"Database connection error\"\n       - Exit process\n     - END IF\n   - Determine pagination approach:\n     - IF count is greater than 0 THEN\n       - Use limited query approach with pagination parameters\n     - ELSE\n       - Use standard query to retrieve all users\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve basic user information:\n     - IF using limited query approach THEN\n       - Retrieve users from database using startFrom and count parameters\n       - Position result cursor at the startFrom position\n     - ELSE\n       - Retrieve all users from database\n     - END IF\n   - Process retrieved user records:\n     - For each user record:\n       - Extract user attributes (id, username, email, etc.)\n       - Create user object with extracted attributes\n     - Add user object to results collection\n   - Enhance user data with karma information:\n     - For each user in the results collection:\n       - Retrieve karma data associated with the user\n       - Calculate total karma value\n       - Attach karma information to user object\n\n5. Response Generation:\n   - Prepare response with user collection:\n     - Format each user with their attributes and karma information\n     - Include pagination metadata:\n       - Total number of users available\n       - Current page information\n       - More results indicator\n   - Return the collection of users with karma information\n   - IF any errors occurred during processing THEN\n     - Generate appropriate error response\n     - Include error details and suggestions for resolution\n   - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Starting index (startFrom) must be a non-negative number",
+    "Count must be a non-negative number",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "registrationDate": {
+          "type": "date"
+        },
+        "karma": {
+          "type": "object",
+          "properties": {
+            "karmaPoints": {
+              "type": "number"
+            },
+            "karmaVotes": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}

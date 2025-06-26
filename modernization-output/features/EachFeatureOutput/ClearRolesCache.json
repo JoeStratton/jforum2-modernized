@@ -1,0 +1,17 @@
+{
+  "featureName": "ClearRolesCache",
+  "description": "Clears the system roles cache to ensure role information is refreshed from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - This is a system-level operation that doesn't require external parameters\n\n2. Data Validation:\n   - Verify system user has appropriate permissions to clear cache\n      * IF user does not have administrative privileges THEN\n        - Generate access denied error\n        - Terminate operation\n      * END IF\n   - Verify cache system is operational\n      * IF cache system is not available or initialized THEN\n        - Log system error\n        - Generate appropriate error message\n        - Terminate operation\n      * END IF\n\n3. Business Rule Processing:\n   - Check if cache clearing operation is allowed at current time\n      * IF system is currently processing critical operations THEN\n        - Queue cache clearing request for later execution\n        - Notify user that request has been queued\n        - Terminate current operation\n      * END IF\n   - Determine impact of clearing roles cache\n      * IF active user sessions depend on roles cache THEN\n        - Prepare notification for affected users\n      * END IF\n\n4. Core Operation Execution:\n   - Identify the roles cache storage location\n   - Mark cache as invalid to prevent further reads\n   - Remove all role entries from cache\n      * Set the roles cache root node to null\n      * This effectively invalidates all cached role data\n   - Log cache clearing operation with timestamp and initiator information\n   - Prepare system for subsequent role data reloading\n      * Flag system to reload roles on next access\n\n5. Response Generation:\n   - Generate success confirmation\n      * Include timestamp of operation\n      * Include count of cleared cache entries if available\n   - Provide information about expected system behavior\n      * Notify that roles will be reloaded from database on next access\n      * Indicate potential temporary performance impact during reload\n   - Return operation status to caller",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to clear roles cache",
+    "Cache system must be operational before attempting to clear cache",
+    "System should not be performing critical operations when clearing cache"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

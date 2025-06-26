@@ -1,0 +1,32 @@
+{
+  "featureName": "AddNewRanking",
+  "description": "Creates a new ranking in the system.",
+  "inputValues": [
+    "title-string-Ranking",
+    "minPoints-number-Ranking",
+    "isSpecial-boolean-Ranking",
+    "imageUrl-string-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - title (string): The name of the ranking (mandatory)\n       - minPoints (number): Minimum points required for this ranking (mandatory)\n       - isSpecial (boolean): Whether this is a special ranking (mandatory)\n       - imageUrl (string): URL to the ranking image (optional)\n\n2. Data Validation:\n   2.1. Validate title:\n       IF title is empty or null THEN\n           Return error message \"Ranking title cannot be empty\"\n       IF title length > 100 characters THEN\n           Return error message \"Ranking title cannot exceed 100 characters\"\n   \n   2.2. Validate minimum points:\n       IF minPoints is negative THEN\n           Return error message \"Minimum points cannot be negative\"\n   \n   2.3. Validate image URL:\n       IF imageUrl is provided THEN\n           IF imageUrl format is invalid THEN\n               Return error message \"Invalid image URL format\"\n\n3. Business Rule Processing:\n   3.1. Check for duplicate ranking titles:\n       FOR EACH existing ranking in the system\n           IF title equals existing.title THEN\n               Return error message \"Ranking with this title already exists\"\n   \n   3.2. Check for special ranking conflicts:\n       IF isSpecial is true THEN\n           Verify special ranking requirements are met\n       ELSE\n           Check for overlapping point ranges with other non-special rankings:\n           FOR EACH existing non-special ranking in the system\n               IF minPoints equals existing.minPoints THEN\n                   Return error message \"Another ranking already exists with the same minimum points\"\n   \n   3.3. Check system limits:\n       IF total number of rankings >= system maximum allowed rankings THEN\n           Return error message \"Maximum number of rankings reached\"\n\n4. Core Operation Execution:\n   4.1. Create new ranking record:\n       - Create a new ranking with the provided information\n       - Set the title to the provided value\n       - Set the minimum points to the provided value\n       - Set the special flag to the provided value\n       - Set the image URL if provided\n   \n   4.2. Store the ranking:\n       - Save the ranking to the system\n       - IF save operation fails THEN\n           Log the error details\n           Return error message \"Failed to create ranking\"\n\n5. Response Generation:\n   5.1. On success:\n       - Return success message \"Ranking created successfully\"\n       - Include the generated ranking ID\n       - Include a summary of the created ranking details\n   \n   5.2. On failure:\n       - Return appropriate error message from validation or processing steps\n       - Include guidance on how to correct the issue",
+  "databaseEntities": [
+    "Ranking"
+  ],
+  "validationRules": [
+    "Ranking title must not be empty",
+    "Ranking title must not exceed 100 characters",
+    "Minimum points must not be negative",
+    "Special rankings must be properly flagged",
+    "Non-special rankings must not have duplicate minimum point values",
+    "Image URL must have a valid format if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "minPoints": "number",
+      "isSpecial": "boolean",
+      "imageUrl": "string"
+    }
+  }
+}

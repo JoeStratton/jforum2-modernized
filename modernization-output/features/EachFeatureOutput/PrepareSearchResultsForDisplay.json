@@ -1,0 +1,74 @@
+{
+  "featureName": "PrepareSearchResultsForDisplay",
+  "description": "Processes search results to prepare posts for display in the user interface.",
+  "inputValues": [
+    "searchResults-object-SearchResult",
+    "posts-object-PostList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search results containing post records\n   - Identify if the search results are from a keyword search or empty search\n   - Determine if formatting is required for display purposes\n\n2. Data Validation:\n   - Verify search results are not null\n   - Check if the results collection contains valid post objects\n   - Validate that each post has the required attributes for display\n   - Ensure the post content is accessible and can be formatted\n   - IF any post is invalid or corrupted:\n      - Log the issue\n      - Skip the problematic post\n      - Continue processing valid posts\n\n3. Business Rule Processing:\n   - Check user permissions for viewing each post\n   - Filter out posts from restricted forums if applicable\n   - Determine if content should be censored based on system settings\n   - Apply content visibility rules based on user access level\n   - IF user lacks permission to view certain posts:\n      - Remove those posts from the results\n      - Update the total count accordingly\n\n4. Core Operation Execution:\n   - FOR EACH post in the search results:\n      - Format post text for HTML display\n      - Process any BBCode or markup in the post content\n      - Convert URLs to clickable links\n      - Format code blocks for proper display\n      - Process emoticons/smilies in the content\n      - Highlight search keywords in the post content if applicable\n      - Prepare post metadata (author, date, forum) for display\n      - Add any required display flags to the post object\n   - Organize posts in the appropriate display order\n   - Calculate pagination information if needed\n\n5. Response Generation:\n   - Prepare the final collection of formatted posts\n   - Include total count of matching posts\n   - Include pagination details if applicable\n   - Provide forum context information for each post\n   - Return the prepared results for rendering in the user interface",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Search results must contain valid post objects",
+    "Each post must have accessible content for formatting",
+    "User must have permission to view the posts",
+    "Posts must belong to accessible forums",
+    "Post content must be properly sanitized for display"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "ref": "Post"
+          }
+        },
+        "totalRecords": {
+          "type": "number"
+        }
+      }
+    },
+    "PostList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "ref": "Post"
+      }
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "postDate": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}

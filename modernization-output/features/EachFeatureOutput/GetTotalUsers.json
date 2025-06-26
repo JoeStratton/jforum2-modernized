@@ -1,0 +1,14 @@
+{
+  "featureName": "GetTotalUsers",
+  "description": "Retrieves the total number of users in the forum.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal state to retrieve user count\n\n2. Data Validation:\n   - No input validation required as there are no user inputs\n   - System will verify that the cache repository is accessible\n     - IF cache repository is not accessible THEN\n       - Generate appropriate error response\n       - End process\n\n3. Business Rule Processing:\n   - Verify user has permission to view user statistics\n     - IF current user does not have permission THEN\n       - Generate access denied response\n       - End process\n   - Check if total users count is already available in cache\n     - IF total users count exists in cache THEN\n       - Proceed to retrieve cached value\n     - ELSE\n       - System will need to calculate the count from database\n\n4. Core Operation Execution:\n   - Retrieve total users count\n     - IF count is available in cache THEN\n       - Retrieve the Integer value from cache repository\n     - ELSE\n       - Query the database for total number of registered users\n       - Store result in cache for future use\n   - Format the count value for display\n     - Convert Integer to appropriate display format\n     - Prepare count for inclusion in response\n\n5. Response Generation:\n   - Create success response containing:\n     - Total number of users in the system\n     - Status indicator showing successful retrieval\n   - IF any errors occurred during processing THEN\n     - Generate appropriate error response with:\n       - Error code\n       - Error description\n       - Suggested resolution steps",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have permission to view forum statistics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

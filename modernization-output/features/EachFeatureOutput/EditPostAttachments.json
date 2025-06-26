@@ -1,0 +1,50 @@
+{
+  "featureName": "EditPostAttachments",
+  "description": "Updates or removes attachments from existing forum posts.",
+  "inputValues": [
+    "postId-number-Post",
+    "forumId-number-Forum",
+    "attachmentsToDelete-string-Attachment",
+    "attachmentsToEdit-object-AttachmentEdit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (mandatory): Numeric identifier of the post being modified\n   - Collect forumId (mandatory): Numeric identifier of the forum containing the post\n   - Collect attachmentsToDelete (optional): Comma-separated list of attachment IDs to remove\n   - Collect attachmentsToEdit (optional): List of attachment objects with updated information\n     - Each attachment edit contains:\n       - attachmentId: Numeric identifier of the attachment\n       - comment: New comment text for the attachment\n\n2. Data Validation:\n   - Validate postId:\n     - Must be a positive integer\n     - Must reference an existing post\n     - Error if invalid: \"Invalid post identifier provided\"\n   - Validate forumId:\n     - Must be a positive integer\n     - Must reference an existing forum\n     - Error if invalid: \"Invalid forum identifier provided\"\n   - Validate attachmentsToDelete:\n     - Each ID must be a positive integer\n     - Each ID must belong to an attachment in the specified post\n     - Error if invalid: \"One or more attachment IDs are invalid\"\n   - Validate attachmentsToEdit:\n     - Each attachmentId must be a positive integer and exist in the system\n     - Each attachmentId must belong to an attachment in the specified post\n     - Comments must not exceed 254 characters in length\n     - Error if invalid: \"One or more attachment edits contain invalid data\"\n\n3. Business Rule Processing:\n   - Check user permissions:\n     - Verify user has permission to edit attachments in the specified forum\n     - IF user does not have attachment edit permission THEN\n       - Return error: \"You do not have permission to edit attachments in this forum\"\n   - Verify post exists and belongs to the specified forum\n     - IF post does not exist THEN\n       - Return error: \"The specified post does not exist\"\n     - IF post does not belong to the specified forum THEN\n       - Return error: \"The post does not belong to the specified forum\"\n   - Verify user has rights to edit the post attachments:\n     - IF user is not the post author AND user is not a moderator THEN\n       - Return error: \"You do not have permission to edit attachments for this post\"\n\n4. Core Operation Execution:\n   - Process attachment deletions:\n     - FOR EACH attachment ID in attachmentsToDelete:\n       - Retrieve the attachment details from the database\n       - Remove the attachment record from the database\n       - Delete the physical attachment file from the storage system\n       - IF attachment has a thumbnail image THEN\n         - Delete the thumbnail file from the storage system\n   - Process attachment updates:\n     - FOR EACH attachment in attachmentsToEdit:\n       - IF attachment ID is not in the attachmentsToDelete list THEN\n         - Retrieve the attachment from the database\n         - Update the attachment comment with the new value\n         - Save the updated attachment to the database\n   - Update post attachment status:\n     - Count remaining attachments for the post\n     - Update post record to indicate whether it has attachments\n\n5. Response Generation:\n   - IF all operations completed successfully THEN\n     - Return success response with:\n       - Message: \"Attachments updated successfully\"\n       - Updated list of attachments for the post\n       - Count of deleted attachments\n       - Count of updated attachments\n   - IF any operation failed THEN\n     - Return error response with:\n       - Error message describing the failure\n       - Any partial success information (e.g., \"2 of 3 attachments were updated\")\n       - Guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_attachments",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_extension_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer and reference an existing post",
+    "Forum ID must be a positive integer and reference an existing forum",
+    "User must have permission to edit attachments in the specified forum",
+    "User must be the post author or a moderator to edit post attachments",
+    "Attachment IDs must belong to the specified post",
+    "Attachment comments must not exceed 254 characters",
+    "Post must exist and belong to the specified forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentEdit": {
+      "type": "object",
+      "properties": {
+        "attachmentId": {
+          "type": "number",
+          "description": "Unique identifier of the attachment to edit"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Updated comment for the attachment",
+          "maxLength": 254
+        }
+      },
+      "required": [
+        "attachmentId",
+        "comment"
+      ]
+    }
+  }
+}

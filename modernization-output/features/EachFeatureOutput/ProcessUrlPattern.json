@@ -1,0 +1,24 @@
+{
+  "featureName": "ProcessUrlPattern",
+  "description": "Processes URL patterns by splitting and storing variables for forum navigation.",
+  "inputValues": [
+    "name-string-UrlPattern",
+    "value-string-UrlPattern"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the pattern name (string, mandatory)\n   - Collect the pattern value (string, mandatory)\n   - System will generate vars array and size attributes\n\n2. Data Validation:\n   - Validate pattern name:\n     * Must not be null or empty\n     * Should follow the format 'moduleName.actionName.numberOfParameters'\n   - Validate pattern value:\n     * Can be empty for patterns with no variables\n     * Should contain comma-separated variable names when variables exist\n   - Generate appropriate error messages for invalid inputs\n\n3. Business Rule Processing:\n   - Verify the pattern name follows the expected format\n   - Check that the pattern value format is valid for parsing\n   - Ensure the pattern can be properly processed\n\n4. Core Operation Execution:\n   - Split the pattern value by comma delimiter\n   - Create a new array to store the variables\n   - Determine the pattern size:\n     * IF the first element is empty or only whitespace, THEN size is 0\n     * ELSE size equals the number of elements after splitting\n   - FOR each variable in the pattern:\n     * Trim whitespace from the variable name\n     * Store the trimmed variable in the vars array\n   - Store the processed pattern information (name, value, size, vars)\n\n5. Response Generation:\n   - Return success status when pattern is successfully processed\n   - Provide access to the pattern name, size, and variables array\n   - IF processing fails, return appropriate error information\n   - Include the pattern details in the response for verification",
+  "databaseEntities": [],
+  "validationRules": [
+    "Pattern name must not be null or empty",
+    "Pattern value must be properly formatted for parsing",
+    "Variable names must be trimmed of whitespace"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlPattern": {
+      "name": "string",
+      "value": "string",
+      "size": "number",
+      "vars": "array"
+    }
+  }
+}

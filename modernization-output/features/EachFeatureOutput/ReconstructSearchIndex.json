@@ -1,0 +1,73 @@
+{
+  "featureName": "ReconstructSearchIndex",
+  "description": "Rebuilds the Lucene search index from scratch with configurable parameters.",
+  "inputValues": [
+    "indexOperationType-string-IndexOperation",
+    "fromDate-date-DateRange",
+    "toDate-date-DateRange",
+    "firstPostId-number-PostRange",
+    "lastPostId-number-PostRange",
+    "avoidDuplicatedRecords-boolean-IndexOption",
+    "type-number-IndexType"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. indexOperationType (mandatory): Determines if the index should be recreated or updated\n     b. fromDate (optional): Starting date for filtering content to be indexed\n     c. toDate (optional): Ending date for filtering content to be indexed\n     d. firstPostId (optional): Starting post ID for filtering content to be indexed\n     e. lastPostId (optional): Ending post ID for filtering content to be indexed\n     f. avoidDuplicatedRecords (optional): Flag to prevent duplicate entries in the index\n     g. type (mandatory): Numeric value indicating the type of content to index\n\n2. Data Validation\n   - Validate indexOperationType:\n     a. IF indexOperationType is empty THEN display error message \"Index operation type must be specified\"\n     b. IF indexOperationType is not one of the allowed values THEN display error message \"Invalid index operation type\"\n   - Validate date ranges:\n     a. IF fromDate is provided AND toDate is provided THEN\n        i. IF fromDate is after toDate THEN display error message \"Start date cannot be after end date\"\n   - Validate post ID ranges:\n     a. IF firstPostId is provided AND lastPostId is provided THEN\n        i. IF firstPostId > lastPostId THEN display error message \"First post ID cannot be greater than last post ID\"\n        ii. IF firstPostId < 0 THEN display error message \"First post ID cannot be negative\"\n   - Validate type parameter:\n     a. IF type is not a valid index type THEN display error message \"Invalid index type specified\"\n\n3. Business Rule Processing\n   - Check system state for indexing:\n     a. IF system is currently performing another indexing operation THEN\n        i. Display error message \"Another indexing operation is in progress\"\n        ii. Abort the current operation\n     b. Check if search functionality is enabled:\n        i. IF search functionality is not enabled THEN\n           1. Display error message \"Search functionality is not enabled\"\n           2. Abort the current operation\n     c. Check if index directory exists:\n        i. IF index directory does not exist THEN\n           1. Create the index directory\n           2. IF directory creation fails THEN display error message \"Failed to create index directory\"\n\n4. Core Operation Execution\n   - Prepare indexing arguments:\n     a. Create indexing configuration with all provided parameters\n     b. Set system flag indicating indexing is in progress\n   - Start the indexing process:\n     a. IF indexOperationType is \"recreate\" THEN\n        i. Initialize a new empty index\n     b. ELSE\n        i. Prepare to update existing index\n     c. Begin background indexing process:\n        i. For each content item matching the criteria (date range, post ID range, type):\n           1. Extract searchable content\n           2. Add content to search index\n           3. Update progress indicators\n        ii. IF avoidDuplicatedRecords is true THEN\n            1. Perform additional checks to prevent duplicate entries\n     d. Upon completion:\n        i. Update index metadata\n        ii. Clear the system flag indicating indexing is in progress\n\n5. Response Generation\n   - Generate success response:\n     a. Display confirmation message that indexing has started\n     b. Show current indexing status information:\n        i. Whether indexing is currently in progress\n        ii. Index statistics (if available):\n           1. Total number of documents in index\n           2. Last modification date\n           3. Index location\n           4. Index version\n     c. Provide option to cancel the indexing process if it's running",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Index operation type must be a valid value",
+    "If date range is specified, start date must be before end date",
+    "If post ID range is specified, first post ID must be less than or equal to last post ID",
+    "First post ID cannot be negative",
+    "Index type must be a valid value",
+    "System cannot start indexing if another indexing operation is in progress"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "IndexOperation": {
+      "type": "string",
+      "enum": [
+        "recreate",
+        "update"
+      ],
+      "description": "Type of index operation to perform"
+    },
+    "DateRange": {
+      "type": "object",
+      "properties": {
+        "day": {
+          "type": "string"
+        },
+        "month": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        },
+        "hour": {
+          "type": "string"
+        },
+        "minutes": {
+          "type": "string"
+        }
+      }
+    },
+    "PostRange": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Post ID for range filtering"
+    },
+    "IndexOption": {
+      "type": "boolean",
+      "description": "Option to control indexing behavior"
+    },
+    "IndexType": {
+      "type": "number",
+      "description": "Type of content to index"
+    }
+  }
+}

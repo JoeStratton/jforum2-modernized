@@ -1,0 +1,53 @@
+{
+  "featureName": "CreateBBCode",
+  "description": "Creates a BBCode tag with specified name, regex pattern, and replacement text.",
+  "inputValues": [
+    "tagName-string-BBCode",
+    "regex-string-BBCode",
+    "replace-string-BBCode",
+    "removeQuotes-boolean-BBCode",
+    "alwaysProcess-boolean-BBCode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. tagName (string, mandatory): The name of the BBCode tag to be created\n     b. regex (string, mandatory): Regular expression pattern for matching the tag\n     c. replace (string, mandatory): Replacement text/pattern for the tag\n     d. removeQuotes (boolean, optional): Flag indicating whether quotes should be removed\n     e. alwaysProcess (boolean, optional): Flag indicating whether the tag should always be processed\n\n2. Data Validation:\n   a. Validate tagName:\n      - Check if tagName is not empty\n      - Verify tagName follows allowed format (alphanumeric characters)\n      - IF validation fails, THEN generate appropriate error message\n   b. Validate regex:\n      - Check if regex is not empty\n      - Verify regex is a valid regular expression pattern\n      - IF validation fails, THEN generate appropriate error message\n   c. Validate replace:\n      - Check if replace is not empty\n      - IF validation fails, THEN generate appropriate error message\n   d. Validate boolean flags:\n      - Ensure removeQuotes and alwaysProcess are valid boolean values\n      - Set default values if not provided (false for both)\n\n3. Business Rule Processing:\n   a. Check for tag name conflicts:\n      - Verify the tagName doesn't conflict with existing BBCode tags\n      - IF conflict exists, THEN generate error message about duplicate tag name\n   b. Verify regex pattern compatibility:\n      - Ensure the regex pattern is compatible with the system\n      - Check for potential security issues in the regex pattern\n      - IF issues found, THEN generate appropriate warning or error\n\n4. Core Operation Execution:\n   a. Create new BBCode instance:\n      - Initialize a new BBCode object\n      - Set the tagName property to the provided value\n      - Set the regex property to the provided pattern\n      - Set the replace property to the provided replacement text\n   b. Configure additional properties:\n      - IF removeQuotes is true, THEN enable quote removal for this BBCode\n      - IF alwaysProcess is true, THEN enable always process flag for this BBCode\n   c. Register the BBCode:\n      - Add the new BBCode to the system's collection of available BBCodes\n      - Ensure the BBCode is properly indexed for efficient lookup\n   d. Update any related caches:\n      - Clear or update any caches that might contain BBCode information\n\n5. Response Generation:\n   a. Success response:\n      - Generate confirmation that BBCode was successfully created\n      - Include the created BBCode details (tagName, regex pattern summary)\n      - Provide information on how to use the newly created BBCode\n   b. Error response:\n      - IF any step failed, THEN provide detailed error information\n      - Include specific validation errors or business rule violations\n      - Suggest possible solutions or alternatives",
+  "databaseEntities": [],
+  "validationRules": [
+    "Tag name must not be empty",
+    "Regular expression pattern must not be empty",
+    "Replacement text must not be empty",
+    "Tag name must be unique",
+    "Regular expression must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCode": {
+      "type": "object",
+      "properties": {
+        "tagName": {
+          "type": "string",
+          "description": "The name of the BBCode tag"
+        },
+        "regex": {
+          "type": "string",
+          "description": "Regular expression pattern for matching the tag"
+        },
+        "replace": {
+          "type": "string",
+          "description": "Replacement text/pattern for the tag"
+        },
+        "removeQuotes": {
+          "type": "boolean",
+          "description": "Flag indicating whether quotes should be removed"
+        },
+        "alwaysProcess": {
+          "type": "boolean",
+          "description": "Flag indicating whether the tag should always be processed"
+        }
+      },
+      "required": [
+        "tagName",
+        "regex",
+        "replace"
+      ]
+    }
+  }
+}

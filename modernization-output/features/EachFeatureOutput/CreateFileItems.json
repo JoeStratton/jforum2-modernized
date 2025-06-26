@@ -1,0 +1,64 @@
+{
+  "featureName": "CreateFileItems",
+  "description": "Creates file item objects from parsed multipart content with metadata.",
+  "inputValues": [
+    "contentType-string-Request",
+    "requestSize-number-Request",
+    "sizeMax-number-Configuration",
+    "headerEncoding-string-Configuration",
+    "multipartContent-object-MultipartContent"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the multipart content from the request\n   1.2. Obtain the content type header value\n   1.3. Get the request size in bytes\n   1.4. Retrieve the maximum allowed size configuration\n   1.5. Get the header encoding configuration\n\n2. Data Validation:\n   2.1. Validate request size\n      2.1.1. IF request size is unknown (-1)\n         THEN generate an error indicating unknown size\n      2.1.2. IF maximum size is configured (sizeMax >= 0) AND request size exceeds maximum\n         THEN generate an error indicating size limit exceeded\n   2.2. Validate multipart boundary\n      2.2.1. Extract boundary from content type header\n      2.2.2. IF boundary is not found\n         THEN generate an error indicating missing multipart boundary\n\n3. Business Rule Processing:\n   3.1. Prepare for multipart content processing\n      3.1.1. Set up multipart stream with input and boundary\n      3.1.2. Configure header encoding for the multipart stream\n   3.2. Check for multipart content structure\n      3.2.1. Skip preamble to position at first part\n      3.2.2. Verify multipart format is valid\n\n4. Core Operation Execution:\n   4.1. Process multipart parts\n      4.1.1. WHILE more parts exist\n         4.1.1.1. Parse headers from current part\n         4.1.1.2. Extract field name from headers\n         4.1.1.3. IF field name exists\n            4.1.1.3.1. Get content type of the part\n            4.1.1.3.2. IF content type indicates nested multipart (multipart/mixed)\n               4.1.1.3.2.1. Extract sub-boundary from content type\n               4.1.1.3.2.2. Process nested multipart content\n               4.1.1.3.2.3. WHILE more sub-parts exist\n                  4.1.1.3.2.3.1. Parse sub-part headers\n                  4.1.1.3.2.3.2. IF file name exists in headers\n                     4.1.1.3.2.3.2.1. Create file item with headers (not form field)\n                     4.1.1.3.2.3.2.2. Read body data into file item\n                     4.1.1.3.2.3.2.3. Add file item to collection\n                  4.1.1.3.2.3.3. ELSE\n                     4.1.1.3.2.3.3.1. Discard body data (non-file content)\n                  4.1.1.3.2.3.4. Move to next sub-part\n               4.1.1.3.2.4. Reset boundary to original boundary\n            4.1.1.3.3. ELSE (regular part)\n               4.1.1.3.3.1. Determine if part is form field based on file name presence\n               4.1.1.3.3.2. Create appropriate file item\n               4.1.1.3.3.3. Read body data into file item\n               4.1.1.3.3.4. Add file item to collection\n         4.1.1.4. ELSE (no field name)\n            4.1.1.4.1. Skip this part by discarding body data\n         4.1.1.5. Move to next part\n\n5. Response Generation:\n   5.1. Return collection of file items\n      5.1.1. Each file item contains:\n         5.1.1.1. Field name\n         5.1.1.2. Content type\n         5.1.1.3. File name (if applicable)\n         5.1.1.4. Content data\n         5.1.1.5. Form field status flag\n   5.2. IF any errors occurred during processing\n      5.2.1. Generate appropriate error response with details",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Request size must be known (not -1)",
+    "Request size must not exceed configured maximum size (if maximum is set)",
+    "Content type must contain a valid multipart boundary",
+    "Multipart content must follow proper format",
+    "Headers in multipart content must be properly formatted",
+    "Header size must not exceed maximum allowed size"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MultipartContent": {
+      "type": "object",
+      "properties": {
+        "inputStream": {
+          "type": "object",
+          "description": "Input stream containing the multipart data"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Map of header names to values"
+        }
+      }
+    },
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "Name of the form field"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the content"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether this item is a form field or file"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Name of the file if this is a file upload"
+        },
+        "content": {
+          "type": "object",
+          "description": "Content data of the file or form field"
+        }
+      }
+    }
+  }
+}

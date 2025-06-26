@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "ListForums",
+    "description": "Displays the forum index page with categories, forums, and online user statistics"
+  },
+  {
+    "featureName": "ShowForumTopics",
+    "description": "Displays all topics in a specific forum with pagination and moderation options"
+  },
+  {
+    "featureName": "ModerationView",
+    "description": "Shows forum topics with moderation panel opened"
+  },
+  {
+    "featureName": "MarkTopicsAsRead",
+    "description": "Marks all topics in a forum as read for the current user"
+  },
+  {
+    "featureName": "ViewNewMessages",
+    "description": "Shows messages posted since the user's last visit"
+  },
+  {
+    "featureName": "ApproveMessages",
+    "description": "Allows moderators to approve pending messages in a forum"
+  },
+  {
+    "featureName": "WatchForum",
+    "description": "Subscribes a user to receive notifications for a specific forum"
+  },
+  {
+    "featureName": "UnwatchForum",
+    "description": "Unsubscribes a user from forum notifications"
+  },
+  {
+    "featureName": "ShowBannedMessage",
+    "description": "Displays a message when a banned user attempts to access the forum"
+  }
+]

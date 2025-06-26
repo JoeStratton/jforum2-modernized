@@ -1,0 +1,41 @@
+{
+  "featureName": "ReadPrivateMessage",
+  "description": "Displays the content of a private message and marks it as read.",
+  "inputValues": [
+    "id-number-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the private message ID (required, numeric)\n   - System retrieves current user ID from active session (system-generated)\n\n2. Data Validation:\n   - Validate user authentication\n     - IF user is not logged in THEN\n       - Redirect to login page\n       - Exit process\n     - END IF\n   - Validate message ID\n     - IF message ID is missing or invalid THEN\n       - Display error message\n       - Exit process\n     - END IF\n\n3. Business Rule Processing:\n   - Verify message access permissions\n     - Retrieve message details using provided ID\n     - Verify message exists\n       - IF message not found THEN\n         - Display error message\n         - Exit process\n       - END IF\n     - Check if current user is either sender or recipient\n       - IF current user is neither sender nor recipient THEN\n         - Display unauthorized access message\n         - Exit process\n       - END IF\n\n4. Core Operation Execution:\n   - Prepare message content for display\n     - Format message text according to system rules\n     - Process any special formatting or embedded content\n   - Update message status if needed\n     - IF message type is NEW AND current user is recipient THEN\n       - Change message type to READ\n       - Update message status in database\n       - Decrement user's unread message count\n     - END IF\n   - Load related message information\n     - Sender details\n     - Recipient details\n     - Message timestamp\n     - Message subject\n\n5. Response Generation:\n   - Display message content\n     - Show message subject\n     - Show sender information\n     - Show recipient information\n     - Show message timestamp\n     - Show formatted message content\n   - Provide navigation options\n     - Return to inbox\n     - Reply to message\n     - Delete message\n     - Other message management options",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be authenticated to read private messages",
+    "User must be either the sender or recipient of the message",
+    "Message ID must be valid and exist in the system",
+    "Only messages that belong to the current user can be accessed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "type": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "post": "object"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    },
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "date": "date"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "ImportPhpbbToJforum",
+    "description": "Migrates data from phpBB to JForum including users, posts, private messages, and forum structure"
+  },
+  {
+    "featureName": "ImportUsers",
+    "description": "Imports user accounts from phpBB to JForum with all profile data and settings"
+  },
+  {
+    "featureName": "ImportPosts",
+    "description": "Transfers forum posts from phpBB to JForum with text formatting conversion"
+  },
+  {
+    "featureName": "ImportPrivateMessages",
+    "description": "Migrates private messages between users from phpBB to JForum"
+  },
+  {
+    "featureName": "ImportForumStructure",
+    "description": "Transfers categories, forums, topics and related forum structure data"
+  },
+  {
+    "featureName": "SetupPermissions",
+    "description": "Configures user permissions and group relationships in the JForum system"
+  },
+  {
+    "featureName": "CleanTables",
+    "description": "Prepares JForum database by cleaning target tables before migration"
+  },
+  {
+    "featureName": "FormatPostContent",
+    "description": "Converts phpBB formatting codes to JForum compatible markup using regex patterns"
+  }
+]

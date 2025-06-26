@@ -1,0 +1,21 @@
+{
+  "featureName": "ValidateActivationKey",
+  "description": "Verifies an account activation key against the stored hash to authenticate user activation requests.",
+  "inputValues": [
+    "userId-number-User",
+    "activationKey-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The unique identifier of the user account\n   - Collect activationKey (string, mandatory) - The activation key provided by the user\n\n2. Data Validation:\n   - Validate userId:\n     a. Verify userId is not null or empty\n     b. Verify userId is a positive integer\n     c. If validation fails, return error message indicating invalid user identifier\n   - Validate activationKey:\n     a. Verify activationKey is not null or empty\n     b. Verify activationKey follows the expected format/pattern\n     c. If validation fails, return error message indicating invalid activation key\n\n3. Business Rule Processing:\n   - Verify user account exists:\n     a. Check if a user with the provided userId exists in the system\n     b. If user does not exist, return error message indicating user not found\n   - Verify user account status:\n     a. Check if the user account is pending activation\n     b. If account is already active, return message indicating account is already activated\n     c. If account is deleted or suspended, return appropriate error message\n\n4. Core Operation Execution:\n   - Compare activation keys:\n     a. Retrieve the stored activation key hash for the specified userId\n     b. Compare the provided activationKey with the stored hash\n     c. IF keys match:\n        i. Mark the validation as successful\n     d. ELSE:\n        i. Mark the validation as failed\n   - Handle validation result:\n     a. IF validation successful:\n        i. Update user account status to active\n        ii. Clear the activation key hash from the system\n     b. ELSE:\n        i. Log failed activation attempt\n        ii. Increment failed attempt counter if applicable\n\n5. Response Generation:\n   - Generate success response:\n     a. IF validation successful:\n        i. Return success status\n        ii. Include message confirming account activation\n        iii. Include any next steps for the user\n     b. ELSE:\n        i. Return failure status\n        ii. Include error message explaining the validation failure\n        iii. Include guidance on how to proceed (request new activation key, contact support)",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Activation key must not be empty",
+    "User must exist in the system",
+    "User account must be pending activation",
+    "Provided activation key must match the stored hash"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

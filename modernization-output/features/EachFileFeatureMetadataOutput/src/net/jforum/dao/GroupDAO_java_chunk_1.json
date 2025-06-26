@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "SelectGroupById",
+    "description": "Retrieves a specific group by its ID"
+  },
+  {
+    "featureName": "SelectAllGroups",
+    "description": "Retrieves all groups in the system"
+  },
+  {
+    "featureName": "CheckGroupDeletionEligibility",
+    "description": "Verifies if a specific group can be deleted"
+  },
+  {
+    "featureName": "DeleteGroup",
+    "description": "Removes a group from the system"
+  },
+  {
+    "featureName": "UpdateGroup",
+    "description": "Updates an existing group's information"
+  },
+  {
+    "featureName": "AddNewGroup",
+    "description": "Creates a new group in the system"
+  },
+  {
+    "featureName": "SelectUsersInGroup",
+    "description": "Retrieves user IDs associated with a specific group"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "featureName": "DeleteOrUndeleteUsers",
+  "description": "Deletes or undeletes selected users based on their current status.",
+  "inputValues": [
+    "user_ids-object-UserIds"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. user_ids (mandatory): List of user identifiers to be processed\n\n2. Data Validation\n   - Validate the provided inputs:\n     2.1. Verify user_ids is not empty\n       IF user_ids is empty THEN\n         Display error message: \"No users selected for operation\"\n         Exit process\n     2.2. Verify each user ID is valid\n       FOR EACH user_id in user_ids\n         IF user_id is not a valid identifier THEN\n           Display error message: \"Invalid user identifier detected\"\n           Exit process\n\n3. Business Rule Processing\n   - Verify system constraints before proceeding:\n     3.1. Check user permissions\n       IF current user does not have administrative privileges THEN\n         Display error message: \"Insufficient permissions to modify user accounts\"\n         Exit process\n     3.2. Verify users can be modified\n       FOR EACH user_id in user_ids\n         IF user is a system account or protected account THEN\n           Display error message: \"Cannot modify system or protected accounts\"\n           Exit process\n\n4. Core Operation Execution\n   - Process each user account:\n     4.1. Retrieve current status for each user\n       FOR EACH user_id in user_ids\n         Retrieve user's current deletion status\n     4.2. Toggle deletion status based on current state\n       FOR EACH user in retrieved users\n         IF user is currently deleted THEN\n           4.2.1. Undelete the user\n             - Mark user as active in the system\n             - Restore user's access to the system\n         ELSE\n           4.2.2. Delete the user\n             - Check if user is currently logged in\n               IF user is in active session THEN\n                 - Terminate user's active session\n             - Mark user as deleted in the system\n             - Revoke user's access to the system\n     4.3. Update user records\n       - Save changes to user records\n       - Update any related security information\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. Prepare success message\n       - Count number of users deleted and undeleted\n       - Create summary message with operation results\n     5.2. Return to user listing view\n       - Display updated list of users with current status\n       - Show confirmation message of successful operation",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User IDs must be provided for deletion/undeletion",
+    "Current user must have administrative privileges",
+    "System accounts cannot be deleted",
+    "Each user ID must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Unique identifier for a user account"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "featureName": "CreateTemporaryFile",
+  "description": "Creates a uniquely named temporary file in the configured repository path.",
+  "inputValues": [
+    "repository-object-FileRepository",
+    "filePrefix-string-FilePrefix",
+    "fileSuffix-string-FileSuffix"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect repository path (mandatory) - the directory where temporary files will be stored\n   - Collect file prefix (optional) - prefix to be added to the filename, defaults to 'upload_'\n   - Collect file suffix (optional) - suffix/extension to be added to the filename, defaults to '.tmp'\n\n2. Data Validation:\n   - Validate repository path:\n     a. Check if repository path is provided\n     b. Verify the repository path exists\n     c. Verify the repository path is a directory\n     d. Verify the repository has write permissions\n     e. If repository path is not provided, use system's default temporary directory\n   - Validate file prefix:\n     a. Ensure prefix contains only valid filename characters\n     b. If prefix is not provided, use default prefix\n   - Validate file suffix:\n     a. Ensure suffix contains only valid filename characters\n     b. If suffix is not provided, use default suffix\n\n3. Business Rule Processing:\n   - Check if the system has enough disk space in the repository location\n   - Verify maximum allowed temporary files limit is not exceeded\n   - Check if file creation is allowed based on system configuration\n\n4. Core Operation Execution:\n   - Generate a unique identifier for the file:\n     a. Create a counter-based unique ID\n     b. Format the ID to ensure consistent length\n   - Construct the complete filename using prefix, unique ID, and suffix\n   - Create the temporary file in the repository location:\n     a. Attempt to create a new file with the generated name\n     b. IF file already exists, regenerate unique ID and try again\n     c. Set appropriate file permissions\n   - Register the file for automatic cleanup:\n     a. Track the file for deletion when no longer needed\n     b. Associate file with the creating process/session\n\n5. Response Generation:\n   - Return success response with:\n     a. Full path to the created temporary file\n     b. File name\n     c. Creation timestamp\n     d. Expected cleanup time (if applicable)\n   - In case of failure, return error response with:\n     a. Error code\n     b. Error description\n     c. Suggested resolution steps",
+  "databaseEntities": [],
+  "validationRules": [
+    "Repository path must exist and be writable",
+    "File prefix must contain only valid filename characters",
+    "File suffix must contain only valid filename characters",
+    "System must have sufficient disk space available",
+    "Generated filename must be unique within the repository",
+    "Maximum number of temporary files per session must not be exceeded"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileRepository": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Directory path where temporary files will be stored"
+        },
+        "maxSize": {
+          "type": "number",
+          "description": "Maximum allowed size for the repository in bytes"
+        },
+        "cleanupInterval": {
+          "type": "number",
+          "description": "Interval in milliseconds for automatic cleanup of temporary files"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "FilePrefix": {
+      "type": "string",
+      "description": "Prefix to be added to the temporary filename"
+    },
+    "FileSuffix": {
+      "type": "string",
+      "description": "Suffix/extension to be added to the temporary filename"
+    }
+  }
+}

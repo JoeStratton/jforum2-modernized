@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/util/legacy/clickstream/config/ClickstreamConfig.java\n\n Original Content: package net.jforum.util.legacy.clickstream.config;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Clickstream configuration data.\n *\n * @author <a href=\"plightbo@hotmail.com\">Patrick Lightbody</a>\n * @author Rafael Steil (little hacks for JForum)\n * @version $Id: ClickstreamConfig.java,v 1.4 2005/07/26 04:01:16 diegopires Exp $\n */\npublic class ClickstreamConfig {\n    private List botAgents = new ArrayList();\n    private List botHosts = new ArrayList();\n\n    public void addBotAgent(String agent) {\n        botAgents.add(agent);\n    }\n\n    public void addBotHost(String host) {\n        botHosts.add(host);\n    }\n\n    public List getBotAgents() {\n        return botAgents;\n    }\n\n    public List getBotHosts() {\n        return botHosts;\n    }\n}",
+  "metadata": {
+    "fileId": "ClickstreamConfig_java_chunk_1",
+    "fileName": "ClickstreamConfig.java",
+    "filePath": "src/net/jforum/util/legacy/clickstream/config/ClickstreamConfig.java"
+  }
+}

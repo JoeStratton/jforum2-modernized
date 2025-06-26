@@ -1,0 +1,39 @@
+{
+  "featureName": "NotifySubscribedUsers",
+  "description": "Sends email notifications to users watching a topic when a new post is added.",
+  "inputValues": [
+    "topic-object-Topic",
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Topic object containing topic details\n   - Collect the Post object containing the new post details\n   - System retrieves notification configuration setting\n\n2. Data Validation:\n   - Verify Topic object contains valid topic ID\n     * IF topic ID is invalid or null THEN abort notification process\n     * Generate error: \"Invalid topic information\"\n   - Verify Post object contains required content\n     * IF post content is empty THEN abort notification process\n     * Generate error: \"Cannot notify users of empty post\"\n   - Check if notifications are enabled in system settings\n     * IF notifications are disabled THEN exit process without error\n\n3. Business Rule Processing:\n   - Check if the topic has any subscribed users\n     * Query database for users watching this topic\n     * IF no users are subscribed THEN exit process (no notifications needed)\n   - Verify user permissions for each subscriber\n     * FOR EACH subscribed user:\n       * Check if user still has access to the forum containing this topic\n       * IF user lacks access THEN remove user from notification list\n\n4. Core Operation Execution:\n   - Prepare notification content\n     * Create email subject line including topic title\n     * Format email body with:\n       * Topic information (title, forum)\n       * Post content summary\n       * Author information\n       * Link to view the complete post\n   - Create notification task\n     * Package all notification data into a task object\n     * Add all recipient users to the task\n   - Submit notification task to execution system\n     * Pass task to background processing system\n     * Ensure task execution doesn't block main thread\n\n5. Response Generation:\n   - Record notification attempt in system logs\n     * Log number of notifications queued\n     * Log timestamp of notification process\n   - Return success status\n     * IF notification task was successfully queued THEN return success\n     * IF any errors occurred THEN return appropriate error message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Notifications must be enabled in system settings",
+    "Topic must exist and be valid",
+    "Post must contain content",
+    "Users must be subscribed to the topic to receive notifications",
+    "Users must have access to the forum containing the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "lastPostId": "number",
+      "lastPostDate": "date"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "content": "string",
+      "postDate": "date"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "featureName": "GetLastPostInfo",
+    "description": "Retrieves information about the last post in a specific forum"
+  },
+  {
+    "featureName": "GetModeratorList",
+    "description": "Retrieves the list of moderators for a specific forum"
+  },
+  {
+    "featureName": "GetTotalMessages",
+    "description": "Retrieves the total count of messages across the forum system"
+  },
+  {
+    "featureName": "GetTotalTopics",
+    "description": "Retrieves the total count of topics for a specific forum"
+  },
+  {
+    "featureName": "GetMaxPostId",
+    "description": "Retrieves the maximum post ID in a specific forum"
+  },
+  {
+    "featureName": "MoveTopics",
+    "description": "Moves topics from one forum to another with proper count adjustments"
+  },
+  {
+    "featureName": "CheckUnreadTopics",
+    "description": "Identifies unread topics in a forum based on user's last visit timestamp"
+  },
+  {
+    "featureName": "SetModerated",
+    "description": "Sets the moderation status for a forum category"
+  },
+  {
+    "featureName": "GetBoardStatus",
+    "description": "Retrieves forum statistics including posts, users, topics, and activity metrics"
+  },
+  {
+    "featureName": "NotifyUsers",
+    "description": "Gets list of users to notify about forum updates"
+  },
+  {
+    "featureName": "SubscribeUser",
+    "description": "Subscribes a user to a forum for notifications"
+  },
+  {
+    "featureName": "IsUserSubscribed",
+    "description": "Checks if a user is subscribed to a specific forum"
+  },
+  {
+    "featureName": "RemoveSubscription",
+    "description": "Removes a user's subscription from a forum"
+  }
+]

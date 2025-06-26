@@ -1,0 +1,27 @@
+{
+  "featureName": "RefreshCategory",
+  "description": "Refreshes a category entry in the cache to ensure data consistency.",
+  "inputValues": [
+    "category-object-Category"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Category object to be refreshed\n     - Category must contain at minimum the category ID\n     - Category should contain updated information\n\n2. Data Validation\n   - Validate Category object\n     - Ensure Category object is not null\n     - Verify Category ID is valid (greater than 0)\n     - Check that Category contains all required attributes\n     - Validate that Category follows proper structure\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Terminate the operation\n\n3. Business Rule Processing\n   - Check system state\n     - Verify cache system is operational\n     - Ensure Category exists in the cache\n   - IF Category does not exist in cache THEN\n     - Generate error indicating Category not found\n     - Terminate the operation\n\n4. Core Operation Execution\n   - Update Category in cache\n     - Add or update Category in cache using category ID as key\n     - Retrieve current category set from cache\n     - Remove the existing Category from the set\n     - Add the updated Category to the set\n     - Update the category set in cache\n   - Handle synchronization\n     - Ensure thread safety during cache update\n     - Prevent concurrent modifications\n   - IF any operation fails THEN\n     - Revert any partial changes\n     - Log the failure\n     - Generate appropriate error message\n\n5. Response Generation\n   - Generate success response\n     - Indicate Category was successfully refreshed\n     - Include Category ID in response\n   - IF operation failed THEN\n     - Generate error response\n     - Include error details and reason for failure\n     - Provide guidance for resolution",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category object must not be null",
+    "Category ID must be greater than 0",
+    "Category must exist in the cache",
+    "Cache system must be operational"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    }
+  }
+}

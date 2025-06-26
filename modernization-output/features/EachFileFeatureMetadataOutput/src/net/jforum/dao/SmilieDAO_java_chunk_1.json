@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "AddNewSmilie",
+    "description": "Creates a new smilie emoticon in the forum system"
+  },
+  {
+    "featureName": "DeleteSmilie",
+    "description": "Removes a smilie emoticon from the forum system by its ID"
+  },
+  {
+    "featureName": "UpdateSmilie",
+    "description": "Modifies an existing smilie emoticon's properties"
+  },
+  {
+    "featureName": "GetAllSmilies",
+    "description": "Retrieves all smilie emoticons available in the forum system"
+  },
+  {
+    "featureName": "GetSmilieById",
+    "description": "Retrieves a specific smilie emoticon by its ID"
+  }
+]

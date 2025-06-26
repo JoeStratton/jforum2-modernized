@@ -1,0 +1,33 @@
+{
+  "featureName": "ListBanners",
+  "description": "Retrieves and displays all banners in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will automatically retrieve all banner records\n\n2. Data Validation:\n   - Verify user has appropriate access permissions to view banner listings\n   - IF user does not have required permissions THEN\n     - Display access denied message\n     - Terminate process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify banner data source is available\n   - IF data source is unavailable THEN\n     - Log system error\n     - Display appropriate error message to user\n     - Terminate process\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve all banner records from the data store\n   - Sort banners according to system default ordering (if applicable)\n   - Prepare banner data for display\n     - Format banner attributes for presentation\n     - Calculate any derived values (such as status indicators)\n     - Prepare action links for each banner (edit, delete options)\n\n5. Response Generation:\n   - IF no banners exist in the system THEN\n     - Display empty state message\n     - Provide guidance on creating new banners\n   - ELSE\n     - Display banner listing with the following information for each banner:\n       - Banner name\n       - Description\n       - Active status\n       - Type\n       - Placement information\n       - Dimensions (width/height)\n       - Performance metrics (views/clicks)\n       - Action options (edit, delete)\n   - END IF\n   - Provide option to create new banner",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "User must have administrative access to view banners",
+    "Banner listing must show all banners regardless of status",
+    "Banner listing must include active status indicators",
+    "Banner listing must provide edit and delete options for each banner"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "comment": "string",
+      "active": "boolean",
+      "type": "number",
+      "width": "number",
+      "height": "number",
+      "url": "string",
+      "placement": "number",
+      "weight": "number",
+      "views": "number",
+      "clicks": "number"
+    }
+  }
+}

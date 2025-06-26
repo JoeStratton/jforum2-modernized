@@ -1,0 +1,41 @@
+{
+  "featureName": "GetForumTopics",
+  "description": "Retrieves all cached topics related to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): numeric identifier of the forum\n   - System will use cache configuration settings (optional, system-generated)\n\n2. Data Validation:\n   - Validate forumId:\n      a. Check if forumId is provided\n      b. Verify forumId is a positive integer\n      c. Return error message if validation fails\n   - Verify cache status:\n      a. Check if topic caching is enabled in system settings\n      b. If caching is disabled, proceed with alternative retrieval method\n\n3. Business Rule Processing:\n   - Check cache status for requested forum:\n      a. IF forum topics are already loaded in cache:\n         i. Proceed to retrieve from cache\n      b. ELSE:\n         i. Mark forum as not cached\n   - Verify access permissions:\n      a. Check if current user has permission to view the forum\n      b. Return error if user lacks necessary permissions\n\n4. Core Operation Execution:\n   - Retrieve topics based on cache status:\n      a. IF topics for the forum are cached:\n         i. Get topic list from cache using forumId as key\n         ii. Create a copy of the cached list to avoid modifying cache\n      b. ELSE:\n         i. Return empty list\n   - Process retrieved topics:\n      a. IF list is empty:\n         i. Return empty result set\n      b. ELSE:\n         i. Prepare topics for display\n\n5. Response Generation:\n   - Format response with topic data:\n      a. For each topic include:\n         i. Topic ID\n         ii. Topic title\n         iii. Creation date\n         iv. Last post information\n         v. View count\n         vi. Reply count\n         vii. Topic type (normal, sticky, announcement)\n   - Return the formatted topic list\n   - Include metadata:\n      a. Total number of topics\n      b. Cache status (whether results came from cache)",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "User must have permission to view the forum",
+    "Topic cache must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "viewCount": "number",
+      "replyCount": "number",
+      "type": "number",
+      "firstPosterId": "number",
+      "lastPosterId": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "lastPostDate": "date",
+      "totalTopics": "number",
+      "totalPosts": "number"
+    }
+  }
+}

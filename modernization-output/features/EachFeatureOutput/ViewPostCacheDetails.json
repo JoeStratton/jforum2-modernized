@@ -1,0 +1,34 @@
+{
+  "featureName": "ViewPostCacheDetails",
+  "description": "Displays detailed information about cached forum posts.",
+  "inputValues": [
+    "topic_id-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topic_id (number, mandatory) to identify the specific topic whose cached posts will be displayed\n   - System will retrieve cached post information based on this identifier\n\n2. Data Validation:\n   - Validate topic_id:\n     a. Check if topic_id is provided\n     b. Verify topic_id is a positive integer\n     c. IF topic_id is missing or invalid, THEN display appropriate error message\n   - Verify post cache system status:\n     a. Check if post caching is enabled in system settings\n     b. IF post caching is disabled, THEN redirect to main cache listing page\n\n3. Business Rule Processing:\n   - Verify user permissions:\n     a. Check if current user has administrative access rights\n     b. IF user lacks proper permissions, THEN display access denied message\n   - Verify topic existence:\n     a. Check if the specified topic exists in the system\n     b. IF topic does not exist, THEN display appropriate error message\n\n4. Core Operation Execution:\n   - Retrieve cached topics information:\n     a. Get collection of all topic IDs that have cached posts\n     b. Retrieve topic titles for all cached topics from database\n   - Retrieve specific topic cache details:\n     a. Get cache statistics for the specified topic (if topic_id was provided)\n     b. Collect information about number of cached posts for the topic\n     c. Retrieve timestamp of when posts were cached\n     d. Calculate memory usage of cached posts\n   - Prepare display data:\n     a. Format cache statistics for presentation\n     b. Organize topic information for display\n     c. Prepare cache management options\n\n5. Response Generation:\n   - Generate success response:\n     a. Display topic title and identification information\n     b. Show number of posts cached for this topic\n     c. Display cache creation/last update timestamp\n     d. Show estimated memory usage\n     e. Provide option to clear cache for this specific topic\n   - Generate error response (if applicable):\n     a. Display appropriate error message based on validation failures\n     b. Provide navigation options to return to main cache management page",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post caching must be enabled in system settings",
+    "User must have administrative access rights",
+    "Topic must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "postCount": "number",
+      "lastPostDate": "date"
+    },
+    "CacheInfo": {
+      "enabled": "boolean",
+      "itemCount": "number",
+      "memoryUsage": "string",
+      "lastUpdated": "date"
+    }
+  }
+}

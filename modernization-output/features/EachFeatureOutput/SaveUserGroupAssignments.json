@@ -1,0 +1,30 @@
+{
+  "featureName": "SaveUserGroupAssignments",
+  "description": "Updates group memberships for a specific user.",
+  "inputValues": [
+    "userId-number-User",
+    "selectedGroups-object-GroupSelection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. userId (mandatory): Numeric identifier of the user\n     b. selectedGroups (mandatory): Collection of group identifiers the user should belong to\n     c. System retrieves current user information based on userId\n     d. System retrieves all available groups in the system\n\n2. Data Validation:\n   - Validate user identifier:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF validation fails, THEN display error message indicating invalid user identifier\n   - Validate selected groups:\n     a. Verify that selectedGroups is properly formatted\n     b. Ensure all group identifiers are valid positive integers\n     c. Confirm all selected groups exist in the system\n     d. IF validation fails, THEN display error message indicating invalid group selection\n\n3. Business Rule Processing:\n   - Check user existence:\n     a. Verify the user with the provided userId exists in the system\n     b. IF user does not exist, THEN display error message indicating user not found\n   - Check user modification permissions:\n     a. Verify current administrator has permission to modify user group assignments\n     b. IF permission check fails, THEN display error message indicating insufficient privileges\n   - Check for required group assignments:\n     a. Determine if the system requires users to belong to at least one group\n     b. IF required and no groups are selected, THEN display error message indicating at least one group must be selected\n\n4. Core Operation Execution:\n   - Retrieve current group memberships:\n     a. Get all groups the user currently belongs to\n     b. Create a list of current group identifiers for comparison\n   - Remove user from all current groups:\n     a. Generate a list of all group identifiers in the system\n     b. Remove the user from all groups to prepare for new assignments\n   - Assign user to selected groups:\n     a. For each selected group identifier:\n        i. Add the user to the group\n        ii. Update group membership records\n   - Update security context:\n     a. Clear any cached security information for the user\n     b. Force security information to be recalculated on next user action\n\n5. Response Generation:\n   - Success response:\n     a. Generate confirmation message indicating successful group assignment update\n     b. Include summary of updated group memberships\n     c. Provide navigation options to view user details or return to user list\n   - Error response:\n     a. Display specific error message based on the failure point\n     b. Maintain form state to allow corrections\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "User must exist in the system",
+    "Selected groups must be valid group identifiers",
+    "Administrator must have permission to modify user group assignments"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupSelection": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "description": "Group identifier"
+      }
+    }
+  }
+}

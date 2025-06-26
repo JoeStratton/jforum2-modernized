@@ -1,0 +1,34 @@
+{
+  "featureName": "MoveForumUp",
+  "description": "Moves a forum up in the display order within its category.",
+  "inputValues": [
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forum_id (mandatory) from the user selection\n   - System will use this ID to identify which forum to move up in order\n\n2. Data Validation:\n   - Validate that forum_id exists in the system\n     * IF forum_id is not found THEN display error message \"Forum not found\"\n     * IF forum_id is invalid format THEN display error message \"Invalid forum ID format\"\n   - Validate that the forum is not already at the top position in its category\n     * IF forum is already at the top position THEN skip reordering and notify user \"Forum is already at the top position\"\n\n3. Business Rule Processing:\n   - Retrieve the current forum object using the forum_id\n   - Identify the category to which the forum belongs\n   - Retrieve all forums within the same category\n   - Determine the current position (index) of the forum in the category's forum list\n   - Verify that moving up is possible\n     * IF current position is the first position (index 0) THEN\n       - Skip reordering as the forum is already at the top\n       - Return to forum listing without changes\n     * ELSE\n       - Proceed with reordering\n\n4. Core Operation Execution:\n   - Identify the forum that is currently positioned above the selected forum\n   - Swap the display order values between the selected forum and the forum above it\n     * Save the current order value of the selected forum as tempOrder\n     * Set the selected forum's order value to the order value of the forum above\n     * Set the forum above's order value to tempOrder\n   - Update both forums in the database with their new order values\n   - Refresh the category data in the system repository to reflect the new ordering\n\n5. Response Generation:\n   - Refresh the forum listing display to show the updated order\n   - Highlight the moved forum briefly to indicate successful movement\n   - IF any errors occurred during the process THEN\n     * Display appropriate error message\n     * Maintain the original ordering\n   - IF successful THEN\n     * Display the updated forum list with the new ordering",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must exist in the system",
+    "Forum must not already be at the top position in its category",
+    "Forum must belong to a valid category"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "displayOrder": "number",
+      "moderated": "boolean"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "displayOrder": "number",
+      "forums": "array"
+    }
+  }
+}

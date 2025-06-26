@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "InitializeDatabaseConnection",
+    "description": "Initializes a non-pooled database connection and validates the connection URL"
+  },
+  {
+    "featureName": "GetDatabaseConnection",
+    "description": "Creates and returns a new database connection using the configured connection string"
+  },
+  {
+    "featureName": "ReleaseDatabaseConnection",
+    "description": "Closes and releases a database connection when it's no longer needed"
+  }
+]

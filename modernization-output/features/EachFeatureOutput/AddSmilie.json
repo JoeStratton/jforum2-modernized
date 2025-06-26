@@ -1,0 +1,29 @@
+{
+  "featureName": "AddSmilie",
+  "description": "Creates a new smilie emoticon with code, URL, and disk name.",
+  "inputValues": [
+    "code-string-Smilie",
+    "url-string-Smilie",
+    "diskName-string-Smilie"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     1.1. code (string): The text representation of the smilie (mandatory)\n     1.2. url (string): The URL path to the smilie image (mandatory)\n     1.3. diskName (string): The filename of the smilie on disk (mandatory)\n\n2. Data Validation:\n   - Validate each input field:\n     2.1. Validate code:\n         2.1.1. Check if code is not empty\n         2.1.2. Check if code follows proper format (e.g., :), :-(, etc.)\n         2.1.3. If validation fails, generate appropriate error message\n     2.2. Validate URL:\n         2.2.1. Check if URL is not empty\n         2.2.2. Check if URL has valid format\n         2.2.3. If validation fails, generate appropriate error message\n     2.3. Validate diskName:\n         2.3.1. Check if diskName is not empty\n         2.3.2. Check if diskName has valid format (no invalid characters)\n         2.3.3. If validation fails, generate appropriate error message\n     2.4. Check for uniqueness:\n         2.4.1. Verify the smilie code doesn't already exist in the system\n         2.4.2. If code already exists, generate duplicate error message\n\n3. Business Rule Processing:\n   - Perform system checks:\n     3.1. Verify user has permission to add smilies\n     3.2. Check if maximum number of smilies hasn't been reached\n     3.3. Verify the disk location is accessible for storing smilies\n     3.4. IF any system check fails:\n         3.4.1. Generate appropriate error message\n         3.4.2. Abort the operation\n\n4. Core Operation Execution:\n   - Process the smilie creation:\n     4.1. Prepare the smilie data for storage\n     4.2. Store the smilie information in the database\n         4.2.1. Save code, URL, and disk name\n         4.2.2. Generate and store unique identifier for the smilie\n     4.3. IF storage operation fails:\n         4.3.1. Log the error details\n         4.3.2. Roll back any partial changes\n         4.3.3. Generate system error message\n     4.4. IF storage operation succeeds:\n         4.4.1. Update the system's smilie collection\n         4.4.2. Log the successful creation\n\n5. Response Generation:\n   - Generate appropriate response:\n     5.1. IF operation was successful:\n         5.1.1. Include the newly created smilie ID in the response\n         5.1.2. Include success message\n         5.1.3. Include the complete smilie details\n     5.2. IF operation failed:\n         5.2.1. Include detailed error information\n         5.2.2. Provide guidance on how to resolve the issue\n         5.2.3. Include support contact information if needed",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie code must not be empty",
+    "Smilie URL must not be empty",
+    "Smilie disk name must not be empty",
+    "Smilie code must be unique in the system",
+    "User must have permission to add smilies"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "id": "number",
+      "code": "string",
+      "url": "string",
+      "diskName": "string"
+    }
+  }
+}

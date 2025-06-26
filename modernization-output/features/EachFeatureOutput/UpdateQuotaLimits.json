@@ -1,0 +1,33 @@
+{
+  "featureName": "UpdateQuotaLimits",
+  "description": "Updates or deletes existing quota limits for attachments.",
+  "inputValues": [
+    "quotaLimits-object-QuotaLimit",
+    "deleteQuotaIds-object-DeleteIds"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. quotaLimits (mandatory): Collection of quota limit records to update\n       - Each record contains: id, description, size, and type\n     1.2. deleteQuotaIds (optional): Collection of quota limit IDs to delete\n\n2. Data Validation:\n   2.1. Validate deleteQuotaIds (if provided):\n     - Verify each ID exists in the system\n     - Ensure IDs are positive integers\n     - Generate error message if any ID is invalid\n   2.2. Validate each quota limit record:\n     - Verify ID exists in the system (for updates)\n     - Ensure description is not empty\n     - Verify size is a positive integer\n     - Confirm type is a valid quota type value\n     - Generate appropriate error message for each validation failure\n\n3. Business Rule Processing:\n   3.1. Check system state:\n     - Verify the quota management system is active\n     - Ensure user has appropriate permissions to modify quotas\n   3.2. Check dependencies:\n     - Verify no quota limit being deleted is currently assigned to a group\n     - IF a quota is assigned to groups, THEN either reassign groups or prevent deletion\n   3.3. Check for duplicates:\n     - Ensure no duplicate quota descriptions exist after update\n\n4. Core Operation Execution:\n   4.1. Process deletions (if any):\n     - IF deleteQuotaIds is provided and not empty, THEN:\n       - Remove all specified quota limits from the system\n       - Track successful deletions\n   4.2. Process updates:\n     - FOR EACH quota limit record:\n       - Update the record with new values (description, size, type)\n       - Skip records that were marked for deletion\n       - Track successful updates\n   4.3. Handle failures:\n     - IF any operation fails, THEN:\n       - Record specific failure reason\n       - Continue with remaining operations\n       - Prepare comprehensive error report\n\n5. Response Generation:\n   5.1. Generate success response:\n     - Include count of successfully updated records\n     - Include count of successfully deleted records\n     - Provide updated list of all quota limits\n   5.2. Generate error response (if applicable):\n     - Include specific error messages for each failed operation\n     - Provide guidance on resolving issues\n   5.3. Return final status:\n     - Complete list of current quota limits\n     - Group quota assignments",
+  "databaseEntities": [
+    "QuotaLimit",
+    "Group"
+  ],
+  "validationRules": [
+    "Quota limit IDs must exist in the system for updates",
+    "Quota limit description must not be empty",
+    "Quota limit size must be a positive integer",
+    "Quota limit type must be a valid value",
+    "Quota limit descriptions must be unique",
+    "User must have administrative permissions to modify quota limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    },
+    "DeleteIds": {
+      "ids": "number[]"
+    }
+  }
+}

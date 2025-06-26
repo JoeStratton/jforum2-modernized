@@ -1,0 +1,37 @@
+{
+  "featureName": "NormalizeUrl",
+  "description": "Normalizes URLs by replacing spaces with underscores and removing special characters.",
+  "inputValues": [
+    "url-string-UrlInput",
+    "limit-number-UrlLimit",
+    "friendlyTruncate-boolean-TruncateOption"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the URL string to be normalized (mandatory)\n   - Collect the character limit for truncation (optional, default: 30)\n   - Collect the friendly truncation flag (optional, default: true)\n\n2. Data Validation:\n   - Validate URL string:\n     a. Check if URL string is not null\n     b. Check if URL string is not empty\n     c. If validation fails, return appropriate error message\n   - Validate character limit:\n     a. Check if limit is a positive integer\n     b. If validation fails, use default limit value (30)\n   - Validate friendly truncation flag:\n     a. Check if friendlyTruncate is a boolean value\n     b. If validation fails, use default value (true)\n\n3. Business Rule Processing:\n   - Determine the maximum length for processing:\n     a. IF friendly truncation is enabled, processing may exceed the limit to avoid cutting words\n     b. IF friendly truncation is disabled, strictly enforce the character limit\n   - Prepare character replacement rules:\n     a. Space characters should be replaced with underscores\n     b. Hyphen characters should be replaced with underscores\n     c. Only letters and digits should be retained\n     d. Multiple consecutive spaces/hyphens should be replaced with a single underscore\n\n4. Core Operation Execution:\n   - Convert the input URL to a character array for processing\n   - Initialize an empty result buffer to store the normalized URL\n   - Process each character in the input URL:\n     a. IF current position is within limit OR (friendly truncation is enabled AND processing beyond limit but last character is not underscore):\n       i. IF character is a space or hyphen:\n          - IF friendly truncation is enabled AND beyond limit, exit the loop\n          - IF previous character is not underscore, append underscore to result\n       ii. IF character is a letter or digit:\n          - Append character to result\n       iii. ELSE IF friendly truncation is enabled AND beyond limit:\n          - Exit the loop\n   - Convert the final result to lowercase\n\n5. Response Generation:\n   - Return the normalized URL string\n   - IF an error occurred during processing, return appropriate error message\n   - Include information about any truncation that occurred",
+  "databaseEntities": [],
+  "validationRules": [
+    "URL string must not be null or empty",
+    "Character limit must be a positive integer",
+    "Friendly truncation flag must be a boolean value",
+    "Spaces and hyphens must be replaced with underscores",
+    "Only letters, digits, and underscores are allowed in the normalized URL",
+    "The normalized URL must be converted to lowercase",
+    "Multiple consecutive spaces or hyphens must be replaced with a single underscore"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlInput": {
+      "type": "string",
+      "description": "The URL string to be normalized"
+    },
+    "UrlLimit": {
+      "type": "number",
+      "description": "Maximum number of characters to process",
+      "default": 30
+    },
+    "TruncateOption": {
+      "type": "boolean",
+      "description": "Flag indicating whether to use friendly truncation",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "AddPrivateMessageText",
+    "description": "Adds text content to a private message by writing to a database BLOB field"
+  },
+  {
+    "featureName": "GetPrivateMessageText",
+    "description": "Retrieves text content of a private message from a database BLOB field"
+  }
+]

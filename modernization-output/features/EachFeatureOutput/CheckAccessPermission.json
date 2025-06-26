@@ -1,0 +1,51 @@
+{
+  "featureName": "CheckAccessPermission",
+  "description": "Verifies if a user has access to specific forum features based on assigned roles.",
+  "inputValues": [
+    "roleName-string-Role",
+    "roleValue-string-RoleValue",
+    "userRoles-object-RoleCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. roleName (mandatory): String identifier for the permission being checked\n     b. roleValue (optional): Specific value for the role if checking granular permissions\n     c. userRoles (mandatory): Collection of roles assigned to the current user\n\n2. Data Validation:\n   - Validate roleName input:\n     a. IF roleName is empty or null THEN\n        i. Return error message indicating role name is required\n        ii. Terminate permission check process\n     b. IF userRoles collection is null or empty THEN\n        i. Return error message indicating no roles are available for checking\n        ii. Terminate permission check process with access denied\n     c. IF roleValue is provided THEN\n        i. Validate that roleValue is not empty or null\n        ii. IF validation fails THEN return error message indicating invalid role value\n\n3. Business Rule Processing:\n   - Process permission check based on input parameters:\n     a. IF only roleName is provided (basic permission check) THEN\n        i. Check if the user has the specified role in their role collection\n        ii. IF role exists in collection THEN mark as authorized\n        iii. ELSE mark as unauthorized\n     b. IF both roleName and roleValue are provided (granular permission check) THEN\n        i. Check if the user has the specified role in their role collection\n        ii. IF role exists THEN\n            1. Retrieve the role's value collection\n            2. Check if the specified roleValue exists in the role's value collection\n            3. IF roleValue exists in collection THEN mark as authorized\n            4. ELSE mark as unauthorized\n        iii. ELSE mark as unauthorized\n\n4. Core Operation Execution:\n   - Based on the permission check results:\n     a. IF user is authorized THEN\n        i. Record successful permission check in system logs (if logging is enabled)\n        ii. Allow access to the requested feature or resource\n     b. ELSE (user is unauthorized)\n        i. Record failed permission check in system logs (if logging is enabled)\n        ii. Deny access to the requested feature or resource\n\n5. Response Generation:\n   - Generate appropriate response based on permission check outcome:\n     a. IF permission check was successful THEN\n        i. Return boolean value 'true' indicating user has permission\n        ii. Allow system to proceed with requested operation\n     b. ELSE (permission check failed)\n        i. Return boolean value 'false' indicating user lacks permission\n        ii. System should prevent access to the requested feature",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Role name must not be empty",
+    "User must have at least one assigned role",
+    "When checking specific role values, the role must exist in user's role collection",
+    "When checking specific role values, the role value must exist in the role's value collection"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default roles are created in the system",
+    "Ensure administrator role has all permissions assigned"
+  ],
+  "schema": {
+    "RoleCollection": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Unique identifier for the role"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "Specific permission values associated with this role"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

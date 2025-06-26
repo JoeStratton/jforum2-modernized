@@ -1,0 +1,20 @@
+{
+  "featureName": "CheckUsernameChanged",
+  "description": "Verifies if a username differs from the one in the database.",
+  "inputValues": [
+    "userId-number-User",
+    "usernameToCheck-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. userId (number, mandatory): The unique identifier of the user\n     b. usernameToCheck (string, mandatory): The username to compare against the database\n\n2. Data Validation:\n   - Validate userId:\n     a. Ensure userId is a positive integer\n     b. Ensure userId is not null or undefined\n     c. Return appropriate error message if validation fails\n   - Validate usernameToCheck:\n     a. Ensure usernameToCheck is not null or empty\n     b. Ensure usernameToCheck follows username format rules (alphanumeric with allowed special characters)\n     c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the system is operational and database is accessible\n     b. Verify the user has appropriate permissions to perform this check\n   - Verify dependencies:\n     a. Ensure the user record exists in the database\n     b. IF user record does not exist, THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Retrieve current username:\n     a. Fetch the current username from the database using the provided userId\n     b. IF retrieval fails, THEN log the error and return appropriate error message\n   - Compare usernames:\n     a. Compare the retrieved username with the usernameToCheck parameter\n     b. IF usernames are identical (case-sensitive comparison), THEN set result to false\n     c. IF usernames are different, THEN set result to true\n   - Handle edge cases:\n     a. IF retrieved username is null or empty, THEN log warning and return appropriate error message\n\n5. Response Generation:\n   - Success response:\n     a. Return boolean result indicating whether username has changed\n     b. Include status code indicating successful operation\n   - Error response:\n     a. Include appropriate error code and message\n     b. Include guidance on how to resolve the issue\n     c. Log detailed error information for system administrators",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Username to check must not be empty",
+    "Username to check must follow username format rules",
+    "User must exist in the database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

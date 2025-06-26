@@ -1,0 +1,18 @@
+{
+  "featureName": "LoadModulesMapping",
+  "description": "Loads module mappings from properties file to configure system modules.",
+  "inputValues": [
+    "baseConfigDir-string-ConfigDirectory"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the base configuration directory path (baseConfigDir) as a string\n   - This directory must contain the modulesMapping.properties file\n   - The baseConfigDir is mandatory and must be a valid directory path\n\n2. Data Validation:\n   - Validate that baseConfigDir is not null or empty\n     * IF baseConfigDir is null or empty THEN generate error message \"Configuration directory path cannot be empty\"\n   - Validate that baseConfigDir exists and is a directory\n     * IF baseConfigDir does not exist THEN generate error message \"Configuration directory does not exist\"\n     * IF baseConfigDir is not a directory THEN generate error message \"Path is not a valid directory\"\n   - Validate that modulesMapping.properties file exists in the baseConfigDir\n     * IF modulesMapping.properties does not exist THEN generate error message \"Module mapping file not found in configuration directory\"\n\n3. Business Rule Processing:\n   - Check file access permissions\n     * Verify read permissions for the modulesMapping.properties file\n     * IF file is not readable THEN generate error message \"Cannot read module mapping file due to permission issues\"\n   - Check file format validity\n     * Ensure the file is a valid properties file\n     * IF file format is invalid THEN generate error message \"Module mapping file has invalid format\"\n\n4. Core Operation Execution:\n   - Create a new Properties object to store module mappings\n   - Open file input stream to the modulesMapping.properties file\n     * IF file cannot be opened THEN generate error message \"Failed to open module mapping file\"\n   - Load properties from the file input stream\n     * IF properties cannot be loaded THEN generate error message \"Failed to load module mappings from file\"\n   - Close the file input stream\n     * Ensure the stream is closed even if an exception occurs\n   - Store loaded properties in memory for system use\n     * Maintain the key-value pairs for module name to class mappings\n\n5. Response Generation:\n   - Return the loaded Properties object containing all module mappings\n     * The Properties object contains key-value pairs where keys are module identifiers and values are implementation class names\n   - In case of errors:\n     * Return appropriate error message indicating the nature of the failure\n     * Include suggestions for resolving common issues\n   - Log the successful loading of module mappings\n     * Include the number of modules loaded",
+  "databaseEntities": [],
+  "validationRules": [
+    "Base configuration directory path must not be empty",
+    "Base configuration directory must exist",
+    "Module mapping file must exist in the specified directory",
+    "Module mapping file must be readable",
+    "Module mapping file must be a valid properties file"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

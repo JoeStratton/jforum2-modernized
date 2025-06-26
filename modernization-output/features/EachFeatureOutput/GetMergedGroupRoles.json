@@ -1,0 +1,30 @@
+{
+  "featureName": "GetMergedGroupRoles",
+  "description": "Retrieves and merges role collections from multiple security groups.",
+  "inputValues": [
+    "groupIds-object-GroupIds"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupIds (mandatory): Array of integer group identifiers\n   - System will use these identifiers to locate and merge role collections\n\n2. Data Validation:\n   - Validate groupIds input:\n     a. Verify the array is not null or empty\n     b. Verify each group ID is a valid positive integer\n     c. IF any validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check system state requirements:\n     a. Verify the cache system is properly initialized\n     b. Verify the roles repository is accessible\n   - Check group existence:\n     a. FOR each group ID in the input array\n        i. Verify the group exists in the system\n        ii. IF any group does not exist, THEN record as invalid group\n     b. IF any invalid groups found, THEN generate appropriate warning\n\n4. Core Operation Execution:\n   - Convert group IDs to appropriate cache key format:\n     a. Transform the array of integers into a standardized string representation\n     b. This string will serve as the lookup key in the cache system\n   - Check if merged roles already exist in cache:\n     a. Attempt to retrieve role collection using the generated key\n     b. IF roles found in cache, THEN return the cached role collection\n     c. ELSE proceed to role merging process\n   - Perform role merging process (when not in cache):\n     a. Initialize an empty result role collection\n     b. FOR each group ID in the input array:\n        i. Retrieve individual group role collection\n        ii. IF group role collection exists, THEN merge with result collection\n     c. Store the merged role collection in cache using the generated key\n     d. Return the merged role collection\n\n5. Response Generation:\n   - Success response:\n     a. Return the merged role collection containing all permissions from all specified groups\n     b. Include metadata about which groups contributed to the collection\n   - Error response:\n     a. For validation errors, return specific validation failure messages\n     b. For system errors, return appropriate error information\n     c. Include suggestions for resolving the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group IDs array must not be null or empty",
+    "Each group ID must be a positive integer",
+    "All specified groups must exist in the system",
+    "Cache system must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Unique identifier for a security group"
+      },
+      "minItems": 1,
+      "description": "Array of group identifiers to merge roles from"
+    }
+  }
+}

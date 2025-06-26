@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ExecuteSummaryJob",
+    "description": "Executes scheduled job to send post summaries to recipients by retrieving users and sending email digests"
+  }
+]

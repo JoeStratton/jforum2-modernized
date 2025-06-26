@@ -1,0 +1,52 @@
+{
+  "featureName": "ShowTopicsByUser",
+  "description": "Retrieves and displays all topics created by a specific user with pagination.",
+  "inputValues": [
+    "userId-number-User",
+    "startPage-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. userId (mandatory): Unique identifier of the user whose topics will be displayed\n     b. startPage (optional): Page number to display, defaults to 1 if not provided\n     c. System will use configured topicsPerPage setting (system-generated)\n     d. System will use configured postsPerPage setting (system-generated)\n\n2. Data Validation\n   - Validate user existence\n     a. Check if the provided userId corresponds to an existing user in the system\n     b. IF user does not exist THEN\n        i. Generate appropriate error message indicating user not found\n        ii. Terminate process and display error message\n     c. IF user exists THEN continue to next step\n   - Validate pagination parameters\n     a. Ensure startPage is a positive integer\n     b. IF startPage is invalid THEN default to page 1\n\n3. Business Rule Processing\n   - Calculate pagination parameters\n     a. Calculate the starting index based on startPage and topicsPerPage\n     b. Calculate total number of pages based on total topics and topicsPerPage\n   - Prepare access control checks\n     a. System must verify user has permission to view topics\n     b. System must filter out topics from forums the current user cannot access\n\n4. Core Operation Execution\n   - Retrieve total count of topics created by the specified user\n     a. Count all topics where the creator ID matches the provided userId\n   - Retrieve paginated list of topics\n     a. Fetch limited set of topics created by the user based on pagination parameters\n     b. Sort topics according to system default sorting (typically by creation date)\n   - Process topic list\n     a. FOR each topic in the retrieved list:\n        i. Retrieve the forum information for the topic\n        ii. IF current user does not have access to the forum THEN\n            - Remove topic from the result list\n            - Decrement total topic count\n        iii. ELSE include forum information with the topic\n     b. Prepare additional topic metadata (last post information, reply count, etc.)\n\n5. Response Generation\n   - Prepare display data\n     a. User information (username, profile details)\n     b. List of topics with their metadata\n     c. Associated forum information for each topic\n     d. Pagination information\n       i. Current page number\n       ii. Total pages\n       iii. Navigation links (previous/next page)\n   - Format response for display\n     a. Include page title with username\n     b. Include topic listing with relevant details\n     c. Include pagination controls\n   - Return formatted response to user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "User ID must correspond to an existing user in the system",
+    "Start page must be a positive integer",
+    "User must have permission to view the topics",
+    "Topics from forums the user cannot access must be filtered out"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "userId": "number",
+      "totalReplies": "number",
+      "totalViews": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "Pagination": {
+      "currentPage": "number",
+      "totalPages": "number",
+      "totalRecords": "number",
+      "recordsPerPage": "number"
+    }
+  }
+}

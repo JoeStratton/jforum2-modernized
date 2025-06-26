@@ -1,0 +1,72 @@
+{
+  "featureName": "GenerateCaptchaImage",
+  "description": "Creates CAPTCHA images with random words, fonts, and backgrounds for user verification.",
+  "inputValues": [
+    "width-number-CaptchaConfig",
+    "height-number-CaptchaConfig",
+    "minWords-number-CaptchaConfig",
+    "maxWords-number-CaptchaConfig",
+    "minFontSize-number-CaptchaConfig",
+    "maxFontSize-number-CaptchaConfig",
+    "ignoreCase-boolean-CaptchaConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect configuration parameters for CAPTCHA generation:\n     - width: The width of the CAPTCHA image (mandatory)\n     - height: The height of the CAPTCHA image (mandatory)\n     - minWords: Minimum number of characters in the CAPTCHA (mandatory)\n     - maxWords: Maximum number of characters in the CAPTCHA (mandatory)\n     - minFontSize: Minimum font size for CAPTCHA text (mandatory)\n     - maxFontSize: Maximum font size for CAPTCHA text (mandatory)\n     - ignoreCase: Whether case sensitivity should be ignored (optional, default: false)\n\n2. Data Validation:\n   - Validate width parameter:\n     - Ensure width is a positive number\n     - Ensure width is within reasonable bounds (e.g., 100-500)\n     - If invalid, generate error message: \"Width must be a positive number within acceptable range\"\n   - Validate height parameter:\n     - Ensure height is a positive number\n     - Ensure height is within reasonable bounds (e.g., 30-200)\n     - If invalid, generate error message: \"Height must be a positive number within acceptable range\"\n   - Validate minWords parameter:\n     - Ensure minWords is a positive number\n     - Ensure minWords is less than or equal to maxWords\n     - If invalid, generate error message: \"Minimum word count must be positive and not exceed maximum word count\"\n   - Validate maxWords parameter:\n     - Ensure maxWords is a positive number\n     - Ensure maxWords is greater than or equal to minWords\n     - If invalid, generate error message: \"Maximum word count must be positive and at least equal to minimum word count\"\n   - Validate font size parameters:\n     - Ensure minFontSize is a positive number\n     - Ensure maxFontSize is greater than or equal to minFontSize\n     - If invalid, generate error message: \"Font size parameters must be positive with maximum at least equal to minimum\"\n\n3. Business Rule Processing:\n   - Determine character set based on configuration:\n     - IF ignoreCase is TRUE, THEN\n       - Use simplified character set excluding easily confused characters (e.g., use \"123456789abcdefghijlmnopkrstuvxzyk@#%^\")\n     - ELSE\n       - Use full character set including uppercase and lowercase letters (e.g., use \"123456789ABCDEFGHJLKMNPRSTWXYZabcdefghijlmnopkrstuvxzyk@#%^\")\n   - Initialize background generators:\n     - Create list of background generators with various color combinations\n     - Each generator should use the specified width and height\n     - Include gradient backgrounds with different color pairs\n   - Initialize text pasters:\n     - Create list of text pasters with different text colors\n     - Configure each paster with the specified minWords and maxWords parameters\n   - Initialize font generators:\n     - Create font generator with the specified minFontSize and maxFontSize\n     - Configure font generator to produce twisted and sheared fonts for security\n   - Check user session:\n     - Verify user session exists\n     - If no session exists, create a new session\n\n4. Core Operation Execution:\n   - Generate random verification word:\n     - Create random word generator using the determined character set\n     - Generate random word of appropriate length\n   - Create CAPTCHA image:\n     - Select random background generator from the list\n     - Select random text paster from the list\n     - Select font generator\n     - Combine selected components to create word-to-image converter\n     - Apply the random word to the converter to generate CAPTCHA image\n   - Store CAPTCHA information:\n     - Store the generated word in the user's session for later verification\n     - Store the generated image in the user's session for display\n   - Set content type:\n     - Configure response to use image/jpg content type\n     - Enable custom content handling for image output\n\n5. Response Generation:\n   - Prepare image for output:\n     - Set appropriate content type for image (image/jpg)\n     - Write image data to output stream\n   - Handle success scenario:\n     - Return success status if image generation is successful\n     - Include image dimensions and format in response metadata\n   - Handle error scenarios:\n     - If any error occurs during image generation, return appropriate error message\n     - Include support information for troubleshooting",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Width must be a positive number within acceptable range",
+    "Height must be a positive number within acceptable range",
+    "Minimum word count must be positive and not exceed maximum word count",
+    "Maximum word count must be positive and at least equal to minimum word count",
+    "Font size parameters must be positive with maximum at least equal to minimum",
+    "CAPTCHA word must be stored in user session for verification",
+    "CAPTCHA image must be stored in user session for display",
+    "User session must exist or be created before CAPTCHA generation",
+    "Content type must be set to image/jpg for proper display"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CaptchaConfig": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number",
+          "description": "Width of the CAPTCHA image"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the CAPTCHA image"
+        },
+        "minWords": {
+          "type": "number",
+          "description": "Minimum number of characters in the CAPTCHA"
+        },
+        "maxWords": {
+          "type": "number",
+          "description": "Maximum number of characters in the CAPTCHA"
+        },
+        "minFontSize": {
+          "type": "number",
+          "description": "Minimum font size for CAPTCHA text"
+        },
+        "maxFontSize": {
+          "type": "number",
+          "description": "Maximum font size for CAPTCHA text"
+        },
+        "ignoreCase": {
+          "type": "boolean",
+          "description": "Whether case sensitivity should be ignored"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "minWords",
+        "maxWords",
+        "minFontSize",
+        "maxFontSize"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "featureName": "CheckUsernameAvailability",
+  "description": "Verifies if a username is already registered in the system.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following input:\n     a. username (string, mandatory): The username to check for availability\n\n2. Data Validation\n   - Validate the username input:\n     a. Check if username is provided\n        IF username is empty or null THEN\n          Return error message indicating username is required\n     b. Check username format\n        IF username does not meet format requirements THEN\n          Return error message indicating invalid username format\n     c. Check username length\n        IF username length is less than minimum required length THEN\n          Return error message indicating username is too short\n        IF username length exceeds maximum allowed length THEN\n          Return error message indicating username is too long\n\n3. Business Rule Processing\n   - Verify system state for username check:\n     a. Check if the system is in maintenance mode\n        IF system is in maintenance mode THEN\n          Return appropriate error message\n     b. Check if username restrictions are in place\n        IF username contains restricted words or patterns THEN\n          Return error message indicating username contains prohibited content\n\n4. Core Operation Execution\n   - Perform username availability check:\n     a. Search for the username in the user database\n        IF username exists in the database THEN\n          Set availability status to false (username is taken)\n        ELSE\n          Set availability status to true (username is available)\n     b. Record the username check attempt in system logs\n        Store username, timestamp, and result of availability check\n\n5. Response Generation\n   - Generate appropriate response based on availability:\n     a. IF username is available THEN\n          Return success response with availability status as true\n     b. IF username is not available THEN\n          Return success response with availability status as false\n     c. Include any relevant suggestions or alternative usernames if configured\n     d. Include timestamp of when the check was performed",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must meet the system's format requirements",
+    "Username must be within the allowed length limits",
+    "Username must not contain restricted words or patterns"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

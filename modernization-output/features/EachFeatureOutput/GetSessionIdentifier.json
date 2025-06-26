@@ -1,0 +1,43 @@
+{
+  "featureName": "GetSessionIdentifier",
+  "description": "Retrieves the unique identifier for the current HTTP session.",
+  "inputValues": [
+    "httpSession-object-Session"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the current session object\n     - The session object is required and must be valid\n     - No user-provided inputs are needed for this operation\n\n2. Data Validation:\n   - Validate session object\n     - Check if the session object exists\n     - IF session is null THEN\n       - Generate appropriate error indicating invalid session\n       - Terminate operation\n     - ENDIF\n     - Verify session has not expired\n     - IF session has expired THEN\n       - Generate appropriate error indicating expired session\n       - Terminate operation\n     - ENDIF\n\n3. Business Rule Processing:\n   - Check session access permissions\n     - Verify the requester has appropriate permissions to access session information\n     - IF requester lacks permission THEN\n       - Generate appropriate security error\n       - Log unauthorized access attempt\n       - Terminate operation\n     - ENDIF\n\n4. Core Operation Execution:\n   - Retrieve session identifier\n     - Access the unique identifier property from the session object\n     - Store the identifier value for response\n     - IF identifier cannot be retrieved THEN\n       - Generate appropriate error indicating session identifier retrieval failure\n       - Terminate operation\n     - ENDIF\n\n5. Response Generation:\n   - Prepare success response\n     - Format the session identifier for return\n     - Include the session identifier in the response\n   - Handle potential errors\n     - Include appropriate error messages for any failures\n     - Provide guidance on resolving session-related issues",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session object must exist and be valid",
+    "Session must not be expired",
+    "Requester must have permission to access session information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "creationTime": {
+          "type": "date",
+          "description": "When the session was created"
+        },
+        "lastAccessedTime": {
+          "type": "date",
+          "description": "When the session was last accessed"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of session attributes"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

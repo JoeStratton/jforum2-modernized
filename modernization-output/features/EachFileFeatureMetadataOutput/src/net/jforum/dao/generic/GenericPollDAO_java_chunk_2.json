@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "AddNewPoll",
+    "description": "Creates a new poll with options for a topic"
+  },
+  {
+    "featureName": "SelectPollById",
+    "description": "Retrieves a poll and its options by poll ID"
+  },
+  {
+    "featureName": "VoteOnPoll",
+    "description": "Records a user's vote on a specific poll option"
+  },
+  {
+    "featureName": "CheckUserVoteStatus",
+    "description": "Verifies if a user has already voted on a specific poll"
+  },
+  {
+    "featureName": "DeletePoll",
+    "description": "Removes a poll including its options and votes"
+  },
+  {
+    "featureName": "DeletePollByTopicId",
+    "description": "Removes a poll associated with a specific topic"
+  },
+  {
+    "featureName": "UpdatePoll",
+    "description": "Modifies an existing poll's details and options"
+  }
+]

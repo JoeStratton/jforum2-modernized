@@ -1,0 +1,49 @@
+{
+  "featureName": "GenerateTopicEmailContent",
+  "description": "Creates formatted email content with topic details, links, and post content for notifications.",
+  "inputValues": [
+    "forum-object-Forum",
+    "topic-object-Topic",
+    "post-object-Post",
+    "users-object-UserList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. forum (mandatory): Forum object containing forum details\n     b. topic (mandatory): Topic object containing topic details\n     c. post (optional): Post object containing post content\n     d. users (mandatory): List of users to receive the notification\n\n2. Data Validation:\n   - Validate forum input:\n     a. IF forum is null THEN\n        i. Generate error: \"Forum information is required\"\n     b. IF forum identifier is invalid THEN\n        i. Generate error: \"Valid forum identifier is required\"\n   - Validate topic input:\n     a. IF topic is null THEN\n        i. Generate error: \"Topic information is required\"\n     b. IF topic identifier is invalid THEN\n        i. Generate error: \"Valid topic identifier is required\"\n     c. IF topic title is empty THEN\n        i. Generate error: \"Topic must have a title\"\n   - Validate users input:\n     a. IF users list is null or empty THEN\n        i. Generate error: \"At least one recipient user is required\"\n\n3. Business Rule Processing:\n   - Generate required links:\n     a. Generate forum link as base URL for all links\n     b. Generate post link using topic identifier and last post identifier\n     c. Generate unwatch link using forum identifier\n   - Prepare notification parameters:\n     a. Add topic information to parameters\n     b. Add generated links to parameters\n     c. IF post is not null THEN\n        i. Prepare post content for display\n        ii. Add post content to parameters\n\n4. Core Operation Execution:\n   - Set recipient users for the notification\n   - Set template parameters with all collected information\n   - Generate email subject using configured template and topic title\n   - Prepare email message using:\n     a. Formatted subject line with topic title\n     b. Email message template from system configuration\n\n5. Response Generation:\n   - Return prepared email content with:\n     a. Subject line containing topic title\n     b. Body content with:\n        i. Topic information\n        ii. Link to view the topic\n        iii. Post content (if available)\n        iv. Link to unwatch the forum\n   - IF any errors occurred during processing THEN\n     a. Return error details with specific validation failure information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Topic object must not be null",
+    "Topic must have a valid identifier",
+    "Topic must have a non-empty title",
+    "Users list must contain at least one recipient"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "lastPostId": "number"
+    },
+    "Post": {
+      "id": "number",
+      "text": "string"
+    },
+    "UserList": {
+      "type": "array",
+      "items": {
+        "id": "number",
+        "email": "string",
+        "username": "string"
+      }
+    }
+  }
+}

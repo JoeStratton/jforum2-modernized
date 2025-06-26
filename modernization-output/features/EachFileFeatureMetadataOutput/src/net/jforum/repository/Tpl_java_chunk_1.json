@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "LoadTemplateConfiguration",
+    "description": "Loads HTML template mappings from a properties file into the cache"
+  },
+  {
+    "featureName": "GetTemplateName",
+    "description": "Retrieves a template filename from the cache using a configuration key"
+  }
+]

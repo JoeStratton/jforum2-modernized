@@ -1,0 +1,43 @@
+{
+  "featureName": "ApproveMessages",
+  "description": "Allows moderators to approve pending messages in a forum.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "messages-object-MessageList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forum_id (mandatory): The identifier of the forum where messages need approval\n   - Collect messages (mandatory): List of message identifiers to be approved\n   - System retrieves current user session information (system-generated)\n\n2. Data Validation:\n   - Validate forum_id:\n      * Check if forum_id is provided and is a valid number\n      * Verify the forum exists in the system\n      * If validation fails, display error message \"Invalid forum selected\"\n   - Validate messages list:\n      * Ensure the messages list is not empty\n      * Verify all message IDs in the list are valid numbers\n      * If validation fails, display error message \"No valid messages selected for approval\"\n   - Validate user permissions:\n      * Verify user is logged in\n      * Check if user is a moderator for the specified forum\n      * Verify user has message approval permissions\n      * If validation fails, display error message \"You do not have permission to approve messages\"\n\n3. Business Rule Processing:\n   - Check forum status:\n      * Verify the forum is active and not locked\n      * If forum is locked, display error message \"Cannot approve messages in a locked forum\"\n   - Verify message approval status:\n      * Check if all selected messages are in pending status\n      * If any message is already approved or deleted, exclude it from processing\n      * Generate a warning if some messages were excluded\n   - Check message ownership:\n      * Verify all messages belong to the specified forum\n      * If any message doesn't belong to the forum, exclude it from processing\n\n4. Core Operation Execution:\n   - For each valid message in the list:\n      * Update message status from pending to approved\n      * Update message visibility settings\n      * Update forum statistics (message count, last post information)\n      * Record approval action in moderation log with moderator ID, timestamp, and action details\n   - Update forum topic counts if necessary\n   - Update system-wide message counts\n   - If any operation fails:\n      * Roll back all changes for consistency\n      * Log the error details\n      * Display appropriate error message\n\n5. Response Generation:\n   - On success:\n      * Generate confirmation message showing number of messages approved\n      * Provide link to return to forum view\n      * Update forum display to show newly approved messages\n   - On partial success:\n      * Show number of messages successfully approved\n      * Show number of messages that couldn't be approved with reasons\n   - On failure:\n      * Display error message explaining the failure reason\n      * Provide guidance on how to resolve the issue\n      * Offer option to retry the operation",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to approve messages",
+    "User must be a moderator of the specified forum",
+    "User must have message approval permissions",
+    "Forum must exist and be active",
+    "Messages must be in pending status",
+    "Messages must belong to the specified forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MessageList": {
+      "type": "object",
+      "properties": {
+        "messageIds": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Unique identifier for each message pending approval"
+          }
+        }
+      },
+      "required": [
+        "messageIds"
+      ]
+    }
+  }
+}

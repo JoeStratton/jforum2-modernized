@@ -1,0 +1,100 @@
+{
+  "featureName": "SelectRecentTopics",
+  "description": "Retrieves the most recent topics with a specified limit.",
+  "inputValues": [
+    "limit-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - limit (number, mandatory): The maximum number of recent topics to retrieve\n\n2. Data Validation:\n   - Validate the limit parameter:\n     - IF limit is null or undefined THEN\n       - Return error: \"Limit parameter is required\"\n     - IF limit is not a positive integer THEN\n       - Return error: \"Limit must be a positive integer\"\n     - IF limit exceeds system maximum allowed value THEN\n       - Set limit to system maximum allowed value\n\n3. Business Rule Processing:\n   - Check system state:\n     - IF system is in maintenance mode THEN\n       - Return appropriate maintenance message\n     - IF user does not have permission to view topics THEN\n       - Return permission denied message\n   - Determine topic visibility based on user permissions:\n     - IF user has restricted access THEN\n       - Prepare to filter topics based on user's allowed forums\n   - Check database connection availability:\n     - IF database connection cannot be established THEN\n       - Log connection error\n       - Return system unavailable message\n\n4. Core Operation Execution:\n   - Retrieve recent topics:\n     - Sort all available topics by creation date in descending order\n     - Apply any required visibility filters based on user permissions\n     - Select the top N topics where N equals the specified limit\n     - For each topic, include:\n       - Topic ID\n       - Topic title\n       - Creation date\n       - Last post date\n       - Forum ID the topic belongs to\n       - Creator user ID\n       - Last post user ID\n       - Total replies\n       - Total views\n       - Status information (locked, sticky, etc.)\n       - Attachment status (has attachments or not)\n   - Retrieve additional user information:\n     - For each topic, get information about:\n       - The user who created the topic (username)\n       - The user who made the last post (username)\n   - Format dates according to system date format settings\n   - IF no topics are found THEN\n     - Prepare empty result set\n   - IF an error occurs during data retrieval THEN\n     - Log the error details\n     - Return appropriate error message\n\n5. Response Generation:\n   - Format the retrieved topics into a structured collection\n   - Include metadata such as:\n     - Total number of topics returned\n     - Whether the result set was limited by permissions\n   - Return the formatted collection of recent topics\n   - IF an error occurred during processing THEN\n     - Generate appropriate error message\n     - Include error details and possible resolution steps",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Limit parameter must be a positive integer",
+    "User must have permission to view topics",
+    "System must not be in maintenance mode",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the topic was created"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date of the last post in the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum the topic belongs to"
+        },
+        "postedBy": {
+          "type": "object",
+          "description": "User who created the topic",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "ID of the user"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the user"
+            }
+          }
+        },
+        "lastPostBy": {
+          "type": "object",
+          "description": "User who made the last post",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "ID of the user"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the user"
+            }
+          }
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Total number of replies in the topic"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Total number of times the topic was viewed"
+        },
+        "status": {
+          "type": "number",
+          "description": "Status of the topic (locked, sticky, etc.)"
+        },
+        "hasAttach": {
+          "type": "boolean",
+          "description": "Whether the topic has attachments"
+        },
+        "firstPostTime": {
+          "type": "string",
+          "description": "Formatted time of the first post"
+        },
+        "lastPostTime": {
+          "type": "string",
+          "description": "Formatted time of the last post"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "featureName": "UpdatePostIndex",
+  "description": "Updates the search index for a modified forum post.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the modified post object containing:\n     a. Post ID (mandatory)\n     b. Forum ID (mandatory)\n     c. Topic ID (mandatory)\n     d. User ID (mandatory)\n     e. Post date/time (mandatory)\n     f. Post subject (mandatory)\n     g. Post text content (mandatory)\n\n2. Data Validation:\n   - Validate post object completeness:\n     a. Verify post ID is present and valid\n        IF post ID is missing or invalid THEN\n          Generate error message: \"Invalid post identifier\"\n          Exit process\n        END IF\n     b. Verify forum ID is present and valid\n        IF forum ID is missing or invalid THEN\n          Generate error message: \"Invalid forum identifier\"\n          Exit process\n        END IF\n     c. Verify topic ID is present and valid\n        IF topic ID is missing or invalid THEN\n          Generate error message: \"Invalid topic identifier\"\n          Exit process\n        END IF\n     d. Verify user ID is present and valid\n        IF user ID is missing or invalid THEN\n          Generate error message: \"Invalid user identifier\"\n          Exit process\n        END IF\n     e. Verify post date/time is present\n        IF post date/time is missing THEN\n          Generate error message: \"Missing post timestamp\"\n          Exit process\n        END IF\n     f. Verify post subject and text are not empty\n        IF post subject AND text are both empty THEN\n          Generate error message: \"Post must contain subject or content\"\n          Exit process\n        END IF\n\n3. Business Rule Processing:\n   - Check if search indexing is enabled\n     IF search indexing is disabled THEN\n       Log information: \"Search indexing is disabled, skipping index update\"\n       Exit process with success status\n     END IF\n   - Check if post is in an indexable state\n     IF post is marked as not indexable THEN\n       Log information: \"Post is marked as not indexable, skipping index update\"\n       Exit process with success status\n     END IF\n   - Check if post belongs to a restricted forum\n     IF post's forum is restricted from search indexing THEN\n       Log information: \"Post belongs to a restricted forum, skipping index update\"\n       Exit process with success status\n     END IF\n   - Check if search index is locked\n     IF index is locked THEN\n       Attempt to remove lock\n       IF lock removal fails THEN\n         Generate error message: \"Search index is currently locked\"\n         Exit process\n       END IF\n     END IF\n\n4. Core Operation Execution:\n   - Acquire exclusive lock on search index to prevent concurrent modifications\n   - Remove existing document for this post from the index\n     a. Locate document using post ID as unique identifier\n     b. Delete document if found\n     c. Log deletion operation\n   - Create new document for the post\n     a. Extract required fields from post object\n     b. Format date/time according to system standards\n     c. Combine subject and text for content indexing\n     d. Create document with all required fields\n   - Add new document to search index\n     a. Add document to index\n     b. Check if index optimization is needed\n        IF document count threshold reached THEN\n          Perform index optimization\n          Log optimization completion\n        END IF\n     c. Commit changes to ensure durability\n   - Release exclusive lock on search index\n   - Notify observers about index update\n     FOR EACH registered observer DO\n       Send notification about updated document\n     END FOR\n\n5. Response Generation:\n   - Generate success response\n     a. Include post identifier\n     b. Include timestamp of indexing operation\n     c. Include status message: \"Post successfully indexed\"\n   - In case of failure:\n     a. Include error details\n     b. Include suggestion for retry if appropriate\n     c. Log detailed error information for administrators",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post ID must be a valid positive integer",
+    "Forum ID must be a valid positive integer",
+    "Topic ID must be a valid positive integer",
+    "User ID must be a valid positive integer",
+    "Post must have a timestamp",
+    "Post must have either subject or text content",
+    "Post must belong to an indexable forum",
+    "Search index must not be locked or lock must be removable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Identifier of the forum containing the post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "Identifier of the topic containing the post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "Identifier of the user who created the post"
+        },
+        "time": {
+          "type": "date",
+          "description": "Date and time when the post was created"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject or title of the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Main content of the post"
+        }
+      },
+      "required": [
+        "id",
+        "forumId",
+        "topicId",
+        "userId",
+        "time",
+        "subject",
+        "text"
+      ]
+    }
+  }
+}

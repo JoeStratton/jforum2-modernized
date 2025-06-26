@@ -1,0 +1,16 @@
+{
+  "featureName": "GetFileCharSet",
+  "description": "Extracts the charset parameter from the content type of the uploaded file.",
+  "inputValues": [
+    "contentType-string-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the content type string from the file item\n   - System will use DEFAULT_CHARSET as fallback value if no charset is specified\n\n2. Data Validation:\n   - Check if the provided content type is null\n     - IF content type is null, THEN proceed with null input handling\n     - IF content type is not null, THEN proceed with parsing\n   - Validate that content type string follows expected format with potential charset parameter\n     - Content type should follow pattern: type/subtype; param1=value1; param2=value2\n     - No specific format validation required as parser will handle malformed inputs\n\n3. Business Rule Processing:\n   - Initialize parameter parser for content type string\n   - Configure parser to use case-insensitive parameter names\n     - Set parser to convert parameter names to lowercase\n   - Parse the content type string using semicolon as delimiter\n     - Split content type into main type and parameters\n     - Extract all parameter name-value pairs\n   - Look for the specific \"charset\" parameter in the parsed parameters\n\n4. Core Operation Execution:\n   - Retrieve the charset parameter value from parsed parameters\n     - IF charset parameter exists, THEN return its value\n     - IF charset parameter does not exist, THEN return null\n   - No modifications to the original content type or file item are made\n   - Operation is read-only and does not affect system state\n\n5. Response Generation:\n   - Return the extracted charset value as a string\n   - IF no charset parameter was found, THEN return null\n   - No additional information or error responses needed as this is a simple extraction operation",
+  "databaseEntities": [],
+  "validationRules": [
+    "Content type string may be null",
+    "Content type string should follow MIME type format when provided",
+    "Charset parameter is optional in content type"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

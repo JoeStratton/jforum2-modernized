@@ -1,0 +1,47 @@
+{
+  "featureName": "UpdateForum",
+  "description": "Updates forum details including name, description, and moderation status.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "categoryId-number-Category",
+    "name-string-Forum",
+    "description-string-Forum",
+    "moderated-boolean-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. forumId (mandatory): Unique identifier of the forum to update\n     b. categoryId (mandatory): Identifier of the category this forum belongs to\n     c. name (mandatory): New name for the forum\n     d. description (mandatory): New description for the forum\n     e. moderated (mandatory): Boolean flag indicating if the forum is moderated\n\n2. Data Validation\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF validation fails, THEN return error message \"Invalid forum ID\"\n   - Validate categoryId:\n     a. Check if categoryId is provided\n     b. Verify categoryId is a positive integer\n     c. IF validation fails, THEN return error message \"Invalid category ID\"\n   - Validate name:\n     a. Check if name is provided\n     b. Verify name is not empty\n     c. Verify name length is between 1 and 150 characters\n     d. IF validation fails, THEN return error message \"Forum name is required and must be between 1 and 150 characters\"\n   - Validate description:\n     a. Check if description is provided\n     b. Verify description length does not exceed 1000 characters\n     c. IF validation fails, THEN return error message \"Forum description must not exceed 1000 characters\"\n   - Validate moderated:\n     a. Check if moderated flag is provided\n     b. Verify moderated is a boolean value\n     c. IF validation fails, THEN return error message \"Moderation status must be specified\"\n\n3. Business Rule Processing\n   - Check forum existence:\n     a. Verify that a forum with the provided forumId exists in the system\n     b. IF forum does not exist, THEN return error message \"Forum not found\"\n   - Check category existence:\n     a. Verify that a category with the provided categoryId exists in the system\n     b. IF category does not exist, THEN return error message \"Category not found\"\n   - Check user permissions:\n     a. Verify current user has administrator privileges or is a forum moderator\n     b. IF user lacks permissions, THEN return error message \"Insufficient permissions to update forum\"\n   - Check for duplicate forum name:\n     a. Verify no other forum in the same category has the same name (excluding the current forum)\n     b. IF duplicate name exists, THEN return error message \"Another forum with this name already exists in the selected category\"\n\n4. Core Operation Execution\n   - Retrieve current forum data:\n     a. Load existing forum information based on forumId\n     b. Store original values for comparison and potential rollback\n   - Update forum record:\n     a. Set the new categoryId for the forum\n     b. Set the new name for the forum\n     c. Set the new description for the forum\n     d. Set the new moderation status for the forum\n     e. Preserve all other forum attributes (order, topic count, etc.)\n   - Save changes to the forum record\n   - IF any database operation fails:\n     a. Rollback all changes\n     b. Log the error details\n     c. Return error message \"Failed to update forum details\"\n\n5. Response Generation\n   - On success:\n     a. Generate success message \"Forum updated successfully\"\n     b. Include updated forum details in the response\n     c. Include category information the forum belongs to\n   - On failure:\n     a. Return appropriate error message from previous steps\n     b. Include error details for troubleshooting\n     c. Preserve user input for form repopulation",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Category ID must be a positive integer",
+    "Forum name must not be empty",
+    "Forum name must be between 1 and 150 characters",
+    "Forum description must not exceed 1000 characters",
+    "Moderation status must be specified as a boolean value",
+    "Forum must exist in the system",
+    "Category must exist in the system",
+    "User must have administrator privileges or be a forum moderator",
+    "No other forum in the same category can have the same name"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "totalTopics": "number",
+      "lastPostId": "number",
+      "moderated": "boolean",
+      "totalPosts": "number"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number"
+    }
+  }
+}

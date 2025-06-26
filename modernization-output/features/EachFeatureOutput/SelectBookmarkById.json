@@ -1,0 +1,31 @@
+{
+  "featureName": "SelectBookmarkById",
+  "description": "Retrieves a specific bookmark by its ID.",
+  "inputValues": [
+    "bookmarkId-number-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the bookmark ID (bookmarkId) as a numeric identifier\n   - The bookmark ID is mandatory and must be provided by the user\n\n2. Data Validation\n   - Validate the bookmark ID\n     - Ensure the bookmark ID is a positive integer\n     - Verify the bookmark ID is not null\n     - IF the bookmark ID is invalid or missing THEN\n       - Generate an appropriate error message\n       - Terminate the process\n\n3. Business Rule Processing\n   - Check system access permissions\n     - Verify the current user has permission to view bookmarks\n     - IF the user lacks necessary permissions THEN\n       - Generate an access denied error\n       - Terminate the process\n   - Verify system availability\n     - Ensure the bookmark service is operational\n     - IF the service is unavailable THEN\n       - Generate a service unavailable error\n       - Terminate the process\n\n4. Core Operation Execution\n   - Query the bookmark repository\n     - Search for a bookmark with the specified ID\n     - IF no bookmark is found with the given ID THEN\n       - Set the result to null or empty\n     - ELSE\n       - Retrieve the complete bookmark information including:\n         - Bookmark ID\n         - User ID (owner)\n         - Relation ID (referenced item)\n         - Relation type (forum, topic, or user)\n         - Title\n         - Description\n         - Public visibility flag\n   - Process the retrieved bookmark\n     - Format the bookmark data for presentation\n     - Prepare any additional context information needed\n\n5. Response Generation\n   - Prepare the response\n     - IF the bookmark was found THEN\n       - Include the complete bookmark details in the response\n       - Include any related metadata needed for display\n     - ELSE\n       - Include appropriate not-found status in the response\n   - Return the response to the caller\n     - Format the response according to the system's requirements\n     - Include any necessary status information",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Bookmark ID must be a positive integer",
+    "Bookmark ID must exist in the system",
+    "User must have permission to view the requested bookmark"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "featureName": "IncrementTotalTopics",
+  "description": "Increases the topic count for a forum by a specified amount.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "count-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): Unique identifier of the forum\n   - Collect count (mandatory): Number of topics to add to the forum's total\n   - Both inputs must be provided by the caller\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is a positive integer\n     b. Check if forumId is not null\n     c. If validation fails, generate appropriate error message\n   - Validate count:\n     a. Check if count is a non-negative integer\n     b. Check if count is not null\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     a. Check if a forum with the provided forumId exists in the system\n     b. IF forum does not exist, THEN generate error message and stop processing\n   - Verify system state:\n     a. Check if the system is in a state that allows topic count updates\n     b. IF system is in maintenance mode or read-only mode, THEN generate error message and stop processing\n\n4. Core Operation Execution:\n   - Retrieve current topic count for the forum\n   - Calculate new topic count by adding the provided count to the current count\n   - Update the forum record with the new topic count\n   - IF update operation fails:\n     a. Log the failure details\n     b. Revert any partial changes\n     c. Generate appropriate error message\n\n5. Response Generation:\n   - IF operation is successful:\n     a. Generate success response with updated forum information\n     b. Include the new total topic count in the response\n   - IF operation fails:\n     a. Generate error response with appropriate error code\n     b. Include error details and suggestions for resolution\n     c. Provide support information if needed",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Count must be a non-negative integer",
+    "Forum with the specified ID must exist in the system",
+    "System must not be in maintenance or read-only mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

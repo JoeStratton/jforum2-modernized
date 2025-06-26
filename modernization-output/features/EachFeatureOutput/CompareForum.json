@@ -1,0 +1,37 @@
+{
+  "featureName": "CompareForum",
+  "description": "Compares forums based on their order and name for sorting purposes.",
+  "inputValues": [
+    "forum1-object-Forum",
+    "forum2-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect two forum objects for comparison:\n     1.1. forum1 (mandatory): The first forum to compare\n     1.2. forum2 (mandatory): The second forum to compare against\n   - Each forum must contain:\n     * order: A numeric value representing the forum's display order\n     * name: A string value representing the forum's display name\n\n2. Data Validation:\n   - Validate forum objects:\n     2.1. Check if forum1 is not null\n        IF forum1 is null THEN\n          Return error indicating first forum object is required\n     2.2. Check if forum2 is not null\n        IF forum2 is null THEN\n          Return error indicating second forum object is required\n     2.3. Verify both forum objects have order property\n        IF either forum is missing order property THEN\n          Return error indicating order property is required\n     2.4. Verify both forum objects have name property\n        IF either forum is missing name property THEN\n          Return error indicating name property is required\n\n3. Business Rule Processing:\n   - No additional business rules to process\n\n4. Core Operation Execution:\n   4.1. Compare forum order values\n      IF forum1.order > forum2.order THEN\n        Return positive value (1) indicating forum1 comes after forum2\n      ELSE IF forum1.order < forum2.order THEN\n        Return negative value (-1) indicating forum1 comes before forum2\n      ELSE\n        4.2. When order values are equal, compare forum names\n          Return result of string comparison between forum1.name and forum2.name\n          * Positive value if forum1.name comes after forum2.name alphabetically\n          * Negative value if forum1.name comes before forum2.name alphabetically\n          * Zero if names are identical\n\n5. Response Generation:\n   5.1. Return comparison result\n      - Return value will be one of:\n        * Positive integer (1): Indicating forum1 should be placed after forum2\n        * Negative integer (-1): Indicating forum1 should be placed before forum2\n        * Zero (0): Indicating forums are equivalent for sorting purposes",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum objects must not be null",
+    "Forum objects must have order property",
+    "Forum objects must have name property"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "number",
+          "description": "The display order of the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the forum"
+        }
+      },
+      "required": [
+        "order",
+        "name"
+      ]
+    }
+  }
+}

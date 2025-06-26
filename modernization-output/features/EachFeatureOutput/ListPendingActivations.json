@@ -1,0 +1,18 @@
+{
+  "featureName": "ListPendingActivations",
+  "description": "Retrieves users who haven't activated their accounts.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current system state to determine pending activations\n\n2. Data Validation:\n   - Verify system has proper access to user data\n   - Validate that user activation status is properly tracked in the system\n   - IF access validation fails, THEN\n     - Generate appropriate system error\n     - Log access failure\n     - End process\n\n3. Business Rule Processing:\n   - Check system configuration for activation requirements\n   - Determine if any activation expiration rules should be applied\n   - IF activation feature is disabled in system settings, THEN\n     - Return empty result set\n     - Log feature usage attempt\n     - End process\n\n4. Core Operation Execution:\n   - Retrieve all user records from the system\n   - Filter users based on activation status\n     - Include only users where activation status is pending/false\n     - Exclude deleted or disabled accounts\n   - Sort results by registration date (newest first)\n   - Apply any system-defined limits on result set size\n   - IF no pending activations found, THEN\n     - Return empty result set\n   - ELSE\n     - Prepare user records for display\n     - Include only necessary user information fields\n     - Mask sensitive data according to system security policies\n\n5. Response Generation:\n   - Format list of pending activation users\n   - Include relevant user details for each entry:\n     - User identifier\n     - Username\n     - Registration date\n     - Email address (if permitted by security settings)\n     - Days pending since registration\n   - Return formatted list to requesting system\n   - Log successful retrieval of pending activations",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "System must have proper access permissions to user data",
+    "Only non-activated user accounts should be included in results",
+    "Deleted users must be excluded from results",
+    "User activation status must be properly tracked in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ParseMultipartRequest",
+    "description": "Processes RFC 1867 compliant multipart/form-data streams from HTTP requests into FileItem objects"
+  },
+  {
+    "featureName": "CreateFileUpload",
+    "description": "Creates a file upload processor with optional FileItemFactory configuration"
+  }
+]

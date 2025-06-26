@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ApprovePost",
+    "description": "Approves a pending post by updating its status and timestamp"
+  },
+  {
+    "featureName": "GetTopicsByForum",
+    "description": "Retrieves moderation information for topics in a specific forum including post details"
+  },
+  {
+    "featureName": "GetCategoryPendingModeration",
+    "description": "Retrieves categories with pending moderation items including forum details and counts"
+  }
+]

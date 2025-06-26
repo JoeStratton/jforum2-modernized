@@ -1,0 +1,36 @@
+{
+  "featureName": "CheckPollStatus",
+  "description": "Determines if a poll is open based on its start time and duration.",
+  "inputValues": [
+    "startTime-date-Poll",
+    "length-number-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect poll start time (startTime) as a date value\n   - Collect poll duration (length) in days as a number value\n   - Note: Both values are mandatory for status determination\n\n2. Data Validation:\n   - Validate startTime:\n     * Ensure startTime is a valid date\n     * Verify startTime is not null\n     * Check that startTime is properly formatted\n     * IF startTime is invalid THEN return validation error\n   - Validate length:\n     * Ensure length is a non-negative number\n     * Verify length is properly formatted as an integer\n     * IF length is negative THEN return validation error\n\n3. Business Rule Processing:\n   - Check for special case handling:\n     * IF length equals 0 THEN\n       > Poll is considered permanently open\n       > Skip duration calculation\n       > Set poll status to \"open\"\n       > Proceed to Response Generation\n     * ELSE continue to duration calculation\n   - Calculate poll end date:\n     * Create end date by adding length (in days) to startTime\n     * Store calculated end date for comparison\n\n4. Core Operation Execution:\n   - Determine current system time\n   - Compare current time with calculated end date:\n     * IF current time is before the end date THEN\n       > Set poll status to \"open\"\n     * ELSE\n       > Set poll status to \"closed\"\n   - Record determination result\n\n5. Response Generation:\n   - Return poll status result (open or closed)\n   - Include additional context information:\n     * Poll identifier\n     * Current status\n     * End date (if applicable)\n     * Remaining time (if poll is open and has a duration)",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Poll start time must be a valid date",
+    "Poll length must be a non-negative integer",
+    "Poll is considered open if length is 0",
+    "Poll is open if current time is before end time",
+    "Poll is closed if current time is after end time"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "length": "number",
+      "label": "string",
+      "startTime": "date",
+      "options": "array"
+    },
+    "PollOption": {
+      "id": "number",
+      "pollId": "number",
+      "text": "string",
+      "voteCount": "number"
+    }
+  }
+}

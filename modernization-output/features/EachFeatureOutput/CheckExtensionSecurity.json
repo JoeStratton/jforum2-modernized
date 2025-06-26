@@ -1,0 +1,46 @@
+{
+  "featureName": "CheckExtensionSecurity",
+  "description": "Verifies if file extensions are allowed for upload based on security settings.",
+  "inputValues": [
+    "fileExtension-string-Attachment",
+    "securitySettings-object-SecuritySettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect fileExtension (string, mandatory) - The file extension to check\n   - Retrieve securitySettings (object, system-generated) - The system's security configuration for file extensions\n\n2. Data Validation:\n   - Validate fileExtension input:\n     a. Check if fileExtension is not empty\n        IF fileExtension is empty THEN\n          Return error message \"File extension cannot be empty\"\n     b. Check if fileExtension is in proper format\n        IF fileExtension does not match valid extension pattern THEN\n          Return error message \"Invalid file extension format\"\n     c. Normalize fileExtension by:\n        - Converting to lowercase\n        - Removing any leading dots\n        - Trimming whitespace\n\n3. Business Rule Processing:\n   - Check if extension security is enabled in system settings\n     IF extension security is disabled THEN\n       Return success with \"Extension security check bypassed\"\n   - Verify if the extension list is available and loaded\n     IF extension list is not available THEN\n       Log warning about missing extension configuration\n       Return error message \"Extension security configuration unavailable\"\n   - Check if the extension is in the explicitly allowed list\n     IF extension is in allowed list THEN\n       Return success with \"Extension explicitly allowed\"\n\n4. Core Operation Execution:\n   - Look up the extension in the security settings map\n     IF extension is not found in the map THEN\n       Return success with \"Extension not restricted\"\n   - Check the security flag for the extension\n     IF security flag indicates extension is allowed THEN\n       Return success with \"Extension allowed by security settings\"\n     ELSE\n       Return error with \"Extension not allowed by security settings\"\n   - Check extension group association if applicable\n     IF extension belongs to a restricted group THEN\n       Return error with \"Extension belongs to a restricted group\"\n   - Log the security check result for audit purposes\n     Record: extension, result, timestamp, and security rule applied\n\n5. Response Generation:\n   - For successful validation:\n     a. Return success status\n     b. Include allowed status flag (true)\n     c. Include any relevant extension group information\n   - For failed validation:\n     a. Return error status\n     b. Include allowed status flag (false)\n     c. Include specific reason for rejection\n     d. Include list of allowed extensions as guidance",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "File extension must not be empty",
+    "File extension must be in valid format",
+    "Extension must be allowed according to security settings",
+    "Extension must not belong to a restricted group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SecuritySettings": {
+      "type": "object",
+      "properties": {
+        "extensionMap": {
+          "type": "object",
+          "description": "Map of extensions and their security status"
+        },
+        "securityEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if extension security is enabled"
+        },
+        "allowedExtensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of explicitly allowed extensions"
+        },
+        "extensionGroups": {
+          "type": "object",
+          "description": "Map of extension groups and their security settings"
+        }
+      }
+    }
+  }
+}

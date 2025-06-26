@@ -1,0 +1,33 @@
+{
+  "featureName": "AddCookie",
+  "description": "Creates or updates a cookie with specified name, value and expiration settings.",
+  "inputValues": [
+    "name-string-Cookie",
+    "value-string-Cookie",
+    "maxAge-number-Cookie",
+    "path-string-Cookie"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. name (string, mandatory): The unique identifier for the cookie\n     b. value (string, mandatory): The data to be stored in the cookie\n     c. maxAge (number, optional): Duration in seconds for cookie validity\n     d. path (string, optional): The path on the server where cookie is valid\n\n2. Data Validation\n   - Validate cookie name:\n     a. Verify name is not null or empty\n     b. Check that name follows valid cookie name format (no special characters, spaces)\n     c. Generate error if validation fails: \"Cookie name is required and must be valid\"\n   - Validate cookie value:\n     a. Check if value is provided (can be empty string but must not be null)\n     b. IF value is null, set maxAge to 0 and value to empty string (indicating cookie deletion)\n     c. Generate error if validation fails: \"Cookie value cannot be null\"\n   - Validate maxAge:\n     a. IF maxAge is not provided, use system default (typically 1 year or 3600 * 24 * 365 seconds)\n     b. IF maxAge is provided, ensure it is a valid number\n     c. IF maxAge is negative, treat as session cookie (expires when browser closes)\n     d. IF maxAge is 0, mark cookie for immediate deletion\n     e. Generate error if validation fails: \"Cookie max age must be a valid number\"\n   - Validate path:\n     a. IF path is provided, ensure it starts with a forward slash\n     b. IF path is not provided, use default path \"/\"\n     c. Generate error if validation fails: \"Cookie path must start with a forward slash\"\n\n3. Business Rule Processing\n   - Check system cookie settings:\n     a. Verify if cookies are enabled in the system configuration\n     b. IF cookies are disabled, log warning and exit process\n   - Check cookie size limitations:\n     a. Ensure combined name and value don't exceed maximum allowed size\n     b. IF size exceeds limit, generate error: \"Cookie size exceeds maximum allowed limit\"\n   - Handle special cookie expiration cases:\n     a. IF value is null, set maxAge to 0 to delete the cookie\n     b. IF maxAge is negative, create session cookie (no explicit expiration)\n\n4. Core Operation Execution\n   - Create or update cookie:\n     a. Create a new cookie object with name and value\n     b. Set cookie expiration time based on maxAge parameter or system default\n     c. Set cookie path to specified path or default path \"/\"\n     d. IF secure flag is required by system settings, mark cookie as secure\n     e. IF HTTP-only flag is required by system settings, mark cookie as HTTP-only\n   - Add cookie to response:\n     a. Add the cookie to the outgoing HTTP response\n     b. IF cookie addition fails, log error and notify caller\n   - Handle existing cookies:\n     a. IF a cookie with the same name already exists, it will be replaced\n     b. Ensure proper update of all cookie properties\n\n5. Response Generation\n   - Generate success response:\n     a. Return confirmation that cookie was successfully created/updated\n     b. Include cookie details (name, expiration, path) in response\n   - Generate error response (if applicable):\n     a. Return specific error message explaining the failure\n     b. Include suggestions for resolving the issue",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Cookie name must not be null or empty",
+    "Cookie name must follow valid format",
+    "Cookie value must not be null",
+    "If maxAge is provided, it must be a valid number",
+    "If path is provided, it must start with a forward slash",
+    "If value is null, cookie will be marked for deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Cookie": {
+      "name": "string",
+      "value": "string",
+      "maxAge": "number",
+      "path": "string",
+      "secure": "boolean",
+      "httpOnly": "boolean"
+    }
+  }
+}

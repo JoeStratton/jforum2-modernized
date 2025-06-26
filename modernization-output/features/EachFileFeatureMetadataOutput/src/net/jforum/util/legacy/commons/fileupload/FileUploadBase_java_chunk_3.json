@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ProcessMultipartFormData",
+    "description": "Processes multipart form data requests, extracting file items and form fields"
+  },
+  {
+    "featureName": "ParseMultipartBoundaries",
+    "description": "Extracts and processes boundary markers from multipart content types"
+  },
+  {
+    "featureName": "ExtractFileAttachments",
+    "description": "Extracts file attachments from multipart requests with proper header parsing"
+  },
+  {
+    "featureName": "ParseContentHeaders",
+    "description": "Parses HTTP headers from multipart content sections into key-value pairs"
+  },
+  {
+    "featureName": "CreateFileItems",
+    "description": "Creates file item objects from parsed multipart content with metadata"
+  }
+]

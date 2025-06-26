@@ -1,0 +1,37 @@
+{
+  "featureName": "GetTotalUsersByGroup",
+  "description": "Counts the total number of users in a specific group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the required input parameter:\n     - groupId (number): The unique identifier of the group to count users for\n     - This field is mandatory and must be provided by the caller\n\n2. Data Validation:\n   - Validate the groupId input:\n     - Ensure groupId is not null\n     - Verify groupId is a positive integer\n     - IF groupId is invalid or missing THEN\n       - Generate appropriate error message\n       - Terminate processing and return error\n\n3. Business Rule Processing:\n   - Verify the group exists in the system:\n     - Check if the provided groupId corresponds to a valid group\n     - IF group does not exist THEN\n       - Generate a \"Group not found\" error message\n       - Terminate processing and return error\n   - Verify the user has permission to view group information:\n     - Check if the current user has sufficient privileges\n     - IF user lacks permission THEN\n       - Generate an \"Insufficient permissions\" error message\n       - Terminate processing and return error\n\n4. Core Operation Execution:\n   - Query the database to count users in the specified group:\n     - Prepare the query to count users associated with the groupId\n     - Execute the query to retrieve the total count\n     - Handle any potential errors during the counting process\n     - IF query execution fails THEN\n       - Log the error details\n       - Generate a system error message\n       - Terminate processing and return error\n\n5. Response Generation:\n   - Format the successful response:\n     - Include the total count of users in the group\n     - Include the groupId for reference\n     - Return the formatted response to the caller\n   - IF any errors occurred during processing:\n     - Include detailed error information\n     - Include suggestions for resolving the error if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "User must have permission to view group information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

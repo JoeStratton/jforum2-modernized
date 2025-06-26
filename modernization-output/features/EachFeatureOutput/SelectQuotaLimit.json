@@ -1,0 +1,22 @@
+{
+  "featureName": "SelectQuotaLimit",
+  "description": "Retrieves all quota limits configured in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection\n   - No user inputs required for this operation\n   - System will retrieve all quota limits from the data store\n\n2. Data Validation\n   - No input validation required as there are no user inputs\n   - System will verify database connection is available\n   - IF database connection is unavailable THEN\n     - Generate appropriate error response\n     - End process\n\n3. Business Rule Processing\n   - Verify user has appropriate permissions to view quota limits\n   - IF user lacks required permissions THEN\n     - Generate access denied error\n     - End process\n   - Prepare data retrieval operation\n\n4. Core Operation Execution\n   - Retrieve all quota limit records from the system\n   - For each quota limit record:\n     - Extract quota limit ID\n     - Extract quota description\n     - Extract quota size value\n     - Extract quota type information\n     - Create quota limit object with extracted data\n     - Add quota limit object to result collection\n   - IF no quota limits exist THEN\n     - Return empty collection\n   - IF error occurs during retrieval THEN\n     - Log error details\n     - Generate appropriate error response\n     - End process\n\n5. Response Generation\n   - Compile list of all quota limit objects\n   - Format response with all quota limits\n   - Return formatted response to caller\n   - IF operation was successful THEN\n     - Include success status in response\n   - ELSE\n     - Include error details in response",
+  "databaseEntities": [
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "User must have permission to view quota limits",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

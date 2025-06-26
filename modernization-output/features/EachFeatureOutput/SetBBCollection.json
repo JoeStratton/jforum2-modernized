@@ -1,0 +1,47 @@
+{
+  "featureName": "SetBBCollection",
+  "description": "Stores the BBCode handler collection in cache for forum text formatting.",
+  "inputValues": [
+    "bbCollection-object-BBCodeHandler"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect BBCodeHandler object (bbCollection) containing forum text formatting rules\n   - Verify the bbCollection is not null\n   - Ensure the bbCollection contains valid BBCode formatting rules\n\n2. Data Validation:\n   - Validate that the BBCodeHandler object is properly initialized\n     - Check that the object is not null\n     - Verify that the BBCodeHandler contains at least one BBCode definition\n     - Ensure each BBCode definition has a valid name and pattern\n   - IF validation fails THEN prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if cache system is properly initialized\n     - Verify that the cache engine has been set\n     - Ensure the cache engine is operational\n   - Determine if an existing BBCode collection exists in cache\n     - IF existing collection exists THEN prepare to replace it\n     - IF no existing collection exists THEN prepare to create new cache entry\n   - Verify system has sufficient cache resources\n\n4. Core Operation Execution:\n   - Store the BBCodeHandler collection in the cache system\n     - Use the predefined fully qualified name (FQN) as the cache namespace\n     - Use the predefined collection identifier as the cache key\n     - Add the BBCodeHandler object to the cache\n   - Verify the cache operation completed successfully\n     - Check that the object was properly stored\n     - Ensure the object is retrievable from cache\n\n5. Response Generation:\n   - IF cache operation successful THEN\n     - Return success status\n     - Provide confirmation that BBCode collection is now available for forum text formatting\n   - ELSE\n     - Return failure status\n     - Include error details explaining why the cache operation failed\n     - Provide guidance for resolving the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "BBCodeHandler object must not be null",
+    "BBCodeHandler must contain at least one BBCode definition",
+    "Cache engine must be properly initialized before storing BBCode collection",
+    "Each BBCode definition must have a valid name and pattern"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCodeHandler": {
+      "type": "object",
+      "properties": {
+        "bbCodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the BBCode tag"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "The regex pattern for matching the BBCode"
+              },
+              "replacement": {
+                "type": "string",
+                "description": "The replacement pattern for the BBCode"
+              }
+            }
+          }
+        },
+        "findByName": {
+          "type": "function",
+          "description": "Method to find a BBCode by its tag name"
+        }
+      }
+    }
+  }
+}

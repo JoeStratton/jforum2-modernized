@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "LoadSystemConfiguration",
+    "description": "Initializes and loads system configuration from default and installation-specific files"
+  },
+  {
+    "featureName": "ManageConfigurationValues",
+    "description": "Sets, retrieves and manages configuration properties with support for different data types"
+  },
+  {
+    "featureName": "SaveInstallationSettings",
+    "description": "Persists installation-specific configuration values to a file"
+  },
+  {
+    "featureName": "LoadSqlQueries",
+    "description": "Loads SQL query definitions from external files for database operations"
+  },
+  {
+    "featureName": "ExpandConfigurationVariables",
+    "description": "Processes configuration values containing variable references for dynamic configuration"
+  }
+]

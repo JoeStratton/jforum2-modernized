@@ -1,0 +1,69 @@
+{
+  "featureName": "CreateTables",
+  "description": "Creates database tables required for forum functionality.",
+  "inputValues": [
+    "database-string-Database",
+    "configDir-string-Configuration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database type (string) from session\n   - Collect configuration directory path (string) from system settings\n   - Both inputs are mandatory for table creation\n\n2. Data Validation:\n   - Validate database type:\n     * Check if database type is supported\n     * Verify that the database type string is not empty\n     * Ensure database type matches available configuration files\n   - Validate configuration directory:\n     * Verify the directory exists\n     * Ensure the directory contains required database structure files\n     * Check read permissions for the database structure files\n   - IF any validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if tables already exist in the database\n   - Determine if special handling is needed for specific database types:\n     * IF database type is PostgreSQL or Oracle, THEN prepare for table dropping\n     * For other database types, proceed with standard creation\n   - Verify database connection status\n   - Set appropriate transaction settings\n\n4. Core Operation Execution:\n   - Parse database structure file based on database type\n     * Load SQL statements from the appropriate structure file\n     * Process each statement into executable format\n   - Execute table creation statements:\n     * FOR each SQL statement in the parsed file:\n       > Skip empty or invalid statements\n       > Execute the statement against the database\n       > IF execution fails, THEN record error and stop processing\n     * END FOR\n   - Handle transaction management:\n     * IF any statement fails, THEN rollback all changes\n     * IF all statements succeed, THEN commit changes\n   - Update system state to reflect successful table creation\n\n5. Response Generation:\n   - IF table creation succeeds:\n     * Generate success response\n     * Update session to mark table creation as completed\n     * Prepare system for next installation step\n   - IF table creation fails:\n     * Generate detailed error message with specific failure point\n     * Include exception details for troubleshooting\n     * Provide guidance on potential resolution steps",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Database type must be supported by the system",
+    "Database structure file must exist for the selected database type",
+    "Configuration directory must be accessible",
+    "Database connection must be active",
+    "User must have sufficient permissions to create tables in the database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Database": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of database (e.g., postgresql, oracle, mysql)"
+        },
+        "connection": {
+          "type": "object",
+          "description": "Database connection information"
+        }
+      }
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to configuration directory"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of configuration files"
+        }
+      }
+    }
+  }
+}

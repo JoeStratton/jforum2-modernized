@@ -1,0 +1,28 @@
+{
+  "featureName": "GetGroupHierarchy",
+  "description": "Retrieves the complete hierarchical structure of groups with parent-child relationships.",
+  "inputValues": [
+    "parentGroupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. parentGroupId (number, optional): The ID of the parent group to start hierarchy from\n         - If not provided, default to 0 (root level)\n\n2. Data Validation\n   - Validate the input parameters:\n     2.1. IF parentGroupId is provided THEN\n         2.1.1. Verify parentGroupId is a valid number\n         2.1.2. Verify parentGroupId exists in the group database\n         2.1.3. IF validation fails THEN\n             - Generate appropriate error message\n             - Return error response\n\n3. Business Rule Processing\n   - Verify system state and access permissions:\n     3.1. Check if the current user has permission to view group hierarchy\n     3.2. Verify the group system is properly configured\n     3.3. IF any verification fails THEN\n         - Generate appropriate error message\n         - Return error response\n\n4. Core Operation Execution\n   - Retrieve and build the group hierarchy:\n     4.1. Initialize an empty list to store the group hierarchy nodes\n     4.2. Retrieve all root groups (groups with the specified parentGroupId or 0 if not specified)\n     4.3. FOR EACH root group retrieved:\n         4.3.1. Create a group node object with the group's information\n         4.3.2. Process child groups recursively:\n             a. Retrieve all child groups where parent ID equals current group ID\n             b. FOR EACH child group:\n                 i. Create a child group node\n                 ii. Process its children recursively (repeat from step a)\n                 iii. Add the child node to the current group's children list\n         4.3.3. Add the complete group node (with all its children) to the result list\n     4.4. IF any error occurs during processing THEN\n         - Log the error details\n         - Generate appropriate error message\n         - Return error response\n\n5. Response Generation\n   - Prepare and return the group hierarchy:\n     5.1. Format the hierarchical structure of groups\n     5.2. Include the following information for each group:\n         - Group ID\n         - Group name\n         - Parent group ID\n         - List of child groups (if any)\n         - Depth level in the hierarchy\n     5.3. Return the complete hierarchy structure\n     5.4. IF the operation was successful THEN\n         - Include success status in the response\n     5.5. ELSE\n         - Include error details and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Parent group ID must be a valid number if provided",
+    "Parent group must exist in the database if ID is provided",
+    "User must have permission to view group hierarchy",
+    "Group system must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupNode": {
+      "id": "number",
+      "name": "string",
+      "parentId": "number",
+      "children": "array",
+      "depth": "number"
+    }
+  }
+}

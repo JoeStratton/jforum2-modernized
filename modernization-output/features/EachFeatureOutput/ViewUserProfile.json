@@ -1,0 +1,39 @@
+{
+  "featureName": "ViewUserProfile",
+  "description": "Displays user profile information including statistics and bookmarks.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the userId (mandatory) from the request\n   - System will use the current session for logged-in user information\n\n2. Data Validation:\n   - Validate that userId is a positive integer\n   - Verify userId exists in the system\n   IF userId is invalid or not found THEN\n      - Prepare user not found message\n      - Display user not found page\n      - End process\n   END IF\n\n3. Business Rule Processing:\n   - Check if the current user has permission to view karma information\n   - Determine which bookmarks are visible to the current user based on:\n     - Public visibility of bookmarks\n     - If the profile being viewed belongs to the current user\n\n4. Core Operation Execution:\n   - Retrieve user profile data:\n     - Basic user information (username, registration date, etc.)\n     - User avatar information\n     - User ranking information\n   - Calculate user statistics:\n     - Count number of visible bookmarks\n     - Count number of topics created by user\n     - Count number of posts made by user\n   - Prepare page title with user's name\n\n5. Response Generation:\n   - Compile all user information into profile view\n   - Display the following sections:\n     - User personal information\n     - User statistics (topics, posts, etc.)\n     - User ranking\n     - User avatar (if available)\n     - Visible bookmarks count\n   - If user not found, display appropriate error message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_bookmarks",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "User ID must exist in the system",
+    "Only public bookmarks are visible to other users",
+    "All bookmarks are visible to the profile owner"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "lastVisit": "date",
+      "avatar": "string",
+      "karma": "number"
+    },
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "isPublicVisible": "boolean",
+      "title": "string"
+    }
+  }
+}

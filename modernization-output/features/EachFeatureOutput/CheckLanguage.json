@@ -1,0 +1,24 @@
+{
+  "featureName": "CheckLanguage",
+  "description": "Validates and sets user language preference for installation process.",
+  "inputValues": [
+    "languageParameter-string-Language",
+    "userLocale-object-Locale"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect language parameter from request (optional)\n   - Collect user's locale from request (system-generated)\n\n2. Data Validation:\n   - Check if language parameter exists in request\n     - IF language parameter is null THEN\n       - Extract language from user's locale\n       - Format as \"language_country\" code\n   - Verify language exists in system\n     - IF language does not exist in system THEN\n       - Return without changing language\n       - Keep default language\n\n3. Business Rule Processing:\n   - Verify language resource files are available\n   - Check if language is supported for installation\n   - Ensure language code follows proper format (language_COUNTRY)\n\n4. Core Operation Execution:\n   - Load language resources for selected language\n   - Create new user session\n   - Set language preference in user session\n   - Add user session to session management system\n   - Store language selection in both session and context\n\n5. Response Generation:\n   - Return success status\n   - Make selected language available for installation process\n   - Ensure all subsequent installation steps use selected language\n   - Display installation interface in selected language",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Language code must exist in the system",
+    "Language code must follow the format 'language_COUNTRY'",
+    "Language resources must be available for the selected language"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Locale": {
+      "language": "string",
+      "country": "string"
+    }
+  }
+}

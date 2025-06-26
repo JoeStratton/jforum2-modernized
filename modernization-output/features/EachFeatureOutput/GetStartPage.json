@@ -1,0 +1,16 @@
+{
+  "featureName": "GetStartPage",
+  "description": "Determines the initial page number for record pagination from request parameters.",
+  "inputValues": [
+    "requestParameter-string-Request"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the 'start' parameter from the request\n   - This parameter is optional and represents the starting record index for pagination\n\n2. Data Validation:\n   - Check if the 'start' parameter exists in the request\n     - IF parameter is empty or not present\n       - Set start value to 0 (default to first page)\n     - ELSE\n       - Parse the string value to an integer\n       - IF parsed value is less than 0\n         - Set start value to 0 (ensure non-negative value)\n       - ELSE\n         - Use the parsed value as is\n\n3. Business Rule Processing:\n   - No additional business rules to process\n   - The start value represents the index of the first record to display in pagination\n\n4. Core Operation Execution:\n   - Return the validated start value\n   - This value will be used by the calling function to determine which records to fetch\n\n5. Response Generation:\n   - Return the calculated start page value as an integer\n   - This value represents the starting point for record retrieval in a paginated list",
+  "databaseEntities": [],
+  "validationRules": [
+    "Start parameter must be a valid integer if provided",
+    "Start parameter must be non-negative",
+    "If start parameter is missing or invalid, default to 0"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

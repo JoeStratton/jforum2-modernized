@@ -1,0 +1,31 @@
+{
+  "featureName": "GetCacheValues",
+  "description": "Retrieves all values from a specific cache node.",
+  "inputValues": [
+    "fqn-string-CacheNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the fully qualified name (fqn) of the cache node as a string\n   - The fqn is mandatory and represents the cache node path to retrieve values from\n\n2. Data Validation:\n   - Validate the fqn parameter:\n     a. Check if fqn is not null\n     b. Check if fqn is not an empty string\n     c. IF validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if the cache system is initialized:\n     a. IF cache system is not initialized, prepare system not ready error\n     b. Check if the requested cache node exists:\n        i. IF node does not exist, prepare node not found error\n\n4. Core Operation Execution:\n   - Access the cache storage system\n   - Locate the specified cache node using the provided fqn\n   - Retrieve all key-value pairs stored within the specified node\n   - Extract all values from the key-value pairs\n   - Compile all values into a collection\n   - IF the specified node doesn't exist or contains no data:\n     a. Return an empty collection\n   - IF any retrieval errors occur:\n     a. Log the error details\n     b. Prepare operation failed error\n\n5. Response Generation:\n   - IF operation was successful:\n     a. Return the collection of all values from the specified cache node\n     b. Include metadata about the cache node if available (e.g., creation time, size)\n   - IF operation failed:\n     a. Return appropriate error information\n     b. Include suggestions for troubleshooting",
+  "databaseEntities": [],
+  "validationRules": [
+    "The fully qualified name (fqn) must not be null",
+    "The fully qualified name (fqn) must not be an empty string",
+    "The cache system must be initialized before retrieving values",
+    "The specified cache node must exist"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CacheNode": {
+      "type": "object",
+      "properties": {
+        "fqn": {
+          "type": "string",
+          "description": "Fully qualified name that identifies the cache node"
+        },
+        "values": {
+          "type": "array",
+          "description": "Collection of values stored in the cache node"
+        }
+      }
+    }
+  }
+}

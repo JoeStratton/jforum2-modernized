@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ProcessInstallRequest",
+    "description": "Processes installation requests by executing appropriate module commands based on request parameters"
+  },
+  {
+    "featureName": "RedirectToForumsList",
+    "description": "Redirects users to the forums list page when the system is already installed"
+  },
+  {
+    "featureName": "RenderInstallationTemplate",
+    "description": "Renders installation templates with context data for the installation process"
+  },
+  {
+    "featureName": "HandleInstallationExceptions",
+    "description": "Handles and displays exceptions that occur during the installation process"
+  }
+]

@@ -1,0 +1,88 @@
+{
+  "featureName": "TrackNewPollOptions",
+  "description": "Identifies new poll options added in an updated poll.",
+  "inputValues": [
+    "originalPoll-object-Poll",
+    "updatedPoll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the original poll (originalPoll) with its options\n   - Collect the updated poll (updatedPoll) with its options\n   - Both polls must contain:\n     * Label (text identifier for the poll)\n     * Options list (collection of poll options)\n   - Each poll option must contain:\n     * ID (unique identifier)\n     * Text (description of the option)\n     * Vote count\n\n2. Data Validation\n   - Validate originalPoll is not null\n     * IF originalPoll is null THEN return error \"Original poll cannot be null\"\n   - Validate updatedPoll is not null\n     * IF updatedPoll is null THEN return error \"Updated poll cannot be null\"\n   - Validate originalPoll has valid options collection\n     * IF originalPoll options collection is null THEN initialize empty collection\n   - Validate updatedPoll has valid options collection\n     * IF updatedPoll options collection is null THEN initialize empty collection\n\n3. Business Rule Processing\n   - Compare poll labels\n     * IF originalPoll.label != updatedPoll.label THEN mark label as changed\n   - Initialize collections for tracking changes:\n     * newOptions (options in updatedPoll not in originalPoll)\n     * deletedOptions (options in originalPoll not in updatedPoll)\n     * changedOptions (options in both polls but with different text)\n\n4. Core Operation Execution\n   - Identify new poll options\n     * FOR EACH option in updatedPoll:\n       * IF option ID does not exist in originalPoll THEN\n         * Add option to newOptions collection\n   - Identify deleted poll options\n     * FOR EACH option in originalPoll:\n       * IF option ID does not exist in updatedPoll THEN\n         * Add option to deletedOptions collection\n   - Identify changed poll options\n     * FOR EACH option in updatedPoll:\n       * IF option ID exists in originalPoll THEN\n         * IF option text differs from corresponding option in originalPoll THEN\n           * Add option to changedOptions collection\n   - Determine if any changes exist\n     * IF label changed OR newOptions not empty OR deletedOptions not empty OR changedOptions not empty THEN\n       * Set hasChanges flag to true\n     * ELSE\n       * Set hasChanges flag to false\n\n5. Response Generation\n   - Create response containing:\n     * hasChanges flag indicating if any changes were detected\n     * Collection of new options added to the poll\n     * Collection of options deleted from the poll\n     * Collection of options whose text was modified\n     * Whether the poll label was changed\n   - Return the complete change tracking information",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Original poll must not be null",
+    "Updated poll must not be null",
+    "Poll options must have unique IDs",
+    "Each poll option must have an ID, text, and vote count"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Text identifier for the poll"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "Collection of options for the poll"
+        }
+      }
+    },
+    "PollOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the poll option"
+        },
+        "text": {
+          "type": "string",
+          "description": "Description text for the poll option"
+        },
+        "voteCount": {
+          "type": "integer",
+          "description": "Number of votes received for this option"
+        }
+      }
+    },
+    "PollChanges": {
+      "type": "object",
+      "properties": {
+        "hasChanges": {
+          "type": "boolean",
+          "description": "Flag indicating if any changes were detected"
+        },
+        "newOptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "Collection of new options added to the poll"
+        },
+        "deletedOptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "Collection of options deleted from the poll"
+        },
+        "changedOptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "Collection of options whose text was modified"
+        },
+        "labelChanged": {
+          "type": "boolean",
+          "description": "Flag indicating if the poll label was changed"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "featureName": "ManageGroupPermissions",
+  "description": "Displays and configures security permissions for a specific user group.",
+  "inputValues": [
+    "groupId-number-Group",
+    "permissionSettings-object-PermissionSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupId (mandatory): Numeric identifier of the group to manage permissions for\n     b. permissionSettings (optional): Collection of permission settings to be applied\n     c. System will generate permission configuration data based on XML configuration\n\n2. Data Validation:\n   - Validate groupId:\n     a. Check if groupId is provided and is a valid number\n     b. Verify groupId exists in the system\n     c. Return error message if group does not exist: \"Invalid group identifier provided\"\n   - Validate permissionSettings (when provided for saving):\n     a. Ensure all permission values are valid boolean flags\n     b. Verify all permission keys match defined system permissions\n     c. Return error message for invalid permissions: \"One or more permission settings are invalid\"\n\n3. Business Rule Processing:\n   - Check user authorization:\n     a. Verify current user has administrative privileges to manage permissions\n     b. IF user lacks required privileges, THEN\n        i. Return error message: \"Insufficient privileges to manage group permissions\"\n        ii. Terminate the operation\n   - Verify group status:\n     a. Check if the group is active and can have permissions modified\n     b. IF group is in a locked or special state, THEN\n        i. Return error message: \"This group's permissions cannot be modified\"\n        ii. Terminate the operation\n\n4. Core Operation Execution:\n   - IF operation is to display permissions:\n     a. Load permission configuration schema from system configuration\n     b. Retrieve current permission settings for the specified group\n     c. Organize permissions into logical sections based on configuration\n     d. Prepare permission data for display with current values\n   - IF operation is to save permissions:\n     a. For each permission in the permissionSettings:\n        i. Update the permission value for the group\n        ii. Track changes for audit purposes\n     b. Save all permission changes to the database\n     c. Clear any cached permission data in the system\n     d. Rebuild security repositories and access control lists\n     e. IF any error occurs during saving, THEN\n        i. Roll back all permission changes\n        ii. Return error message: \"Failed to save permission changes\"\n\n5. Response Generation:\n   - For display operation:\n     a. Return success response with:\n        i. Group details (name, description, ID)\n        ii. Organized permission sections with settings\n        iii. Available permission options\n   - For save operation:\n     a. Return success response with:\n        i. Confirmation message: \"Permissions updated successfully\"\n        ii. Summary of changes made\n        iii. Option to view updated permissions",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_roles"
+  ],
+  "validationRules": [
+    "Group ID must be a valid positive integer",
+    "Group must exist in the system",
+    "User must have administrative privileges to manage permissions",
+    "Permission settings must contain valid permission keys",
+    "Permission values must be valid boolean flags"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default permission roles exist in the system",
+    "Ensure XML permission configuration is properly loaded"
+  ],
+  "schema": {
+    "PermissionSettings": {
+      "type": "object",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the permission section"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the permission"
+                    },
+                    "value": {
+                      "type": "boolean",
+                      "description": "Whether the permission is granted or not"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

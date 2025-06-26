@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ValidateApiKey",
+    "description": "Authenticates REST API requests by validating the provided API key against stored credentials"
+  }
+]

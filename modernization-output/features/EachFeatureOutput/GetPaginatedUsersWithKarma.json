@@ -1,0 +1,61 @@
+{
+  "featureName": "GetPaginatedUsersWithKarma",
+  "description": "Retrieves a paginated list of users with their karma information.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - startFrom (number): The starting index for pagination (mandatory)\n     - count (number): The maximum number of users to retrieve (mandatory)\n     - System will use default values (0) if inputs are not provided\n\n2. Data Validation\n   - Validate pagination parameters:\n     - IF startFrom is provided, THEN ensure it is a non-negative integer\n       - IF startFrom is negative, THEN set error message \"Starting index cannot be negative\"\n     - IF count is provided, THEN ensure it is a non-negative integer\n       - IF count is negative, THEN set error message \"Count cannot be negative\"\n\n3. Business Rule Processing\n   - Check system state:\n     - Verify the user database is accessible\n       - IF database is not accessible, THEN generate appropriate error message\n     - Determine if the requesting user has permission to view user information\n       - IF user lacks permission, THEN return permission denied error\n\n4. Core Operation Execution\n   - Retrieve paginated user list:\n     - IF count is greater than 0, THEN:\n       - Retrieve users starting from the 'startFrom' index up to 'count' users\n     - ELSE:\n       - Retrieve all users without pagination\n     - For each retrieved user, collect basic information:\n       - User ID\n       - Username\n       - Email address\n       - Registration date\n       - Post count\n       - Location information\n       - Website URL\n       - Email visibility preference\n       - Account status (active/deleted)\n   - Enhance user data with karma information:\n     - For each user in the list:\n       - Retrieve and attach karma points information\n       - Calculate karma status based on points\n   - Sort the user list according to system default or specified criteria\n\n5. Response Generation\n   - Prepare success response:\n     - Create a structured list of users with their information\n     - Include pagination metadata:\n       - Total number of users in the system\n       - Current page information\n       - More pages indicator\n     - Format the response according to the system standards\n   - Handle error responses:\n     - IF any errors occurred during processing, THEN:\n       - Generate appropriate error message\n       - Include error code and description\n       - Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Starting index (startFrom) must be a non-negative integer",
+    "Count must be a non-negative integer",
+    "User must have permission to view user information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "registrationDate": {
+          "type": "date"
+        },
+        "totalPosts": {
+          "type": "integer"
+        },
+        "from": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "viewEmailEnabled": {
+          "type": "boolean"
+        },
+        "deleted": {
+          "type": "integer"
+        },
+        "karma": {
+          "type": "object",
+          "properties": {
+            "karmaPoints": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

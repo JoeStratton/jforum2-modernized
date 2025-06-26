@@ -1,0 +1,57 @@
+{
+  "featureName": "DispatchMessages",
+  "description": "Delivers email messages to recipients with authentication and configurable sending delay.",
+  "inputValues": [
+    "users-object-User",
+    "subject-string-MessageSubject",
+    "messageFile-string-TemplateFile",
+    "messageId-string-MessageIdentifier",
+    "inReplyTo-string-ReplyReference",
+    "templateParams-object-TemplateParameters"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect list of recipient users (mandatory)\n   - Get message subject (mandatory)\n   - Get message template file path (mandatory)\n   - Get message identifier (optional)\n   - Get in-reply-to reference (optional)\n   - Get template parameters (mandatory)\n   - System retrieves configuration values:\n     * SMTP host and port\n     * Authentication credentials\n     * Message format (HTML or text)\n     * Sending delay between messages\n     * SSL settings\n\n2. Data Validation:\n   - Validate recipient list:\n     * IF recipient list is empty THEN return error \"No recipients specified\"\n     * FOR EACH recipient, validate email format\n   - Validate message subject:\n     * IF subject is empty THEN return error \"Subject cannot be empty\"\n   - Validate message template file:\n     * IF template file does not exist THEN return error \"Template file not found\"\n     * IF template file cannot be read THEN return error \"Cannot read template file\"\n   - Validate SMTP configuration:\n     * IF SMTP host is not specified THEN return error \"SMTP host not configured\"\n     * IF authentication is enabled:\n       * IF username is empty THEN return error \"SMTP username not configured\"\n       * IF password is empty THEN return error \"SMTP password not configured\"\n\n3. Business Rule Processing:\n   - Determine message format (HTML or text) based on system configuration\n   - Determine if authentication is required based on system configuration\n   - Determine if SSL connection is required based on system configuration\n   - Check if message customization is needed:\n     * FOR EACH recipient, check notification preferences\n     * IF any recipient requires customized content THEN set customization flag\n   - Prepare email session with appropriate properties:\n     * Set SMTP host and port\n     * Set authentication settings\n     * Set character encoding\n     * Set local hostname if specified\n\n4. Core Operation Execution:\n   - Create email message with appropriate headers:\n     * Set sent date to current time\n     * Set sender address from system configuration\n     * Set subject with proper character encoding\n     * IF message ID is provided THEN set message ID\n     * IF in-reply-to reference is provided THEN add in-reply-to header\n   - Prepare message content:\n     * Load message template\n     * IF customization is not needed:\n       * Process template with provided parameters\n       * Set message content based on format (HTML or text)\n   - Send messages to recipients:\n     * IF authentication is required:\n       * Establish authenticated transport connection\n       * FOR EACH recipient:\n         * IF customization is needed THEN generate personalized content\n         * Send message to recipient\n         * IF sending delay is greater than zero THEN wait for specified delay\n       * Close transport connection\n     * ELSE:\n       * FOR EACH recipient:\n         * IF customization is needed THEN generate personalized content\n         * Send message to recipient\n         * IF sending delay is greater than zero THEN wait for specified delay\n\n5. Response Generation:\n   - IF all messages are sent successfully THEN:\n     * Return success status\n     * Log successful dispatch information\n   - IF any errors occur during sending THEN:\n     * Log detailed error information\n     * Return failure status with error details",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Recipient list must not be empty",
+    "Each recipient must have a valid email address",
+    "Message subject must not be empty",
+    "Message template file must exist and be readable",
+    "SMTP host must be configured",
+    "If authentication is enabled, username and password must be provided",
+    "Message format must be either HTML or text"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "notifyText": {
+          "type": "function",
+          "description": "Function that returns whether the user requires text notification"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "TemplateParameters": {
+      "type": "object",
+      "properties": {
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "user": {
+          "type": "object",
+          "description": "User object for customization"
+        }
+      }
+    }
+  }
+}

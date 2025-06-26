@@ -1,0 +1,31 @@
+{
+  "featureName": "InsertCategory",
+  "description": "Prepares the form for creating a new forum category.",
+  "inputValues": [
+    "category_name-string-Category",
+    "moderated-boolean-Category",
+    "groups-object-GroupSelection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. category_name (string, mandatory): The name of the new category\n     b. moderated (boolean, optional): Whether the category is moderated\n     c. groups (array of IDs, optional): List of group IDs that have access to this category\n\n2. Data Validation:\n   - Validate category_name:\n     a. IF category_name is empty THEN\n        i. Generate error message: \"Category name cannot be empty\"\n        ii. Return to form with error message\n     b. IF category_name exceeds maximum length THEN\n        i. Generate error message: \"Category name is too long\"\n        ii. Return to form with error message\n   - Validate moderated flag:\n     a. Ensure value is either true or false\n     b. Default to false if not provided\n   - Validate groups selection:\n     a. IF groups are selected THEN\n        i. Ensure all group IDs exist in the system\n        ii. IF any invalid group ID is found THEN\n            1. Generate error message: \"One or more selected groups are invalid\"\n            2. Return to form with error message\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. IF current user does not have administrative privileges THEN\n        i. Generate error message: \"Insufficient permissions to create categories\"\n        ii. Redirect to access denied page\n   - Check system constraints:\n     a. IF system has reached maximum allowed categories THEN\n        i. Generate error message: \"Maximum number of categories reached\"\n        ii. Return to form with error message\n\n4. Core Operation Execution:\n   - Prepare form for category creation:\n     a. Retrieve all available user groups from the system\n     b. Initialize an empty list for selected groups\n     c. Set the form action to \"insertSave\"\n     d. Prepare the category creation template\n     e. Make all retrieved data available to the template\n\n5. Response Generation:\n   - Display the category creation form:\n     a. Show input field for category name\n     b. Show checkbox for moderated status\n     c. Show multi-select list of available groups\n     d. Include submit and cancel buttons\n   - Provide clear instructions:\n     a. Explain the purpose of each field\n     b. Indicate which fields are mandatory\n     c. Explain the implications of making a category moderated",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Category name must not be empty",
+    "Category name must not exceed maximum length",
+    "User must have administrative privileges to create categories",
+    "Selected groups must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupSelection": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Group ID"
+      }
+    }
+  }
+}

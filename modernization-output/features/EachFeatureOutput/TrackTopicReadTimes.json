@@ -1,0 +1,49 @@
+{
+  "featureName": "TrackTopicReadTimes",
+  "description": "Manages tracking information about when topics were last read by users.",
+  "inputValues": [
+    "userId-number-User",
+    "topicId-number-Topic",
+    "readTime-date-ReadTime"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The identifier of the user\n   - Collect topicId (number, mandatory) - The identifier of the topic being read\n   - Collect readTime (date, system-generated, default: current timestamp) - The time when the topic was read\n\n2. Data Validation:\n   - Validate userId:\n      * Verify userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid THEN return error message \"Invalid user identifier\"\n   - Validate topicId:\n      * Verify topicId is a positive integer\n      * Verify topicId exists in the system\n      * IF topicId is invalid THEN return error message \"Invalid topic identifier\"\n   - Validate readTime:\n      * Verify readTime is a valid date format\n      * Verify readTime is not in the future\n      * IF readTime is invalid THEN use current system time instead\n\n3. Business Rule Processing:\n   - Check user session status:\n      * Verify user has an active session\n      * IF user session is not found THEN return error message \"User must be in an active session\"\n   - Check user access permissions:\n      * Verify user has permission to access the specified topic\n      * IF user lacks permission THEN return error message \"User does not have permission to access this topic\"\n   - Retrieve existing topic read times:\n      * Get the user's topic read time tracking map from the session\n      * IF tracking map does not exist THEN create a new empty tracking map\n\n4. Core Operation Execution:\n   - Update topic read time:\n      * Add or update the entry in the tracking map with topicId as key and readTime as value\n      * IF the topic already exists in the tracking map THEN:\n         > Compare the existing timestamp with the new readTime\n         > Only update if the new readTime is more recent\n   - Update forum-level read tracking (optional):\n      * Determine the forum that contains the topic\n      * Update the forum's last read time if necessary\n      * Store this information in the forum-level tracking map\n   - Persist tracking information:\n      * Store the updated tracking map in the user's session\n      * Ensure the tracking information persists across page views\n\n5. Response Generation:\n   - Success response:\n      * Return confirmation that the topic read time was updated\n      * Include the topicId and timestamp in the response\n   - Error response:\n      * Return appropriate error message based on validation failures\n      * Include guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_sessions",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Topic ID must be a valid positive integer",
+    "User must have an active session",
+    "User must have permission to access the topic",
+    "Read time must not be in the future"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ReadTimeTracking": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The identifier of the user"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "The identifier of the topic being read"
+        },
+        "readTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the topic was last read"
+        }
+      },
+      "required": [
+        "userId",
+        "topicId",
+        "readTime"
+      ]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "featureName": "PreviewPost",
+  "description": "Generates a preview of a forum post with HTML safety, BBCode, and smilies processing.",
+  "inputValues": [
+    "text-string-Post",
+    "subject-string-Post",
+    "html-boolean-Post",
+    "bbcode-boolean-Post",
+    "smilies-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs from the user:\n     a. Post text (mandatory): The main content of the post\n     b. Post subject (mandatory): The title or subject of the post\n     c. HTML enabled flag (optional): Whether HTML formatting is allowed in the post\n     d. BBCode enabled flag (optional): Whether BBCode formatting is allowed in the post\n     e. Smilies enabled flag (optional): Whether emoticon conversion is allowed in the post\n\n2. Data Validation:\n   - Validate post text:\n     a. Check if post text is not empty\n     b. Check if post text length is within allowed limits\n     c. IF validation fails, THEN return appropriate error message\n   - Validate post subject:\n     a. Check if subject is not empty\n     b. Check if subject length is within allowed limits\n     c. IF validation fails, THEN return appropriate error message\n   - Validate formatting flags:\n     a. Ensure HTML, BBCode, and Smilies flags are valid boolean values\n     b. IF any flag is invalid, THEN use system default values\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify if the user has permission to use HTML in posts\n     b. IF HTML is enabled but user lacks permission, THEN disable HTML formatting\n   - Process content safety rules:\n     a. IF HTML is enabled, THEN apply HTML safety filtering to prevent XSS attacks\n     b. Check for forbidden words or content based on forum rules\n     c. IF forbidden content is found, THEN mark content for moderation or rejection\n\n4. Core Operation Execution:\n   - Create a temporary post object with the provided inputs\n   - Process the post content based on enabled formatting options:\n     a. IF HTML is enabled, THEN apply HTML safety filtering to the text\n     b. IF BBCode is enabled, THEN convert BBCode tags to their HTML equivalents\n     c. IF Smilies are enabled, THEN convert emoticon codes to their graphical representations\n   - Format the post for display:\n     a. Apply any additional formatting required for preview display\n     b. Escape special characters in the subject to prevent script injection\n     c. Escape special characters in the processed text to prevent script injection\n\n5. Response Generation:\n   - Generate a preview response containing:\n     a. The formatted post subject\n     b. The formatted post content with all applied formatting\n     c. Any system messages or warnings about the content\n   - Return the preview to the user interface for display\n   - Indicate that this is a preview only and not a saved post",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Post text must not be empty",
+    "Post subject must not be empty",
+    "Post text length must be within allowed limits",
+    "Post subject length must be within allowed limits",
+    "HTML content must be sanitized if HTML formatting is enabled",
+    "Formatting flags (HTML, BBCode, Smilies) must be valid boolean values"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "text": "string",
+      "subject": "string",
+      "htmlEnabled": "boolean",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean"
+    }
+  }
+}

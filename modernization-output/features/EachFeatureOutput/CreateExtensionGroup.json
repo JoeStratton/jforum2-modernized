@@ -1,0 +1,30 @@
+{
+  "featureName": "CreateExtensionGroup",
+  "description": "Creates a new extension group for file attachments.",
+  "inputValues": [
+    "name-string-AttachmentExtensionGroup",
+    "allow-boolean-AttachmentExtensionGroup",
+    "downloadMode-number-AttachmentExtensionGroup",
+    "uploadIcon-string-AttachmentExtensionGroup"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. name (string): The name of the extension group\n     b. allow (boolean): Whether the extension group is allowed\n     c. downloadMode (number): The download mode for the extension group\n     d. uploadIcon (string): The icon to be displayed for this extension group\n\n2. Data Validation:\n   - Validate the name field:\n     a. IF name is empty or null THEN\n        i. Generate error message: \"Extension group name is required\"\n        ii. Return error response\n     b. IF name exceeds maximum allowed length THEN\n        i. Generate error message: \"Extension group name is too long\"\n        ii. Return error response\n   - Validate the downloadMode field:\n     a. IF downloadMode is not a valid option THEN\n        i. Generate error message: \"Invalid download mode selected\"\n        ii. Return error response\n   - Validate the uploadIcon field:\n     a. IF uploadIcon is provided and not in the list of available icons THEN\n        i. Generate error message: \"Selected upload icon is not valid\"\n        ii. Return error response\n\n3. Business Rule Processing:\n   - Check for duplicate extension group names:\n     a. Search existing extension groups for the same name\n     b. IF a group with the same name exists THEN\n        i. Generate error message: \"An extension group with this name already exists\"\n        ii. Return error response\n   - Verify system permissions:\n     a. Check if the current user has administrative privileges\n     b. IF user lacks required permissions THEN\n        i. Generate error message: \"Insufficient permissions to create extension groups\"\n        ii. Return error response\n\n4. Core Operation Execution:\n   - Create a new AttachmentExtensionGroup object with the following properties:\n     a. Set the name property to the provided name\n     b. Set the allow property to the provided allow value\n     c. Set the downloadMode property to the provided downloadMode value\n     d. Set the uploadIcon property to the provided uploadIcon value\n   - Save the new extension group to the database:\n     a. Generate a unique identifier for the new extension group\n     b. Insert the extension group record into the database\n     c. IF database operation fails THEN\n        i. Log the error details\n        ii. Generate error message: \"Failed to create extension group\"\n        iii. Return error response\n\n5. Response Generation:\n   - On successful creation:\n     a. Generate success message: \"Extension group created successfully\"\n     b. Include the newly created extension group details in the response\n     c. Return success response with the extension group ID\n   - On failure:\n     a. Include detailed error information\n     b. Provide guidance on how to resolve the issue\n     c. Return appropriate error status",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Extension group name must not be empty",
+    "Extension group name must be unique",
+    "Download mode must be a valid option",
+    "User must have administrative privileges to create extension groups"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtensionGroup": {
+      "id": "number",
+      "name": "string",
+      "allow": "boolean",
+      "downloadMode": "number",
+      "uploadIcon": "string"
+    }
+  }
+}

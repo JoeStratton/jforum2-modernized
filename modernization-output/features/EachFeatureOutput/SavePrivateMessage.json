@@ -1,0 +1,47 @@
+{
+  "featureName": "SavePrivateMessage",
+  "description": "Processes and saves a composed private message with notification support.",
+  "inputValues": [
+    "toUserId-number-User",
+    "toUsername-string-User",
+    "messageContent-object-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. toUserId (number, optional): The ID of the recipient user\n     b. toUsername (string, optional): The username of the recipient\n     c. messageContent (object, mandatory): Contains the message text, subject, and formatting options\n     d. preview (boolean, system-generated): Indicates if this is a preview request\n\n2. Data Validation\n   - Validate user authentication\n     a. IF user is not logged in THEN\n        i. Redirect to login page\n        ii. STOP processing\n     b. ELSE continue processing\n   - Validate recipient information\n     a. IF toUserId is empty or invalid THEN\n        i. IF toUsername is provided THEN\n           1. Search for user by username\n           2. IF user found THEN\n              a. Set toUserId to the found user's ID\n           3. ELSE\n              a. Display error message \"User not found\"\n              b. STOP processing\n        ii. ELSE\n           1. Display error message \"Recipient information required\"\n           2. STOP processing\n     b. ELSE continue with provided toUserId\n   - Validate message content\n     a. Check that subject is not empty\n     b. Check that message body is not empty\n     c. IF any validation fails THEN\n        i. Display appropriate error message\n        ii. Return to message composition form with entered data\n        iii. STOP processing\n\n3. Business Rule Processing\n   - Check if preview mode is requested\n     a. IF preview is requested THEN\n        i. Format message for display\n        ii. Return to composition form with preview\n        iii. STOP processing\n     b. ELSE continue with message saving\n   - Check recipient availability\n     a. Verify recipient user exists in the system\n     b. IF recipient not found THEN\n        i. Display error message\n        ii. STOP processing\n     c. ELSE continue processing\n\n4. Core Operation Execution\n   - Prepare message data\n     a. Create new private message object\n     b. Set sender information from current user session\n     c. Set recipient information from validated toUserId\n     d. Set message content from input\n     e. Set message status as NEW\n   - Save private message\n     a. Store message in database\n     b. IF save fails THEN\n        i. Display error message\n        ii. Return to composition form with entered data\n        iii. STOP processing\n     c. ELSE continue processing\n   - Update recipient notification status\n     a. IF recipient is currently online THEN\n        i. Increment recipient's unread message counter\n     b. IF recipient has email notifications enabled THEN\n        i. Queue email notification for sending\n\n5. Response Generation\n   - Generate success response\n     a. Display confirmation message that message was sent successfully\n     b. Provide link to inbox for further actions\n     c. Clear form data to prevent duplicate submissions",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to send private messages",
+    "Recipient user must exist in the system",
+    "Message must have a subject",
+    "Message must have content",
+    "Either recipient user ID or username must be provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Subject of the private message"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the private message"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Whether HTML formatting is enabled in the message"
+        }
+      },
+      "required": [
+        "subject",
+        "text"
+      ]
+    }
+  }
+}

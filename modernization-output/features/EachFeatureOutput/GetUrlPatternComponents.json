@@ -1,0 +1,46 @@
+{
+  "featureName": "GetUrlPatternComponents",
+  "description": "Retrieves pattern name, variables, and size for URL routing in the forum system.",
+  "inputValues": [
+    "patternName-string-UrlPattern",
+    "patternValue-string-UrlPattern"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - patternName (string, mandatory): The name identifier for the URL pattern\n     - patternValue (string, mandatory): The comma-separated list of variables in the pattern\n   - System will use these inputs to create a URL pattern object\n\n2. Data Validation:\n   - Validate patternName:\n     - IF patternName is empty or null THEN\n       - Generate error message: \"Pattern name cannot be empty\"\n     - IF patternName does not follow the format \"module.action.paramCount\" THEN\n       - Generate error message: \"Pattern name must follow format: module.action.paramCount\"\n   - Validate patternValue:\n     - No specific format validation required as empty values are allowed\n     - patternValue should be a comma-separated list of variable names\n\n3. Business Rule Processing:\n   - Verify pattern name uniqueness:\n     - IF pattern with the same name already exists in the system THEN\n       - Generate warning: \"Pattern with this name already exists and will be overwritten\"\n   - Check pattern consistency:\n     - IF patternName ends with a number (paramCount) THEN\n       - The number should match the actual number of parameters in patternValue\n       - IF mismatch detected THEN\n         - Generate warning: \"Parameter count in name does not match actual parameters\"\n\n4. Core Operation Execution:\n   - Process the pattern value:\n     - Split the patternValue by comma separator\n     - Create an array to store the variables\n     - Calculate the pattern size:\n       - IF the first element is empty or only contains whitespace THEN\n         - Set size to 0\n       - ELSE\n         - Set size to the number of elements after splitting\n     - For each element in the split array:\n       - Trim whitespace from the element\n       - Store the trimmed element in the variables array\n   - Create the URL pattern object with:\n     - The provided pattern name\n     - The processed variables array\n     - The calculated pattern size\n\n5. Response Generation:\n   - Return the URL pattern components:\n     - Pattern name: The original name provided\n     - Pattern variables: Array of variable names extracted from the pattern value\n     - Pattern size: The number of variables in the pattern\n   - IF any warnings were generated during processing THEN\n     - Include warnings in the response\n   - IF any errors were encountered THEN\n     - Return error details and status",
+  "databaseEntities": [],
+  "validationRules": [
+    "Pattern name must not be empty",
+    "Pattern name should follow the format 'module.action.paramCount'",
+    "Pattern value must be properly formatted as comma-separated values",
+    "Parameter count in name should match actual parameters in value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlPattern": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name identifier for the URL pattern"
+        },
+        "value": {
+          "type": "string",
+          "description": "The comma-separated list of variables in the pattern"
+        },
+        "size": {
+          "type": "integer",
+          "description": "The number of variables in the pattern"
+        },
+        "vars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of variable names extracted from the pattern value"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

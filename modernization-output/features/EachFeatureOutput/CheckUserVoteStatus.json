@@ -1,0 +1,36 @@
+{
+  "featureName": "CheckUserVoteStatus",
+  "description": "Verifies if a user has already voted on a specific poll.",
+  "inputValues": [
+    "pollId-number-Poll",
+    "userId-number-User",
+    "ipAddress-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. pollId (mandatory): Unique identifier of the poll to check\n     b. userId (optional): Unique identifier of the user\n     c. ipAddress (optional): IP address of the user\n   - Note: Either userId OR ipAddress must be provided\n\n2. Data Validation:\n   - Validate pollId:\n     a. Check if pollId is provided\n     b. Verify pollId is a positive integer\n     c. IF validation fails, THEN return appropriate error message\n   - Validate user identification:\n     a. IF userId is provided:\n        i. Verify userId is a positive integer\n        ii. IF validation fails, THEN return appropriate error message\n     b. ELSE IF ipAddress is provided:\n        i. Verify ipAddress is in valid format\n        ii. IF validation fails, THEN return appropriate error message\n     c. ELSE:\n        i. Return error indicating either userId or ipAddress must be provided\n\n3. Business Rule Processing:\n   - Verify poll existence:\n     a. Check if poll with given pollId exists in the system\n     b. IF poll does not exist, THEN return appropriate error message\n   - Determine verification method:\n     a. IF userId is provided and greater than 0:\n        i. Set verification method to user-based verification\n     b. ELSE:\n        i. Set verification method to IP-based verification\n\n4. Core Operation Execution:\n   - Check voting status:\n     a. IF using user-based verification:\n        i. Search for voting record matching both pollId and userId\n     b. ELSE IF using IP-based verification:\n        i. Search for voting record matching both pollId and ipAddress\n     c. Determine if matching record exists:\n        i. IF record found, THEN user has voted\n        ii. ELSE user has not voted\n\n5. Response Generation:\n   - Prepare response with voting status:\n     a. Include boolean result indicating whether user has voted\n     b. Include pollId in response\n     c. Include timestamp of verification\n   - Return formatted response to caller",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Poll ID must be a positive integer",
+    "Either User ID or IP address must be provided",
+    "User ID must be a positive integer when provided",
+    "IP address must be in valid format when provided",
+    "Poll must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "label": "string",
+      "startTime": "date",
+      "length": "number",
+      "options": "array"
+    },
+    "User": {
+      "id": "number",
+      "ipAddress": "string"
+    }
+  }
+}

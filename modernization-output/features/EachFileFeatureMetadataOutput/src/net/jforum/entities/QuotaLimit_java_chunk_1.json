@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "CheckQuotaExceeded",
+    "description": "Checks if a given file size exceeds the configured quota limit"
+  },
+  {
+    "featureName": "GetSizeInBytes",
+    "description": "Calculates the quota limit size in bytes based on KB or MB configuration"
+  }
+]

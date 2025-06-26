@@ -1,0 +1,104 @@
+{
+  "featureName": "CheckInstallationInformation",
+  "description": "Validates and stores installation parameters for forum setup including database and forum configuration.",
+  "inputValues": [
+    "language-string-Installation",
+    "database-string-Installation",
+    "dbHost-string-Installation",
+    "dbPort-string-Installation",
+    "dbUser-string-Installation",
+    "dbName-string-Installation",
+    "dbPassword-string-Installation",
+    "dbEncoding-string-Installation",
+    "dbEncodingOther-string-Installation",
+    "usePool-string-Installation",
+    "forumLink-string-Installation",
+    "siteLink-string-Installation",
+    "adminPassword-string-Installation",
+    "dbdatasource-string-Installation",
+    "db_connection_type-string-Installation"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect installation configuration parameters from the user\n     1.1. Gather language preference for the forum\n     1.2. Collect database configuration information:\n          - Database type (e.g., MySQL, PostgreSQL)\n          - Database host address\n          - Database port number\n          - Database user name\n          - Database name\n          - Database password\n          - Database character encoding\n          - Alternative encoding if needed\n     1.3. Collect connection pool preference (whether to use connection pooling)\n     1.4. Gather forum configuration information:\n          - Forum URL link\n          - Site URL link\n          - Administrator password\n          - Database datasource name (if applicable)\n          - Database connection type\n\n2. Data Validation\n   - Validate all input parameters for correctness and completeness\n     2.1. Check if required fields are provided\n          - IF any mandatory field is empty, apply default values where appropriate:\n            - Set default database host to \"localhost\" if not provided\n            - Set default character encoding to \"utf-8\" if not specified\n            - Set default forum link to \"http://localhost\" if not provided\n            - Set default database name to \"jforum\" if not provided\n            - IF database type is \"hsqldb\" AND user name is empty, set default user to \"sa\"\n     2.2. Validate format of provided URLs\n          - Ensure forum link and site link have proper URL format\n     2.3. Validate database connection parameters\n          - Ensure port number is numeric if provided\n          - Ensure database name follows naming conventions\n\n3. Business Rule Processing\n   - Process business rules related to installation configuration\n     3.1. Check system environment compatibility\n          - Verify if the application has write permissions to configuration directories\n          - Store write permission status for later use in the installation process\n     3.2. Determine installation steps based on configuration\n          - Reset configuration flags for database setup steps\n          - Prepare for subsequent installation phases\n\n4. Core Operation Execution\n   - Store validated configuration in the system\n     4.1. Save all validated parameters to session context\n          - Store language preference\n          - Store database configuration (type, host, port, user, name, password, encoding)\n          - Store connection pooling preference\n          - Store forum and site URLs\n          - Store administrator password\n          - Store database connection details\n     4.2. Save all validated parameters to view context\n          - Make all configuration parameters available for the view template\n          - Add write permission status to view context\n     4.3. Reset installation progress flags\n          - Clear database configuration status\n          - Clear table creation status\n          - Clear data import status\n\n5. Response Generation\n   - Prepare response for the user\n     5.1. Set appropriate template for displaying configuration summary\n     5.2. Include all configuration parameters in the view\n     5.3. Include system status information (e.g., write permissions)\n     5.4. Prepare navigation information for next installation steps\n     5.5. Return the prepared view with configuration summary",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Database host defaults to 'localhost' if not provided",
+    "Database encoding defaults to 'utf-8' if not provided",
+    "Forum link defaults to 'http://localhost' if not provided",
+    "Database name defaults to 'jforum' if not provided",
+    "Database user defaults to 'sa' if database is 'hsqldb' and no user is provided",
+    "System must have write permissions to configuration directories"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Installation": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Preferred language for the forum"
+        },
+        "database": {
+          "type": "string",
+          "description": "Database type selection"
+        },
+        "dbHost": {
+          "type": "string",
+          "description": "Database server hostname"
+        },
+        "dbPort": {
+          "type": "string",
+          "description": "Database server port"
+        },
+        "dbUser": {
+          "type": "string",
+          "description": "Database username"
+        },
+        "dbName": {
+          "type": "string",
+          "description": "Database name"
+        },
+        "dbPassword": {
+          "type": "string",
+          "description": "Database password"
+        },
+        "dbEncoding": {
+          "type": "string",
+          "description": "Database character encoding"
+        },
+        "dbEncodingOther": {
+          "type": "string",
+          "description": "Alternative database encoding"
+        },
+        "usePool": {
+          "type": "string",
+          "description": "Whether to use connection pooling"
+        },
+        "forumLink": {
+          "type": "string",
+          "description": "URL for the forum"
+        },
+        "siteLink": {
+          "type": "string",
+          "description": "URL for the main site"
+        },
+        "adminPassword": {
+          "type": "string",
+          "description": "Administrator password"
+        },
+        "dbdatasource": {
+          "type": "string",
+          "description": "Database datasource name"
+        },
+        "db_connection_type": {
+          "type": "string",
+          "description": "Type of database connection"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "featureName": "CheckBanStatus",
+  "description": "Determines if a user should be banned based on matching criteria against the banlist.",
+  "inputValues": [
+    "userInfo-object-BanCandidate"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user information (userInfo) to check against the ban criteria\n     1.1. Extract user identification details from the input object\n     1.2. Prepare the user information for ban criteria matching\n     1.3. Ensure all required identification fields are present\n\n2. Data Validation:\n   - Validate the user information provided for ban checking\n     2.1. Verify that the user information contains at least one identifiable attribute\n     2.2. Check that the format of each identification attribute is valid\n     2.3. IF any required identification attribute is missing or invalid THEN\n          2.3.1. Generate an error message indicating invalid user information\n          2.3.2. Abort the ban checking process\n     2.4. ELSE continue to the next step\n\n3. Business Rule Processing:\n   - Prepare the system for ban status checking\n     3.1. Verify that the banlist repository is accessible\n     3.2. IF the banlist is not loaded or accessible THEN\n          3.2.1. Attempt to load the banlist from the data source\n          3.2.2. IF loading fails THEN\n                 3.2.2.1. Generate an error indicating banlist unavailability\n                 3.2.2.2. Abort the ban checking process\n     3.3. ELSE continue with the loaded banlist\n\n4. Core Operation Execution:\n   - Check if the user matches any ban criteria in the banlist\n     4.1. Initialize ban status as 'not banned'\n     4.2. FOR each entry in the banlist DO\n          4.2.1. Compare the user information against the current ban entry criteria\n          4.2.2. IF the user information matches the ban criteria THEN\n                 4.2.2.1. Set ban status to 'banned'\n                 4.2.2.2. Record the matching ban reason\n                 4.2.2.3. Exit the loop\n          4.2.3. ELSE continue checking the next ban entry\n     4.3. IF no matches were found THEN\n          4.3.1. Keep ban status as 'not banned'\n\n5. Response Generation:\n   - Generate the appropriate response based on the ban check results\n     5.1. Create a result object containing:\n          5.1.1. Ban status (banned or not banned)\n          5.1.2. IF banned THEN include reason for ban\n          5.1.3. IF banned THEN include ban duration information if available\n     5.2. Return the ban check result to the caller\n     5.3. IF banned THEN\n          5.3.1. Log the ban match for audit purposes\n     5.4. ELSE\n          5.4.1. Allow normal system access",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User information must contain at least one identifiable attribute",
+    "Banlist must be accessible and loaded before checking",
+    "Each ban criteria must be properly formatted and valid",
+    "Ban matching must check all relevant user attributes against ban criteria"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BanCandidate": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "User's IP address"
+        },
+        "userId": {
+          "type": "number",
+          "description": "User's unique identifier"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "ipAddress"
+      ]
+    }
+  }
+}

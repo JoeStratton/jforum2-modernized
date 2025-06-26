@@ -1,0 +1,57 @@
+{
+  "featureName": "GetAllCategoriesAndForums",
+  "description": "Retrieves all forums available to the user with optional unread post checking.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "anonymousUserId-number-User",
+    "tracking-object-TopicTracking",
+    "checkUnreadPosts-boolean-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user session information (optional)\n   - Determine if unread post checking is required\n   - Gather topic tracking data if available\n   - Set anonymous user ID for permission checking\n\n2. Data Validation:\n   - Validate user session status:\n     * IF user session is provided, extract user ID and last visit timestamp\n     * IF user session is not provided, use anonymous user ID and current time\n   - Validate tracking data format if provided\n   - Determine if unread post checking should be performed:\n     * Only check unread posts if user is logged in (not anonymous)\n     * Skip unread checking if explicitly set to false\n\n3. Business Rule Processing:\n   - Retrieve category access permissions for the current user\n   - Filter categories based on user's access rights\n   - For each accessible category:\n     * Retrieve associated forums\n     * Filter forums based on user's access permissions\n     * IF checkUnreadPosts is true:\n       > For each forum, determine if it contains unread posts\n       > Compare last post timestamp with user's last visit time\n       > Mark forums with unread content accordingly\n\n4. Core Operation Execution:\n   - Create result collection for categories\n   - For each accessible category:\n     * Create category object with basic information\n     * Populate category with accessible forums\n     * For each forum in the category:\n       > Include forum metadata (name, description)\n       > Include forum statistics (total topics, posts)\n       > IF checkUnreadPosts is true:\n         - Check last post information\n         - Compare with user's tracking data\n         - Mark forum as read/unread based on comparison\n     * Add complete category with forums to result collection\n\n5. Response Generation:\n   - Return hierarchical structure of categories and forums\n   - Each category contains:\n     * Category ID and name\n     * List of accessible forums\n   - Each forum contains:\n     * Forum ID, name, and description\n     * Forum statistics\n     * Unread status flag (if requested)\n     * Last post information (if available)",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must have permission to view requested categories",
+    "User must have permission to view forums within categories",
+    "Anonymous users cannot check for unread posts",
+    "Last visit timestamp must be valid for unread post checking",
+    "Topic tracking data must be properly formatted if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "userId": "number",
+      "lastVisit": "date",
+      "username": "string"
+    },
+    "TopicTracking": {
+      "type": "object",
+      "properties": {
+        "topicId": "number",
+        "lastReadTime": "number"
+      }
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "unread": "boolean",
+      "lastPostInfo": "object"
+    }
+  }
+}

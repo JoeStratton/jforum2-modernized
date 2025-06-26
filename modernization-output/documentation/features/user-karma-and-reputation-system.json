@@ -1,0 +1,193 @@
+{
+  "feature_name": "User Karma and Reputation System",
+  "description": "The User Karma and Reputation System enables community-driven evaluation of user contributions through a point-based system, encouraging positive participation and content quality.",
+  "business_logic": {
+    "karma_points": {
+      "description": "System for users to rate each other's contributions",
+      "workflow": [
+        "Users can give positive or negative karma points to other users' posts",
+        "Each user has limited karma points to give per day (configurable)",
+        "Users cannot give karma to their own posts",
+        "Total karma for a user is calculated from received points",
+        "Karma history is maintained for transparency"
+      ],
+      "calculation_rules": [
+        "Karma points per vote configurable (typically +/- 1)",
+        "Daily limit on karma points a user can give",
+        "Minimum post count before user can give karma",
+        "Optional karma weighting based on giver's reputation"
+      ]
+    },
+    "reputation_levels": {
+      "description": "Representation of user standing based on karma",
+      "level_system": [
+        "Reputation levels based on total karma points",
+        "Visual indicators (stars, badges, labels) for reputation levels",
+        "Configurable thresholds for each level",
+        "Special titles or badges for high reputation"
+      ]
+    },
+    "karma_management": {
+      "description": "Administrative tools for managing the karma system",
+      "admin_capabilities": [
+        "Reset user karma",
+        "Configure karma system parameters",
+        "View karma history",
+        "Handle karma abuse reports"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "karma": {
+      "give": {
+        "path": "/api/karma",
+        "method": "POST",
+        "request_body": {
+          "post_id": "integer",
+          "points": "integer",
+          "reason": "string"
+        },
+        "responses": {
+          "201": "Karma given successfully",
+          "400": "Invalid request",
+          "403": "Daily limit reached or not authorized",
+          "404": "Post not found"
+        }
+      },
+      "user_karma": {
+        "path": "/api/users/{userId}/karma",
+        "method": "GET",
+        "responses": {
+          "200": "User karma statistics"
+        }
+      },
+      "post_karma": {
+        "path": "/api/posts/{postId}/karma",
+        "method": "GET",
+        "responses": {
+          "200": "Post karma statistics"
+        }
+      },
+      "received": {
+        "path": "/api/users/{userId}/karma/received",
+        "method": "GET",
+        "query_params": {
+          "page": "integer",
+          "size": "integer"
+        },
+        "responses": {
+          "200": "Karma received by user"
+        }
+      },
+      "given": {
+        "path": "/api/users/{userId}/karma/given",
+        "method": "GET",
+        "query_params": {
+          "page": "integer",
+          "size": "integer"
+        },
+        "responses": {
+          "200": "Karma given by user"
+        }
+      }
+    },
+    "admin": {
+      "karma_config": {
+        "get": {
+          "path": "/api/admin/karma/config",
+          "method": "GET",
+          "responses": {
+            "200": "Karma system configuration"
+          }
+        },
+        "update": {
+          "path": "/api/admin/karma/config",
+          "method": "PUT",
+          "request_body": {
+            "min_post_count": "integer",
+            "daily_karma_limit": "integer",
+            "karma_per_vote": "integer",
+            "min_karma_to_give": "integer"
+          },
+          "responses": {
+            "200": "Configuration updated"
+          }
+        }
+      },
+      "reset_user_karma": {
+        "path": "/api/admin/users/{userId}/karma/reset",
+        "method": "POST",
+        "responses": {
+          "200": "Karma reset successfully"
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "karma": {
+      "fields": [
+        {"name": "karma_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "post_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "from_user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "to_user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "points", "type": "SMALLINT", "constraints": "NOT NULL"},
+        {"name": "karma_time", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "karma_reason", "type": "VARCHAR(255)"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (post_id) REFERENCES posts(post_id)",
+        "FOREIGN KEY (from_user_id) REFERENCES users(user_id)",
+        "FOREIGN KEY (to_user_id) REFERENCES users(user_id)",
+        "UNIQUE (post_id, from_user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_karma_from ON karma(from_user_id)",
+        "CREATE INDEX idx_karma_to ON karma(to_user_id)",
+        "CREATE INDEX idx_karma_post ON karma(post_id)"
+      ]
+    },
+    "karma_status": {
+      "fields": [
+        {"name": "karma_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "karma_min_value", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "karma_max_value", "type": "INTEGER"},
+        {"name": "karma_title", "type": "VARCHAR(50)", "constraints": "NOT NULL"},
+        {"name": "karma_image", "type": "VARCHAR(255)"},
+        {"name": "karma_color", "type": "VARCHAR(25)"}
+      ]
+    },
+    "user_karma": {
+      "fields": [
+        {"name": "user_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "karma_points", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "karma_votes_given", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "karma_votes_received", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "karma_votes_left_today", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "karma_votes_last_update", "type": "TIMESTAMP"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ]
+    }
+  },
+  "security_considerations": {
+    "anti_abuse": [
+      "Daily limits on karma points to prevent abuse",
+      "Minimum post count before allowing karma voting",
+      "Prevention of self-karma",
+      "Detection of suspicious karma patterns (coordinated voting)",
+      "Ability to revoke karma in abuse cases"
+    ],
+    "privacy": [
+      "Option for anonymous karma (not showing who gave points)",
+      "Admin-only access to detailed karma history",
+      "User control over displaying their karma"
+    ]
+  },
+  "integration_points": {
+    "user_management": "Karma is associated with user accounts",
+    "post_system": "Karma is given to specific posts",
+    "permission_system": "Karma giving may be restricted by permissions",
+    "moderation_system": "Moderators can manage karma abuse"
+  }
+}

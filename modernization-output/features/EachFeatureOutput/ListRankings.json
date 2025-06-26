@@ -1,0 +1,15 @@
+{
+  "featureName": "ListRankings",
+  "description": "Retrieves and displays all user rankings in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all ranking data automatically\n\n2. Data Validation:\n   - Verify user has appropriate permissions to view rankings\n     - IF user does not have admin privileges THEN\n       - Display access denied message\n       - Terminate process\n     - END IF\n\n3. Business Rule Processing:\n   - Verify ranking system is enabled in system settings\n     - IF ranking system is disabled THEN\n       - Display appropriate notification\n       - Provide option to enable ranking system\n       - Terminate process\n     - END IF\n   - Check if ranking data is accessible\n     - IF ranking data cannot be accessed THEN\n       - Log access failure\n       - Display error message\n       - Terminate process\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve all ranking records from data store\n     - Include both special and regular rankings\n     - Sort rankings by:\n       - Special rankings first\n       - Regular rankings by minimum post requirement (ascending)\n   - Prepare ranking data for display\n     - For each ranking record:\n       - Format title for display\n       - Determine if ranking is special or regular\n       - For regular rankings, include minimum post requirement\n       - Include ranking ID for reference\n\n5. Response Generation:\n   - Display rankings list with the following information:\n     - Ranking title\n     - Ranking type (special or regular)\n     - Minimum posts required (for regular rankings)\n     - Options for each ranking:\n       - Edit ranking\n       - Delete ranking\n   - Provide option to add new ranking\n   - IF no rankings exist THEN\n     - Display message indicating no rankings are defined\n     - Provide prominent option to create first ranking\n   - END IF",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to view rankings",
+    "Ranking system must be enabled to display rankings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,17 @@
+{
+  "featureName": "CleanGroupQuota",
+  "description": "Removes all group quota associations from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - This is a system-level operation that does not require external parameters\n\n2. Data Validation:\n   - Verify system user has appropriate permissions to perform quota management operations\n   - Confirm the operation is being executed in an appropriate system context\n   - Validate that the system is in a state where quota cleaning is allowed\n\n3. Business Rule Processing:\n   - Check if there are any active processes that depend on group quota associations\n   - Verify that removing all group quota associations will not cause system inconsistencies\n   - Determine if any notifications should be generated for affected groups\n\n4. Core Operation Execution:\n   - Begin transaction for data consistency\n   - Execute the group quota cleaning operation:\n     a. Identify all existing group quota associations in the system\n     b. Remove all associations between groups and quota limits\n     c. Ensure all references to group quotas are properly cleared\n   - If any errors occur during the operation:\n     a. Roll back the transaction\n     b. Log the failure details\n     c. Prepare error information for response\n   - If successful, commit the transaction\n\n5. Response Generation:\n   - If operation was successful:\n     a. Generate success confirmation\n     b. Include summary of removed associations (if applicable)\n     c. Provide information about the system's new state\n   - If operation failed:\n     a. Generate appropriate error message\n     b. Include details about what caused the failure\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to clean group quotas",
+    "System must not have any operations in progress that depend on group quota associations",
+    "Database connection must be available and operational"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,48 @@
+{
+  "featureName": "SetCategoryOrder",
+  "description": "Changes the display order of forum categories.",
+  "inputValues": [
+    "category-object-Category",
+    "relatedCategory-object-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - category (mandatory): The Category object to be reordered\n     - relatedCategory (mandatory): The Category object to swap order with\n     - Both objects must contain valid category IDs and current display order values\n\n2. Data Validation:\n   - Validate Category objects:\n     - Verify both category and relatedCategory objects are not null\n     - Verify both category and relatedCategory have valid IDs (greater than 0)\n     - Verify both category and relatedCategory have valid order values (greater than or equal to 1)\n     - Verify the categories are different (have different IDs)\n   - IF any validation fails, THEN:\n     - Generate appropriate error message\n     - Abort the operation\n\n3. Business Rule Processing:\n   - Verify both categories exist in the system\n   - Verify user has permission to modify category order\n   - Check if the system allows reordering of categories\n   - IF any business rule fails, THEN:\n     - Generate appropriate error message\n     - Abort the operation\n\n4. Core Operation Execution:\n   - Store the current order value of the relatedCategory\n   - Assign the category's order value to the relatedCategory\n   - Assign the stored order value (from relatedCategory) to the category\n   - Update the display_order field for both categories in the database\n   - IF any update operation fails, THEN:\n     - Rollback all changes\n     - Generate error message\n     - Abort the operation\n\n5. Response Generation:\n   - IF all operations completed successfully, THEN:\n     - Generate success response indicating categories were reordered\n     - Include updated category information in response\n   - ELSE:\n     - Generate error response with details about what went wrong\n     - Include support information if needed",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category objects must not be null",
+    "Category IDs must be greater than 0",
+    "Category order values must be greater than or equal to 1",
+    "Categories must be different (have different IDs)",
+    "Both categories must exist in the system",
+    "User must have permission to modify category order"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the category"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the category is moderated"
+        }
+      },
+      "required": [
+        "id",
+        "order"
+      ]
+    }
+  }
+}

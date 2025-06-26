@@ -1,0 +1,42 @@
+{
+  "featureName": "SaveUploadedFile",
+  "description": "Saves an uploaded file to the specified location on the server.",
+  "inputValues": [
+    "fileItem-object-FileItem",
+    "targetFilename-string-String"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the file item to be saved (mandatory)\n   - Collect the target filename with complete path (mandatory)\n   - System will determine file extension from the original filename\n\n2. Data Validation:\n   - Validate file item exists\n     * IF file item is null THEN return error \"No file provided\"\n     * IF file item contains no data THEN return error \"Empty file provided\"\n   - Validate target filename\n     * IF target filename is empty THEN return error \"No target location specified\"\n     * IF target filename is invalid THEN return error \"Invalid target location\"\n   - Validate file extension\n     * Extract extension from original filename\n     * IF no extension found THEN use empty string as extension\n\n3. Business Rule Processing:\n   - Check storage location availability\n     * IF target directory does not exist THEN return error \"Target directory not found\"\n     * IF target directory is not writable THEN return error \"Permission denied for target directory\"\n   - Check storage capacity\n     * IF insufficient space available THEN return error \"Insufficient storage space\"\n   - Check for existing file\n     * IF file already exists at target location AND overwrite not allowed THEN return error \"File already exists\"\n\n4. Core Operation Execution:\n   - Prepare file streams\n     * Create input stream from the uploaded file item\n     * Create output stream to the target filename\n   - Transfer file data\n     * Read data from input stream in chunks\n     * Write data to output stream\n     * Continue until all data is transferred\n   - Handle potential errors\n     * IF I/O error occurs during transfer THEN\n       > Close all open streams if possible\n       > Delete partially written file if possible\n       > Return error \"File transfer failed\"\n\n5. Response Generation:\n   - Clean up resources\n     * Flush output stream to ensure all data is written\n     * Close all open streams\n   - Generate success response\n     * Return success status\n     * Include saved file information (name, size, path)\n   - IF any errors occurred during the process THEN\n     * Return appropriate error message\n     * Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File item must not be null",
+    "Target filename must not be empty",
+    "Target directory must exist and be writable",
+    "Sufficient storage space must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Original name of the uploaded file"
+        },
+        "inputStream": {
+          "type": "object",
+          "description": "Stream containing the file data"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the uploaded file in bytes"
+        }
+      },
+      "required": [
+        "name",
+        "inputStream"
+      ]
+    }
+  }
+}

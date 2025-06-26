@@ -1,0 +1,19 @@
+{
+  "featureName": "LastPostIdByDate",
+  "description": "Finds the last post ID created on or before a specified date.",
+  "inputValues": [
+    "targetDate-date-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the target date (targetDate) from the user\n   - Validate that targetDate is a valid date format\n   - Determine if targetDate is required or if system should use current date as default\n\n2. Data Validation:\n   - Validate that targetDate is not null if required\n   - Validate that targetDate is a valid date format\n   - Validate that targetDate is not in the future\n   - IF targetDate is invalid THEN\n     - Generate appropriate error message\n     - Return error response\n   - END IF\n\n3. Business Rule Processing:\n   - Verify that the post repository is accessible\n   - Verify that post data exists in the system\n   - IF post repository is not accessible THEN\n     - Generate system error message\n     - Return error response\n   - END IF\n   - IF no posts exist in the system THEN\n     - Generate appropriate message indicating no posts exist\n     - Return zero or null as post ID\n   - END IF\n\n4. Core Operation Execution:\n   - Query the post repository for all posts\n   - Filter posts to include only those created on or before the targetDate\n   - IF no posts match the date criteria THEN\n     - Return zero or null as post ID\n   - ELSE\n     - Sort the filtered posts by creation date in descending order\n     - Identify the post with the most recent creation date that is still on or before targetDate\n     - Extract the ID of this identified post\n   - END IF\n\n5. Response Generation:\n   - IF a matching post was found THEN\n     - Return the post ID as the result\n     - Include metadata about the found post (optional)\n   - ELSE\n     - Return appropriate message indicating no posts were found for the given date criteria\n     - Return zero or null as post ID\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Target date must be a valid date format",
+    "Target date must not be in the future",
+    "Post repository must be accessible",
+    "Return value must be an integer representing a post ID or zero/null if no matching post exists"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

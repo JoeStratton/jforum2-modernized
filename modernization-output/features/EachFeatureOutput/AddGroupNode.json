@@ -1,0 +1,48 @@
+{
+  "featureName": "AddGroupNode",
+  "description": "Adds a new node to the group hierarchy structure.",
+  "inputValues": [
+    "name-string-GroupNode",
+    "id-number-GroupNode",
+    "parentNode-object-GroupNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. name (string, mandatory): The name of the new group node\n     b. id (number, mandatory): The unique identifier for the new group node\n     c. parentNode (object, mandatory): The parent group node to which this node will be added\n\n2. Data Validation:\n   - Validate the name input:\n     a. IF name is empty or null THEN\n        i. Generate error: \"Group node name cannot be empty\"\n     b. IF name contains invalid characters THEN\n        i. Generate error: \"Group node name contains invalid characters\"\n   - Validate the id input:\n     a. IF id is less than or equal to 0 THEN\n        i. Generate error: \"Group node ID must be a positive number\"\n     b. IF id already exists in the hierarchy THEN\n        i. Generate error: \"Group node ID already exists\"\n   - Validate the parentNode input:\n     a. IF parentNode is null THEN\n        i. Generate error: \"Parent node cannot be null\"\n\n3. Business Rule Processing:\n   - Check hierarchy constraints:\n     a. IF adding this node would create a circular reference THEN\n        i. Generate error: \"Cannot add node as it would create a circular reference\"\n     b. IF maximum depth of hierarchy would be exceeded THEN\n        i. Generate error: \"Maximum hierarchy depth would be exceeded\"\n   - Check node limit constraints:\n     a. IF parent node has reached maximum allowed child nodes THEN\n        i. Generate error: \"Parent node cannot accept more child nodes\"\n\n4. Core Operation Execution:\n   - Create a new GroupNode instance:\n     a. Initialize the node with empty subgroups collection\n     b. Set the node name to the provided name\n     c. Set the node id to the provided id\n   - Add the new node to the parent node:\n     a. Call the addNode method on the parent node\n     b. Pass the newly created node as parameter\n   - Update the hierarchy structure:\n     a. Recalculate any hierarchy-dependent properties\n     b. Update any indexes or caches that track the hierarchy\n\n5. Response Generation:\n   - On success:\n     a. Return confirmation that the node was added successfully\n     b. Include the updated parent node with the new child node\n     c. Include the total count of nodes in the parent\n   - On failure:\n     a. Return appropriate error message\n     b. Include information about which validation or business rule failed\n     c. Provide guidance on how to correct the issue",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Group node name must not be empty",
+    "Group node ID must be a positive number",
+    "Parent node must exist",
+    "Group node ID must be unique within the hierarchy",
+    "Adding a node must not create a circular reference",
+    "Hierarchy depth limits must not be exceeded"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupNode": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the group node"
+        },
+        "id": {
+          "type": "number",
+          "description": "The unique identifier for the group node"
+        },
+        "extraNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/GroupNode"
+          },
+          "description": "Collection of child nodes under this group node"
+        }
+      },
+      "required": [
+        "name",
+        "id"
+      ]
+    }
+  }
+}

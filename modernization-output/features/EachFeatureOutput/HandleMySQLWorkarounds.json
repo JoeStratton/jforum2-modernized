@@ -1,0 +1,49 @@
+{
+  "featureName": "HandleMySQLWorkarounds",
+  "description": "Detects MySQL version and applies appropriate configuration fixes for database compatibility.",
+  "inputValues": [
+    "databaseConnection-object-Connection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database connection object\n   - Retrieve current database configuration settings\n   - Identify database type from system configuration\n\n2. Data Validation:\n   - Validate database connection is not null\n     * IF connection is null THEN\n       * Log warning message about null connection\n       * Exit process\n     * END IF\n   - Validate database type is MySQL\n     * IF database type is not MySQL THEN\n       * Exit process as workarounds only apply to MySQL\n     * END IF\n\n3. Business Rule Processing:\n   - Retrieve database metadata from connection\n   - Extract database version information (major and minor version)\n   - Determine appropriate configuration based on version\n     * IF major version is 3 AND minor version is 23 THEN\n       * Mark for MySQL 3.23 specific configuration\n     * ELSE IF major version is 4 AND minor version is 0 THEN\n       * Mark for MySQL 4.0 specific configuration\n     * ELSE IF major version is greater than 4 OR (major version is 4 AND minor version is greater than 0) THEN\n       * Mark for MySQL 4.1+ specific configuration\n     * END IF\n\n4. Core Operation Execution:\n   - Apply MySQL 3.23 specific workarounds if needed\n     * Update data access driver class to MySQL 3.23 specific driver\n     * Load necessary SQL queries for MySQL 3.23\n     * Update SQL query configuration file with version-specific queries\n   - Apply MySQL 4.0 specific workarounds if needed\n     * Update data access driver class to standard MySQL driver\n     * Load necessary SQL queries for MySQL 4.0\n     * Update SQL query configuration file with version-specific queries\n   - Apply MySQL 4.1+ specific workarounds if needed\n     * Update data access driver class to standard MySQL driver\n     * Clear any unnecessary SQL query overrides\n     * Fix character encoding settings in configuration\n   - Reload system configuration to apply changes\n\n5. Response Generation:\n   - Log completion of workaround application\n   - Log any errors encountered during the process\n   - Return success or failure status",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Database connection must not be null",
+    "Database type must be MySQL",
+    "Configuration files must be writable for updates",
+    "SQL query file must exist and be accessible",
+    "Database driver configuration file must exist and be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "description": "Database metadata information"
+        }
+      },
+      "description": "Database connection object"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "LoadPermissionConfigurations",
+    "description": "Loads permission configurations from XML file and builds a structured permission hierarchy"
+  },
+  {
+    "featureName": "ParsePermissionSections",
+    "description": "Parses XML permission sections with their associated permission items and settings"
+  },
+  {
+    "featureName": "RetrieveRoleBasedPermissions",
+    "description": "Retrieves and processes role-based permissions from database using SQL templates"
+  }
+]

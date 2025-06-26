@@ -1,0 +1,35 @@
+{
+  "featureName": "CheckBannerDeletability",
+  "description": "Checks if a banner can be deleted based on its ID.",
+  "inputValues": [
+    "bannerId-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the banner ID (bannerId) as a required numeric input\n   - System will use this ID to check if the banner can be deleted\n\n2. Data Validation:\n   - Validate that bannerId is provided\n     - IF bannerId is missing or null THEN\n       - Return an error message indicating that banner ID is required\n     - END IF\n   - Validate that bannerId is a positive integer\n     - IF bannerId is not a positive integer THEN\n       - Return an error message indicating that banner ID must be a positive integer\n     - END IF\n\n3. Business Rule Processing:\n   - Check if the banner exists in the system\n     - Retrieve banner information using the provided bannerId\n     - IF banner does not exist THEN\n       - Return an error message indicating that the banner was not found\n     - END IF\n   - Check if the banner is referenced by other system components\n     - Verify if the banner is currently in use by any active campaigns\n     - Verify if the banner is referenced in any scheduled promotions\n     - Verify if the banner is part of any active content placement\n     - IF banner is referenced by any system component THEN\n       - Set deletable status to false\n     - ELSE\n       - Set deletable status to true\n     - END IF\n\n4. Core Operation Execution:\n   - Prepare the deletion status result\n     - Create a result object containing:\n       - Banner ID\n       - Deletion status (true if banner can be deleted, false otherwise)\n       - If not deletable, include references to where the banner is being used\n\n5. Response Generation:\n   - Return the deletion status result\n     - IF banner can be deleted THEN\n       - Return success response with deletable status set to true\n     - ELSE\n       - Return success response with deletable status set to false\n       - Include information about where the banner is being used\n     - END IF",
+  "databaseEntities": [
+    "jforum_banners"
+  ],
+  "validationRules": [
+    "Banner ID must be provided",
+    "Banner ID must be a positive integer",
+    "Banner must exist in the system to check its deletability",
+    "A banner cannot be deleted if it is referenced by other system components"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "placement": "number",
+      "description": "string",
+      "clicks": "number",
+      "views": "number",
+      "url": "string",
+      "weight": "number",
+      "active": "boolean",
+      "comment": "string",
+      "type": "number",
+      "width": "number",
+      "height": "number"
+    }
+  }
+}

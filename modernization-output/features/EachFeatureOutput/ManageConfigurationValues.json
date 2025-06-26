@@ -1,0 +1,53 @@
+{
+  "featureName": "ManageConfigurationValues",
+  "description": "Sets, retrieves and manages configuration properties with support for different data types.",
+  "inputValues": [
+    "field-string-ConfigurationKey",
+    "value-object-ConfigurationValue",
+    "configFile-string-FilePath"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. field (mandatory): Configuration key name as string\n     b. value (mandatory): Configuration value which can be string, number, boolean, or object\n     c. configFile (optional): Path to configuration file\n     d. operation (mandatory): Type of operation (get, set, save, load, reset)\n\n2. Data Validation:\n   - Validate configuration key (field):\n     a. Check if field is not null or empty\n     b. Verify field follows naming convention\n     c. Return error if validation fails\n   - Validate configuration value:\n     a. For string values: Check for proper formatting\n     b. For numeric values: Verify it's a valid number\n     c. For boolean values: Ensure it's either \"true\" or \"false\"\n     d. For object values: Validate object structure\n   - Validate file path if provided:\n     a. Check if file exists\n     b. Verify read/write permissions\n     c. Return error if file is inaccessible\n\n3. Business Rule Processing:\n   - Check operation type and apply corresponding rules:\n     a. For GET operations:\n       i. Check if configuration exists in system\n       ii. Determine data type of requested configuration\n     b. For SET operations:\n       i. Verify if configuration is modifiable\n       ii. Check if value type matches expected type\n     c. For LOAD operations:\n       i. Verify file format is valid\n       ii. Check for duplicate configuration keys\n     d. For SAVE operations:\n       i. Ensure system has write permissions\n       ii. Check if there are changes to save\n     e. For RESET operations:\n       i. Confirm reset operation is allowed\n       ii. Identify which configurations to reset\n\n4. Core Operation Execution:\n   - Execute the requested operation:\n     a. For GET operations:\n       i. Retrieve value from configuration store\n       ii. Convert to appropriate data type (string, int, boolean, object)\n       iii. Apply variable expansion if needed\n     b. For SET operations:\n       i. Store value in appropriate configuration store (default, installation, or transient)\n       ii. Clear any cached values\n       iii. Update in-memory representation\n     c. For LOAD operations:\n       i. Open configuration file\n       ii. Parse file contents\n       iii. Load values into appropriate store\n       iv. Close file resources\n     d. For SAVE operations:\n       i. Sort configuration keys\n       ii. Create output stream to file\n       iii. Write configuration data\n       iv. Close file resources\n     e. For RESET operations:\n       i. Clear specified configuration stores\n       ii. Reload default values if needed\n\n5. Response Generation:\n   - Generate appropriate response based on operation:\n     a. For GET operations:\n       i. Return requested value with proper type\n       ii. Include metadata about the configuration if requested\n     b. For SET operations:\n       i. Confirm value was set successfully\n       ii. Return updated value for verification\n     c. For LOAD operations:\n       i. Return count of loaded configurations\n       ii. Include any warnings about overwritten values\n     d. For SAVE operations:\n       i. Confirm save was successful\n       ii. Include path where configuration was saved\n     e. For RESET operations:\n       i. Confirm reset was successful\n       ii. Include count of reset configurations",
+  "databaseEntities": [],
+  "validationRules": [
+    "Configuration key must not be null or empty",
+    "Configuration file path must be valid if provided",
+    "Configuration value must match expected data type",
+    "File must exist and be accessible for load operations",
+    "System must have write permissions for save operations",
+    "Variable references in configuration values must be resolvable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ConfigurationValue": {
+      "type": "object",
+      "properties": {
+        "stringValue": {
+          "type": "string",
+          "description": "String representation of the configuration value"
+        },
+        "intValue": {
+          "type": "integer",
+          "description": "Integer representation of the configuration value"
+        },
+        "booleanValue": {
+          "type": "boolean",
+          "description": "Boolean representation of the configuration value"
+        },
+        "objectValue": {
+          "type": "object",
+          "description": "Object representation of the configuration value"
+        },
+        "valueType": {
+          "type": "string",
+          "enum": [
+            "string",
+            "integer",
+            "boolean",
+            "object"
+          ],
+          "description": "Type of the configuration value"
+        }
+      }
+    }
+  }
+}

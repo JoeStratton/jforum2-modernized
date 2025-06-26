@@ -1,0 +1,25 @@
+{
+  "featureName": "GetResponseEncoding",
+  "description": "Retrieves the character encoding of the HTTP response.",
+  "inputValues": [
+    "response-object-HttpResponse"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HTTP response object\n     - The response object is required and must be valid\n     - No additional input parameters are needed\n\n2. Data Validation:\n   - Validate HTTP response object\n     - Check if the response object is not null\n     - IF response object is null THEN\n       - Generate an error indicating invalid response object\n       - Return appropriate error message\n     - END IF\n\n3. Business Rule Processing:\n   - Verify response state\n     - Check if the response is in a valid state to retrieve encoding\n     - IF response has been committed or closed THEN\n       - Log warning about retrieving encoding from committed response\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve character encoding\n     - Access the character encoding property from the response object\n     - IF encoding is not explicitly set THEN\n       - Return the default encoding used by the system\n     - ELSE\n       - Return the explicitly set encoding value\n     - END IF\n\n5. Response Generation:\n   - Format the encoding information\n     - Return the character encoding as a string value\n     - IF encoding could not be determined THEN\n       - Return null or appropriate indication of unavailable encoding\n     - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Response object must not be null",
+    "Response must be in a valid state to retrieve encoding"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpResponse": {
+      "type": "object",
+      "properties": {
+        "characterEncoding": {
+          "type": "string",
+          "description": "The character encoding of the HTTP response"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "featureName": "CreateUserWithId",
+  "description": "Adds a new user with a predefined ID for external login support.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect User object with the following fields:\n     - userId (required, predefined): Unique identifier for the user\n     - username (required): User's login name\n     - password (required): User's authentication credential\n     - email (required): User's email address\n     - registrationDate (system-generated): Date and time of registration\n     - active (optional, default=false): Account activation status\n     - avatar (optional): User's profile image reference\n     - attachSignature (optional, default=false): Whether to attach signature to posts\n     - signature (optional): User's signature text\n\n2. Data Validation\n   - Validate userId:\n     - Must be a positive integer\n     - Must not already exist in the system\n     - Error message if validation fails: \"User ID already exists or is invalid\"\n   - Validate username:\n     - Must not be empty\n     - Must be between 3 and 30 characters\n     - Must not contain special characters except underscores\n     - Must not already exist in the system\n     - Error message if validation fails: \"Username is invalid or already registered\"\n   - Validate email:\n     - Must be in valid email format\n     - Must not already exist in the system\n     - Error message if validation fails: \"Email is invalid or already registered\"\n   - Validate password:\n     - Must be at least 6 characters long\n     - Error message if validation fails: \"Password must be at least 6 characters long\"\n\n3. Business Rule Processing\n   - Verify system can accept new users:\n     - Check if user registration is enabled\n     - Check if maximum user limit has not been reached\n     - IF registration is disabled OR user limit reached THEN\n       - Return error: \"User registration is currently not available\"\n   - Check external login system compatibility:\n     - Verify the provided user ID format matches external system requirements\n     - IF format incompatible THEN\n       - Return error: \"User ID format incompatible with external login system\"\n   - Prepare user data for creation:\n     - Set registration date to current system time\n     - Set default user preferences if not provided\n     - Set initial post count to zero\n     - Set default user rank\n\n4. Core Operation Execution\n   - Create new user record:\n     - Insert user record with predefined ID into user table\n     - Create associated user profile record\n     - IF insertion fails due to database constraints THEN\n       - Roll back all changes\n       - Return error: \"Failed to create user record\"\n   - Assign default user groups:\n     - Identify default groups for new users\n     - Associate user with these groups\n     - IF group assignment fails THEN\n       - Log warning but continue process\n   - Initialize user settings:\n     - Create default notification preferences\n     - Set default privacy settings\n     - IF settings initialization fails THEN\n       - Log warning but continue process\n\n5. Response Generation\n   - For successful creation:\n     - Return success status\n     - Include created user information (excluding sensitive data)\n     - Include activation instructions if account requires activation\n   - For failed creation:\n     - Return failure status\n     - Include specific error details\n     - Include suggestions for resolving the issue\n     - Provide support contact information if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must not already exist in the system",
+    "Username must not be empty",
+    "Username must be between 3 and 30 characters",
+    "Username must not contain special characters except underscores",
+    "Username must not already exist in the system",
+    "Email must be in valid email format",
+    "Email must not already exist in the system",
+    "Password must be at least 6 characters long"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "description": "Predefined unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's authentication credential"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date and time of registration"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Account activation status"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "User's profile image reference"
+        },
+        "attachSignature": {
+          "type": "boolean",
+          "description": "Whether to attach signature to posts"
+        },
+        "signature": {
+          "type": "string",
+          "description": "User's signature text"
+        }
+      },
+      "required": [
+        "userId",
+        "username",
+        "password",
+        "email"
+      ]
+    }
+  }
+}

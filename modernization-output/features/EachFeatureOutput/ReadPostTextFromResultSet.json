@@ -1,0 +1,34 @@
+{
+  "featureName": "ReadPostTextFromResultSet",
+  "description": "Retrieves post text content from database result set using specialized blob handling techniques.",
+  "inputValues": [
+    "resultSet-object-ResultSet"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Receive database result set object containing post data\n       1.1.1. Result set must contain a column named 'post_text'\n       1.1.2. The column must contain text content stored in binary format\n\n2. Data Validation:\n   2.1. Validate result set parameter\n       2.1.1. Check if result set is not null\n       2.1.2. Verify result set is open and valid\n       2.1.3. IF result set is invalid or closed THEN\n             - Generate appropriate error message\n             - Return empty string or throw exception based on system configuration\n   2.2. Validate column existence\n       2.2.1. Check if 'post_text' column exists in the result set\n       2.2.2. IF column does not exist THEN\n             - Generate appropriate error message\n             - Return empty string or throw exception based on system configuration\n\n3. Business Rule Processing:\n   3.1. Determine text encoding format\n       3.1.1. Identify the binary storage format (UTF-16 in this case)\n       3.1.2. Select appropriate reading method based on storage format\n   3.2. Check for content size limitations\n       3.2.1. IF content exceeds system-defined size limits THEN\n             - Log warning about oversized content\n             - Proceed with retrieval but may need truncation based on system settings\n\n4. Core Operation Execution:\n   4.1. Access binary data stream\n       4.1.1. Locate the binary data for the 'post_text' column in the result set\n       4.1.2. Open binary stream to the data\n   4.2. Process binary data\n       4.2.1. Read binary data using appropriate character encoding\n       4.2.2. Convert binary data to string format\n       4.2.3. Handle any special characters or formatting requirements\n   4.3. Clean up resources\n       4.3.1. Close any opened streams\n       4.3.2. Release any temporary resources used during conversion\n\n5. Response Generation:\n   5.1. Return processed text content\n       5.1.1. Return the extracted and converted text as a string\n       5.1.2. IF extraction failed THEN\n             - Return empty string or null based on system configuration\n             - Ensure error is logged for troubleshooting",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Result set must not be null",
+    "Result set must be open and valid",
+    "Result set must contain a 'post_text' column",
+    "Binary data must be properly formatted for conversion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ResultSet": {
+      "type": "object",
+      "description": "Database result set containing query results",
+      "properties": {
+        "post_text": {
+          "type": "binary",
+          "description": "Binary data containing post text content"
+        }
+      },
+      "required": [
+        "post_text"
+      ]
+    }
+  }
+}

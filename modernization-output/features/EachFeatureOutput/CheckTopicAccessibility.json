@@ -1,0 +1,41 @@
+{
+  "featureName": "CheckTopicAccessibility",
+  "description": "Verifies if the current user has permission to view a specific topic.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): The numeric identifier of the forum containing the topic\n   - Retrieve userSession (system-generated): The current user's session information\n\n2. Data Validation:\n   - Validate forumId:\n     2.1. Check if forumId is a valid positive integer\n     2.2. Verify forumId exists in the system\n     2.3. If validation fails, prepare error message indicating invalid forum identifier\n\n3. Business Rule Processing:\n   - Retrieve forum information:\n     3.1. Fetch forum details using the provided forumId\n     3.2. IF forum is not found:\n          3.2.1. Set access status to denied\n          3.2.2. Prepare access denied message\n          3.2.3. Return false (not accessible)\n     3.3. Retrieve the categoryId associated with the forum\n     3.4. Check category accessibility:\n          3.4.1. Verify if the user has permission to access the category\n          3.4.2. IF category is not accessible:\n                 3.4.2.1. Set access status to denied\n                 3.4.2.2. Prepare access denied message\n                 3.4.2.3. Return false (not accessible)\n\n4. Core Operation Execution:\n   - Determine final accessibility status:\n     4.1. IF both forum exists AND category is accessible:\n          4.1.1. Set access status to granted\n          4.1.2. Return true (accessible)\n     4.2. ELSE:\n          4.2.1. Set access status to denied\n          4.2.2. Return false (not accessible)\n\n5. Response Generation:\n   - Generate appropriate response:\n     5.1. IF access is granted:\n          5.1.1. Return success response with accessibility status set to true\n     5.2. ELSE:\n          5.2.1. Return error response with access denied message\n          5.2.2. Include reason for denial (forum not found or category not accessible)",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid positive integer",
+    "Forum must exist in the system",
+    "User must have permission to access the category containing the forum",
+    "Category must be accessible to the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The unique identifier of the user"
+        },
+        "lastVisit": {
+          "type": "object",
+          "description": "The timestamp of the user's last visit"
+        },
+        "permissions": {
+          "type": "object",
+          "description": "The user's permission settings"
+        }
+      }
+    }
+  }
+}

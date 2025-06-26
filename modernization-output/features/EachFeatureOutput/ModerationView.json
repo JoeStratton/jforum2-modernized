@@ -1,0 +1,49 @@
+{
+  "featureName": "ModerationView",
+  "description": "Shows forum topics with moderation panel opened for authorized moderators.",
+  "inputValues": [
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forum_id (mandatory) from the request\n   - System will determine current user session information automatically\n\n2. Data Validation:\n   - Validate that forum_id is provided and is a valid number\n     - IF forum_id is missing or invalid THEN\n       - Display error message indicating invalid forum selection\n       - Return user to forum listing page\n   - Validate that the forum exists in the system\n     - IF forum does not exist THEN\n       - Display error message indicating forum not found\n       - Return user to forum listing page\n   - Validate that the user has access to the specified forum\n     - IF user does not have access to the forum THEN\n       - Display access denied message\n       - Return user to forum listing page\n\n3. Business Rule Processing:\n   - Check if the current user is logged in\n     - IF user is not logged in THEN\n       - Redirect to login page\n       - Store original request for post-login redirection\n   - Check if the current user is a moderator for the specified forum\n     - IF user is not a moderator for this forum THEN\n       - Display access denied message\n       - Return user to forum listing page\n   - Check if the user has permission to approve messages\n     - IF user does not have message approval permission THEN\n       - Display limited moderation view without approval options\n\n4. Core Operation Execution:\n   - Retrieve forum information based on forum_id\n   - Retrieve topics in the forum with pagination\n     - Get current page number from request or default to first page\n     - Calculate offset based on page number and topics per page setting\n   - Retrieve topics pending approval for the forum\n   - Prepare topic data for display\n     - Format dates according to system settings\n     - Calculate unread status for each topic\n     - Prepare moderation options for each topic\n   - Set moderation panel to open state\n   - Prepare forum statistics and metadata\n     - Total topics count\n     - Total posts count\n     - Last post information\n   - Prepare moderation action buttons and options\n\n5. Response Generation:\n   - Display forum view with moderation panel opened\n   - Show standard forum information:\n     - Forum name and description\n     - Topic listing with pagination\n     - Forum statistics\n   - Show moderation-specific elements:\n     - Topics pending approval section\n     - Moderation action buttons (approve, reject, move, etc.)\n     - Batch operation options\n   - IF any errors occurred during processing THEN\n     - Display appropriate error messages\n     - Provide navigation options to return to valid state",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_moderator_groups",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid number",
+    "Forum must exist in the system",
+    "User must have access to the specified forum",
+    "User must be logged in to access moderation features",
+    "User must be a moderator for the specified forum",
+    "User must have appropriate permissions for moderation actions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostId": "number",
+      "moderated": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "postTime": "date",
+      "userId": "number",
+      "totalReplies": "number",
+      "lastPostId": "number",
+      "status": "number",
+      "type": "number",
+      "pendingModeration": "boolean"
+    }
+  }
+}

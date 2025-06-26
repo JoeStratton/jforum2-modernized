@@ -1,0 +1,57 @@
+{
+  "featureName": "AddModerationLog",
+  "description": "Records a new moderation log entry in the system.",
+  "inputValues": [
+    "user-object-User",
+    "description-string-ModerationLog",
+    "originalMessage-string-ModerationLog",
+    "type-number-ModerationLog",
+    "postId-number-Post",
+    "topicId-number-Topic",
+    "posterUser-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - user: Object containing moderator information (id, username)\n       - description: Textual description of the moderation action\n       - type: Numeric code representing the type of moderation action\n       - posterUser: Object containing information about the user whose content is being moderated\n   1.2. Collect the following optional inputs based on moderation context:\n       - originalMessage: Original content before moderation (if applicable)\n       - postId: Identifier of the post being moderated (if applicable)\n       - topicId: Identifier of the topic being moderated (if applicable)\n   1.3. System will automatically generate:\n       - timestamp: Current date and time when the log entry is created\n       - logId: Unique identifier for the moderation log entry\n\n2. Data Validation:\n   2.1. Validate user object:\n       - IF user is null THEN\n         - Return error: \"Moderator information is required\"\n       - IF user.id is empty, null, or less than 1 THEN\n         - Return error: \"Valid moderator ID is required\"\n       - IF user does not have moderation privileges THEN\n         - Return error: \"User does not have moderation privileges\"\n   2.2. Validate posterUser object:\n       - IF posterUser is null THEN\n         - Return error: \"Poster user information is required\"\n       - IF posterUser.id is empty, null, or less than 1 THEN\n         - Return error: \"Valid poster user ID is required\"\n   2.3. Validate type:\n       - IF type is null or less than 1 THEN\n         - Return error: \"Valid moderation type is required\"\n       - IF type is not a recognized moderation action code THEN\n         - Return error: \"Invalid moderation type code\"\n   2.4. Validate description:\n       - IF description is empty or null THEN\n         - Return error: \"Description is required\"\n       - IF description length exceeds maximum allowed characters THEN\n         - Return error: \"Description exceeds maximum length\"\n   2.5. Validate context-specific fields:\n       - IF type requires a post reference AND postId is null or less than 1 THEN\n         - Return error: \"Valid post ID is required for this moderation type\"\n       - IF type requires a topic reference AND topicId is null or less than 1 THEN\n         - Return error: \"Valid topic ID is required for this moderation type\"\n\n3. Business Rule Processing:\n   3.1. Check moderator permissions:\n       - IF moderation action is forum-specific THEN\n         - Verify moderator has permission for the specific forum\n         - IF not authorized THEN\n           - Return error: \"Moderator not authorized for this forum\"\n   3.2. Check for duplicate entries:\n       - IF an identical moderation log entry exists within short time window THEN\n         - Skip creating duplicate entry\n         - Return success with existing entry ID\n   3.3. Verify referenced entities exist:\n       - IF postId is provided THEN\n         - Verify post exists\n         - IF not exists THEN\n           - Return error: \"Referenced post does not exist\"\n       - IF topicId is provided THEN\n         - Verify topic exists\n         - IF not exists THEN\n           - Return error: \"Referenced topic does not exist\"\n\n4. Core Operation Execution:\n   4.1. Create moderation log entry:\n       - Create new ModerationLog object\n       - Set user to the provided moderator user object\n       - Set description to the provided description\n       - Set originalMessage to the provided original message (if applicable)\n         - IF originalMessage is null THEN\n           - Set originalMessage to empty string \"\"\n       - Set type to the provided moderation type code\n       - Set postId to the provided post ID (if applicable)\n       - Set topicId to the provided topic ID (if applicable)\n       - Set posterUser to the provided user object\n       - Set timestamp to current system time\n   4.2. Store log entry:\n       - Prepare database statement for inserting the log entry\n       - Execute the statement with all field values\n       - Retrieve the generated log ID\n       - Set the ID in the ModerationLog object\n       - Store description text in the database as a binary stream\n       - Store originalMessage text in the database as a binary stream\n       - IF save operation fails THEN\n         - Log system error\n         - Return error: \"Failed to save moderation log entry\"\n   4.3. Update related statistics:\n       - Increment moderator activity counter\n       - Update last moderation timestamp for the moderator\n\n5. Response Generation:\n   5.1. On success:\n       - Return success status\n       - Include the ModerationLog object with its newly assigned ID\n       - Include timestamp of the recorded action\n   5.2. On failure:\n       - Return error status\n       - Include specific error message\n       - Include error code for programmatic handling",
+  "databaseEntities": [
+    "ModerationLog",
+    "User",
+    "Post",
+    "Topic"
+  ],
+  "validationRules": [
+    "Moderator user object must be provided with a valid ID",
+    "Poster user object must be provided with a valid ID",
+    "Moderation type must be a valid action code",
+    "Description is required and must not exceed maximum length",
+    "Post ID must be valid if provided",
+    "Topic ID must be valid if provided",
+    "Moderator must have permission for the forum being moderated",
+    "Original message will be set to empty string if null"
+  ],
+  "dbSeedingOperations": [
+    "Insert default moderation action types",
+    "Ensure moderator permissions are properly set"
+  ],
+  "schema": {
+    "ModerationLog": {
+      "id": "number",
+      "user": {
+        "id": "number",
+        "username": "string"
+      },
+      "description": "string",
+      "originalMessage": "string",
+      "date": "date",
+      "type": "number",
+      "postId": "number",
+      "topicId": "number",
+      "posterUser": {
+        "id": "number",
+        "username": "string"
+      }
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

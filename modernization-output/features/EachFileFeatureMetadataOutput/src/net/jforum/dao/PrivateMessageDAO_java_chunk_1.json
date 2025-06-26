@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "SendPrivateMessage",
+    "description": "Sends a new private message between users"
+  },
+  {
+    "featureName": "DeletePrivateMessages",
+    "description": "Deletes a collection of private messages for a specific user"
+  },
+  {
+    "featureName": "UpdateMessageType",
+    "description": "Updates the status/type of a private message"
+  },
+  {
+    "featureName": "GetInboxMessages",
+    "description": "Retrieves all private messages from a user's inbox"
+  },
+  {
+    "featureName": "GetSentMessages",
+    "description": "Retrieves all private messages from a user's sent box"
+  },
+  {
+    "featureName": "GetPrivateMessageById",
+    "description": "Retrieves a specific private message by its ID"
+  }
+]

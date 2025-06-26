@@ -1,0 +1,101 @@
+{
+  "featureName": "SelectTopicsByUser",
+  "description": "Retrieves topics created by a specific user with pagination.",
+  "inputValues": [
+    "userId-number-User",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. userId (mandatory): Numeric identifier of the user whose topics are being retrieved\n     b. startFrom (mandatory): Numeric value indicating the starting position for pagination\n     c. count (mandatory): Numeric value indicating the maximum number of topics to retrieve\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF userId is invalid or missing, THEN generate an error message\n   - Validate pagination parameters:\n     a. Ensure startFrom is a non-negative integer\n     b. Ensure count is a positive integer\n     c. IF either pagination parameter is invalid, THEN use system defaults\n\n3. Business Rule Processing:\n   - Check user existence:\n     a. Verify the specified user exists in the system\n     b. IF user does not exist, THEN return an appropriate error message\n   - Check user permissions:\n     a. Verify the requesting user has permission to view the target user's topics\n     b. IF permission is denied, THEN return an access denied error\n   - Check forum access permissions:\n     a. Determine which forums the requesting user has access to\n     b. Filter topics to only include those from accessible forums\n     c. IF no forums are accessible, THEN return an empty result set\n\n4. Core Operation Execution:\n   - Retrieve user topics:\n     a. Query the database for topics created by the specified user\n     b. Apply pagination parameters (startFrom and count) to limit results\n     c. Order topics by creation date (newest first)\n     d. For each topic, retrieve:\n        i. Topic identifier\n        ii. Topic title\n        iii. Creation date\n        iv. Last post date\n        v. View count\n        vi. Reply count\n        vii. Forum information the topic belongs to\n        viii. Topic status (locked, normal, etc.)\n        ix. Topic type (sticky, announcement, normal)\n        x. First post ID\n        xi. Last post ID\n   - Count total topics:\n     a. Determine the total number of topics created by the user\n     b. Use this count for pagination metadata\n   - Handle empty results:\n     a. IF no topics are found, THEN prepare an empty result set\n     b. Include metadata indicating zero results found\n\n5. Response Generation:\n   - Prepare successful response:\n     a. Format the list of topics with all retrieved attributes\n     b. Include pagination metadata:\n        i. Total number of topics by the user\n        ii. Current page information\n        iii. Whether more topics are available\n     c. Include user information summary\n   - Handle errors:\n     a. For validation errors, return appropriate error messages\n     b. For permission errors, return access denied message\n     c. For system errors, return a generic error message with support information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Requesting user must have permission to view the target user's topics",
+    "Topics must be filtered based on forum access permissions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the topic was created"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date of the last post in the topic"
+        },
+        "viewCount": {
+          "type": "number",
+          "description": "Number of times the topic has been viewed"
+        },
+        "replyCount": {
+          "type": "number",
+          "description": "Number of replies to the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum the topic belongs to"
+        },
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum the topic belongs to"
+        },
+        "status": {
+          "type": "number",
+          "description": "Status of the topic (locked, normal, etc.)"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of the topic (sticky, announcement, normal)"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "ID of the first post in the topic"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in the topic"
+        }
+      }
+    },
+    "PaginationInfo": {
+      "type": "object",
+      "properties": {
+        "totalTopics": {
+          "type": "number",
+          "description": "Total number of topics created by the user"
+        },
+        "startFrom": {
+          "type": "number",
+          "description": "Starting position of the current page"
+        },
+        "count": {
+          "type": "number",
+          "description": "Number of topics in the current page"
+        },
+        "hasMore": {
+          "type": "boolean",
+          "description": "Indicates if more topics are available"
+        }
+      }
+    }
+  }
+}

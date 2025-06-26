@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "MakeSafeHtml",
+    "description": "Sanitizes HTML content by removing unsafe tags and attributes to prevent XSS attacks"
+  },
+  {
+    "featureName": "EnsureAllAttributesAreSafe",
+    "description": "Validates and sanitizes HTML tag attributes to ensure they don't contain malicious code"
+  },
+  {
+    "featureName": "ValidateHrefLinks",
+    "description": "Checks if URLs in href attributes use allowed protocols to prevent JavaScript injection"
+  }
+]

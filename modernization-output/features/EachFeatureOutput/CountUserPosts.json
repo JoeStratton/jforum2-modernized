@@ -1,0 +1,21 @@
+{
+  "featureName": "CountUserPosts",
+  "description": "Counts the total number of posts created by a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the userId (number) of the user whose posts need to be counted\n   - The userId is mandatory and must be provided by the caller\n\n2. Data Validation\n   - Validate that userId is provided\n     - IF userId is missing or null THEN\n       - Generate an error message indicating that userId is required\n       - Terminate the operation\n     - END IF\n   - Validate that userId is a positive integer\n     - IF userId is not a positive integer THEN\n       - Generate an error message indicating that userId must be a positive integer\n       - Terminate the operation\n     - END IF\n   - Validate that the user exists in the system\n     - IF user with the provided userId does not exist THEN\n       - Generate an error message indicating that the user does not exist\n       - Terminate the operation\n     - END IF\n\n3. Business Rule Processing\n   - Check if the current user has permission to view the post count\n     - IF current user does not have permission THEN\n       - Generate an error message indicating insufficient permissions\n       - Terminate the operation\n     - END IF\n   - Determine which forums the current user has access to\n     - Retrieve the list of forum IDs the current user is allowed to access\n     - IF no accessible forums exist THEN\n       - Return a post count of zero\n       - Terminate the operation\n     - END IF\n\n4. Core Operation Execution\n   - Initialize a counter for the total number of posts\n   - Query the database to count posts with the following criteria:\n     - Posts created by the specified userId\n     - Posts located in forums the current user has access to\n     - Posts that have not been deleted or marked as hidden\n   - Store the resulting count\n\n5. Response Generation\n   - Format the post count as an integer value\n   - Return the total count of posts created by the specified user\n   - IF an error occurred during processing THEN\n     - Return an appropriate error message\n   - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Current user must have permission to view the requested user's post count",
+    "Only count posts in forums the current user has access to"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

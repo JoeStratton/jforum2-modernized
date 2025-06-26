@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GetHeaderFromMap",
+    "description": "Retrieves HTTP header value from a map using case-insensitive lookup"
+  }
+]

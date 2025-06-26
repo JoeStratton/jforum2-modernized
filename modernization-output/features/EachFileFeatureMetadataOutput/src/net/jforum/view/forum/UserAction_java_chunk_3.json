@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "CompleteUserRegistration",
+    "description": "Finalizes user registration by updating system data and showing completion page"
+  },
+  {
+    "featureName": "ValidateUserLogin",
+    "description": "Authenticates users with credentials and manages login sessions with optional auto-login"
+  },
+  {
+    "featureName": "ViewUserProfile",
+    "description": "Displays user profile information including statistics and bookmarks"
+  },
+  {
+    "featureName": "LogoutUser",
+    "description": "Logs out current user by removing session data and disabling auto-login"
+  },
+  {
+    "featureName": "ShowLoginForm",
+    "description": "Displays the login form with optional return path handling"
+  },
+  {
+    "featureName": "HandleLostPassword",
+    "description": "Provides password recovery functionality through email verification"
+  },
+  {
+    "featureName": "ProcessBasicAuthentication",
+    "description": "Handles HTTP Basic Authentication for user login"
+  }
+]

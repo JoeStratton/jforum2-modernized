@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "AddUserSession",
+    "description": "Creates a new user session record in the database"
+  },
+  {
+    "featureName": "UpdateUserSession",
+    "description": "Updates an existing user session with new timestamp and session time"
+  },
+  {
+    "featureName": "SelectUserSessionById",
+    "description": "Retrieves user session information by user ID"
+  }
+]

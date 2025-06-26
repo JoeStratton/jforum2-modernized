@@ -1,0 +1,67 @@
+{
+  "featureName": "ValidateRoleValueAccess",
+  "description": "Checks if a user has permission for specific role values within a role category.",
+  "inputValues": [
+    "roleName-string-Role",
+    "roleValue-string-RoleValue",
+    "userRoles-object-RoleCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. roleName (string, mandatory): The name of the role category to check\n     b. roleValue (string, mandatory): The specific permission value to verify\n     c. userRoles (object, mandatory): Collection of roles assigned to the user\n\n2. Data Validation:\n   a. Validate roleName:\n      - IF roleName is empty or null THEN\n        - Return validation error: \"Role name must be provided\"\n      - END IF\n   b. Validate roleValue:\n      - IF roleValue is empty or null THEN\n        - Return validation error: \"Role value must be provided\"\n      - END IF\n   c. Validate userRoles:\n      - IF userRoles is null THEN\n        - Return validation error: \"User roles collection must be provided\"\n      - END IF\n\n3. Business Rule Processing:\n   a. Check if role exists:\n      - IF userRoles does not contain the specified roleName THEN\n        - Set accessGranted to FALSE\n        - Skip to Response Generation\n      - END IF\n   b. Retrieve role details:\n      - Get the Role object associated with roleName from userRoles\n      - IF Role object is null THEN\n        - Set accessGranted to FALSE\n        - Skip to Response Generation\n      - END IF\n\n4. Core Operation Execution:\n   a. Check role value permission:\n      - Get the RoleValues collection from the Role object\n      - Create a RoleValue object using the provided roleValue\n      - Check if the RoleValues collection contains the created RoleValue object\n      - IF RoleValues collection contains the RoleValue THEN\n        - Set accessGranted to TRUE\n      - ELSE\n        - Set accessGranted to FALSE\n      - END IF\n\n5. Response Generation:\n   a. Return access result:\n      - Return the accessGranted boolean value\n      - IF accessGranted is TRUE THEN\n        - Include success message: \"User has permission for the specified role value\"\n      - ELSE\n        - Include denial message: \"User does not have permission for the specified role value\"\n      - END IF",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Role name must not be empty",
+    "Role value must not be empty",
+    "User roles collection must be provided",
+    "Role must exist in the user's role collection",
+    "Role value must exist in the role's value collection to grant access"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RoleCollection": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        }
+      },
+      "required": [
+        "roles"
+      ]
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleValue"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "values"
+      ]
+    },
+    "RoleValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

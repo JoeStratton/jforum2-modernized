@@ -1,0 +1,33 @@
+{
+  "featureName": "AddUserToGroups",
+  "description": "Associates a user with specified groups.",
+  "inputValues": [
+    "userId-number-User",
+    "groupIds-object-GroupArray"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The identifier of the user to be added to groups\n   - Collect groupIds (array of numbers, mandatory) - The identifiers of the groups to associate with the user\n   - System will use current user context for authorization\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided and is a positive integer\n     b. If validation fails, generate error message: \"User ID must be a valid positive integer\"\n   - Validate groupIds:\n     a. Check if groupIds is provided and is a non-empty array\n     b. Verify each groupId is a positive integer\n     c. If validation fails, generate error message: \"Group IDs must be provided as a non-empty array of positive integers\"\n\n3. Business Rule Processing:\n   - Check if user exists:\n     a. Verify the user with the provided userId exists in the system\n     b. If user not found, generate error: \"User with ID {userId} does not exist\"\n   - Check if groups exist:\n     a. For each groupId in groupIds:\n        i. Verify the group exists in the system\n        ii. If any group not found, generate error: \"Group with ID {groupId} does not exist\"\n   - Check for authorization:\n     a. Verify the current user has permission to modify group memberships\n     b. If not authorized, generate error: \"Insufficient permissions to modify group memberships\"\n   - Check for existing memberships:\n     a. For each groupId in groupIds:\n        i. Check if the user is already a member of the group\n        ii. If already a member, skip this group in further processing\n\n4. Core Operation Execution:\n   - Prepare for group association:\n     a. Create a list of groups that the user is not already a member of\n     b. If list is empty (user is already in all specified groups), return success with appropriate message\n   - Associate user with groups:\n     a. For each valid groupId in the filtered list:\n        i. Create an association between the user and the group\n        ii. Record the association timestamp\n     b. If any association fails:\n        i. Roll back all associations made in this operation\n        ii. Generate error: \"Failed to associate user with groups\"\n\n5. Response Generation:\n   - On success:\n     a. Generate success message: \"User successfully added to specified groups\"\n     b. Include summary of groups the user was added to\n     c. Include any groups that were skipped (if user was already a member)\n   - On failure:\n     a. Return appropriate error message from validation or processing steps\n     b. Include guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Group IDs must be provided as a non-empty array of positive integers",
+    "User must exist in the system",
+    "All specified groups must exist in the system",
+    "Current user must have permission to modify group memberships"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupArray": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "description": "Group identifier"
+      },
+      "minItems": 1,
+      "description": "Array of group identifiers"
+    }
+  }
+}

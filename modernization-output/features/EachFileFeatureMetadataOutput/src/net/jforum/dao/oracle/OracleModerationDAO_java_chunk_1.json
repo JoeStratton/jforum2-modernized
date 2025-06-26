@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GetPostTextFromResultSet",
+    "description": "Retrieves post text content from database result set using Oracle-specific blob reading"
+  }
+]

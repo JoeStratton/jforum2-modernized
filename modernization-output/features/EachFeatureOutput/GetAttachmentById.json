@@ -1,0 +1,38 @@
+{
+  "featureName": "GetAttachmentById",
+  "description": "Retrieves a specific attachment by its ID from the system.",
+  "inputValues": [
+    "attachmentId-number-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the attachment ID (mandatory)\n   - System will use the current user context (system-generated)\n\n2. Data Validation:\n   - Validate attachment ID:\n     a. Check if attachment ID is provided\n     b. Verify attachment ID is a positive integer\n     c. Return appropriate error message if validation fails\n   - Validate user permissions:\n     a. Check if current user has permission to view attachments\n     b. Verify if user has access to the specific attachment\n     c. Return appropriate error message if permission check fails\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify attachment system is enabled\n     b. Check if attachment storage is accessible\n     c. Return appropriate error if system checks fail\n   - Process access rules:\n     a. Determine if attachment is in a restricted area\n     b. Check if user has appropriate group permissions\n     c. Verify if attachment quota or restrictions apply\n     d. Return appropriate error if access is denied\n\n4. Core Operation Execution:\n   - Locate attachment record:\n     a. Search for attachment by ID in the attachment repository\n     b. If attachment not found, prepare not found response\n     c. If found, retrieve attachment metadata (name, size, type, etc.)\n   - Process attachment data:\n     a. Determine appropriate download mode (physical or inline)\n     b. Prepare attachment content for delivery\n     c. Update attachment access statistics if required\n     d. Log the attachment access event\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Prepare attachment metadata (filename, size, type)\n     b. Include attachment content or reference\n     c. Include appropriate content headers\n     d. Return success status with attachment data\n   - For failed retrieval:\n     a. Generate appropriate error message\n     b. Include error code and description\n     c. Provide troubleshooting information if applicable\n     d. Return error status with details",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_extension_groups",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Attachment ID must be a positive integer",
+    "User must have permission to view attachments",
+    "Attachment must exist in the system",
+    "User must have access to the post containing the attachment",
+    "Attachment system must be enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "userId": "number",
+      "filename": "string",
+      "filesize": "number",
+      "contentType": "string",
+      "comment": "string",
+      "downloadCount": "number",
+      "uploadTime": "date",
+      "physicalFilename": "string",
+      "extensionGroupId": "number"
+    }
+  }
+}

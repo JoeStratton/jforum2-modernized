@@ -1,0 +1,92 @@
+{
+  "featureName": "SearchForumContent",
+  "description": "Searches forum content based on keywords, forum ID, and date range criteria.",
+  "inputValues": [
+    "keywords-string-SearchCriteria",
+    "forumId-number-Forum",
+    "fromDate-date-SearchCriteria",
+    "toDate-date-SearchCriteria",
+    "matchAllKeywords-boolean-SearchCriteria",
+    "orderBy-string-SearchCriteria",
+    "orderDir-string-SearchCriteria"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. keywords (string, mandatory): Search terms entered by the user\n     b. forumId (number, optional): Specific forum to search within\n     c. fromDate (date, optional): Start date for the search range\n     d. toDate (date, optional): End date for the search range\n     e. matchAllKeywords (boolean, optional): Whether to match all keywords (true) or any keyword (false)\n     f. orderBy (string, optional): Field to sort results by (default: relevance, alternative: time)\n     g. orderDir (string, optional): Direction of sorting (ASC or DESC)\n\n2. Data Validation:\n   a. Keywords validation:\n      - IF keywords is empty or null THEN\n        * Return error message indicating keywords are required\n      - IF keywords contains only whitespace THEN\n        * Return error message indicating valid keywords are required\n      - Sanitize keywords to prevent any malicious input\n\n   b. Forum ID validation:\n      - IF forumId is provided THEN\n        * Verify forumId exists in the system\n        * Verify user has permission to access the specified forum\n        * IF forum does not exist or user lacks permission THEN\n          - Return appropriate error message\n\n   c. Date range validation:\n      - IF fromDate is provided THEN\n        * Verify fromDate is a valid date format\n        * IF toDate is not provided THEN\n          - Set toDate to current date\n      - IF both fromDate and toDate are provided THEN\n        * Verify fromDate is before or equal to toDate\n        * IF fromDate is after toDate THEN\n          - Return error message for invalid date range\n\n   d. Order parameters validation:\n      - IF orderBy is provided THEN\n        * Verify orderBy is one of the allowed values (relevance, time)\n        * IF invalid THEN\n          - Set to default (relevance)\n      - IF orderDir is provided THEN\n        * Verify orderDir is one of the allowed values (ASC, DESC)\n        * IF invalid THEN\n          - Set to default (DESC)\n\n3. Business Rule Processing:\n   a. Permission verification:\n      - Verify user has general search permissions\n      - IF user does not have search permissions THEN\n        * Return error message indicating insufficient permissions\n\n   b. Search scope determination:\n      - IF forumId is provided THEN\n        * Limit search to the specified forum\n      - ELSE\n        * Search across all forums the user has access to\n\n   c. Keyword processing:\n      - Analyze and tokenize keywords for effective searching\n      - Remove common words (stop words) if necessary\n      - IF matchAllKeywords is true THEN\n        * Configure search to require all keywords\n      - ELSE\n        * Configure search to match any keyword\n\n4. Core Operation Execution:\n   a. Construct search query:\n      - Build query criteria based on validated inputs\n      - Apply forum filter if forumId is specified\n      - Apply keyword search conditions\n      - Apply date range filter if dates are specified\n\n   b. Execute search operation:\n      - Perform search using constructed query\n      - Apply sorting based on orderBy and orderDir parameters\n      - Track search performance metrics\n\n   c. Process search results:\n      - Collect matching content items\n      - Extract relevant information from each result\n      - Format results for display\n      - IF no results found THEN\n        * Prepare empty result set with appropriate message\n\n5. Response Generation:\n   a. Success response:\n      - Return search results containing:\n        * List of matching content items with:\n          - Post/topic title\n          - Content snippet showing matched keywords\n          - Author information\n          - Forum information\n          - Post date\n          - Relevance score or ranking\n        * Total count of matching items\n        * Pagination information if applicable\n\n   b. Error response:\n      - Return appropriate error message based on validation failures\n      - Include suggestions for improving search if no results found",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Keywords must not be empty",
+    "Forum ID must exist in the system if provided",
+    "From date must be before or equal to to date if both are provided",
+    "Order by parameter must be either 'relevance' or 'time'",
+    "Order direction must be either 'ASC' or 'DESC'",
+    "User must have permission to search forums",
+    "User must have permission to access the specified forum if forum ID is provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchCriteria": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Search terms entered by the user"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the specific forum to search within"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for the search range"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for the search range"
+        },
+        "matchAllKeywords": {
+          "type": "boolean",
+          "description": "Whether to match all keywords (true) or any keyword (false)"
+        },
+        "orderBy": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "time"
+          ],
+          "description": "Field to sort results by"
+        },
+        "orderDir": {
+          "type": "string",
+          "enum": [
+            "ASC",
+            "DESC"
+          ],
+          "description": "Direction of sorting"
+        }
+      },
+      "required": [
+        "keywords"
+      ]
+    },
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        }
+      }
+    }
+  }
+}

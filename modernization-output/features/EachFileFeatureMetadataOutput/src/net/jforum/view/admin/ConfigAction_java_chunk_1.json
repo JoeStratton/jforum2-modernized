@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ListSystemConfiguration",
+    "description": "Displays all system configuration properties and available locales in the admin interface"
+  },
+  {
+    "featureName": "SaveSystemConfiguration",
+    "description": "Updates and persists system configuration properties with validation for URL fields"
+  }
+]

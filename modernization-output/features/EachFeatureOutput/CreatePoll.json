@@ -1,0 +1,58 @@
+{
+  "featureName": "CreatePoll",
+  "description": "Creates a new poll in the system and returns its ID.",
+  "inputValues": [
+    "poll-object-Poll",
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Poll object with the following fields:\n     * question-string (mandatory): The main question of the poll\n     * options-array (mandatory): List of possible answers for the poll\n     * length-number (optional): Duration of the poll in days\n     * isMultipleAnswersAllowed-boolean (optional): Whether users can select multiple options\n     * topicId-number (mandatory): The topic this poll is associated with\n\n2. Data Validation:\n   - Validate Poll question:\n     * Check if question is not empty\n     * Verify question length is within allowed limits (5-255 characters)\n     * Error message if validation fails: \"Poll question is required and must be between 5-255 characters\"\n   - Validate Poll options:\n     * Ensure at least 2 options are provided\n     * Verify each option is not empty\n     * Check that each option is within allowed length (1-255 characters)\n     * Error message if validation fails: \"Poll requires at least 2 non-empty options\"\n   - Validate Topic association:\n     * Verify topicId exists in the system\n     * Check if topic already has an associated poll\n     * Error message if validation fails: \"Invalid topic or topic already has a poll\"\n\n3. Business Rule Processing:\n   - Check user permissions:\n     * Verify current user has permission to create polls\n     * Ensure user has appropriate access to the specified topic\n     * Error message if validation fails: \"Insufficient permissions to create poll\"\n   - Validate system constraints:\n     * Check if system poll limit has been reached\n     * Verify poll creation is enabled in system settings\n     * Error message if validation fails: \"Poll creation is currently disabled or limit reached\"\n\n4. Core Operation Execution:\n   - Create new Poll record:\n     * Generate unique identifier for the poll\n     * Store poll question\n     * Store poll options with initial vote count of zero for each\n     * Set poll creation timestamp\n     * Associate poll with the specified topic\n     * Set poll status as active\n   - Update related records:\n     * Update topic record to indicate it has an associated poll\n   - IF any operation fails:\n     * Rollback all changes\n     * Log error details\n     * Return appropriate error message\n\n5. Response Generation:\n   - Success response:\n     * Return the newly created poll ID\n     * Include confirmation message\n   - Error response:\n     * Return specific error message based on failure point\n     * Include guidance for resolution if applicable",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_polls",
+    "jforum_poll_options",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Poll question must not be empty",
+    "Poll question must be between 5-255 characters",
+    "Poll must have at least 2 options",
+    "Each poll option must not be empty",
+    "Each poll option must be within 1-255 characters",
+    "Topic must exist in the system",
+    "Topic must not already have an associated poll",
+    "User must have permission to create polls",
+    "User must have access to the specified topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "The main question of the poll"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "An answer option for the poll"
+          },
+          "description": "List of possible answers for the poll"
+        },
+        "length": {
+          "type": "number",
+          "description": "Duration of the poll in days"
+        },
+        "isMultipleAnswersAllowed": {
+          "type": "boolean",
+          "description": "Whether users can select multiple options"
+        }
+      },
+      "required": [
+        "question",
+        "options"
+      ]
+    }
+  }
+}

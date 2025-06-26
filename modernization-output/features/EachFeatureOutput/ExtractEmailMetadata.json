@@ -1,0 +1,62 @@
+{
+  "featureName": "ExtractEmailMetadata",
+  "description": "Extracts and processes email metadata including subject, sender, reply-to, references, and dates from incoming messages.",
+  "inputValues": [
+    "emailMessage-object-Message"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the email message object containing all raw email data\n   - System will process the following metadata fields:\n     * Subject line\n     * Sender address\n     * Reply-to address\n     * References header\n     * In-Reply-To header\n     * Content type\n     * Recipient address\n     * Send date\n     * All email headers\n     * Message content\n\n2. Data Validation:\n   - Validate email message object\n     * Verify the message object is not null\n     * Check that the message contains required minimum fields (subject, sender)\n     * Validate that content can be accessed\n   - Validate email addresses format\n     * Ensure sender address follows standard email format\n     * Verify reply-to address format if present\n   - Validate date information\n     * Ensure send date is a valid date format\n     * Verify date is not in the future\n\n3. Business Rule Processing:\n   - Process email headers\n     * Extract all headers into a structured collection\n     * Identify and flag special headers (References, In-Reply-To)\n     * Map header names to their values\n   - Handle reply chain information\n     * IF In-Reply-To header exists, extract message reference ID\n     * IF References header exists, extract conversation thread history\n   - Process addressing information\n     * Extract primary sender address\n     * IF reply-to field exists, use as primary response address\n     * ELSE use sender address as reply-to address\n     * Extract list email address from recipients\n\n4. Core Operation Execution:\n   - Extract message content\n     * Determine message format (plain text, HTML, multipart)\n     * IF message is multipart, extract first part as primary content\n     * Process content based on content type\n       * FOR text/plain: Extract raw text\n       * FOR text/html: Extract HTML content\n     * Handle character encoding appropriately\n     * Buffer content into memory with appropriate size handling\n   - Organize metadata structure\n     * Compile all extracted metadata into structured format\n     * Associate headers with their corresponding values\n     * Link reply chain information with message content\n\n5. Response Generation:\n   - Prepare metadata result\n     * Assemble complete metadata object with all extracted fields\n     * Include subject, sender, reply-to, references, dates, content\n     * Format headers in accessible structure\n   - Handle extraction errors\n     * IF any extraction process fails, provide error information\n     * Include partial metadata if some fields were successfully extracted\n     * Provide guidance on missing or malformed fields\n   - Return complete metadata package\n     * Deliver structured metadata for further processing\n     * Include original message reference for traceability",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Email message object must not be null",
+    "Sender address must be a valid email format",
+    "Reply-to address must be a valid email format if present",
+    "Send date must be a valid date",
+    "Content type must be recognized (text/plain, text/html, etc.)",
+    "Message content must be extractable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Message": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Email subject line"
+        },
+        "from": {
+          "type": "array",
+          "description": "Sender addresses"
+        },
+        "replyTo": {
+          "type": "array",
+          "description": "Reply-to addresses"
+        },
+        "recipients": {
+          "type": "array",
+          "description": "Message recipients"
+        },
+        "sentDate": {
+          "type": "date",
+          "description": "Date when message was sent"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Collection of all message headers"
+        },
+        "content": {
+          "type": "object",
+          "description": "Message content object"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of message content"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "GetFirstPostId",
+    "description": "Retrieves the ID of the first post in the system"
+  },
+  {
+    "featureName": "GetPostsToIndex",
+    "description": "Retrieves posts within a specified ID range for search indexing"
+  },
+  {
+    "featureName": "GetFirstPostIdByDate",
+    "description": "Finds the ID of the first post created after a specific date"
+  },
+  {
+    "featureName": "GetLastPostIdByDate",
+    "description": "Finds the ID of the last post created before a specific date"
+  },
+  {
+    "featureName": "GetPostsData",
+    "description": "Retrieves detailed post data for a collection of post IDs"
+  }
+]

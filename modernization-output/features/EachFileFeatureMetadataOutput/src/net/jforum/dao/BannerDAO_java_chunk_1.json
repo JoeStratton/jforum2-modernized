@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "SelectBannerById",
+    "description": "Retrieves a specific banner by its ID"
+  },
+  {
+    "featureName": "SelectAllBanners",
+    "description": "Retrieves all banners from the database"
+  },
+  {
+    "featureName": "AddNewBanner",
+    "description": "Creates a new banner in the system"
+  },
+  {
+    "featureName": "UpdateBanner",
+    "description": "Updates an existing banner's information"
+  },
+  {
+    "featureName": "CheckBannerDeletionEligibility",
+    "description": "Verifies if a specific banner can be deleted"
+  },
+  {
+    "featureName": "DeleteBanner",
+    "description": "Removes a banner from the system"
+  },
+  {
+    "featureName": "SelectActiveBannersByPlacement",
+    "description": "Retrieves active banners filtered by placement position"
+  }
+]

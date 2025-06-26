@@ -1,0 +1,62 @@
+{
+  "featureName": "DoModeration",
+  "description": "Performs moderation actions on forum content with return URL handling.",
+  "inputValues": [
+    "returnUrl-string-Navigation",
+    "topicMove-string-Topic",
+    "moderationAction-string-Moderation"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect returnUrl (mandatory): The URL to return to after moderation action\n   - Collect topicMove flag (optional): Indicates if topics should be moved\n   - Collect moderationAction (mandatory): The type of moderation action to perform\n   - System retrieves current user session information\n\n2. Data Validation:\n   - Validate user permissions:\n     a. Check if user has moderation privileges\n     b. IF user lacks moderation privileges THEN\n        i. Deny access and display error message\n        ii. END process\n     c. ELSE continue with moderation\n   - Validate returnUrl:\n     a. Check if returnUrl is provided\n     b. IF returnUrl is missing THEN\n        i. Set default return URL to forum index\n   - Validate moderationAction:\n     a. Check if moderationAction is valid\n     b. IF moderationAction is invalid THEN\n        i. Log error\n        ii. Display error message\n        iii. END process\n\n3. Business Rule Processing:\n   - Check forum-specific moderation rules:\n     a. Verify user has moderation rights for the specific forum\n     b. IF user lacks forum-specific rights THEN\n        i. Log unauthorized attempt\n        ii. Display permission denied message\n        iii. END process\n   - Check content status:\n     a. Verify content is available for moderation\n     b. IF content is locked or already moderated THEN\n        i. Log conflict\n        ii. Display appropriate message\n        iii. END process\n\n4. Core Operation Execution:\n   - Process moderation action:\n     a. IF moderationAction is delete THEN\n        i. Mark content for deletion\n        ii. Update related records\n        iii. Log deletion action\n     b. ELSE IF moderationAction is move THEN\n        i. IF topicMove flag is present THEN\n           1. Prepare topic move interface\n           2. Store selected topics for moving\n        ii. ELSE\n           1. Log error for missing move parameters\n           2. Display error message\n           3. END process\n     c. ELSE IF moderationAction is lock/unlock THEN\n        i. Toggle lock status on content\n        ii. Update related records\n        iii. Log lock/unlock action\n     d. ELSE IF moderationAction is approve/reject THEN\n        i. Update content approval status\n        ii. Update related records\n        iii. Log approval action\n   - Create moderation log entry:\n     a. Record user performing action\n     b. Record timestamp\n     c. Record action type\n     d. Record affected content\n     e. Store original content state if applicable\n\n5. Response Generation:\n   - Prepare response based on action:\n     a. IF action requires additional steps (like move) THEN\n        i. Display appropriate interface for next step\n        ii. Include returnUrl for later navigation\n     b. ELSE\n        i. Prepare success message\n        ii. Include returnUrl for navigation\n   - Format response:\n     a. Include action summary\n     b. Include affected content details\n     c. Include navigation options\n     d. IF errors occurred THEN\n        i. Include error details\n        ii. Include recovery options",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "User must have moderation privileges",
+    "User must have moderation rights for the specific forum",
+    "Content must be available for moderation",
+    "Return URL must be valid if provided",
+    "Moderation action must be a valid operation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Moderation": {
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "type": "string",
+          "enum": [
+            "delete",
+            "move",
+            "lock",
+            "unlock",
+            "approve",
+            "reject"
+          ]
+        },
+        "userId": {
+          "type": "integer"
+        },
+        "contentId": {
+          "type": "integer"
+        },
+        "contentType": {
+          "type": "string",
+          "enum": [
+            "topic",
+            "post"
+          ]
+        },
+        "timestamp": {
+          "type": "date"
+        },
+        "originalState": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

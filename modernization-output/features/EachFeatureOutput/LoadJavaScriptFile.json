@@ -1,0 +1,18 @@
+{
+  "featureName": "LoadJavaScriptFile",
+  "description": "Loads and parses JavaScript files with FreeMarker Template Language statements from the js directory.",
+  "inputValues": [
+    "js-string-File"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the JavaScript filename (js) from the request\n   - The filename is mandatory and must be provided as a string\n   - No default value is provided\n\n2. Data Validation:\n   - Validate the JavaScript filename parameter:\n     a. Check if the filename parameter exists\n        IF filename is null or empty THEN\n          Generate an error message indicating the filename is required\n          Return error response\n        END IF\n     b. Verify the filename contains only valid characters\n        IF filename contains invalid characters THEN\n          Generate an error message indicating invalid filename format\n          Return error response\n        END IF\n     c. Verify the filename is not attempting path traversal\n        IF filename contains path traversal sequences (..) THEN\n          Generate a security error message\n          Return error response\n        END IF\n\n3. Business Rule Processing:\n   - Verify the JavaScript file exists in the system:\n     a. Construct the complete template path to the JavaScript file\n        Set templatePath to \"js/\" + filename + \".js\"\n     b. Check if the file exists in the template directory\n        IF file does not exist THEN\n          Generate an error message indicating the file was not found\n          Return error response\n        END IF\n   - Verify the user has permission to access the JavaScript file:\n     a. Check if the current user has permission to access the requested file\n        IF user does not have permission THEN\n          Generate an access denied error message\n          Return error response\n        END IF\n\n4. Core Operation Execution:\n   - Set the response content type to JavaScript:\n     a. Set the content type header to \"text/javascript\"\n   - Prepare the template for processing:\n     a. Set the template name to the constructed path (\"js/\" + filename + \".js\")\n   - Process the JavaScript file through the template engine:\n     a. The template engine will parse any FreeMarker Template Language statements\n     b. The template engine will generate the final JavaScript content\n     c. IF any error occurs during template processing THEN\n          Log the error details\n          Generate an error message indicating template processing failed\n          Return error response\n        END IF\n\n5. Response Generation:\n   - For successful processing:\n     a. Return the processed JavaScript content with the proper content type\n     b. Include appropriate caching headers if configured\n   - For error scenarios:\n     a. Return an appropriate error message with details about the failure\n     b. Include proper HTTP status code based on the error type",
+  "databaseEntities": [],
+  "validationRules": [
+    "JavaScript filename must not be empty",
+    "JavaScript filename must contain only valid characters",
+    "JavaScript filename must not contain path traversal sequences",
+    "JavaScript file must exist in the template directory",
+    "User must have permission to access the requested JavaScript file"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,29 @@
+{
+  "featureName": "EncryptStringWithMD5",
+  "description": "Encrypts a string using MD5 hashing algorithm and returns the hexadecimal representation.",
+  "inputValues": [
+    "inputString-string-StringToEncrypt"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the input string to be encrypted\n       1.1.1. Receive the string value from the user or system\n       1.1.2. This input is mandatory and must be provided\n       1.1.3. No default value is provided\n\n2. Data Validation\n   2.1. Validate the input string\n       2.1.1. Check if the input string is null\n          IF input string is null THEN\n             Generate an error message indicating string cannot be null\n             Terminate the process\n       2.1.2. Check if the input string is empty\n          IF input string length is zero THEN\n             Generate an error message indicating string cannot be empty\n             Terminate the process\n\n3. Business Rule Processing\n   3.1. Prepare for encryption\n       3.1.1. Initialize a buffer to store the hexadecimal result\n       3.1.2. Verify system capability to perform MD5 hashing\n          IF MD5 algorithm is not available THEN\n             Generate an error message indicating encryption cannot be performed\n             Terminate the process\n\n4. Core Operation Execution\n   4.1. Perform MD5 hashing\n       4.1.1. Convert the input string to bytes\n       4.1.2. Apply the MD5 algorithm to the byte array\n       4.1.3. Obtain the resulting hash as a byte array\n   4.2. Convert hash to hexadecimal representation\n       4.2.1. Iterate through each byte in the hash\n          FOR each byte in the hash\n             4.2.1.1. Convert the byte to an integer value (0-255)\n             4.2.1.2. Convert the integer to a hexadecimal string\n             4.2.1.3. IF the hexadecimal value is a single digit (less than 16)\n                         Prepend a '0' to the hexadecimal value\n             4.2.1.4. Append the hexadecimal value to the result buffer\n\n5. Response Generation\n   5.1. Return the encrypted string\n       5.1.1. Provide the hexadecimal string representation of the MD5 hash\n       5.1.2. In case of success, return the complete 32-character hexadecimal string\n       5.1.3. In case of failure, provide appropriate error information",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input string must not be null",
+    "Input string must not be empty",
+    "System must support MD5 hashing algorithm"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "StringToEncrypt": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The string value to be encrypted"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

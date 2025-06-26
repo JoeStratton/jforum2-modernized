@@ -1,0 +1,30 @@
+{
+  "featureName": "GetUserLanguagePreference",
+  "description": "Determines the appropriate language based on user session settings.",
+  "inputValues": [
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve UserSession object which may contain language preference\n   - System will need access to default language configuration\n   1.1. Identify if UserSession is available\n   1.2. Check if language preference is set in UserSession\n   1.3. Access system default language configuration if needed\n\n2. Data Validation:\n   - Validate UserSession data\n   2.1. Check if UserSession object exists\n   2.2. IF UserSession is null THEN mark as invalid\n   2.3. IF UserSession exists, check if language attribute exists\n   2.4. IF language attribute exists, check if it contains a value\n   2.5. IF language value exists, check if it's not an empty string\n\n3. Business Rule Processing:\n   - Apply language selection logic\n   3.1. IF UserSession is valid AND has non-empty language setting THEN\n       3.1.1. Select the user's preferred language\n   3.2. ELSE\n       3.2.1. Select the system default language\n   3.3. Verify the selected language exists in the system\n       3.3.1. IF selected language is not registered in the system THEN\n           3.3.1.1. Fall back to system default language\n\n4. Core Operation Execution:\n   - Determine final language selection\n   4.1. Based on validation and business rules, select appropriate language\n       4.1.1. IF user has valid language preference THEN use that language\n       4.1.2. ELSE use system default language\n   4.2. Return the selected language identifier\n       4.2.1. Ensure language identifier is properly formatted\n       4.2.2. Verify language resources are available\n\n5. Response Generation:\n   - Provide the determined language preference\n   5.1. Return language identifier string\n   5.2. IF operation successful, provide language code\n   5.3. IF operation encounters issues, provide default language and log issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "UserSession must be checked for null before accessing properties",
+    "Language preference must be non-null and non-empty to be considered valid",
+    "Selected language must exist in the system's registered languages",
+    "Default language must be available as fallback"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "description": "User's language preference code"
+        }
+      }
+    }
+  }
+}

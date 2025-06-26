@@ -1,0 +1,91 @@
+{
+  "featureName": "ImportPosts",
+  "description": "Transfers forum posts from phpBB to JForum with text formatting conversion.",
+  "inputValues": [
+    "baseDirectory-string-Configuration",
+    "sourceDatabase-object-DatabaseConnection",
+    "targetDatabase-object-DatabaseConnection",
+    "formattingRules-object-TextFormatting"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the base directory path for configuration files\n   - Obtain connection details for source phpBB database\n   - Obtain connection details for target JForum database\n   - Gather text formatting conversion rules\n\n2. Data Validation\n   - Validate base directory exists and contains required configuration files\n     - IF base directory is invalid THEN display error message and halt process\n   - Verify source database connection parameters\n     - IF source database connection fails THEN display connection error and halt process\n   - Verify target database connection parameters\n     - IF target database connection fails THEN display connection error and halt process\n   - Validate text formatting conversion rules are properly defined\n     - IF formatting rules are incomplete THEN use default conversion settings\n\n3. Business Rule Processing\n   - Initialize system configuration from properties files\n     - Load global system settings\n     - Load database query definitions\n   - Verify target database tables are ready for import\n     - Check table structure compatibility\n     - Ensure proper character encoding support for text conversion\n   - Calculate total number of posts to be imported\n     - IF total posts count is zero THEN notify user and skip post import process\n\n4. Core Operation Execution\n   - Clean target database tables to prepare for import\n     - Remove existing data from all relevant tables\n   - Import user accounts\n     - Transfer user profiles, credentials, and preferences\n     - Preserve user relationships and permissions\n   - Import forum structure\n     - Transfer categories, forums, and topic definitions\n     - Maintain hierarchical relationships\n   - Import private messages\n     - Transfer message content with text formatting conversion\n     - Preserve sender/recipient relationships\n   - Import forum posts\n     - Process posts in batches to optimize memory usage\n     - Apply text formatting conversion rules to post content\n     - Convert BBCode tags to JForum compatible format\n     - Preserve post relationships (topics, replies, etc.)\n     - Display progress indicators during lengthy import process\n   - Set up permissions\n     - Configure user group permissions\n     - Set administrative access rights\n\n5. Response Generation\n   - Generate summary of import operation\n     - Total number of users imported\n     - Total number of forums and categories imported\n     - Total number of topics imported\n     - Total number of posts imported\n     - Total number of private messages imported\n   - Report any errors or warnings encountered during import\n     - List any posts that couldn't be properly converted\n     - Identify any missing relationships or data integrity issues\n   - Provide next steps for post-import verification\n     - Instructions for validating the imported data\n     - Guidance for any manual adjustments needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Base directory must contain valid configuration files",
+    "Source database connection must be valid",
+    "Target database connection must be valid",
+    "Text formatting rules must be properly defined",
+    "User IDs must be preserved during import",
+    "Post relationships must maintain referential integrity",
+    "Text formatting must be converted according to defined rules",
+    "All posts must be associated with valid topics",
+    "All topics must be associated with valid forums",
+    "User permissions must be properly configured after import"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "driverClass": {
+          "type": "string",
+          "description": "Database driver class name"
+        },
+        "connectionUrl": {
+          "type": "string",
+          "description": "Database connection URL"
+        },
+        "username": {
+          "type": "string",
+          "description": "Database username"
+        },
+        "password": {
+          "type": "string",
+          "description": "Database password"
+        }
+      },
+      "required": [
+        "driverClass",
+        "connectionUrl"
+      ]
+    },
+    "TextFormatting": {
+      "type": "object",
+      "properties": {
+        "conversionRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourcePattern": {
+                "type": "string",
+                "description": "Regular expression pattern to match"
+              },
+              "targetReplacement": {
+                "type": "string",
+                "description": "Replacement pattern"
+              }
+            },
+            "required": [
+              "sourcePattern",
+              "targetReplacement"
+            ]
+          }
+        }
+      },
+      "required": [
+        "conversionRules"
+      ]
+    }
+  }
+}

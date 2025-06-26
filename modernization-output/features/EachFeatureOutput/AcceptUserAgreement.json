@@ -1,0 +1,55 @@
+{
+  "featureName": "AcceptUserAgreement",
+  "description": "Processes user acceptance of the terms and conditions agreement before registration.",
+  "inputValues": [
+    "agreementText-string-Agreement",
+    "userAcceptance-boolean-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user agreement acceptance status (userAcceptance: boolean)\n   - System retrieves agreement text (agreementText: string)\n   - System identifies current user session\n\n2. Data Validation:\n   - Validate that agreement text is available\n     * IF agreement text is not available THEN\n       - Load default agreement text\n       - IF default agreement text is not available THEN\n         - Display error message indicating agreement text could not be found\n         - End process\n   - Validate user session exists\n     * IF user session does not exist THEN\n       - Create new user session\n       - Set session attributes to default values\n\n3. Business Rule Processing:\n   - Check if registration is enabled in system settings\n     * IF registration is disabled AND current user is not an administrator THEN\n       - Display registration disabled message\n       - End process\n   - Check if agreement must be shown based on system configuration\n     * IF agreement should not be shown THEN\n       - Skip agreement acceptance step\n       - Proceed to registration form\n       - End process\n   - Check if user has already accepted the agreement\n     * IF user has already accepted agreement THEN\n       - Skip agreement display\n       - Proceed to registration form\n       - End process\n\n4. Core Operation Execution:\n   - Display agreement text to user\n   - Provide acceptance option to user\n   - IF user accepts agreement THEN\n     * Store acceptance status in user session\n     * Mark agreement as accepted\n     * Proceed to registration form\n   - ELSE IF user declines agreement THEN\n     * Do not store acceptance status\n     * Return to previous page or homepage\n     * End registration process\n\n5. Response Generation:\n   - IF agreement was successfully accepted THEN\n     * Generate success response\n     * Redirect user to registration form\n     * Prepare registration form with any previously entered data\n   - ELSE\n     * Generate appropriate message based on user action\n     * Provide option to review agreement again if declined",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Agreement text must be available for user to review",
+    "User must explicitly accept the agreement to proceed with registration",
+    "System must verify if registration is enabled before showing agreement",
+    "Agreement acceptance must be stored in user session",
+    "User cannot proceed to registration without accepting agreement"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default agreement text file exists in the system"
+  ],
+  "schema": {
+    "Agreement": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The full text content of the user agreement"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version identifier of the agreement"
+        },
+        "lastUpdated": {
+          "type": "date",
+          "description": "Date when the agreement was last updated"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for user session"
+        },
+        "hasAcceptedAgreement": {
+          "type": "boolean",
+          "description": "Flag indicating if user has accepted the agreement"
+        }
+      }
+    }
+  }
+}

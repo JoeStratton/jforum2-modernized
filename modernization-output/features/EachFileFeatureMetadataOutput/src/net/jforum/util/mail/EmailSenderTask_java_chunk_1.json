@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "DispatchEmailMessages",
+    "description": "Executes email sending process by triggering the spammer component to dispatch queued messages"
+  }
+]

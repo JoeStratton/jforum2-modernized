@@ -1,0 +1,68 @@
+{
+  "featureName": "UpdateUser",
+  "description": "Updates user information in the system.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User",
+    "email-string-User",
+    "password-string-User",
+    "signature-string-User",
+    "avatar-string-User",
+    "userDetails-object-UserDetails"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect user identifier:\n       1.1.1. Obtain userId (mandatory) to identify the user to update\n   1.2. Collect user profile information:\n       1.2.1. Obtain username (optional) for the user account\n       1.2.2. Obtain email (optional) for contact information\n       1.2.3. Obtain password (optional) if changing credentials\n       1.2.4. Obtain signature (optional) for forum posts\n       1.2.5. Obtain avatar (optional) for profile image\n       1.2.6. Obtain userDetails (optional) containing additional profile information\n   1.3. Set system-generated values:\n       1.3.1. Set modificationDate to current system time\n\n2. Data Validation:\n   2.1. Validate user identifier:\n       2.1.1. IF userId is not provided or invalid THEN\n           2.1.1.1. Generate error message \"Valid user ID is required\"\n           2.1.1.2. Terminate process\n   2.2. Validate username if provided:\n       2.2.1. IF username is provided THEN\n           2.2.2. Verify username is between 3 and 25 characters\n           2.2.3. Verify username contains only alphanumeric characters, underscores, or hyphens\n           2.2.4. IF username has changed from current value THEN\n               2.2.4.1. Check if new username already exists in system\n               2.2.4.2. IF username exists THEN generate error \"Username already taken\"\n   2.3. Validate email if provided:\n       2.3.1. IF email is provided THEN\n           2.3.2. Verify email follows valid format (contains @ and proper domain)\n           2.3.3. IF email has changed from current value THEN\n               2.3.3.1. Check if email already exists in system\n               2.3.3.2. IF email exists THEN generate error \"Email already registered\"\n   2.4. Validate password if provided:\n       2.4.1. IF password is provided THEN\n           2.4.2. Verify password meets minimum length requirement (8 characters)\n           2.4.3. Verify password meets complexity requirements\n\n3. Business Rule Processing:\n   3.1. Verify user exists:\n       3.1.1. Check if user with provided userId exists in the system\n       3.1.2. IF user not found THEN\n           3.1.2.1. Generate error message \"User not found\"\n           3.1.2.2. Terminate process\n   3.2. Verify user is not deleted:\n       3.2.1. Check if user account is marked as deleted\n       3.2.2. IF user is deleted THEN\n           3.2.2.1. Generate error message \"Cannot update deleted user account\"\n           3.2.2.2. Terminate process\n   3.3. Check update permissions:\n       3.3.1. Verify current user has permission to update the specified user\n       3.3.2. IF permission denied THEN\n           3.3.2.1. Generate error message \"Insufficient permissions to update user\"\n           3.3.2.2. Terminate process\n\n4. Core Operation Execution:\n   4.1. Retrieve current user data:\n       4.1.1. Load existing user record from database using userId\n       4.1.2. Store original values for comparison and audit purposes\n   4.2. Update user information:\n       4.2.1. IF username is provided and valid THEN update username\n       4.2.2. IF email is provided and valid THEN update email\n       4.2.3. IF password is provided and valid THEN\n           4.2.3.1. Generate password hash\n           4.2.3.2. Update password with hashed value\n       4.2.4. IF signature is provided THEN update signature\n       4.2.5. IF avatar is provided THEN update avatar\n       4.2.6. IF userDetails is provided THEN update user details\n       4.2.7. Set last modified timestamp to current time\n   4.3. Save updated user record:\n       4.3.1. Persist all changes to the database\n       4.3.2. IF database error occurs THEN\n           4.3.2.1. Rollback all changes\n           4.3.2.2. Generate error message \"Failed to update user information\"\n           4.3.2.3. Terminate process\n\n5. Response Generation:\n   5.1. Prepare success response:\n       5.1.1. Include userId of updated user\n       5.1.2. Include confirmation message \"User information updated successfully\"\n       5.1.3. Include timestamp of update\n   5.2. Handle error response if needed:\n       5.2.1. Include error code\n       5.2.2. Include descriptive error message\n       5.2.3. Include suggestions for resolution if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid identifier in the system",
+    "Username must be between 3 and 25 characters if provided",
+    "Username must contain only alphanumeric characters, underscores, or hyphens",
+    "Username must be unique in the system if changed",
+    "Email must follow valid format if provided",
+    "Email must be unique in the system if changed",
+    "Password must be at least 8 characters long if provided",
+    "User must exist in the system",
+    "User must not be marked as deleted",
+    "Current user must have permission to update the specified user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserDetails": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "occupation": {
+          "type": "string"
+        },
+        "interests": {
+          "type": "string"
+        },
+        "biography": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "dateFormat": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

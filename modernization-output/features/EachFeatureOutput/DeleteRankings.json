@@ -1,0 +1,26 @@
+{
+  "featureName": "DeleteRankings",
+  "description": "Removes selected user rankings from the system.",
+  "inputValues": [
+    "rank_id-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. rank_id (mandatory): Array of numeric identifiers for rankings to be deleted\n   - System will retrieve these values from the user selection in the interface\n\n2. Data Validation:\n   - Validate rank_id input:\n     a. Check if at least one ranking is selected for deletion\n     b. Verify all rank_id values are valid numeric identifiers\n     c. Confirm each rank_id exists in the system\n   - IF no rankings are selected THEN:\n     a. Generate validation error message: \"No rankings selected for deletion\"\n     b. Return to ranking list view without performing deletion\n   - IF any rank_id is invalid THEN:\n     a. Generate validation error message: \"One or more invalid ranking selections\"\n     b. Return to ranking list view without performing deletion\n\n3. Business Rule Processing:\n   - Check system dependencies for each ranking:\n     a. Verify if any users are currently assigned to these rankings\n     b. Determine if any selected rankings are system default rankings\n   - IF any ranking is a system default ranking THEN:\n     a. Generate warning message: \"Cannot delete system default rankings\"\n     b. Remove these rankings from the deletion list\n   - IF any ranking is currently assigned to users THEN:\n     a. Generate confirmation message: \"Selected rankings are assigned to users. Deletion will remove these assignments.\"\n     b. Require user confirmation before proceeding\n\n4. Core Operation Execution:\n   - FOR EACH valid rank_id in the selection:\n     a. Locate the ranking record in the system\n     b. Remove the ranking record from the database\n     c. Log the deletion operation with timestamp and user information\n   - Update the ranking repository to reflect the changes\n   - IF any deletion operation fails THEN:\n     a. Roll back any partial deletions\n     b. Generate error message with details of the failure\n     c. Log the error for system administrators\n\n5. Response Generation:\n   - IF all deletions complete successfully THEN:\n     a. Generate success message: \"Selected rankings successfully deleted\"\n     b. Refresh the ranking list to show current rankings\n     c. Log the successful operation\n   - IF deletion partially succeeds THEN:\n     a. Generate partial success message: \"Some rankings could not be deleted\"\n     b. Display details of which rankings were deleted and which failed\n     c. Refresh the ranking list to show current rankings\n   - IF deletion completely fails THEN:\n     a. Generate failure message: \"Unable to delete rankings\"\n     b. Provide error details and suggest contacting system administrator\n     c. Return to ranking list view without changes",
+  "databaseEntities": [
+    "Ranking"
+  ],
+  "validationRules": [
+    "At least one ranking must be selected for deletion",
+    "All ranking IDs must be valid numeric identifiers",
+    "All ranking IDs must exist in the system",
+    "System default rankings cannot be deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "special": "boolean",
+      "min": "number"
+    }
+  }
+}

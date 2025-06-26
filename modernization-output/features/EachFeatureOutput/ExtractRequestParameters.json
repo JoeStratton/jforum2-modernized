@@ -1,0 +1,92 @@
+{
+  "featureName": "ExtractRequestParameters",
+  "description": "Extracts and processes request parameters with proper character encoding handling.",
+  "inputValues": [
+    "request-object-HttpServletRequest",
+    "encoding-string-SystemGlobal",
+    "contextPath-string-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HTTP request object (mandatory)\n   - Retrieve system encoding configuration (mandatory)\n   - Get servlet extension from system configuration (mandatory)\n   - Determine request method type (GET or POST)\n   - Extract request URI and context path (mandatory)\n\n2. Data Validation:\n   - Validate request object is not null\n     * IF request is null THEN return error\n   - Validate encoding configuration is available\n     * IF encoding is not set THEN use default encoding\n   - Validate request URI format\n     * IF URI format is invalid THEN handle as regular request\n   - Check if request is multipart\n     * IF request is multipart THEN verify content type\n\n3. Business Rule Processing:\n   - Determine request processing approach based on request type\n     * IF request is GET with empty query string and ends with servlet extension\n       THEN set character encoding and parse as friendly URL\n     * IF request is POST\n       THEN check if multipart content\n         * IF multipart THEN handle multipart processing\n         * ELSE set character encoding based on request type\n   - Check if request is AJAX\n     * IF request is AJAX THEN use UTF-8 encoding\n     * ELSE use system configured encoding\n   - Determine container encoding\n     * IF request is POST THEN use system encoding\n     * ELSE use default container encoding\n\n4. Core Operation Execution:\n   - Process request parameters based on request type\n     * FOR each parameter in the request\n       * Extract parameter name and values\n       * IF parameter has multiple values\n         THEN process each value with proper encoding conversion\n       * ELSE process single value with proper encoding conversion\n       * Add processed parameter to internal parameter map\n   - Handle friendly URL parsing if needed\n     * IF module and action parameters are not set\n       THEN parse URI as friendly URL\n         * Extract module and action from URL segments\n         * Map URL parameters according to pattern definitions\n         * Add extracted parameters to parameter map\n   - Process file uploads for multipart requests\n     * Create temporary directory for file storage\n     * Process each uploaded item\n     * Store form fields in parameter map\n     * Store file items separately for later access\n\n5. Response Generation:\n   - Provide access methods to retrieve processed parameters\n     * Return single parameter value when requested by name\n     * Return parameter value array when multiple values exist\n     * Return file items for uploaded content\n   - Support session context access\n     * Create session context when requested\n     * Provide access to existing session when available",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request object must not be null",
+    "Character encoding must be properly set",
+    "Temporary directory must be accessible for multipart uploads",
+    "URL patterns must match defined format for friendly URL parsing",
+    "File uploads must not exceed system-defined size limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpServletRequest": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "HTTP method of the request (GET, POST, etc.)"
+        },
+        "contextPath": {
+          "type": "string",
+          "description": "Context path of the application"
+        },
+        "requestURI": {
+          "type": "string",
+          "description": "Full request URI"
+        },
+        "queryString": {
+          "type": "string",
+          "description": "Query string portion of the URL"
+        },
+        "parameterNames": {
+          "type": "array",
+          "description": "Names of all parameters in the request"
+        },
+        "parameterValues": {
+          "type": "object",
+          "description": "Map of parameter names to values"
+        },
+        "headers": {
+          "type": "object",
+          "description": "HTTP headers in the request"
+        }
+      }
+    },
+    "SystemGlobal": {
+      "type": "object",
+      "properties": {
+        "encoding": {
+          "type": "string",
+          "description": "System character encoding setting"
+        },
+        "servletExtension": {
+          "type": "string",
+          "description": "Extension used for servlet mappings"
+        },
+        "containerEncoding": {
+          "type": "string",
+          "description": "Default container encoding"
+        },
+        "tmpDir": {
+          "type": "string",
+          "description": "Path to temporary directory"
+        }
+      }
+    },
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "description": "Processed request parameters"
+        },
+        "module": {
+          "type": "string",
+          "description": "Module name extracted from request"
+        },
+        "action": {
+          "type": "string",
+          "description": "Action name extracted from request"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "featureName": "NotifyTopicReplies",
+  "description": "Sends email notifications to users when new replies are posted to forum topics they follow.",
+  "inputValues": [
+    "topic-object-Topic",
+    "post-object-Post",
+    "users-object-UserList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Topic object containing topic details (required)\n     - Topic ID\n     - Topic title\n     - Forum ID\n     - First post ID\n     - Last post ID\n     - Total replies count\n   - Collect Post object containing the reply details (optional)\n     - Post ID\n     - Post text content\n     - Post author information\n   - Collect list of Users who follow the topic (required)\n     - Each user must have email address and notification preferences\n\n2. Data Validation:\n   - Validate Topic object\n     - Ensure Topic ID is valid and exists\n     - Verify Topic title is not empty\n     - Confirm Forum ID is valid\n   - Validate Post object (if provided)\n     - Ensure Post ID is valid\n     - Verify Post text is not empty\n   - Validate Users list\n     - Ensure list is not empty\n     - Verify each user has valid email address\n     - Check each user has opted in for notifications\n   - IF any validation fails, THEN\n     - Log validation errors\n     - Exit notification process\n\n3. Business Rule Processing:\n   - Check system notification settings\n     - Verify email notifications are enabled system-wide\n     - Confirm email template files exist\n   - Process topic pagination\n     - Calculate current page number based on total replies and posts per page setting\n     - IF total replies exceed posts per page, THEN\n       - Determine correct page number for the new reply\n     - ELSE\n       - Use default page (first page)\n   - Generate notification links\n     - Create direct link to the new reply post\n     - Create unsubscribe link for each recipient\n   - Prepare message context\n     - Format topic title for email subject\n     - Include forum context information\n     - IF Post object is provided, THEN\n       - Prepare post content for display in email\n       - Format post text according to display rules\n\n4. Core Operation Execution:\n   - Create email parameters\n     - Set email subject with topic title\n     - Set message template file path\n     - Add topic information to template parameters\n     - Add navigation links to template parameters\n     - Add formatted post content to template parameters (if available)\n   - Process message threading\n     - Generate unique message ID for the notification\n     - IF not the first post in topic, THEN\n       - Set In-Reply-To header to maintain email thread\n   - FOR EACH user in the notification list\n     - Prepare personalized email content\n     - Add user to recipient list\n   - Send notification emails\n     - Process email template with parameters\n     - Send emails to all recipients\n     - Track delivery status\n   - IF any sending errors occur, THEN\n     - Log error details\n     - Continue with remaining recipients\n\n5. Response Generation:\n   - Generate notification summary\n     - Count of successful notifications sent\n     - List of any failed notifications\n   - Update notification tracking\n     - Record timestamp of notification\n     - Update user notification history\n   - Return notification status\n     - Success or failure indication\n     - Error details if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic must exist in the system",
+    "Topic title must not be empty",
+    "Users must have valid email addresses",
+    "Users must have opted in to receive notifications",
+    "Email notification templates must exist",
+    "System must have email notification functionality enabled"
+  ],
+  "dbSeedingOperations": [
+    "Ensure notification template files exist in the system",
+    "Verify system configuration contains required email settings"
+  ],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "firstPostId": "number",
+      "lastPostId": "number",
+      "totalReplies": "number"
+    },
+    "Post": {
+      "id": "number",
+      "text": "string",
+      "authorId": "number",
+      "topicId": "number",
+      "forumId": "number"
+    },
+    "UserList": {
+      "type": "array",
+      "items": {
+        "id": "number",
+        "email": "string",
+        "username": "string",
+        "notificationPreferences": "object"
+      }
+    }
+  }
+}

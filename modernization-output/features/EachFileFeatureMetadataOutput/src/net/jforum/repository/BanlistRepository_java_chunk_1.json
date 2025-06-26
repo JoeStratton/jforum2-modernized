@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "CheckBanStatus",
+    "description": "Determines if a user should be banned based on matching criteria against the banlist"
+  },
+  {
+    "featureName": "AddBanEntry",
+    "description": "Adds a new ban entry to the banlist cache"
+  },
+  {
+    "featureName": "RemoveBanEntry",
+    "description": "Removes a ban entry from the banlist cache by its ID"
+  },
+  {
+    "featureName": "LoadBanlist",
+    "description": "Loads all ban entries from the database into the cache"
+  }
+]

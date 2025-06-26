@@ -1,0 +1,45 @@
+{
+  "featureName": "ComposePrivateMessage",
+  "description": "Provides a form for composing and sending new private messages.",
+  "inputValues": [
+    "toUsername-string-User",
+    "toUserId-number-User",
+    "subject-string-PrivateMessage",
+    "message-string-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. toUsername (string, optional): Username of the recipient\n     b. toUserId (number, optional): Unique identifier of the recipient\n     c. subject (string, mandatory): Subject of the private message\n     d. message (string, mandatory): Content of the private message\n     e. fromUserId (number, system-generated): Current logged-in user ID\n\n2. Data Validation:\n   a. Authentication Validation:\n      - Check if the user is logged in\n      - IF user is not logged in, THEN\n        - Redirect to login page\n        - Exit the process\n   b. Recipient Validation:\n      - IF toUserId is provided, THEN\n        - Verify the user exists in the system\n      - ELSE IF toUsername is provided, THEN\n        - Search for matching users in the system\n        - IF no matching user found, THEN\n          - Display error message \"User not found\"\n          - Return to composition form\n        - ELSE IF multiple matching users found, THEN\n          - Display list of matching users for selection\n          - Exit the process until user selects a specific recipient\n        - ELSE\n          - Set toUserId to the found user's ID\n      - ELSE\n        - Display error message \"Recipient is required\"\n        - Return to composition form\n   c. Subject Validation:\n      - Verify subject is not empty\n      - IF subject is empty, THEN\n        - Display error message \"Subject is required\"\n        - Return to composition form\n   d. Message Validation:\n      - Verify message is not empty\n      - IF message is empty, THEN\n        - Display error message \"Message content is required\"\n        - Return to composition form\n\n3. Business Rule Processing:\n   a. Permission Check:\n      - Verify sender has permission to send private messages\n      - IF sender does not have permission, THEN\n        - Display error message \"You do not have permission to send private messages\"\n        - Exit the process\n   b. Recipient Availability Check:\n      - Verify recipient can receive private messages\n      - IF recipient cannot receive messages, THEN\n        - Display error message \"User cannot receive private messages\"\n        - Return to composition form\n   c. Message Quota Check:\n      - Check if recipient's inbox has available space\n      - IF recipient's inbox is full, THEN\n        - Display error message \"Recipient's inbox is full\"\n        - Return to composition form\n\n4. Core Operation Execution:\n   a. Message Preparation:\n      - Create new private message record\n      - Set message status to \"NEW\"\n      - Associate sender information\n      - Associate recipient information\n      - Format message content according to system rules\n   b. Message Storage:\n      - Save the private message to the database\n      - IF save operation fails, THEN\n        - Display error message \"Failed to send message\"\n        - Return to composition form\n   c. Notification Processing:\n      - IF recipient has email notifications enabled, THEN\n        - Queue email notification about new private message\n      - IF recipient is currently online, THEN\n        - Update recipient's session with new message count\n\n5. Response Generation:\n   a. Success Response:\n      - Display confirmation message \"Message has been sent successfully\"\n      - Provide link to inbox\n      - Provide option to compose another message\n   b. Error Response:\n      - Display specific error message based on failure point\n      - Preserve entered message content\n      - Allow user to correct errors and resubmit",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to send private messages",
+    "Recipient username or ID must be provided",
+    "Recipient must exist in the system",
+    "Subject field cannot be empty",
+    "Message content cannot be empty",
+    "Sender must have permission to send private messages",
+    "Recipient must be able to receive private messages",
+    "Recipient's inbox must not be full"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object-User",
+      "toUser": "object-User",
+      "subject": "string",
+      "message": "string",
+      "type": "number",
+      "sendDate": "date"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "signature": "string"
+    }
+  }
+}

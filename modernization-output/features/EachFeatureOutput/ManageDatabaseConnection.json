@@ -1,0 +1,44 @@
+{
+  "featureName": "ManageDatabaseConnection",
+  "description": "Handles database connection lifecycle including transactions and rollbacks.",
+  "inputValues": [
+    "connection-object-Connection",
+    "forumContext-object-ForumContext",
+    "enableRollback-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database connection object (mandatory)\n   - Collect forum context information (mandatory)\n   - Determine transaction behavior settings (mandatory)\n   - Determine content type settings (optional)\n   - Determine redirect information (optional)\n\n2. Data Validation:\n   - Validate connection object:\n     * Check if connection is null\n     * Verify connection is valid and open\n   - Validate forum context:\n     * Ensure request context is available\n     * Ensure response context is available\n   - Validate transaction settings:\n     * Confirm transaction mode is properly configured\n     * Verify auto-commit settings match system configuration\n\n3. Business Rule Processing:\n   - Initialize execution context:\n     * Create thread-local storage for context data\n     * Set up template context for rendering\n   - Configure connection properties:\n     * Set auto-commit based on system transaction settings\n     * Associate connection with current thread context\n   - Prepare response parameters:\n     * Set content type if specified\n     * Configure redirect information if needed\n\n4. Core Operation Execution:\n   - Connection Management:\n     * Store connection in thread-local context\n     * Configure connection based on system settings\n     * Make connection available to application components\n   - Transaction Control:\n     * IF transaction support is enabled THEN\n       > Manage transaction boundaries\n       > Support explicit rollback requests\n       > Handle commit/rollback operations\n     * ELSE\n       > Use auto-commit mode\n   - Context Lifecycle Management:\n     * Maintain execution context throughout request\n     * Support context retrieval operations\n     * Enable custom content handling when needed\n\n5. Response Generation:\n   - Connection Cleanup:\n     * IF connection exists THEN\n       > IF using transactions THEN\n         * IF rollback requested THEN\n           - Execute rollback operation\n         * ELSE\n           - Commit transaction\n       > Release connection back to pool\n     * Clear thread-local storage\n   - Response Finalization:\n     * Apply content type settings\n     * Process any redirect instructions\n     * Handle authentication requirements if needed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Connection must be valid before operations",
+    "Auto-commit setting must match system configuration",
+    "Thread context must be properly initialized",
+    "Connection must be released after use",
+    "Transactions must be either committed or rolled back",
+    "Thread-local storage must be cleared after request completion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "autoCommit": {
+          "type": "boolean",
+          "description": "Controls whether transactions are automatically committed"
+        }
+      }
+    },
+    "ForumContext": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "object",
+          "description": "Request context containing HTTP request information"
+        },
+        "response": {
+          "type": "object",
+          "description": "Response context for HTTP response handling"
+        }
+      }
+    }
+  }
+}

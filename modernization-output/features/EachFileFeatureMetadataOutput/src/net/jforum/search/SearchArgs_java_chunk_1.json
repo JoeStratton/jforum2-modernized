@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ConfigureSearchParameters",
+    "description": "Configures search parameters including keywords, author, forum, date range, and result ordering"
+  },
+  {
+    "featureName": "ProcessSearchKeywords",
+    "description": "Processes search keywords with options for exact matching or partial matching"
+  },
+  {
+    "featureName": "ManageSearchPagination",
+    "description": "Manages pagination of search results with configurable starting position and count"
+  }
+]

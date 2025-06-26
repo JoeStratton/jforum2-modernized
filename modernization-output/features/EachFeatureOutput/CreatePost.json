@@ -1,0 +1,57 @@
+{
+  "featureName": "CreatePost",
+  "description": "Creates a new post with text content and associates it with a topic.",
+  "inputValues": [
+    "topicId-number-Post",
+    "forumId-number-Post",
+    "userId-number-Post",
+    "text-string-Post",
+    "subject-string-Post",
+    "userIp-string-Post",
+    "bbCodeEnabled-boolean-Post",
+    "htmlEnabled-boolean-Post",
+    "smiliesEnabled-boolean-Post",
+    "signatureEnabled-boolean-Post",
+    "moderationNeeded-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId: The identifier of the topic this post belongs to\n     b. forumId: The identifier of the forum this post belongs to\n     c. userId: The identifier of the user creating the post\n     d. text: The main content of the post\n     e. subject: The title or subject of the post\n   - Collect the following optional inputs:\n     a. userIp: The IP address of the user creating the post (system-generated if not provided)\n     b. bbCodeEnabled: Whether BBCode formatting is enabled (default: true)\n     c. htmlEnabled: Whether HTML formatting is enabled (default: false)\n     d. smiliesEnabled: Whether emoticons are enabled (default: true)\n     e. signatureEnabled: Whether user signature is enabled (default: true)\n     f. moderationNeeded: Whether the post requires moderation (default: false)\n   - System will automatically generate:\n     a. postTime: Current timestamp when the post is created\n     b. editCount: Initial value set to 0\n\n2. Data Validation\n   - Validate topicId:\n     a. Must be a positive integer\n     b. Must reference an existing topic\n     c. Return error \"Invalid topic selected\" if validation fails\n   - Validate forumId:\n     a. Must be a positive integer\n     b. Must reference an existing forum\n     c. Return error \"Invalid forum selected\" if validation fails\n   - Validate userId:\n     a. Must be a positive integer\n     b. Must reference an existing user\n     c. Return error \"Invalid user\" if validation fails\n   - Validate text content:\n     a. Must not be empty\n     b. Must not exceed maximum allowed length\n     c. Return error \"Post content cannot be empty\" or \"Post content too long\" if validation fails\n   - Validate subject:\n     a. Must not be empty\n     b. Must not exceed maximum allowed length\n     c. Return error \"Subject cannot be empty\" or \"Subject too long\" if validation fails\n\n3. Business Rule Processing\n   - Check user permissions:\n     a. Verify user has permission to post in the specified forum\n     b. IF user does not have permission, THEN\n        i. Return error \"You do not have permission to post in this forum\"\n   - Check forum status:\n     a. Verify the forum is not locked or archived\n     b. IF forum is locked, THEN\n        i. Return error \"This forum is locked and does not accept new posts\"\n   - Check topic status:\n     a. Verify the topic is not locked\n     b. IF topic is locked, THEN\n        i. Return error \"This topic is locked and does not accept new replies\"\n   - Check moderation requirements:\n     a. Determine if post requires moderation based on forum settings and user permissions\n     b. Set moderationNeeded flag accordingly\n\n4. Core Operation Execution\n   - Create new post record:\n     a. Generate a new post ID\n     b. Set the current timestamp as post creation time\n     c. Set initial edit count to 0\n     d. Store all post metadata (topicId, forumId, userId, timestamp, userIp, formatting flags)\n   - Store post content:\n     a. Create a new post text record with the post ID\n     b. Store the text content and subject\n   - Update related records:\n     a. Increment post count for the topic\n     b. Update last post information in the topic record\n     c. Update last post information in the forum record\n     d. Increment user's post count\n   - Handle search indexing:\n     a. Add the new post to the search index\n   - IF any operation fails, THEN\n     a. Roll back all database changes\n     b. Return appropriate error message\n\n5. Response Generation\n   - On successful post creation:\n     a. Return success status\n     b. Include the newly created post ID\n     c. Include information about moderation status if applicable\n   - On failure:\n     a. Return error status\n     b. Include specific error message\n     c. Include any validation errors that occurred",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must reference an existing topic",
+    "Forum ID must reference an existing forum",
+    "User ID must reference an existing user",
+    "Post text content cannot be empty",
+    "Post subject cannot be empty",
+    "User must have permission to post in the specified forum",
+    "Forum must not be locked or archived",
+    "Topic must not be locked"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "editCount": "number",
+      "editTime": "date",
+      "subject": "string",
+      "text": "string",
+      "postUsername": "string",
+      "hasAttachments": "boolean",
+      "moderationNeeded": "boolean"
+    }
+  }
+}

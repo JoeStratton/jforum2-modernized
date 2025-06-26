@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "AddMailIntegration",
+    "description": "Creates a new mail integration configuration for a forum"
+  },
+  {
+    "featureName": "DeleteMailIntegration",
+    "description": "Removes mail integration configuration for a specific forum"
+  },
+  {
+    "featureName": "FindMailIntegration",
+    "description": "Retrieves mail integration configuration for a specific forum"
+  },
+  {
+    "featureName": "FindAllMailIntegrations",
+    "description": "Retrieves all mail integration configurations in the system"
+  },
+  {
+    "featureName": "UpdateMailIntegration",
+    "description": "Updates an existing mail integration configuration for a forum"
+  }
+]

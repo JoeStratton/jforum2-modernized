@@ -1,0 +1,45 @@
+{
+  "featureName": "SavePost",
+  "description": "Updates a forum post's content with moderation logging and search index updates.",
+  "inputValues": [
+    "id-number-Post",
+    "value-string-Post",
+    "originalMessage-string-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post ID (mandatory, system-generated)\n   - Collect new post content (mandatory, user-provided)\n   - Retrieve current user session information (system-generated)\n\n2. Data Validation:\n   - Validate post ID:\n     * Ensure post ID is a valid number\n     * Verify post exists in the system\n     * IF post does not exist, THEN return error message\n   - Validate post content:\n     * Ensure content is not empty\n     * Check content length against system limits\n     * IF content exceeds limits, THEN return error message\n   - Validate user permissions:\n     * Check if current user has permission to edit the post\n     * IF user is not the post owner, THEN check if user has moderation privileges\n     * IF user has neither ownership nor moderation rights, THEN return permission denied error\n\n3. Business Rule Processing:\n   - Retrieve original post from database:\n     * Store original message content for comparison and logging purposes\n     * Check post status (locked, deleted, etc.)\n     * IF post is locked or deleted, THEN return appropriate error message\n   - Apply content formatting rules:\n     * Process HTML formatting if enabled for the post\n     * Apply safety filters to prevent malicious content\n     * Process BBCode if enabled for the post\n     * Process emoticons if enabled for the post\n\n4. Core Operation Execution:\n   - Update post content in database:\n     * Save new content to post record\n     * Update modification timestamp\n     * IF update fails, THEN rollback and return error message\n   - Handle moderation logging:\n     * IF user is a moderator AND not the post owner, THEN:\n       * Create moderation log entry\n       * Include original and new content in log\n       * Record moderator ID, timestamp, and action type\n   - Update search index:\n     * Remove old post content from search index\n     * Add updated content to search index\n     * IF indexing fails, log error but continue process\n   - Update post cache:\n     * IF post caching is enabled, THEN update post in cache\n     * Prepare post for display with proper formatting\n\n5. Response Generation:\n   - Prepare success response:\n     * Format updated post for display\n     * Include all post metadata (author, timestamp, etc.)\n     * Apply display formatting (HTML, BBCode, emoticons)\n   - Return formatted post content:\n     * Include post ID and topic ID for reference\n     * Include status confirmation message\n     * Return complete formatted post for display",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post ID must be a valid number",
+    "Post must exist in the system",
+    "Post content cannot be empty",
+    "User must have permission to edit the post",
+    "Post must not be locked or deleted",
+    "Content must comply with system formatting rules"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "text": "string",
+      "subject": "string",
+      "htmlEnabled": "boolean",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean"
+    },
+    "ModerationLog": {
+      "id": "number",
+      "userId": "number",
+      "postId": "number",
+      "topicId": "number",
+      "originalMessage": "string",
+      "timestamp": "date"
+    }
+  }
+}

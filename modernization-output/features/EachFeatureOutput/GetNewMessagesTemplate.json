@@ -1,0 +1,55 @@
+{
+  "featureName": "GetNewMessagesTemplate",
+  "description": "Returns the template key for rendering new messages search results.",
+  "inputValues": [
+    "searchArgs-object-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search arguments from the system\n     1.1. Verify that searchArgs object is provided\n     1.2. Extract date range parameters from searchArgs\n     1.3. Identify user context for the search request\n\n2. Data Validation:\n   - Validate search parameters\n     2.1. Verify date range is valid\n        2.1.1. IF start date is after end date THEN\n              Return error message \"Invalid date range\"\n     2.2. Verify user has permission to search for new messages\n        2.2.1. IF user does not have permission THEN\n              Return error message \"Insufficient permissions\"\n\n3. Business Rule Processing:\n   - Process search request according to business rules\n     3.1. Determine which forums the user has access to\n        3.1.1. Filter out private forums where user lacks access\n     3.2. Apply system-wide search limitations\n        3.2.1. Check if search functionality is enabled\n        3.2.2. Verify search request doesn't exceed system limits\n\n4. Core Operation Execution:\n   - Execute search operation\n     4.1. Retrieve topics based on date range\n        4.1.1. Query topics created within the specified date range\n        4.1.2. Filter topics based on user permissions\n     4.2. Prepare topics for display\n        4.2.1. Format topic metadata for presentation\n        4.2.2. Sort topics according to relevance or date\n     4.3. Store search results for rendering\n        4.3.1. Save formatted topics in results collection\n\n5. Response Generation:\n   - Generate template key for rendering\n     5.1. Determine appropriate template for new messages\n        5.1.1. Return the template key for new messages search results\n     5.2. Ensure template key is valid\n        5.2.1. Verify template exists in the system\n        5.2.2. IF template doesn't exist THEN\n              Return default search template key",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User must have permission to search for new messages",
+    "Date range for search must be valid",
+    "Search functionality must be enabled in the system",
+    "User must have access to at least one forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "type": "date",
+          "description": "Start date for the search range"
+        },
+        "endDate": {
+          "type": "date",
+          "description": "End date for the search range"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user performing the search"
+        },
+        "forumIds": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "List of forum IDs to search within"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "Field to order results by"
+        },
+        "orderDirection": {
+          "type": "string",
+          "description": "Direction to order results (ascending/descending)"
+        }
+      }
+    }
+  }
+}

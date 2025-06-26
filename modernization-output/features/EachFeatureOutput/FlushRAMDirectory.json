@@ -1,0 +1,20 @@
+{
+  "featureName": "FlushRAMDirectory",
+  "description": "Commits indexed documents from RAM to persistent storage.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No explicit user inputs required\n   - System-generated trigger based on threshold or manual call\n\n2. Data Validation:\n   - Verify RAM directory exists and is accessible\n   - Check if RAM writer is properly initialized\n   - Validate that persistent storage directory is available\n   - Ensure analyzer is properly configured\n\n3. Business Rule Processing:\n   - Check if RAM directory contains any documents to flush\n   - IF RAM directory is empty THEN\n      - Skip the flush operation\n      - Return success with no changes made\n   - Verify system has sufficient resources to perform the operation\n   - Check if any concurrent indexing operations are in progress\n   - IF concurrent operations detected THEN\n      - Apply synchronization mechanism to prevent conflicts\n\n4. Core Operation Execution:\n   - Acquire synchronization lock to prevent concurrent modifications\n   - Initialize persistent storage writer\n   - Copy all documents from RAM directory to persistent storage\n   - Optimize the persistent index for better search performance\n   - Close the persistent storage writer after flushing\n   - Recreate empty RAM directory and writer for future operations\n   - Release synchronization lock\n   - Notify any registered listeners about the new documents added\n\n5. Response Generation:\n   - IF operation completes successfully THEN\n      - Return success status\n      - Include statistics about number of documents flushed\n   - IF any errors occur during the process THEN\n      - Generate appropriate error message\n      - Include details about the failure point\n      - Provide recovery suggestions if applicable",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "RAM directory must be properly initialized before flushing",
+    "Persistent storage directory must be accessible",
+    "Synchronization lock must be acquired before flushing",
+    "All documents must be successfully transferred to persistent storage",
+    "RAM directory must be recreated after flushing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,43 @@
+{
+  "featureName": "AddUserSession",
+  "description": "Registers a new user session with appropriate tracking for logged-in or anonymous users.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "connection-object-Connection",
+    "checked-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect UserSession object with user information\n     - userId (number): Identifier of the user\n     - username (string): Name of the user\n     - sessionId (string): Unique identifier for the session\n     - lastVisit (date): Timestamp of the last visit\n     - startTime (date): Timestamp when the session started\n     - ip (string): IP address of the user\n     - isBot (boolean): Flag indicating if the user is a bot\n     - sessionTime (number): Duration of the session in milliseconds\n   - Collect database connection object\n     - connection (object): Database connection for persistence\n     - If null, system will handle accordingly based on implementation\n   - Collect checked flag (optional)\n     - checked (boolean): Flag to bypass existing session check\n     - Default value is false if not provided\n\n2. Data Validation:\n   - Validate UserSession object\n     - Ensure UserSession object is not null\n     - Verify sessionId is not null or empty\n     - Validate userId is a valid number\n     - Ensure startTime is a valid date\n   - Validate connection object if database persistence is required\n     - If connection is required but null, prepare appropriate error\n   - Validate session data integrity\n     - Ensure startTime is not in the future\n     - Verify IP address format is valid\n\n3. Business Rule Processing:\n   - Determine user type based on userId\n     - IF userId equals system-defined anonymous user ID THEN\n       - Mark as anonymous user\n     - ELSE\n       - Mark as logged-in user\n   - Check for existing sessions\n     - IF checked flag is false THEN\n       - Query database for existing session with same userId\n       - IF existing session found THEN\n         - Skip adding new session and return\n   - Check for bot detection\n     - IF isBot flag is true THEN\n       - Skip user counting operations\n     - ELSE\n       - Proceed with user counting\n\n4. Core Operation Execution:\n   - Prepare UserSession object for storage\n     - Ensure all required fields are populated\n     - Format startTime as database timestamp\n   - IF existing session check is bypassed OR no existing session found THEN\n     - Execute database insert operation\n       - Store sessionId, userId, and startTime in database\n       - Handle any database errors that may occur\n   - Process user type specific operations\n     - IF user is logged in (not anonymous) THEN\n       - Update user's last activity timestamp\n       - Associate session with user account\n     - ELSE IF user is anonymous THEN\n       - Track anonymous session separately if needed\n   - Update session statistics\n     - Increment active session counters\n     - Update online users list\n\n5. Response Generation:\n   - Return success status\n     - Indicate successful session registration\n   - Provide session information\n     - Include sessionId for reference\n     - Include session creation timestamp\n   - Handle potential errors\n     - Return appropriate error messages for validation failures\n     - Include guidance for resolving persistence issues\n     - Throw DatabaseException for SQL errors",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "UserSession object must not be null",
+    "SessionId must not be null or empty",
+    "User must be properly identified as either anonymous or logged-in",
+    "Bot requests should be identified and handled appropriately",
+    "Connection object must be valid if database persistence is required",
+    "StartTime must be a valid date",
+    "Database operations must handle SQL exceptions properly"
+  ],
+  "dbSeedingOperations": [
+    "Ensure system has a valid anonymous user ID configured",
+    "Ensure jforum_sessions table exists with proper schema"
+  ],
+  "schema": {
+    "UserSession": {
+      "userId": "number",
+      "username": "string",
+      "sessionId": "string",
+      "lastVisit": "date",
+      "startTime": "date",
+      "sessionTime": "number",
+      "ip": "string",
+      "isBot": "boolean"
+    },
+    "Connection": {
+      "status": "string",
+      "autoCommit": "boolean"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "featureName": "GetUserPostsWithPagination",
+  "description": "Retrieves posts created by a specific user with pagination support.",
+  "inputValues": [
+    "userId-number-User",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Numeric identifier of the user whose posts are being retrieved\n   - Collect startFrom (mandatory): Numeric value indicating the starting position for pagination\n   - Collect count (mandatory): Numeric value indicating the maximum number of posts to retrieve\n   - System will use forum permissions from the current context\n\n2. Data Validation:\n   - Validate userId:\n      * Ensure userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid or not found, THEN return appropriate error message\n   - Validate pagination parameters:\n      * Ensure startFrom is a non-negative integer\n      * Ensure count is a positive integer\n      * IF either parameter is invalid, THEN use default values (startFrom = 0, count = system default)\n\n3. Business Rule Processing:\n   - Check user access permissions:\n      * Retrieve list of forums the current user has access to\n      * IF no accessible forums exist, THEN return empty result with appropriate message\n   - Verify system state:\n      * Ensure database connection is available\n      * IF connection is unavailable, THEN return system unavailable error\n\n4. Core Operation Execution:\n   - Construct query to retrieve posts:\n      * Filter by specified userId\n      * Filter by forums the current user has permission to access\n      * Apply pagination parameters (startFrom and count)\n      * Order posts by creation date (newest first)\n   - Execute the query to retrieve matching posts\n   - For each retrieved post:\n      * Load post details (content, creation time, etc.)\n      * Format timestamps according to system settings\n      * Check for attachments\n      * Load associated karma information\n   - Count total number of posts by the user (for pagination information)\n\n5. Response Generation:\n   - Prepare success response with:\n      * List of retrieved posts with all details\n      * Pagination metadata:\n         - Total number of posts by the user\n         - Current page information\n         - More pages indicator\n      * IF no posts found, THEN include appropriate message\n   - Return formatted response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must have access to at least one forum",
+    "System must have an active database connection"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "editCount": "number",
+      "editTime": "date",
+      "subject": "string",
+      "text": "string",
+      "postUsername": "string",
+      "hasAttachments": "boolean",
+      "moderate": "boolean",
+      "formatedTime": "string",
+      "karma": "number"
+    },
+    "Pagination": {
+      "startFrom": "number",
+      "count": "number",
+      "totalPosts": "number"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "featureName": "ManageExtensionGroups",
+  "description": "Creates, updates, and removes attachment extension groups.",
+  "inputValues": [
+    "extensionGroup-object-AttachmentExtensionGroup",
+    "extensionIds-object-ExtensionIdList",
+    "operation-string-Operation"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. extensionGroup (mandatory): Contains details of the extension group\n        i. name: Name of the extension group\n        ii. allow: Boolean indicating if the group is allowed\n        iii. downloadMode: Integer representing download mode\n        iv. uploadIcon: Icon to be displayed for this group\n     b. extensionIds (optional): Array of extension IDs to be processed\n     c. operation (mandatory): Type of operation to perform (CREATE, UPDATE, DELETE)\n\n2. Data Validation:\n   - Validate operation type:\n     a. IF operation is not one of CREATE, UPDATE, or DELETE THEN\n        i. Return error: \"Invalid operation type. Must be CREATE, UPDATE, or DELETE.\"\n   - Validate extension group data:\n     a. IF operation is CREATE or UPDATE THEN\n        i. Verify extensionGroup.name is not empty\n           - IF empty THEN return error: \"Extension group name cannot be empty.\"\n        ii. Verify extensionGroup.name length is between 3 and 50 characters\n           - IF not THEN return error: \"Extension group name must be between 3 and 50 characters.\"\n        iii. Verify download mode is valid\n           - IF not valid THEN return error: \"Invalid download mode specified.\"\n        iv. Verify upload icon path if provided\n           - IF provided but invalid THEN return error: \"Invalid upload icon path.\"\n     b. IF operation is DELETE THEN\n        i. Verify extensionIds array is not empty\n           - IF empty THEN return error: \"No extension groups selected for deletion.\"\n\n3. Business Rule Processing:\n   - Check for existing extension groups:\n     a. IF operation is CREATE THEN\n        i. Verify extension group name does not already exist\n           - IF exists THEN return error: \"Extension group with this name already exists.\"\n     b. IF operation is UPDATE THEN\n        i. Verify extension group exists\n           - IF not exists THEN return error: \"Extension group not found.\"\n        ii. Verify no other extension group has the same name (except the current one)\n           - IF duplicate name THEN return error: \"Another extension group with this name already exists.\"\n     c. IF operation is DELETE THEN\n        i. Verify all extension groups in extensionIds exist\n           - IF any not exist THEN return error: \"One or more extension groups not found.\"\n        ii. Check if any extensions are associated with these groups\n           - IF associations exist THEN display warning: \"Deleting these groups will affect associated extensions.\"\n\n4. Core Operation Execution:\n   - Process based on operation type:\n     a. IF operation is CREATE THEN\n        i. Create new extension group record with provided details:\n           - Set name from input\n           - Set allow status (true/false)\n           - Set download mode value\n           - Set upload icon path if provided\n        ii. Generate unique identifier for the new group\n        iii. Store extension group in the system\n     b. IF operation is UPDATE THEN\n        i. Retrieve existing extension group by ID\n        ii. Update fields with new values:\n           - Update name if provided\n           - Update allow status if provided\n           - Update download mode if provided\n           - Update upload icon if provided\n        iii. Save updated extension group\n     c. IF operation is DELETE THEN\n        i. FOR EACH id in extensionIds:\n           - Locate the extension group\n           - Remove extension group from the system\n           - Update any affected extensions to remove association\n        ii. Record deletion in system logs\n\n5. Response Generation:\n   - Generate appropriate response based on operation:\n     a. IF operation is CREATE THEN\n        i. Return success message: \"Extension group created successfully.\"\n        ii. Include the newly created extension group details\n     b. IF operation is UPDATE THEN\n        i. Return success message: \"Extension group updated successfully.\"\n        ii. Include the updated extension group details\n     c. IF operation is DELETE THEN\n        i. Return success message: \"Selected extension groups deleted successfully.\"\n        ii. Include count of deleted groups\n   - IF any errors occurred during processing:\n     a. Return appropriate error message\n     b. Include details about the error and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension group name must not be empty",
+    "Extension group name must be between 3 and 50 characters",
+    "Download mode must be valid",
+    "Extension group name must be unique",
+    "Extension IDs must exist for deletion operations",
+    "Upload icon path must be valid if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtensionGroup": {
+      "id": "number",
+      "name": "string",
+      "allow": "boolean",
+      "downloadMode": "number",
+      "uploadIcon": "string"
+    },
+    "ExtensionIdList": {
+      "ids": "string[]"
+    }
+  }
+}

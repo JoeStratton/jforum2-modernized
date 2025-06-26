@@ -1,0 +1,59 @@
+{
+  "featureName": "ImportPhpbbToJforum",
+  "description": "Migrates data from phpBB to JForum including users, posts, private messages, and forum structure.",
+  "inputValues": [
+    "baseDirectory-string-System",
+    "sourceDatabase-object-PhpbbDatabase",
+    "targetDatabase-object-JforumDatabase"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect base directory path for configuration files\n   - Obtain connection details for source phpBB database\n   - Obtain connection details for target JForum database\n   - Determine text formatting conversion rules\n\n2. Data Validation\n   - Verify base directory exists and contains required configuration files\n     - IF configuration files are missing THEN display error and exit\n   - Validate database connection parameters for both source and target\n     - IF connection parameters are invalid THEN display error and exit\n   - Verify source database contains valid phpBB data structure\n     - IF required phpBB tables are missing THEN display error and exit\n   - Check if target JForum database is properly initialized\n     - IF JForum tables are not properly set up THEN display error and exit\n\n3. Business Rule Processing\n   - Initialize system configuration from properties files\n   - Establish database connections to both source and target databases\n   - Prepare text conversion rules for formatting compatibility\n   - Verify sufficient disk space and memory for migration process\n   - Check user permissions for database operations\n\n4. Core Operation Execution\n   - Clean Target Tables\n     - Remove existing data from all target tables to prevent conflicts\n     - Preserve system configuration data if needed\n   - Import Users\n     - Retrieve all users from phpBB database\n     - Transform user data to match JForum structure\n     - Insert transformed user records into JForum database\n     - Preserve user credentials, profiles, and preferences\n   - Import Forum Structure\n     - Migrate categories hierarchy\n     - Migrate forums within categories\n     - Preserve forum settings and permissions\n   - Import Private Messages\n     - Retrieve private message data from phpBB\n     - Transform message content using text conversion rules\n     - Insert messages into JForum private messaging system\n     - Preserve sender/recipient relationships\n   - Import Posts and Topics\n     - Retrieve all posts and topics from phpBB\n     - Transform post content using text conversion rules\n     - Maintain topic-post relationships\n     - Preserve posting dates, edit information, and author details\n   - Setup Permissions\n     - Configure user group permissions\n     - Set administrator access rights\n     - Establish moderation capabilities\n     - Ensure proper access control for all imported content\n\n5. Response Generation\n   - Generate detailed migration statistics\n     - Number of users migrated\n     - Number of forums and categories migrated\n     - Number of topics and posts migrated\n     - Number of private messages migrated\n   - Report any errors or warnings encountered during migration\n   - Provide verification steps to confirm successful migration\n   - Display completion message with summary of migration results",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Base directory must exist and contain required configuration files",
+    "Database connection parameters must be valid for both source and target",
+    "Source database must contain valid phpBB data structure",
+    "Target database must be properly initialized with JForum schema",
+    "User must have sufficient permissions to read from source and write to target databases",
+    "System must have sufficient resources (memory and disk space) for migration"
+  ],
+  "dbSeedingOperations": [
+    "Create anonymous user in JForum if not present",
+    "Set up administrator group and permissions",
+    "Configure default forum settings"
+  ],
+  "schema": {
+    "PhpbbDatabase": {
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "description": "Database connection string for phpBB"
+        },
+        "tablePrefix": {
+          "type": "string",
+          "description": "Prefix used for phpBB database tables"
+        }
+      }
+    },
+    "JforumDatabase": {
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "description": "Database connection string for JForum"
+        }
+      }
+    }
+  }
+}

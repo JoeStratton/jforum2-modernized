@@ -1,0 +1,64 @@
+{
+  "featureName": "DisplayAdminDashboard",
+  "description": "Shows the main administration dashboard with forum statistics and system status.",
+  "inputValues": [
+    "userId-number-User",
+    "userSession-object-UserSession",
+    "boardStatus-object-BoardStatus"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect userId from the current user session\n   - Collect userSession object containing user authentication details\n   - System will generate boardStatus data\n   - System will determine if install module exists\n   - System will retrieve all active sessions\n\n2. Data Validation\n   - Validate user authentication status\n     * Check if user is logged in\n     * IF user is not logged in, THEN redirect to login page\n     * Set return path to admin login page\n   - Validate user permissions\n     * Check if user has administration access permissions\n     * IF user does not have admin permissions, THEN redirect to login page\n\n3. Business Rule Processing\n   - Check system installation status\n     * Verify if installation module still exists in the system\n     * IF installation module exists, THEN flag for admin notification\n   - Process board version information\n     * Retrieve latest version information from central repository\n     * Compare current version with latest available version\n     * Determine if system is up to date\n     * IF development version is detected, THEN mark accordingly\n     * IF newer version available, THEN prepare update notification\n\n4. Core Operation Execution\n   - Retrieve forum statistics\n     * Get total number of users\n     * Get total number of topics\n     * Get total number of posts\n     * Calculate posting activity metrics\n   - Gather system status information\n     * Collect all active user sessions\n     * Determine server load and performance metrics\n     * Check mail integration status\n   - Prepare version comparison data\n     * Format current version information\n     * Format latest version information\n     * Generate version difference notes if applicable\n\n5. Response Generation\n   - Prepare dashboard display data\n     * Compile forum statistics for display\n     * Format system status information\n     * Prepare version information and update notifications\n     * Include installation module warning if applicable\n   - Generate admin dashboard view\n     * Display forum statistics section\n     * Display system status section\n     * Display version information section\n     * Show administrative action options\n     * IF updates available, THEN display update notification\n     * IF installation module exists, THEN display security warning",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User must be logged in to access admin dashboard",
+    "User must have administration permission to access dashboard",
+    "Board statistics must be retrieved successfully",
+    "Version check must complete with or without external connection"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the logged in user"
+        },
+        "isLogged": {
+          "type": "boolean",
+          "description": "Flag indicating if user is logged in"
+        }
+      }
+    },
+    "BoardStatus": {
+      "type": "object",
+      "properties": {
+        "totalUsers": {
+          "type": "number",
+          "description": "Total number of registered users"
+        },
+        "totalPosts": {
+          "type": "number",
+          "description": "Total number of posts in the forum"
+        },
+        "totalTopics": {
+          "type": "number",
+          "description": "Total number of topics in the forum"
+        },
+        "activeSessions": {
+          "type": "number",
+          "description": "Number of active user sessions"
+        }
+      }
+    }
+  }
+}

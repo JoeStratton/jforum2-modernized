@@ -1,0 +1,39 @@
+{
+  "featureName": "ReadBlobUTF16BinaryStream",
+  "description": "Reads binary data from a database BLOB field and converts it to a UTF-16 encoded string.",
+  "inputValues": [
+    "resultSet-object-DatabaseResultSet",
+    "fieldName-string-DatabaseField"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the database result set containing the BLOB data\n   - Collect the field name that identifies the BLOB column\n   - Both inputs are mandatory for processing\n\n2. Data Validation:\n   - Validate that the result set is not null\n     * IF result set is null THEN\n       - Generate an error indicating invalid result set\n       - Terminate processing\n     * END IF\n   - Validate that the field name is not empty\n     * IF field name is empty or null THEN\n       - Generate an error indicating invalid field name\n       - Terminate processing\n     * END IF\n   - Verify the field exists in the result set\n     * IF field does not exist in result set THEN\n       - Generate an error indicating field not found\n       - Terminate processing\n     * END IF\n\n3. Business Rule Processing:\n   - Check if the BLOB field contains null value\n     * IF BLOB field is null THEN\n       - Return empty string as result\n       - Terminate processing\n     * END IF\n   - Verify system has sufficient memory for processing\n     * IF system memory is insufficient THEN\n       - Generate resource limitation error\n       - Terminate processing\n     * END IF\n\n4. Core Operation Execution:\n   - Retrieve the BLOB object from the result set using the field name\n   - Obtain a binary input stream from the BLOB object\n   - Initialize a buffer to hold the string data\n   - Set up a reading buffer with appropriate size (4096 bytes)\n   - WHILE there is data to read from the stream DO\n     * Read bytes from the stream into the buffer\n     * IF bytes were read THEN\n       - Convert the bytes to a string using UTF-16 encoding\n       - Append the converted string to the result buffer\n     * END IF\n   - END WHILE\n   - Close the input stream to release resources\n   - Return the complete string from the buffer\n   - IF any errors occur during processing THEN\n     * Release all resources\n     * Generate appropriate error message\n     * Terminate processing\n   * END IF\n\n5. Response Generation:\n   - On success:\n     * Return the complete UTF-16 decoded string\n     * Include information about the size of data processed\n   - On failure:\n     * Return detailed error information\n     * Include the nature of the failure (connection, encoding, or memory issue)\n     * Provide guidance for resolving common issues",
+  "databaseEntities": [
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Result set must not be null",
+    "Field name must not be empty",
+    "Field must exist in the result set",
+    "BLOB data must be properly formatted for UTF-16 conversion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseResultSet": {
+      "type": "object",
+      "description": "Represents a database query result set containing rows of data",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "description": "Information about the columns in the result set"
+        },
+        "rows": {
+          "type": "array",
+          "description": "The data rows returned by the query"
+        }
+      }
+    },
+    "DatabaseField": {
+      "type": "string",
+      "description": "The name of a column in the database result set"
+    }
+  }
+}

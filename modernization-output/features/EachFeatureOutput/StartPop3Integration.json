@@ -1,0 +1,77 @@
+{
+  "featureName": "StartPop3Integration",
+  "description": "Initializes POP3 email integration service for the forum.",
+  "inputValues": [
+    "configurationSettings-object-Pop3Config"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect POP3 configuration settings from system configuration:\n     - POP3 server address (mandatory)\n     - Port number (mandatory, default: 110)\n     - Username (mandatory)\n     - Password (mandatory)\n     - Connection security type (optional, default: none)\n     - Check interval in minutes (mandatory, default: 15)\n     - Destination forum for email posts (mandatory)\n     - Email processing rules (optional)\n\n2. Data Validation:\n   - Validate POP3 server configuration:\n     - VERIFY server address is not empty and has valid format\n     - VERIFY port number is a positive integer between 1-65535\n     - VERIFY username is not empty\n     - VERIFY password is not empty\n     - VERIFY connection security type is one of: none, SSL, TLS\n     - VERIFY check interval is a positive integer\n     - VERIFY destination forum exists in the system\n   - IF any validation fails THEN:\n     - Generate appropriate error message\n     - Log validation failure details\n     - Abort integration startup\n\n3. Business Rule Processing:\n   - Check system prerequisites:\n     - VERIFY POP3 integration is enabled in system settings\n     - VERIFY required libraries are available\n     - VERIFY system has appropriate permissions to create scheduled tasks\n   - Check for existing POP3 integration:\n     - IF POP3 job is already running THEN:\n       - Stop existing job\n       - Log that service is being restarted\n     - ELSE:\n       - Log that service is being started for the first time\n\n4. Core Operation Execution:\n   - Initialize POP3 job scheduler:\n     - Create new scheduler instance\n     - Configure job parameters based on validated inputs\n     - Set execution interval based on check interval setting\n     - Register email processing handlers\n     - Configure error handling and retry mechanisms\n   - Start the POP3 job:\n     - Initialize connection to mail server\n     - Schedule first execution based on configuration\n     - Register job with system scheduler\n   - Configure monitoring and reporting:\n     - Set up logging for POP3 activities\n     - Configure notification settings for critical errors\n\n5. Response Generation:\n   - IF integration started successfully THEN:\n     - Log successful initialization message\n     - Return success status with job details\n     - Include next scheduled execution time\n   - ELSE:\n     - Log detailed error information\n     - Return failure status with specific error details\n     - Include troubleshooting suggestions",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "POP3 server address must be a valid hostname or IP address",
+    "POP3 port must be a valid port number between 1-65535",
+    "Username must not be empty",
+    "Password must not be empty",
+    "Check interval must be a positive integer",
+    "Destination forum must exist in the system",
+    "POP3 integration must be enabled in system settings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Pop3Config": {
+      "type": "object",
+      "properties": {
+        "serverAddress": {
+          "type": "string",
+          "description": "POP3 server hostname or IP address"
+        },
+        "port": {
+          "type": "number",
+          "description": "POP3 server port number"
+        },
+        "username": {
+          "type": "string",
+          "description": "Authentication username for POP3 server"
+        },
+        "password": {
+          "type": "string",
+          "description": "Authentication password for POP3 server"
+        },
+        "securityType": {
+          "type": "string",
+          "enum": [
+            "none",
+            "SSL",
+            "TLS"
+          ],
+          "description": "Connection security type"
+        },
+        "checkInterval": {
+          "type": "number",
+          "description": "Interval in minutes between email checks"
+        },
+        "destinationForum": {
+          "type": "number",
+          "description": "Forum ID where emails will be posted"
+        },
+        "processingRules": {
+          "type": "object",
+          "description": "Rules for processing incoming emails"
+        }
+      },
+      "required": [
+        "serverAddress",
+        "port",
+        "username",
+        "password",
+        "checkInterval",
+        "destinationForum"
+      ]
+    }
+  }
+}

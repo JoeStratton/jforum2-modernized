@@ -1,0 +1,54 @@
+{
+  "featureName": "ManageTopicSubscription",
+  "description": "Manages user subscriptions for topic notifications.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User",
+    "subscriptionAction-string-Subscription"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicId (mandatory): Unique identifier for the topic\n     b. userId (mandatory): Unique identifier for the user\n     c. subscriptionAction (mandatory): Action to perform ('subscribe', 'unsubscribe', 'checkStatus')\n\n2. Data Validation:\n   - Validate topicId:\n     a. Ensure topicId is provided and is a positive integer\n     b. IF topicId is missing or invalid, THEN return error message \"Valid topic identifier required\"\n   - Validate userId:\n     a. Ensure userId is provided and is a positive integer\n     b. IF userId is missing or invalid, THEN return error message \"Valid user identifier required\"\n   - Validate subscriptionAction:\n     a. Ensure subscriptionAction is one of the allowed values ('subscribe', 'unsubscribe', 'checkStatus')\n     b. IF subscriptionAction is invalid, THEN return error message \"Invalid subscription action requested\"\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if topic with given topicId exists in the system\n     b. IF topic does not exist, THEN return error message \"Topic not found\"\n   - Verify user existence:\n     a. Check if user with given userId exists in the system\n     b. IF user does not exist, THEN return error message \"User not found\"\n   - Verify user permissions:\n     a. Check if user has permission to subscribe to topics\n     b. IF user lacks permission, THEN return error message \"Insufficient permissions to manage subscriptions\"\n\n4. Core Operation Execution:\n   - Process based on subscriptionAction:\n     a. IF subscriptionAction is 'subscribe':\n        i. Check if user is already subscribed to the topic\n        ii. IF already subscribed, THEN return message \"User is already subscribed to this topic\"\n        iii. ELSE create a new subscription record linking the user to the topic\n        iv. Record subscription timestamp\n     b. IF subscriptionAction is 'unsubscribe':\n        i. Check if user is currently subscribed to the topic\n        ii. IF not subscribed, THEN return message \"User is not subscribed to this topic\"\n        iii. ELSE remove the subscription record for the user and topic\n     c. IF subscriptionAction is 'checkStatus':\n        i. Retrieve subscription status for the user and topic\n\n5. Response Generation:\n   - For 'subscribe' action:\n     a. On success: Return confirmation message \"Successfully subscribed to topic\"\n     b. On failure: Return appropriate error message with reason\n   - For 'unsubscribe' action:\n     a. On success: Return confirmation message \"Successfully unsubscribed from topic\"\n     b. On failure: Return appropriate error message with reason\n   - For 'checkStatus' action:\n     a. Return subscription status (true/false) indicating if user is subscribed\n   - Include topic details in response:\n     a. Topic title\n     b. Forum information\n     c. Subscription date (for status checks and successful subscriptions)",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_topic_subscriptions"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Subscription action must be one of: 'subscribe', 'unsubscribe', 'checkStatus'",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must have permission to manage subscriptions"
+  ],
+  "dbSeedingOperations": [
+    "Create jforum_topic_subscriptions table if not exists with columns: subscription_id, topic_id, user_id, subscription_date"
+  ],
+  "schema": {
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "topicId": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "subscribed": {
+          "type": "boolean",
+          "description": "Subscription status"
+        },
+        "subscriptionDate": {
+          "type": "date",
+          "description": "Date when subscription was created"
+        }
+      },
+      "required": [
+        "topicId",
+        "userId",
+        "subscribed"
+      ]
+    }
+  }
+}

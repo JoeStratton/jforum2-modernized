@@ -1,0 +1,18 @@
+{
+  "featureName": "IncrementTopicViews",
+  "description": "Increments the view count for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number)\n   - System will use this identifier to locate the specific topic\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. Return error message if validation fails: \"Invalid topic identifier provided\"\n   - Verify topic exists:\n     a. Check if a topic with the provided topicId exists in the system\n     b. Return error message if not found: \"Topic not found\"\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the topic tracking system is operational\n     b. Ensure the topic is not in a locked or deleted state\n     c. If topic is in an invalid state, log the attempt and return appropriate message\n\n4. Core Operation Execution:\n   - Retrieve current view count for the topic\n   - Increment the view count by one\n   - Update the topic record with the new view count\n   - Persist the updated view count to ensure data consistency\n   - If update fails:\n     a. Log the failure with appropriate details\n     b. Attempt rollback if necessary\n     c. Return error message: \"Failed to update topic view count\"\n\n5. Response Generation:\n   - On success:\n     a. Return confirmation that view count was incremented\n     b. Include the new view count in the response\n   - On failure:\n     a. Return appropriate error message\n     b. Include support information if needed",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic must not be in a deleted state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

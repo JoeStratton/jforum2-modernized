@@ -1,0 +1,21 @@
+{
+  "featureName": "MarkTopicsAsRead",
+  "description": "Marks all topics in a forum as read for the current user.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forumId (mandatory): Unique identifier of the forum\n   - Retrieve current user session (system-generated): User's active session\n\n2. Data Validation\n   - Validate forumId:\n      * Check if forumId is provided\n      * Verify forumId is a valid number\n      * Verify the forum exists in the system\n      * IF forumId is invalid or not found, THEN display error message\n   - Validate user session:\n      * Verify user has an active session\n      * IF no active session exists, THEN create or use guest session\n\n3. Business Rule Processing\n   - Check forum accessibility:\n      * Verify the user has permission to access the specified forum\n      * IF user does not have access, THEN deny the operation\n   - Check tracking system availability:\n      * Verify the topic tracking system is operational\n      * IF tracking system is unavailable, THEN notify user and abort operation\n\n4. Core Operation Execution\n   - Retrieve user's topic tracking information:\n      * Get the current tracking map for the user\n      * IF tracking map does not exist, THEN create a new empty tracking map\n   - Update tracking information:\n      * Set the current timestamp as the read time for all topics in the forum\n      * Store the updated tracking map in the user's session\n   - Process forum-specific operations:\n      * IF forumId is provided, THEN mark only topics in that specific forum as read\n      * IF forumId is not provided, THEN mark topics in all accessible forums as read\n\n5. Response Generation\n   - Determine appropriate redirect destination:\n      * IF specific forum was marked as read, THEN redirect to that forum's topic listing\n      * IF all forums were marked as read, THEN redirect to forum list page\n   - Provide success feedback:\n      * Display confirmation message that topics have been marked as read\n      * Show updated visual indicators for read topics when displaying forum content",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid number",
+    "Forum must exist in the system",
+    "User must have an active session",
+    "User must have permission to access the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

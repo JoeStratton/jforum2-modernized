@@ -1,0 +1,28 @@
+{
+  "featureName": "StoreSupportProjectMessage",
+  "description": "Creates a support announcement topic in the forum with information about contributing to JForum.",
+  "inputValues": [
+    "connection-object-Connection"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect database connection object\n   - System will use predefined message content about supporting JForum\n   - System will use predefined user ID (2) for posting the announcement\n   - System will use predefined forum ID (1) for posting the announcement\n\n2. Data Validation\n   - Validate that the database connection is active and valid\n     - IF connection is null or closed THEN\n       - Generate error message indicating invalid connection\n       - Terminate process\n     - END IF\n   - Validate that the system can access required database entities\n     - IF unable to access forum tables THEN\n       - Generate error message indicating database access issue\n       - Terminate process\n     - END IF\n\n3. Business Rule Processing\n   - Prepare system environment for announcement creation\n     - Load authentication configuration\n     - Load data access implementation\n     - Load system queries\n     - Temporarily disable search indexing\n     - Set up execution context with provided connection\n   - Verify user permissions\n     - Ensure the system has sufficient privileges to create announcement\n     - IF permissions insufficient THEN\n       - Log permission error\n       - Terminate process\n     - END IF\n\n4. Core Operation Execution\n   - Create new announcement topic\n     - Set topic type as announcement\n     - Set topic title to \"Support JForum - Please read\"\n     - Set posting user ID to administrator (ID: 2)\n     - Set topic forum ID to main forum (ID: 1)\n     - Set posting timestamp to current date/time\n     - Save topic to database\n   - Create new post within the topic\n     - Set post subject to match topic title\n     - Set post timestamp to match topic timestamp\n     - Set user ID to administrator (ID: 2)\n     - Set post text to predefined support message content\n     - Set forum ID to match topic forum ID\n     - Enable smilies, HTML, and BBCode formatting\n     - Set user IP address\n     - Set topic ID to the newly created topic's ID\n     - Save post to database\n   - Update topic with post references\n     - Set topic's first post ID to the newly created post's ID\n     - Set topic's last post ID to the newly created post's ID\n     - Update topic in database\n   - Update forum statistics\n     - Increment total topics count for the forum\n     - Set forum's last post ID to the newly created post's ID\n\n5. Response Generation\n   - Restore system environment\n     - Re-enable search indexing\n     - Clear database connection from execution context\n   - Return operation status\n     - IF all operations completed successfully THEN\n       - Return success status\n     - ELSE\n       - Return error status with details of failure\n     - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Database connection must be active and valid",
+    "System must have access to required database entities",
+    "User ID 2 must exist in the system",
+    "Forum ID 1 must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "description": "Database connection object used to interact with the forum database"
+    }
+  }
+}

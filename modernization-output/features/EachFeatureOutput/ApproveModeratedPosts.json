@@ -1,0 +1,47 @@
+{
+  "featureName": "ApproveModeratedPosts",
+  "description": "Approves selected posts from the moderation queue and updates forum statistics.",
+  "inputValues": [
+    "postIds-object-PostSelection",
+    "moderationAction-string-ActionType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the list of post IDs selected for moderation (postIds)\n   - Collect the moderation action to perform (moderationAction: 'approve', 'reject', or 'defer')\n   - System will use current moderator's user ID from session\n\n2. Data Validation:\n   - Validate that postIds contains at least one valid post ID\n     * IF postIds is empty or null THEN return error message \"No posts selected for moderation\"\n   - Validate that moderationAction is one of the allowed values\n     * IF moderationAction is not 'approve', 'reject', or 'defer' THEN return error message \"Invalid moderation action\"\n   - Validate that the current user has moderation privileges for the forums containing the selected posts\n     * IF user lacks moderation privileges THEN return error message \"Insufficient permissions to moderate selected posts\"\n\n3. Business Rule Processing:\n   - FOR EACH post ID in the selection:\n     * Verify the post exists in the system\n     * Verify the post is currently awaiting moderation\n     * IF post doesn't exist THEN skip to next post\n     * IF post is not awaiting moderation THEN skip to next post\n\n4. Core Operation Execution:\n   - FOR EACH valid post awaiting moderation:\n     * IF moderationAction is 'defer':\n       - Skip processing this post (leave in moderation queue)\n     * ELSE IF moderationAction is 'approve':\n       - Mark post as approved in the system\n       - Retrieve post details (author, content, timestamp)\n       - Retrieve associated topic information\n       - Check if this is the first post in the topic\n         * IF this is the first post in the topic THEN mark topic as visible\n       - Update topic statistics:\n         * Update last post information (ID, author, timestamp)\n         * IF not the first post THEN increment reply count\n       - Update forum statistics:\n         * Update last post information\n         * Increment post count\n       - Increment post count for the post author\n       - Send notifications to subscribed users\n     * ELSE IF moderationAction is 'reject':\n       - Delete the post from the system\n       - Delete any attachments associated with the post\n       - Check if this was the only post in the topic\n         * IF topic now has zero posts THEN delete the topic\n\n5. Response Generation:\n   - Generate summary of moderation actions taken:\n     * Number of posts approved\n     * Number of posts rejected\n     * Number of posts deferred\n   - Provide list of affected topics and forums\n   - Return to the moderation queue view with updated list of pending posts",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "At least one post must be selected for moderation",
+    "Moderation action must be one of: approve, reject, or defer",
+    "User must have moderation privileges for the forums containing selected posts",
+    "Posts must exist in the system",
+    "Posts must be awaiting moderation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PostSelection": {
+      "type": "object",
+      "properties": {
+        "postIds": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "ID of a post to be moderated"
+          }
+        }
+      }
+    },
+    "ActionType": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "reject",
+        "defer"
+      ],
+      "description": "Type of moderation action to perform on selected posts"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ManageSessionAttributes",
+    "description": "Manages HTTP session attributes through setting, retrieving, and removing operations"
+  },
+  {
+    "featureName": "GetSessionIdentifier",
+    "description": "Retrieves the unique identifier for the current HTTP session"
+  },
+  {
+    "featureName": "ListSessionAttributes",
+    "description": "Provides enumeration of all attribute names stored in the current session"
+  },
+  {
+    "featureName": "InvalidateSession",
+    "description": "Terminates the current HTTP session and removes all associated attributes"
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "CompareCategoryOrder",
+    "description": "Compares two Category objects by their order and name for sorting purposes"
+  }
+]

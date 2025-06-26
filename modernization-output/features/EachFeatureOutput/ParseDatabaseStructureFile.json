@@ -1,0 +1,38 @@
+{
+  "featureName": "ParseDatabaseStructureFile",
+  "description": "Parses database structure files to extract SQL statements for database setup.",
+  "inputValues": [
+    "filename-string-File"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the database structure file path (filename) as a string\n   - The filename must point to an existing file containing SQL statements\n   - The file is expected to contain database creation statements\n\n2. Data Validation:\n   - Validate that the filename is not empty\n     * IF filename is empty or null THEN\n       - Return an error indicating a valid filename is required\n     * END IF\n   - Validate that the file exists and is readable\n     * IF file does not exist THEN\n       - Return an error indicating the file cannot be found\n     * END IF\n     * IF file is not readable THEN\n       - Return an error indicating permission issues\n     * END IF\n\n3. Business Rule Processing:\n   - Initialize an empty list to store extracted SQL statements\n   - Define recognized SQL command patterns that should be extracted:\n     * CREATE INDEX\n     * CREATE TABLE\n     * CREATE SEQUENCE\n     * DROP TABLE\n     * IF EXISTS\n     * DROP SEQUENCE\n     * DROP INDEX\n   - Set the statement delimiter character (typically semicolon)\n   - Verify the file format is compatible with the parser\n     * IF file format is incompatible THEN\n       - Return an error indicating format issues\n     * END IF\n\n4. Core Operation Execution:\n   - Open the specified file for reading\n   - Initialize a buffer to accumulate multi-line statements\n   - FOR each line in the file DO\n     * Skip empty lines\n     * Skip comment lines (starting with '-' or '#')\n     * IF currently processing a multi-line statement THEN\n       - Append the current line to the buffer\n       - IF line contains the delimiter character THEN\n         * Remove the delimiter from the buffer\n         * Add the complete statement to the result list\n         * Reset the processing flag\n       * END IF\n     * ELSE\n       - FOR each recognized SQL command pattern DO\n         * IF the current line contains this pattern THEN\n           - Clear the buffer\n           - IF line contains the delimiter character THEN\n             * Clean the line by removing the delimiter\n             * Add the statement to the result list\n           * ELSE\n             * Add the line to the buffer\n             * Set the processing flag to true\n           * END IF\n           - Break the pattern checking loop\n         * END IF\n       * END FOR\n     * END IF\n   * END FOR\n   - Close the file\n   - IF any error occurs during processing THEN\n     * Handle the exception appropriately\n     * Ensure file resources are properly released\n   * END IF\n\n5. Response Generation:\n   - Return the list of extracted SQL statements\n   - IF the extraction was successful THEN\n     * Return the complete list of valid SQL statements\n   * ELSE\n     * Return appropriate error information\n     * Include details about which part of the process failed\n   * END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Filename must not be empty",
+    "File must exist and be readable",
+    "File must contain valid SQL statements",
+    "SQL statements must follow expected format with proper delimiters",
+    "Comments in the file must start with '-' or '#'"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

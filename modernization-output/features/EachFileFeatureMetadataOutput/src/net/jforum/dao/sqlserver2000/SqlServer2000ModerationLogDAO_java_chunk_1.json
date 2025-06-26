@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SelectAllModerationLogs",
+    "description": "Retrieves paginated moderation logs with specified start position and count"
+  }
+]

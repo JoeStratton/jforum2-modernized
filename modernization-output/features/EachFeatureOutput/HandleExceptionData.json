@@ -1,0 +1,55 @@
+{
+  "featureName": "HandleExceptionData",
+  "description": "Processes exceptions by logging details, formatting error messages, and rendering exception template.",
+  "inputValues": [
+    "exception-object-Throwable",
+    "writer-object-Writer",
+    "request-object-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the thrown exception (Throwable object)\n   - Collect the output writer for response rendering\n   - Collect the request context containing URL information\n   - System will use logging configuration from system settings\n   - System will access user session data for permission checks\n\n2. Data Validation:\n   - Validate that the exception object is not null\n     * IF exception is null THEN abort processing\n   - Validate that the writer object is available for output\n     * IF writer is null THEN log error and abort processing\n   - Validate request context for URL extraction\n     * IF request is null THEN use empty string as URL information\n\n3. Business Rule Processing:\n   - Check user permission for viewing stack trace details\n     * Retrieve stack trace visibility setting from system configuration\n     * IF stack trace is restricted to moderators THEN\n       * Check if current user is logged in\n       * Check if current user has moderator privileges\n     * ELSE allow stack trace viewing for all users\n   - Determine the most appropriate error message to display\n     * Check for cause chain to find root cause message\n     * IF no cause message is available THEN use exception's direct message\n     * IF no direct message is available THEN use exception's string representation\n\n4. Core Operation Execution:\n   - Capture exception details\n     * Create string writer to hold stack trace information\n     * Create print writer to format exception details\n     * Print full exception stack trace to the writer\n     * Extract current URL from request context\n     * Append URL information to the stack trace\n   - Log the complete exception information\n     * Write the full stack trace to system error log\n   - Format error message for display\n     * Extract the most descriptive message from exception chain\n     * Remove potentially harmful HTML characters from message\n     * Prepare stack trace content based on user permissions\n     * Remove potentially harmful HTML characters from stack trace\n   - Prepare template data\n     * Add formatted stack trace to template context\n     * Add formatted error message to template context\n\n5. Response Generation:\n   - Render exception template\n     * Load the exception template from template configuration\n     * Process template with prepared context data\n     * Write rendered template to output writer\n   - Handle rendering failures\n     * Catch any exceptions that occur during rendering\n     * Log secondary exceptions to error log\n     * Ensure all writers are properly closed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Exception object must not be null",
+    "Writer object must be available for output",
+    "HTML characters must be filtered from error messages",
+    "Stack trace visibility must be restricted based on user permissions",
+    "All exceptions must be properly logged"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Throwable": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The error message associated with the exception"
+        },
+        "cause": {
+          "type": "object",
+          "description": "The underlying cause of this exception"
+        },
+        "stackTrace": {
+          "type": "array",
+          "description": "The stack trace elements of the exception"
+        }
+      }
+    },
+    "Writer": {
+      "type": "object",
+      "description": "Output writer for rendering response"
+    },
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "requestURI": {
+          "type": "string",
+          "description": "The URI of the request"
+        },
+        "queryString": {
+          "type": "string",
+          "description": "The query string of the request"
+        }
+      }
+    }
+  }
+}

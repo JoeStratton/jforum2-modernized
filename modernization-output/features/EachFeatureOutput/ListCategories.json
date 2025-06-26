@@ -1,0 +1,17 @@
+{
+  "featureName": "ListCategories",
+  "description": "Displays a list of all forum categories with repository information.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all categories from the database\n\n2. Data Validation:\n   - Verify user has appropriate permissions to view categories\n   - IF user does not have required permissions THEN\n     - Display access denied message\n     - Redirect to appropriate page\n   - END IF\n\n3. Business Rule Processing:\n   - Verify the category repository is accessible\n   - IF repository is not accessible THEN\n     - Log system error\n     - Prepare error message for display\n   - END IF\n   - Determine if user has administrative privileges\n   - IF user has administrative privileges THEN\n     - Enable category management options (edit, delete, reorder)\n   - ELSE\n     - Disable category management options\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve all categories from the data source\n   - Sort categories according to their defined order\n   - FOR each category:\n     - Retrieve associated forum information\n     - Calculate statistics (number of forums, topics, posts)\n     - Determine category status (active, locked, moderated)\n   - END FOR\n   - Prepare category list for display\n   - Include repository information with each category\n\n5. Response Generation:\n   - Format the category list for presentation\n   - IF no categories exist THEN\n     - Display appropriate message indicating no categories are available\n   - ELSE\n     - Display the list of categories with their details\n     - IF user has administrative privileges THEN\n       - Include category management controls (edit, delete, reorder buttons)\n     - END IF\n   - END IF\n   - Provide navigation options for other system areas",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must have permission to view categories",
+    "Category repository must be accessible",
+    "Categories must be displayed in their defined order"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

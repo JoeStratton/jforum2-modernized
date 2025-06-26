@@ -1,0 +1,30 @@
+{
+  "featureName": "SendErrorStatus",
+  "description": "Sends an error response with the specified status code.",
+  "inputValues": [
+    "statusCode-number-ErrorStatus"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the status code (number) to be sent as the error response\n   - The status code is mandatory and must represent a valid HTTP error status\n   - No default value is provided; the caller must specify the exact error status code\n\n2. Data Validation:\n   - Validate the status code:\n     a. Check if the status code is a valid number\n     b. Verify the status code is within the valid range for HTTP error codes (typically 400-599)\n     c. Generate appropriate internal error if the status code is invalid\n   - Validate system state:\n     a. Ensure the response has not already been committed\n     b. If response is already committed, record the failure attempt in system logs\n\n3. Business Rule Processing:\n   - Check if the current system configuration allows sending the specified error code\n   - Verify that no content has already been written to the response\n   - Determine if any special headers need to be included with this error status\n   - IF custom error pages are configured for this status code:\n     a. Prepare to serve the custom error page\n     b. Set appropriate content type for the error page\n\n4. Core Operation Execution:\n   - Set the HTTP status code in the response\n   - IF the status code requires a default error message:\n     a. Include the standard error message for this status code\n   - Update any relevant system metrics for error tracking\n   - Ensure any open resources are properly managed\n   - IF the operation fails:\n     a. Log the failure with appropriate details\n     b. Attempt to send a server error if possible\n\n5. Response Generation:\n   - Complete the error response with the specified status code\n   - Include any standard headers required for error responses\n   - IF debugging is enabled:\n     a. Include additional diagnostic information in the response\n   - Finalize the response to be returned to the client\n   - Prevent any further content from being added to the response",
+  "databaseEntities": [],
+  "validationRules": [
+    "Status code must be a valid number",
+    "Status code must be within the valid HTTP error code range (typically 400-599)",
+    "Response must not already be committed before sending the error",
+    "System must be in a state that allows sending error responses"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ErrorStatus": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "description": "HTTP error status code to be sent in the response"
+        }
+      },
+      "required": [
+        "statusCode"
+      ]
+    }
+  }
+}

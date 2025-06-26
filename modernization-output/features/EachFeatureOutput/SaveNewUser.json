@@ -1,0 +1,57 @@
+{
+  "featureName": "SaveNewUser",
+  "description": "Processes and saves new user registration with validation checks.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "email-string-User",
+    "captchaResponse-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following user registration information:\n     a. username (mandatory): User's chosen identifier\n     b. password (mandatory): User's chosen password\n     c. email (mandatory): User's email address\n     d. captchaResponse (mandatory if captcha enabled): User's response to security challenge\n   - System generates:\n     a. activationKey (if email verification required): Unique verification code\n\n2. Data Validation:\n   - Username Validation:\n     a. Check if username is not empty\n     b. Verify username length does not exceed maximum allowed length\n     c. Ensure username does not contain invalid characters (< or >)\n     d. Verify username is not already registered in the system\n   - Password Validation:\n     a. Check if password is not empty\n   - Email Validation:\n     a. Verify email is not already registered in the system\n   - Captcha Validation (if enabled):\n     a. Verify the captcha response matches the expected value\n   - IF any validation fails THEN:\n     a. Collect all validation errors\n     b. Return to registration form with error messages\n     c. Preserve entered data for user convenience\n\n3. Business Rule Processing:\n   - Check if registration is enabled in system settings\n     a. IF registration is disabled AND current user does not have administration privileges THEN:\n        i. Display registration disabled message\n        ii. Terminate registration process\n   - Check if user agreement acceptance is required\n     a. IF agreement is required AND not yet accepted THEN:\n        i. Display agreement text\n        ii. Require user acceptance before proceeding\n        iii. Store acceptance status in session\n   - Check if email activation is required based on system settings\n\n4. Core Operation Execution:\n   - Create new user record with provided information:\n     a. Set username as provided\n     b. Encrypt password using MD5 algorithm\n     c. Set email as provided\n     d. IF email activation is required THEN:\n        i. Generate unique activation key\n        ii. Set user status as inactive\n     e. ELSE:\n        i. Set user status as active\n   - Save user record to database\n   - IF email activation is required THEN:\n     a. Send activation email to user\n     b. Display instructions to check email\n   - ELSE IF user was created by administrator THEN:\n     a. Redirect to admin user list\n   - ELSE:\n     a. Automatically log user in\n     b. Create new user session\n     c. Update system statistics (last registered user, total users)\n     d. Redirect to registration completion page\n\n5. Response Generation:\n   - Success Response:\n     a. IF email activation required:\n        i. Display message instructing user to check email\n     b. ELSE IF created by administrator:\n        i. Return to admin user list\n     c. ELSE:\n        i. Display registration completion message\n        ii. Provide links to profile page and forum homepage\n   - Error Response:\n     a. Display specific error messages for validation failures\n     b. Preserve user input for correction\n     c. Regenerate captcha if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Password must not be empty",
+    "Username must not exceed maximum allowed length",
+    "Username must not contain < or > characters",
+    "Username must not already exist in the system",
+    "Email must not already be registered in the system",
+    "Captcha response must match expected value if captcha is enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "User's chosen identifier"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's encrypted password"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "activationKey": {
+          "type": "string",
+          "description": "Key for email verification if required"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates if user account is active"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "email"
+      ]
+    }
+  }
+}

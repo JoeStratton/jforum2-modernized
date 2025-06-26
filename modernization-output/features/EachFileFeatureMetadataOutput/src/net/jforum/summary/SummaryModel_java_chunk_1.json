@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SendPostsSummary",
+    "description": "Sends weekly summary emails of recent forum posts to subscribed recipients"
+  },
+  {
+    "featureName": "ListRecipients",
+    "description": "Retrieves a list of users who are subscribed to receive post summaries"
+  },
+  {
+    "featureName": "ListPosts",
+    "description": "Retrieves forum posts from a specified date range for inclusion in summaries"
+  }
+]

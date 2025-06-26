@@ -1,0 +1,59 @@
+{
+  "featureName": "SetForumsModerationStatus",
+  "description": "Updates moderation status for all forums within a category and their associated topics.",
+  "inputValues": [
+    "category-object-Category",
+    "status-boolean-ModerationStatus"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the Category object which contains:\n       - Category ID\n       - Current moderation status\n       - List of forums belonging to the category\n   1.2. Collect the boolean status value indicating whether moderation should be enabled or disabled\n\n2. Data Validation:\n   2.1. Validate Category object\n       - Verify the Category object is not null\n       - Ensure the Category ID is valid\n       - Confirm the Category contains a valid list of forums\n       - IF any validation fails, THEN generate appropriate error message and terminate process\n   2.2. Validate status parameter\n       - Ensure the status parameter is a valid boolean value\n       - IF validation fails, THEN generate appropriate error message and terminate process\n\n3. Business Rule Processing:\n   3.1. Check if category moderation status change is necessary\n       - Compare the provided status with the current category moderation status\n       - IF status is the same as current category moderation status, THEN no action is needed\n       - IF status is different, THEN proceed with the update\n   3.2. Verify system permissions\n       - Ensure the current user has administrative privileges to modify moderation settings\n       - IF user lacks required permissions, THEN generate access denied error and terminate process\n\n4. Core Operation Execution:\n   4.1. Update forums moderation status\n       - FOR EACH forum in the category's forum list:\n           - Compare forum's current moderation status with the new category moderation status\n           - IF forum's moderation status is different from the new category status, THEN:\n               - Update the forum's moderation status to match the category's new status\n               - Update all topics within the forum to have the same moderation status\n   4.2. Persist category moderation status\n       - Update the category's moderation status in the system\n       - Save the updated category information\n   4.3. Handle any failures during the update process\n       - IF any forum or topic update fails, THEN:\n           - Log the failure details\n           - Determine whether to continue with remaining updates or roll back\n           - IF critical failure, THEN roll back all changes\n\n5. Response Generation:\n   5.1. Generate success response\n       - Include confirmation that the moderation status was updated\n       - Include the number of forums and topics affected by the change\n       - Include the new moderation status value\n   5.2. Generate error response if needed\n       - Include specific error details if the operation failed\n       - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Category object must not be null",
+    "Category ID must be a valid identifier",
+    "Category must contain a valid list of forums",
+    "Moderation status must be a boolean value",
+    "User must have administrative privileges to modify moderation settings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the category"
+        },
+        "isModerated": {
+          "type": "boolean",
+          "description": "Current moderation status of the category"
+        },
+        "forums": {
+          "type": "array",
+          "description": "List of forums belonging to this category",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "description": "Unique identifier for the forum"
+              },
+              "isModerated": {
+                "type": "boolean",
+                "description": "Current moderation status of the forum"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "isModerated",
+        "forums"
+      ]
+    }
+  }
+}

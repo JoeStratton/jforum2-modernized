@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SelectPostById",
+    "description": "Retrieves a forum post by its ID with all associated data"
+  },
+  {
+    "featureName": "SelectPostsByTopicWithPagination",
+    "description": "Retrieves paginated posts for a specific forum topic"
+  },
+  {
+    "featureName": "SelectPostsByUserWithPagination",
+    "description": "Retrieves paginated posts created by a specific user"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "featureName": "DiscardBodyData",
+  "description": "Skips unwanted encapsulation data by reading and discarding body content.",
+  "inputValues": [
+    "inputStream-object-InputStream",
+    "buffer-object-ByteArray",
+    "boundary-object-ByteArray",
+    "keepRegion-number-Integer"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect input stream containing multipart data\n   - Access buffer for temporary data storage\n   - Use boundary information for detecting section separators\n   - Utilize keepRegion parameter for buffer management\n\n2. Data Validation:\n   - Verify input stream is not null\n   - Ensure buffer has sufficient capacity for processing\n   - Validate boundary information is properly formatted\n   - Confirm keepRegion value is positive and within reasonable limits\n   - Generate appropriate error messages for any validation failures\n\n3. Business Rule Processing:\n   - Check if current position is at a valid data section\n   - Verify system has sufficient resources to process the stream\n   - Ensure the stream follows expected multipart format standards\n\n4. Core Operation Execution:\n   - INITIALIZE tracking variables for processing:\n     - Set done flag to false\n     - Set total bytes discarded counter to 0\n   - WHILE not done:\n     - Search for boundary separator in current buffer\n     - IF separator found:\n       - Calculate bytes to discard before boundary\n       - Update total bytes discarded counter\n       - Update head position to separator location\n       - Set done flag to true\n     - ELSE:\n       - Determine optimal buffer retention size (pad)\n       - Update total bytes discarded counter\n       - Move remaining buffer data to beginning\n       - Refill buffer with new data from input stream\n       - IF end of stream reached unexpectedly:\n         - Update total bytes discarded counter\n         - Throw malformed stream exception\n\n5. Response Generation:\n   - Return total number of bytes discarded\n   - Provide appropriate error information if exceptions occurred\n   - Ensure stream position is correctly set at boundary for next operation",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input stream must not be null",
+    "Buffer must have sufficient capacity",
+    "Boundary information must be properly formatted",
+    "KeepRegion value must be positive",
+    "Stream must follow expected multipart format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "function",
+          "description": "Reads bytes from the input stream"
+        }
+      }
+    },
+    "ByteArray": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      },
+      "description": "Array of bytes for data processing"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "featureName": "SetResponseHeader",
+  "description": "Sets a header with specified name and value in the HTTP response.",
+  "inputValues": [
+    "name-string-Header",
+    "value-string-HeaderValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. name (string): The name of the header to be set\n     b. value (string): The value to be assigned to the header\n   - Both fields are mandatory\n   - No default values are provided\n\n2. Data Validation:\n   - Validate header name:\n     a. Check if name is not null or empty\n     b. Verify name follows valid HTTP header format (contains only valid characters)\n     c. Generate error message if name is invalid: \"Header name cannot be empty or contain invalid characters\"\n   - Validate header value:\n     a. Check if value is not null\n     b. Verify value contains only valid characters for HTTP header values\n     c. Generate error message if value is invalid: \"Header value contains invalid characters\"\n\n3. Business Rule Processing:\n   - Check if response context is available and active:\n     a. Verify the response has not been committed yet\n     b. IF response is already committed THEN\n        i. Generate error: \"Cannot set header after response has been committed\"\n        ii. Abort operation\n     c. ELSE continue processing\n   - Check if header with same name already exists:\n     a. IF header exists and should not be overwritten THEN\n        i. Generate warning: \"Header already exists and will be overwritten\"\n\n4. Core Operation Execution:\n   - Set the header in the response:\n     a. Add the header name and value to the response\n     b. IF operation fails THEN\n        i. Generate error: \"Failed to set response header\"\n        ii. Log the error details\n     c. ELSE mark operation as successful\n\n5. Response Generation:\n   - For successful operation:\n     a. Return success status indicating header was set\n     b. Include confirmation that header was added to response\n   - For failed operation:\n     a. Return failure status with appropriate error message\n     b. Include details about which validation or business rule failed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Header name must not be empty",
+    "Header name must follow valid HTTP header format",
+    "Header value must not be null",
+    "Header value must contain only valid characters for HTTP headers",
+    "Response must not be already committed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

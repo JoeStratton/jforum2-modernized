@@ -1,0 +1,42 @@
+{
+  "featureName": "SelectAttachmentById",
+  "description": "Retrieves a specific attachment by its ID from the system.",
+  "inputValues": [
+    "attachId-number-Attachment"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the attachment ID (attachId) as a numeric value\n   - The attachment ID is mandatory for this operation\n   - No default values are provided; a valid ID must be supplied\n\n2. Data Validation\n   - Validate the attachment ID:\n     a. Verify the attachment ID is not null\n     b. Verify the attachment ID is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing\n   - Verify system access permissions:\n     a. Check if the current user has permission to access attachments\n     b. Verify the attachment exists in the system\n     c. IF attachment does not exist, THEN prepare not-found response\n\n4. Core Operation Execution\n   - Retrieve attachment record:\n     a. Search for the attachment using the provided ID\n     b. IF attachment is found, THEN:\n        i. Retrieve all attachment metadata (file information, comments, etc.)\n        ii. Retrieve associated extension information\n        iii. Combine attachment data with its extension information\n     c. IF attachment is not found, THEN:\n        i. Prepare null or empty result\n\n5. Response Generation\n   - Prepare attachment response:\n     a. IF attachment was found, THEN:\n        i. Format complete attachment information including:\n           - Basic attachment properties (ID, post ID, private message ID)\n           - File information (filename, physical location, size, mimetype)\n           - Extension information\n           - Upload timestamp and download count\n     b. IF attachment was not found, THEN:\n        i. Return null or empty result\n        ii. Include appropriate status information\n     c. Return the formatted attachment data to the caller",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Attachment ID must be a valid positive integer",
+    "Attachment must exist in the system",
+    "User must have permission to access the requested attachment"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "privmsgsId": "number",
+      "info": {
+        "comment": "string",
+        "downloadCount": "number",
+        "filesize": "number",
+        "mimetype": "string",
+        "physicalFilename": "string",
+        "realFilename": "string",
+        "uploadTime": "date",
+        "extension": {
+          "id": "number",
+          "extension": "string",
+          "comment": "string",
+          "uploadIcon": "string",
+          "allow": "boolean",
+          "extensionGroupId": "number"
+        }
+      }
+    }
+  }
+}

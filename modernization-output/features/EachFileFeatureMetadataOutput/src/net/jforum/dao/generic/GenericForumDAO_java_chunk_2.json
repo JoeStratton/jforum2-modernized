@@ -1,0 +1,50 @@
+[
+  {
+    "featureName": "SelectForumById",
+    "description": "Retrieves a forum by its ID with all associated details"
+  },
+  {
+    "featureName": "SelectAllForums",
+    "description": "Retrieves all forums with their complete details"
+  },
+  {
+    "featureName": "SetForumOrderUp",
+    "description": "Moves a forum up in the display order relative to another forum"
+  },
+  {
+    "featureName": "SetForumOrderDown",
+    "description": "Moves a forum down in the display order relative to another forum"
+  },
+  {
+    "featureName": "DeleteForum",
+    "description": "Removes a forum and its associated security roles"
+  },
+  {
+    "featureName": "UpdateForum",
+    "description": "Updates forum details including name, description, and moderation status"
+  },
+  {
+    "featureName": "AddNewForum",
+    "description": "Creates a new forum with specified details and assigns it an order position"
+  },
+  {
+    "featureName": "SetLastPost",
+    "description": "Updates the last post reference for a forum"
+  },
+  {
+    "featureName": "IncrementTotalTopics",
+    "description": "Increases the topic count for a forum by a specified amount"
+  },
+  {
+    "featureName": "DecrementTotalTopics",
+    "description": "Decreases the topic count for a forum by a specified amount"
+  },
+  {
+    "featureName": "GetLastPostInfo",
+    "description": "Retrieves information about the most recent post in a forum"
+  },
+  {
+    "featureName": "GetModeratorList",
+    "description": "Retrieves the list of moderators for a specific forum"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "featureName": "DeleteForums",
+  "description": "Removes selected forums and their associated topics from the system.",
+  "inputValues": [
+    "forum_id-string-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the selected forum IDs to be deleted\n   - Input is provided as an array of forum identifiers\n   - All forum IDs are mandatory for the deletion process\n\n2. Data Validation\n   - Verify that at least one forum ID has been selected for deletion\n     - IF no forum IDs are selected THEN\n       - Display error message indicating that at least one forum must be selected\n       - Return to forum listing without performing any deletion\n   - Validate that each forum ID exists in the system\n     - FOR EACH forum ID in the selection\n       - Verify the forum exists in the database\n       - IF any forum ID is invalid THEN\n         - Log the error for the specific forum ID\n         - Continue with valid forums\n\n3. Business Rule Processing\n   - Check system permissions for forum deletion\n     - Verify the current user has administrative rights to delete forums\n     - IF user lacks required permissions THEN\n       - Display access denied message\n       - Abort the deletion process\n   - Check for any system constraints that might prevent deletion\n     - Verify that deleting these forums won't violate system integrity\n     - IF any constraint violations are found THEN\n       - Display specific constraint violation messages\n       - Abort the deletion process\n\n4. Core Operation Execution\n   - FOR EACH valid forum ID in the selection\n     - Retrieve the forum information from the repository\n     - Delete all topics associated with the forum\n       - Find all topics linked to the current forum\n       - Remove all topic records from the database\n     - Delete the forum record from the database\n     - Remove the forum from the forum repository cache\n   - Clean up security-related caches\n     - Clear security repository cache\n     - Clear roles repository\n   - Update any dependent data structures\n     - Refresh category listings\n     - Update forum ordering if necessary\n\n5. Response Generation\n   - IF deletion completed successfully THEN\n     - Display confirmation message indicating forums were deleted\n     - Show updated forum listing without the deleted forums\n   - IF errors occurred during deletion THEN\n     - Display error messages for any forums that could not be deleted\n     - Show partial forum listing reflecting successful deletions",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "At least one forum must be selected for deletion",
+    "User must have administrative permissions to delete forums",
+    "Selected forum IDs must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "moderated": "boolean",
+      "order": "number"
+    }
+  }
+}

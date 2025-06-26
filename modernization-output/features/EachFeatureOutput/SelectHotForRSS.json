@@ -1,0 +1,35 @@
+{
+  "featureName": "SelectHotForRSS",
+  "description": "Retrieves popular posts across forums for RSS feed generation.",
+  "inputValues": [
+    "limit-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - limit (number, mandatory): Maximum number of posts to retrieve\n\n2. Data Validation:\n   - Validate limit parameter:\n     - IF limit is not provided THEN set a default value\n     - IF limit is not a positive integer THEN return error message \"Limit must be a positive integer\"\n     - IF limit exceeds system maximum THEN cap it to the system maximum value\n\n3. Business Rule Processing:\n   - Verify system state:\n     - Check if the RSS feature is enabled in system settings\n     - Verify user has appropriate permissions to access hot posts\n   - Determine hotness criteria:\n     - Consider post view count, reply count, and recency\n     - Apply weighting algorithm to identify popular posts\n\n4. Core Operation Execution:\n   - Retrieve posts based on hotness criteria:\n     - Query posts ordered by popularity metrics\n     - Limit results to the specified number\n     - Include only posts from public forums\n     - Exclude posts from restricted or private forums\n   - For each retrieved post:\n     - Extract post details (ID, subject, content, topic ID, forum ID)\n     - Extract author information (user ID, username)\n     - Extract timestamp information\n     - Format post data for RSS consumption\n   - Compile retrieved posts into a structured list\n\n5. Response Generation:\n   - IF no posts match the criteria THEN return empty list\n   - IF posts are found THEN:\n     - Return the list of posts with all required fields\n     - Include metadata about the response (total count, generation timestamp)\n   - IF any errors occurred during processing THEN:\n     - Return appropriate error message\n     - Log the error for system administrators",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Limit parameter must be a positive integer",
+    "RSS feature must be enabled in system settings",
+    "User must have appropriate permissions to access posts",
+    "Only posts from public forums should be included",
+    "Posts from restricted or private forums should be excluded"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "postUsername": "string",
+      "time": "date"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "featureName": "MatchBanlistEntries",
+  "description": "Validates if banlist entries match based on user ID, email, or IP address patterns.",
+  "inputValues": [
+    "userId-number-Banlist",
+    "email-string-Banlist",
+    "ip-string-Banlist",
+    "targetEntry-object-Banlist"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - userId (number, mandatory if email and ip are not provided)\n     - email (string, mandatory if userId and ip are not provided)\n     - ip (string, mandatory if userId and email are not provided)\n     - targetEntry (object, mandatory): The banlist entry to compare against\n\n2. Data Validation:\n   - Validate userId:\n     - IF userId is provided THEN\n       - ENSURE userId is a positive integer\n       - IF invalid THEN return validation error\n   - Validate email:\n     - IF email is provided THEN\n       - ENSURE email is in valid format\n       - IF invalid THEN return validation error\n   - Validate IP address:\n     - IF ip is provided THEN\n       - ENSURE ip follows valid IP format or contains wildcards (*)\n       - IF invalid THEN return validation error\n   - Validate targetEntry:\n     - ENSURE targetEntry contains at least one of: userId, email, or ip\n     - IF invalid THEN return validation error\n   - ENSURE at least one matching criterion (userId, email, or ip) is provided\n     - IF no criteria provided THEN return validation error\n\n3. Business Rule Processing:\n   - Determine match type priority:\n     - IF userId is provided in both source and target THEN\n       - Set comparison type to \"userId\"\n     - ELSE IF email is provided in both source and target THEN\n       - Set comparison type to \"email\"\n     - ELSE IF ip is provided in both source and target THEN\n       - Set comparison type to \"ip\"\n     - ELSE\n       - Set match result to FALSE\n       - Skip to Response Generation\n\n4. Core Operation Execution:\n   - Execute matching based on determined type:\n     - IF comparison type is \"userId\" THEN\n       - Compare source userId with target userId\n       - IF values are equal THEN\n         - Set match result to TRUE\n       - ELSE\n         - Set match result to FALSE\n     - ELSE IF comparison type is \"email\" THEN\n       - Compare source email with target email (case-insensitive)\n       - IF values are equal THEN\n         - Set match result to TRUE\n       - ELSE\n         - Set match result to FALSE\n     - ELSE IF comparison type is \"ip\" THEN\n       - IF source ip contains wildcards (*) THEN\n         - Split both IPs into segments\n         - IF segment counts don't match THEN\n           - Set match result to FALSE\n         - ELSE\n           - FOR EACH segment in source ip\n             - IF segment is wildcard (*) THEN\n               - Continue to next segment\n             - ELSE IF segment matches corresponding target segment THEN\n               - Continue to next segment\n             - ELSE\n               - Set match result to FALSE\n               - Break loop\n           - IF all segments processed successfully THEN\n             - Set match result to TRUE\n       - ELSE\n         - Compare source ip with target ip directly\n         - IF values are equal THEN\n           - Set match result to TRUE\n         - ELSE\n           - Set match result to FALSE\n\n5. Response Generation:\n   - Return the match result:\n     - IF match result is TRUE THEN\n       - Return success response with match details\n     - ELSE\n       - Return negative match response",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "At least one of userId, email, or IP must be provided",
+    "User ID must be a positive integer if provided",
+    "Email must be in valid format if provided",
+    "IP address must be in valid format or contain wildcards (*)",
+    "IP address segments must match in count when comparing with wildcards",
+    "Target entry must contain at least one matching criterion field"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "User ID to match"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address to match"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP address to match, may contain wildcards (*)"
+        }
+      }
+    }
+  }
+}

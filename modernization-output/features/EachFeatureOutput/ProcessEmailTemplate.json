@@ -1,0 +1,62 @@
+{
+  "featureName": "ProcessEmailTemplate",
+  "description": "Processes email templates with user-specific parameters to generate personalized content.",
+  "inputValues": [
+    "subject-string-EmailSubject",
+    "templateFile-string-TemplateFile",
+    "recipients-object-RecipientList",
+    "templateParameters-object-TemplateParameters",
+    "messageId-string-MessageIdentifier",
+    "inReplyTo-string-ReferenceIdentifier"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the email subject (mandatory)\n   - Collect the template file path (mandatory)\n   - Collect the list of recipients (mandatory)\n   - Collect template parameters for personalization (mandatory)\n   - Collect message identifier (optional)\n   - Collect in-reply-to reference (optional)\n   - System will use configuration values for sender address, mail server settings, and character encoding\n\n2. Data Validation:\n   - Validate email subject:\n     * Must not be empty\n     * Must be properly encoded using system character set\n   - Validate template file path:\n     * Must point to an existing template file\n     * File must be readable\n     * File must contain valid template syntax\n   - Validate recipients list:\n     * Must contain at least one recipient\n     * Each recipient must have a valid email address\n     * Each recipient must have notification preferences set\n   - Validate template parameters:\n     * Must contain all required placeholders for the template\n     * Values must be properly formatted for template processing\n   - Validate message identifier (if provided):\n     * Must follow standard message ID format\n   - Validate in-reply-to reference (if provided):\n     * Must reference a valid previous message ID\n\n3. Business Rule Processing:\n   - Check system mail configuration:\n     * Verify SMTP server settings are configured\n     * Determine if authentication is required\n     * Determine if SSL is enabled\n     * Verify sender email address is configured\n   - Determine message format (HTML or text) based on system configuration\n   - Determine if template customization is needed:\n     * Check if any recipient has specific notification preferences\n     * If customization is needed, prepare for per-user message generation\n   - Check for sending delay requirements between messages\n\n4. Core Operation Execution:\n   - Initialize mail session with appropriate properties:\n     * Set SMTP host and port\n     * Configure authentication if required\n     * Set character encoding\n     * Configure SSL if enabled\n   - Prepare email message template:\n     * Load template file with proper encoding\n     * Add system parameters to template context\n     * Add forum name and other global parameters\n   - Process template for non-customized scenario:\n     * If customization is not needed, process template once\n     * Store processed content for all recipients\n   - Establish connection to mail server if authentication required:\n     * Connect using configured credentials\n     * Verify connection is established\n   - For each recipient:\n     * If customization is needed:\n       - Add recipient-specific parameters to template context\n       - Process template with recipient context\n       - Format message as HTML or text based on configuration\n     * Set recipient as the TO address\n     * Set message headers (message ID, in-reply-to if provided)\n     * Send message to recipient\n     * Apply sending delay if configured\n     * Log successful sending\n   - Close mail server connection if established\n\n5. Response Generation:\n   - If all messages sent successfully:\n     * Return success status\n     * Include count of messages sent\n     * Include timestamp of operation completion\n   - If any failures occurred:\n     * Return error status\n     * Include details of which recipients could not be processed\n     * Include error messages for troubleshooting\n     * Provide information on partial success (which messages were sent)",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Email subject must not be empty",
+    "Template file must exist and be readable",
+    "Recipients list must contain at least one valid recipient",
+    "Each recipient must have a valid email address",
+    "Template parameters must contain all required placeholders",
+    "SMTP server settings must be properly configured",
+    "Sender email address must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RecipientList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address of the recipient"
+          },
+          "notifyText": {
+            "type": "boolean",
+            "description": "Whether the recipient prefers text notifications"
+          }
+        },
+        "required": [
+          "email",
+          "notifyText"
+        ]
+      }
+    },
+    "TemplateParameters": {
+      "type": "object",
+      "properties": {
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "user": {
+          "type": "object",
+          "description": "User-specific information for personalization"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

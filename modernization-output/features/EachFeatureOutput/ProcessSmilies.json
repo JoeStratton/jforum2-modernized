@@ -1,0 +1,44 @@
+{
+  "featureName": "ProcessSmilies",
+  "description": "Replaces smilie codes with their corresponding image URLs in post text.",
+  "inputValues": [
+    "text-string-Post",
+    "smilies-object-SmiliesList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post text content (text-string-Post)\n   - Retrieve list of available smilies (smilies-object-SmiliesList)\n   - Check if smilies are enabled for the post\n\n2. Data Validation:\n   - Verify that the post text is not null or empty\n     * IF text is null or empty THEN return the original text without processing\n   - Verify that smilies list is available and not empty\n     * IF smilies list is empty THEN return the original text without processing\n   - Confirm smilies processing is enabled for the current post\n     * IF smilies are disabled for this post THEN return the original text without processing\n\n3. Business Rule Processing:\n   - Convert the text string to a modifiable text buffer\n   - Prepare to track position information to prevent infinite loops\n   - Set up a counter to prevent potential infinite processing loops\n   - Establish a reasonable maximum iteration limit (e.g., 300 iterations)\n\n4. Core Operation Execution:\n   - FOR each smilie in the smilies list:\n     * Find the first occurrence position of the smilie code in the text\n     * WHILE a smilie code is found AND counter is below safety limit:\n       > Replace the smilie code with its corresponding image URL\n       > Update the position to find the next occurrence of the smilie code\n       > Increment the safety counter\n   - Handle any special cases where smilie codes might be part of other content\n   - Ensure proper spacing and formatting is maintained around replaced smilies\n\n5. Response Generation:\n   - Convert the modified text buffer back to a string\n   - Return the processed text with all smilie codes replaced by their image URLs\n   - Ensure the text maintains its original formatting except for the replaced smilies",
+  "databaseEntities": [
+    "jforum_smilies",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Post text must not be null when processing smilies",
+    "Smilies must be enabled for the post to process smilies",
+    "Smilie codes must be replaced with their corresponding image URLs",
+    "Processing must have a safety limit to prevent infinite loops"
+  ],
+  "dbSeedingOperations": [
+    "Ensure the jforum_smilies table contains standard emoticons with their codes and image URLs"
+  ],
+  "schema": {
+    "SmiliesList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The text code representing the smilie (e.g., ':)', ':-)', ':-(', etc.)"
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL to the image that represents the smilie"
+          }
+        },
+        "required": [
+          "code",
+          "url"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "featureName": "GetSentMessages",
+  "description": "Retrieves all private messages from a user's sent box.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect User object with the following attributes:\n     - userId (mandatory): Unique identifier for the user\n     - username (optional): Name of the user requesting their sent messages\n   - System will use the authenticated user information if not explicitly provided\n\n2. Data Validation:\n   - Validate User object:\n     - Check if userId is provided and is a valid identifier\n     - Verify that the user exists in the system\n     - Confirm the user has permission to access their sent messages\n   - IF any validation fails, THEN:\n     - Generate appropriate error message\n     - Terminate the process and return error response\n\n3. Business Rule Processing:\n   - Check if the user account is active and not suspended\n   - Verify user has permission to view sent messages\n   - IF user account is inactive or suspended, THEN:\n     - Generate access denied message\n     - Terminate the process\n   - Check if the user has any sent messages\n     - IF no sent messages exist, THEN prepare to return empty result set\n\n4. Core Operation Execution:\n   - Retrieve all messages from sent box for the specified user\n     - Filter messages by the user as sender (where message type is SENT)\n     - Include message metadata (recipient, date sent, subject)\n     - Include message status information (read/unread by recipient)\n     - Sort messages by date sent (newest first by default)\n   - Process message data for display\n     - Format dates to user-friendly format using system date format settings\n     - Prepare message previews (truncated content)\n     - Include recipient information (username and ID)\n\n5. Response Generation:\n   - Prepare the list of sent messages with the following information for each message:\n     - Message identifier (privmsgs_id)\n     - Recipient information (username and ID)\n     - Subject line\n     - Date and time sent (formatted according to system preferences)\n     - Message status (read/unread by recipient)\n     - Message preview (if applicable)\n   - Include pagination information if applicable\n   - Return the complete list of sent messages as an array\n   - IF no messages found, return empty list with appropriate notification",
+  "databaseEntities": [
+    "User",
+    "PrivateMessage",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "User must be authenticated and authorized",
+    "User ID must be valid",
+    "User account must be active",
+    "User must have permission to view sent messages"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the private message"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of message (SENT, NEW, etc.)"
+        },
+        "fromUser": {
+          "type": "object",
+          "description": "User who sent the message",
+          "$ref": "#/User"
+        },
+        "toUser": {
+          "type": "object",
+          "description": "User who received the message",
+          "$ref": "#/User"
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "subject": {
+              "type": "string",
+              "description": "Subject line of the message"
+            },
+            "text": {
+              "type": "string",
+              "description": "Content of the message"
+            },
+            "time": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the message was sent"
+            },
+            "bbCodeEnabled": {
+              "type": "boolean",
+              "description": "Indicates if BBCode is enabled for this message"
+            },
+            "htmlEnabled": {
+              "type": "boolean",
+              "description": "Indicates if HTML is enabled for this message"
+            },
+            "smiliesEnabled": {
+              "type": "boolean",
+              "description": "Indicates if smilies are enabled for this message"
+            },
+            "signatureEnabled": {
+              "type": "boolean",
+              "description": "Indicates if signature is enabled for this message"
+            }
+          }
+        },
+        "formatedDate": {
+          "type": "string",
+          "description": "Formatted date string according to system preferences"
+        }
+      }
+    }
+  }
+}

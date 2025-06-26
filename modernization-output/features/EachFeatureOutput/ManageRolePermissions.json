@@ -1,0 +1,75 @@
+{
+  "featureName": "ManageRolePermissions",
+  "description": "Manages security roles and permissions for forum users and groups.",
+  "inputValues": [
+    "roleId-number-Role",
+    "roleName-string-Role",
+    "groupId-number-Group",
+    "permissions-object-PermissionSet",
+    "roleValues-object-RoleValueCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupId (mandatory): The identifier of the group to manage permissions for\n     b. roleId (optional): The identifier of the role when modifying an existing role\n     c. roleName (mandatory when creating a new role): The name of the permission role\n     d. permissions (mandatory): The set of permissions to assign\n     e. roleValues (mandatory): Collection of specific values for the role permissions\n\n2. Data Validation:\n   - Validate groupId:\n     a. VERIFY groupId is a positive integer\n     b. VERIFY groupId corresponds to an existing group in the system\n     c. IF validation fails, THEN return error message \"Invalid group identifier\"\n   - Validate roleName (when creating a new role):\n     a. VERIFY roleName is not empty\n     b. VERIFY roleName follows naming conventions\n     c. VERIFY roleName is unique within the system\n     d. IF validation fails, THEN return error message \"Invalid role name\"\n   - Validate permissions object:\n     a. VERIFY permissions contains valid permission types\n     b. VERIFY all required permission attributes are present\n     c. IF validation fails, THEN return error message \"Invalid permission configuration\"\n   - Validate roleValues collection:\n     a. VERIFY roleValues contains valid entries\n     b. VERIFY roleValues match the expected format for the role type\n     c. IF validation fails, THEN return error message \"Invalid role values\"\n\n3. Business Rule Processing:\n   - Check user authorization:\n     a. VERIFY current user has administrator privileges\n     b. IF user lacks required privileges, THEN return error message \"Insufficient permissions to manage roles\"\n   - Verify system constraints:\n     a. CHECK if the system allows the requested permission combination\n     b. VERIFY the requested permissions do not conflict with system security policies\n     c. IF constraints are violated, THEN return error message \"Permission configuration violates system constraints\"\n   - Check role dependencies:\n     a. IDENTIFY any dependent roles or permissions that might be affected\n     b. VERIFY changes won't break existing permission structures\n     c. IF dependencies are compromised, THEN return error message \"Operation would break existing permission dependencies\"\n\n4. Core Operation Execution:\n   - Determine operation type:\n     a. IF roleId is provided, THEN prepare for role update\n     b. IF roleId is not provided but roleName is, THEN prepare for role creation\n     c. IF operation type cannot be determined, THEN return error message \"Invalid operation parameters\"\n   - Process role management:\n     a. FOR creating a new role:\n        i. CREATE new Role object with provided roleName\n        ii. ASSIGN the Role to the specified group\n        iii. ADD all roleValues to the Role\n        iv. STORE the new Role in the system\n     b. FOR updating an existing role:\n        i. RETRIEVE the existing Role using roleId\n        ii. IF role not found, THEN return error message \"Role not found\"\n        iii. UPDATE the Role with new permissions and values\n        iv. STORE the updated Role in the system\n     c. FOR deleting all roles from a group:\n        i. VERIFY deletion is explicitly requested\n        ii. REMOVE all roles associated with the specified group\n   - Handle transaction integrity:\n     a. ENSURE all changes are applied atomically\n     b. IF any operation fails, THEN revert all changes\n     c. LOG all permission changes for audit purposes\n\n5. Response Generation:\n   - For successful operations:\n     a. GENERATE success message with operation details\n     b. INCLUDE summary of applied permission changes\n     c. RETURN updated role information\n   - For failed operations:\n     a. GENERATE detailed error message\n     b. INCLUDE specific validation or business rule violation details\n     c. PROVIDE guidance on how to correct the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_roles",
+    "jforum_role_values"
+  ],
+  "validationRules": [
+    "Group ID must reference an existing group",
+    "Role name must be unique within the system",
+    "Role name cannot be empty",
+    "User must have administrator privileges to manage roles",
+    "Permission configuration must not violate system security constraints",
+    "Role values must be valid for the specified role type",
+    "Permission changes must not break existing role dependencies"
+  ],
+  "dbSeedingOperations": [
+    "Insert default system roles",
+    "Insert default administrator role with full permissions",
+    "Insert default moderator role with limited permissions",
+    "Insert default registered user role with basic permissions",
+    "Insert default guest role with minimal permissions"
+  ],
+  "schema": {
+    "PermissionSet": {
+      "type": "object",
+      "properties": {
+        "canAccess": {
+          "type": "boolean",
+          "description": "Determines if the role has basic access permission"
+        },
+        "roleTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of permission types assigned to the role"
+        }
+      }
+    },
+    "RoleValueCollection": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the role value"
+              },
+              "value": {
+                "type": "string",
+                "description": "Actual value for the role"
+              }
+            }
+          },
+          "description": "Collection of role values"
+        }
+      }
+    }
+  }
+}

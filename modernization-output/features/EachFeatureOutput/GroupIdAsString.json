@@ -1,0 +1,27 @@
+{
+  "featureName": "GroupIdAsString",
+  "description": "Converts an array of group IDs into a comma-separated string representation.",
+  "inputValues": [
+    "ids-object-IntArray"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the array of group IDs (ids) of type integer array\n   - This array contains the IDs of groups that need to be converted to a string\n   - All IDs are required; empty array is allowed\n\n2. Data Validation:\n   - Validate that the input is a valid array\n   - IF input array is null THEN\n     - Return an empty string or handle the null case appropriately\n   - Validate that all elements in the array are valid integer IDs\n   - IF any element is invalid THEN\n     - Skip the invalid element or handle the error appropriately\n\n3. Business Rule Processing:\n   - Check if the array is empty\n   - IF array is empty THEN\n     - Return an empty string\n   - Determine the format for the output string (comma-separated values without spaces)\n\n4. Core Operation Execution:\n   - Initialize an empty string buffer to store the result\n   - Process all elements except the last one:\n     - FOR each ID from index 0 to length-2:\n       - Append the current ID to the string buffer\n       - Append a comma separator\n   - Handle the last element separately to avoid trailing comma:\n     - IF array has at least one element THEN\n       - Append the last element (at index length-1) to the string buffer\n\n5. Response Generation:\n   - Return the final string containing comma-separated IDs\n   - The format will be \"id1,id2,id3,...,idN\" without any trailing comma\n   - IF the input array was empty THEN\n     - Return an empty string",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Input must be a valid array of integers",
+    "Empty array is allowed and will result in an empty string",
+    "Null input should be handled appropriately"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "IntArray": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "An array of integer group IDs"
+    }
+  }
+}

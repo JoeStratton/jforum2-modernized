@@ -1,0 +1,67 @@
+{
+  "featureName": "FindTopicsByDateRange",
+  "description": "Searches for topics within a specified date range.",
+  "inputValues": [
+    "fromDate-date-Topic",
+    "toDate-date-Topic",
+    "startFrom-number-SearchArgs",
+    "fetchCount-number-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect fromDate (mandatory): The beginning of the date range to search for topics\n   - Collect toDate (mandatory): The end of the date range to search for topics\n   - Collect startFrom (optional): The starting index for pagination (default: 0)\n   - Collect fetchCount (optional): Maximum number of results to return per page (default: 10)\n\n2. Data Validation:\n   - Validate fromDate:\n     - Must be a valid date format\n     - Cannot be null or empty\n     - Error message if invalid: \"From date must be a valid date format\"\n   - Validate toDate:\n     - Must be a valid date format\n     - Cannot be null or empty\n     - Must be equal to or after fromDate\n     - Error message if invalid: \"To date must be a valid date format and must not be before from date\"\n   - Validate startFrom:\n     - Must be a non-negative integer\n     - Default to 0 if not provided\n     - Error message if invalid: \"Start index must be a non-negative number\"\n   - Validate fetchCount:\n     - Must be a positive integer\n     - Default to system-defined value if not provided\n     - Cannot exceed maximum allowed fetch limit\n     - Error message if invalid: \"Fetch count must be a positive number not exceeding system limits\"\n\n3. Business Rule Processing:\n   - Check user permissions:\n     - Verify current user has permission to search topics\n     - Verify current user has access to forums containing the topics\n   - Apply system constraints:\n     - Check if date range exceeds maximum allowed search period\n     - IF date range > maximum allowed period THEN\n       - Adjust date range to maximum allowed period\n       - Add warning message to response\n     - Check if system is under high load:\n       - IF system load > threshold THEN\n         - Apply more restrictive limits to search parameters\n         - Add notification to response\n\n4. Core Operation Execution:\n   - Prepare search parameters:\n     - Format dates to system standard format\n     - Prepare query parameters including date range\n   - Execute search operation:\n     - Search for topics where creation date is between fromDate and toDate\n     - Apply pagination using startFrom and fetchCount parameters\n   - Process search results:\n     - Retrieve topic IDs matching the date range criteria\n     - Count total matches before pagination\n     - Apply pagination to limit results based on startFrom and fetchCount\n     - Load complete topic information for the paginated results\n     - IF no results found THEN\n       - Prepare empty result set with appropriate message\n\n5. Response Generation:\n   - Prepare success response:\n     - Include list of matching topics with relevant metadata\n     - Include pagination information (total results, current page)\n     - Include any warnings about adjusted search parameters\n   - For each topic in results, include:\n     - Topic identifier\n     - Topic title\n     - Creation date\n     - Last update date\n     - Author information\n     - Reply count\n     - View count\n     - Forum information\n   - Add search metadata:\n     - Actual search parameters used\n     - Total count of matching records\n     - Current page information",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "From date must be a valid date format",
+    "To date must be a valid date format",
+    "To date must not be before from date",
+    "Start index must be a non-negative number",
+    "Fetch count must be a positive number",
+    "Date range must not exceed maximum allowed search period",
+    "User must have permission to search topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "fromDate": {
+          "type": "date",
+          "description": "Beginning of the date range to search for topics"
+        },
+        "toDate": {
+          "type": "date",
+          "description": "End of the date range to search for topics"
+        },
+        "startFrom": {
+          "type": "number",
+          "description": "Starting index for pagination"
+        },
+        "fetchCount": {
+          "type": "number",
+          "description": "Maximum number of results to return per page"
+        }
+      },
+      "required": [
+        "fromDate",
+        "toDate"
+      ]
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "description": "List of topics matching the search criteria"
+        },
+        "totalRecords": {
+          "type": "number",
+          "description": "Total number of records matching the search criteria"
+        }
+      }
+    }
+  }
+}

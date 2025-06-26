@@ -1,0 +1,31 @@
+{
+  "featureName": "ActivateUserAccounts",
+  "description": "Activates selected user accounts from the pending activations list.",
+  "inputValues": [
+    "user_ids-object-UserIdList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect list of user IDs to be activated (user_ids)\n   - System retrieves current administrator credentials\n   \n2. Data Validation:\n   - Validate administrator has proper permissions to activate accounts\n     - IF administrator lacks activation permissions THEN\n       - Display error message \"Insufficient permissions to activate accounts\"\n       - Terminate process\n     - END IF\n   - Validate user_ids is not empty\n     - IF user_ids list is empty THEN\n       - Display message \"No accounts selected for activation\"\n       - Terminate process\n     - END IF\n   - Validate each user ID exists in the system\n     - FOR EACH user ID in user_ids\n       - Check if user ID exists in the system\n       - IF user ID does not exist THEN\n         - Log invalid user ID\n         - Continue to next user ID\n       - END IF\n     - END FOR\n   - Validate each user account is in pending activation status\n     - FOR EACH valid user ID\n       - Check if user account status is \"pending activation\"\n       - IF account is not in pending status THEN\n         - Log user ID as already activated or in different status\n         - Continue to next user ID\n       - END IF\n     - END FOR\n\n3. Business Rule Processing:\n   - Check system activation settings\n     - IF account activation feature is disabled in system settings THEN\n       - Display error message \"Account activation feature is currently disabled\"\n       - Terminate process\n     - END IF\n   - Check for any system maintenance that would prevent activation\n     - IF system is in maintenance mode THEN\n       - Display error message \"Cannot activate accounts during system maintenance\"\n       - Terminate process\n     - END IF\n   - Verify activation quota is not exceeded\n     - IF daily activation limit is reached THEN\n       - Display warning message \"Daily activation limit reached\"\n       - Prompt for confirmation to proceed\n     - END IF\n\n4. Core Operation Execution:\n   - Begin activation transaction\n     - FOR EACH valid user ID in pending status\n       - Update user account status from \"pending\" to \"active\"\n       - Record activation timestamp\n       - Record administrator who performed activation\n       - Update user permissions based on default group assignments\n       - IF activation fails for a user THEN\n         - Log failure reason\n         - Continue with next user\n       - END IF\n     - END FOR\n   - Send notifications\n     - FOR EACH successfully activated user\n       - Generate activation confirmation notification\n       - Queue notification for delivery to user\n     - END FOR\n   - Commit activation transaction\n   - Update system statistics for activated accounts\n\n5. Response Generation:\n   - Prepare activation summary\n     - Count of successfully activated accounts\n     - Count of accounts that failed activation\n     - List of specific accounts that failed with reasons\n   - Display success message \"X user accounts have been successfully activated\"\n   - Provide option to view pending activations list\n   - Provide option to view newly activated accounts",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Administrator must have activation permissions",
+    "At least one user ID must be selected for activation",
+    "Selected user accounts must exist in the system",
+    "Selected user accounts must be in pending activation status",
+    "System activation feature must be enabled",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserIdList": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "User ID to be activated"
+      }
+    }
+  }
+}

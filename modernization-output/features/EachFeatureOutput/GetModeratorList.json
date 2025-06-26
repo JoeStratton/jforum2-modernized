@@ -1,0 +1,61 @@
+{
+  "featureName": "GetModeratorList",
+  "description": "Retrieves the list of moderators for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number, mandatory) - The unique identifier of the forum\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     a. Check if a forum with the provided forumId exists in the system\n     b. If forum does not exist, prepare a \"Forum not found\" error message\n   - Verify user permissions:\n     a. Check if the current user has permission to view moderator information\n     b. If permission check fails, prepare an \"Access denied\" error message\n\n4. Core Operation Execution:\n   - Check cache for moderator information:\n     a. Look up moderator list in the cache using forumId as the key\n     b. IF moderator list is found in cache:\n        i. Return the cached moderator list\n     c. IF moderator list is not found in cache:\n        i. Acquire synchronization lock to prevent duplicate database queries\n        ii. Query the database for all moderators associated with the specified forum\n        iii. For each moderator found:\n            - Collect moderator's user information (id, name)\n            - Create a moderator info object with the collected data\n            - Add moderator info to the result list\n        iv. Store the moderator list in cache for future requests\n        v. Release synchronization lock\n     d. If no moderators are found, return an empty list\n     e. If an error occurs during retrieval, prepare appropriate error message and handle the exception\n\n5. Response Generation:\n   - Prepare success response:\n     a. Return the list of moderator information objects\n     b. Each moderator info object contains id and name\n   - Prepare error response if any validation or processing step failed:\n     a. Include specific error message\n     b. Include error code if applicable\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_moderator_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to view moderator information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModeratorInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the moderator"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the moderator"
+        }
+      }
+    },
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "categoryId": {
+          "type": "number",
+          "description": "Category ID the forum belongs to"
+        },
+        "isModerated": {
+          "type": "boolean",
+          "description": "Whether the forum is moderated"
+        }
+      }
+    }
+  }
+}

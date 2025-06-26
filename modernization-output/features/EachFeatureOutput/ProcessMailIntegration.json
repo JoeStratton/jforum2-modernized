@@ -1,0 +1,68 @@
+{
+  "featureName": "ProcessMailIntegration",
+  "description": "Processes emails from POP servers and integrates them into the forum system.",
+  "inputValues": [
+    "mailIntegration-object-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Retrieve all mail integration configurations from the system\n       1.1.1. Each configuration contains server details, authentication credentials, and forum mapping information\n       1.1.2. System-generated configurations are loaded automatically\n       1.1.3. No manual input is required during execution\n\n2. Data Validation\n   2.1. Validate each mail integration configuration\n       2.1.1. Verify server address is properly formatted\n       2.1.2. Confirm port number is valid\n       2.1.3. Ensure username and password are not empty\n       2.1.4. Validate that target forum for messages exists\n       2.1.5. IF any validation fails, log error and skip the current configuration\n\n3. Business Rule Processing\n   3.1. Check system state for mail processing\n       3.1.1. Verify if mail processing is already in progress\n       3.1.2. IF processing is already active, exit without performing operations\n       3.1.3. Set processing state flag to active\n   3.2. Prepare resources for mail processing\n       3.2.1. Initialize mail connector component\n       3.2.2. Initialize message parser component\n       3.2.3. Initialize post action component for forum integration\n\n4. Core Operation Execution\n   4.1. Process each mail integration configuration\n       4.1.1. FOR each mail integration configuration:\n           4.1.1.1. Configure connector with current mail integration settings\n           4.1.1.2. Open connection to mail server\n           4.1.1.3. Retrieve all unprocessed messages\n           4.1.1.4. Parse each message to extract content, subject, sender information\n           4.1.1.5. Convert parsed messages to forum post format\n           4.1.1.6. Create new forum posts based on message content\n           4.1.1.7. Link posts to appropriate topics based on subject lines\n           4.1.1.8. Associate posts with user accounts based on sender information\n           4.1.1.9. Close connection to mail server\n       4.1.2. IF any errors occur during processing:\n           4.1.2.1. Log detailed error information\n           4.1.2.2. Ensure connection is properly closed\n           4.1.2.3. Continue with next configuration\n\n5. Response Generation\n   5.1. Generate processing summary\n       5.1.1. Count of processed mail configurations\n       5.1.2. Number of messages successfully imported\n       5.1.3. Number of messages that failed processing\n   5.2. Update system state\n       5.2.1. Set processing state flag to inactive\n       5.2.2. Log completion of mail integration process\n   5.3. Error handling\n       5.3.1. Ensure all resources are properly released even if errors occur\n       5.3.2. Provide detailed logs for troubleshooting",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Mail server connection details must be valid and complete",
+    "Mail integration must be mapped to an existing forum",
+    "Only one mail processing job can run at a time",
+    "Each email must have a valid sender that can be mapped to a forum user",
+    "Email content must not be empty",
+    "Connection to mail server must be properly closed after processing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "type": "object",
+      "properties": {
+        "serverId": {
+          "type": "number",
+          "description": "Unique identifier for the mail server configuration"
+        },
+        "serverAddress": {
+          "type": "string",
+          "description": "POP server address"
+        },
+        "serverPort": {
+          "type": "number",
+          "description": "POP server port"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username for authentication"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for authentication"
+        },
+        "targetForumId": {
+          "type": "number",
+          "description": "Forum ID where messages will be posted"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this mail integration is active"
+        }
+      },
+      "required": [
+        "serverId",
+        "serverAddress",
+        "serverPort",
+        "username",
+        "password",
+        "targetForumId",
+        "enabled"
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ListPendingModerationItems",
+    "description": "Displays a list of categories with pending moderation items"
+  },
+  {
+    "featureName": "ViewForumModerationQueue",
+    "description": "Shows topics pending moderation for a specific forum"
+  },
+  {
+    "featureName": "ApproveModeratedPosts",
+    "description": "Approves selected posts from the moderation queue and updates forum statistics"
+  },
+  {
+    "featureName": "RejectModeratedPosts",
+    "description": "Rejects and deletes posts from the moderation queue including their attachments"
+  },
+  {
+    "featureName": "SaveModerationDecisions",
+    "description": "Processes moderation decisions and refreshes the forum view"
+  }
+]

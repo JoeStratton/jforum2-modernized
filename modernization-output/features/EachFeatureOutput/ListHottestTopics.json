@@ -1,0 +1,57 @@
+{
+  "featureName": "ListHottestTopics",
+  "description": "Displays a list of the hottest forum topics with pagination and access control.",
+  "inputValues": [
+    "page-number-Pagination",
+    "postsPerPage-number-SystemConfig",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pagination parameters:\n     a. Current page number (optional, defaults to 1)\n     b. Posts per page (system configuration value)\n   - Collect user information if accessing user-specific topics:\n     a. User ID (required for user-specific topic listing)\n\n2. Data Validation:\n   - Validate pagination parameters:\n     a. Ensure page number is a positive integer\n     b. Verify posts per page is within acceptable range\n   - IF accessing user-specific topics:\n     a. Validate user ID exists in the system\n     b. IF user not found:\n        i. Generate user not found message\n        ii. RETURN error response\n\n3. Business Rule Processing:\n   - Determine access permissions:\n     a. Check user's access rights to forums\n     b. Filter out forums and topics the user cannot access\n   - Determine topic listing type:\n     a. IF user ID is provided:\n        i. Set up for user-specific topic listing\n     b. ELSE:\n        i. Set up for general hottest topics listing\n   - Calculate pagination values:\n     a. Determine start index based on current page and items per page\n     b. Calculate total pages based on total topics and items per page\n\n4. Core Operation Execution:\n   - Retrieve topic data:\n     a. IF listing user-specific topics:\n        i. Fetch topics created by the specified user\n        ii. Count total topics by user for pagination\n     b. ELSE:\n        i. Fetch hottest topics from the system\n   - Process topic data:\n     a. For each topic:\n        i. Check if topic's forum is accessible to current user\n        ii. IF not accessible, remove from results\n        iii. IF accessible, retrieve forum information for the topic\n     b. Prepare topic data for display:\n        i. Format dates and times\n        ii. Calculate reply counts\n        iii. Determine if topic has new posts for current user\n   - Organize forum data:\n     a. Create mapping between topics and their respective forums\n     b. Include forum names and other relevant information\n\n5. Response Generation:\n   - Prepare display data:\n     a. Set page title based on listing type\n     b. Include processed topic list\n     c. Include forum information for each topic\n     d. Add pagination information:\n        i. Current page number\n        ii. Total pages\n        iii. Next/previous page links if applicable\n   - Format response:\n     a. IF successful:\n        i. Return topic listing with forum information and pagination\n     b. IF error occurred:\n        i. Return appropriate error message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Page number must be a positive integer",
+    "Posts per page must be within system-defined limits",
+    "User must exist in the system when listing user-specific topics",
+    "User must have access rights to view the requested topics",
+    "Topics must belong to forums the user has permission to access"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "userId": "number",
+      "postCount": "number",
+      "lastPostDate": "date",
+      "type": "number",
+      "status": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "lastPostDate": "date",
+      "topicCount": "number",
+      "postCount": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "postCount": "number"
+    },
+    "Pagination": {
+      "currentPage": "number",
+      "totalPages": "number",
+      "itemsPerPage": "number",
+      "totalItems": "number"
+    }
+  }
+}

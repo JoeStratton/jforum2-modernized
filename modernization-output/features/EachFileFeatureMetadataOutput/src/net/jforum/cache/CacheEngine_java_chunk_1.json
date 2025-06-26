@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "InitializeCache",
+    "description": "Initializes the cache engine system"
+  },
+  {
+    "featureName": "StopCache",
+    "description": "Stops the cache engine system"
+  },
+  {
+    "featureName": "AddCacheItem",
+    "description": "Adds a new object to the cache with a key"
+  },
+  {
+    "featureName": "AddCacheItemWithFqn",
+    "description": "Adds a new object to the cache with a fully qualified name and key"
+  },
+  {
+    "featureName": "GetCacheItem",
+    "description": "Retrieves an object from the cache using fully qualified name and key"
+  },
+  {
+    "featureName": "GetCacheNode",
+    "description": "Retrieves an entire cache node using fully qualified name"
+  },
+  {
+    "featureName": "GetCacheValues",
+    "description": "Retrieves all values from a specific cache node"
+  },
+  {
+    "featureName": "RemoveCacheItem",
+    "description": "Removes a specific item from the cache using fully qualified name and key"
+  },
+  {
+    "featureName": "RemoveCacheNode",
+    "description": "Removes an entire node from the cache using fully qualified name"
+  }
+]

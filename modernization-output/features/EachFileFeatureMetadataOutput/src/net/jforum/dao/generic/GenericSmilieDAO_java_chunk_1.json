@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "AddSmilie",
+    "description": "Creates a new smilie emoticon with code, URL, and disk name"
+  },
+  {
+    "featureName": "DeleteSmilie",
+    "description": "Removes a smilie emoticon by its ID"
+  },
+  {
+    "featureName": "UpdateSmilie",
+    "description": "Updates an existing smilie emoticon's properties"
+  },
+  {
+    "featureName": "GetAllSmilies",
+    "description": "Retrieves all smilie emoticons from the database"
+  },
+  {
+    "featureName": "GetSmilieById",
+    "description": "Retrieves a specific smilie emoticon by its ID"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "featureName": "CompleteRegistration",
+  "description": "Finalizes user registration and shows confirmation message.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, system-generated)\n   - Collect username (string, mandatory)\n   - System retrieves current session information\n\n2. Data Validation:\n   - Validate userId:\n     a. Verify userId is a positive integer\n     b. Verify userId exists in the system\n     c. Return error if validation fails\n   - Validate username:\n     a. Verify username is not empty\n     b. Verify username follows system format rules\n     c. Return error if validation fails\n   - Validate user session:\n     a. Verify session is active\n     b. Verify session belongs to the registering user\n     c. Return error if validation fails\n\n3. Business Rule Processing:\n   - Check if user account is already active:\n     a. IF user account is already active THEN\n        i. Return error message indicating account is already active\n     b. ELSE continue with activation process\n   - Update user statistics in the system:\n     a. Increment total user count\n     b. Update last registered user information\n     c. Verify statistics update was successful\n   - Prepare navigation links:\n     a. Generate profile page link\n     b. Generate home page link\n     c. Store links for inclusion in confirmation message\n\n4. Core Operation Execution:\n   - Update user record status:\n     a. Set user account status to active\n     b. Record activation timestamp\n     c. IF update fails THEN\n        i. Log error details\n        ii. Return system error message\n     d. ELSE continue with process\n   - Create user session:\n     a. Initialize new user session\n     b. Set session parameters (auto-login, user ID, username)\n     c. Set session timestamps (last visit, start time)\n     d. Add session to active sessions\n     e. IF session creation fails THEN\n        i. Log error details\n        ii. Return system error message\n     f. ELSE continue with process\n\n5. Response Generation:\n   - Prepare confirmation message:\n     a. Include personalized greeting with username\n     b. Include profile page link\n     c. Include home page link\n     d. Include any additional guidance for new users\n   - Display registration completion page:\n     a. Show confirmation message\n     b. Provide navigation options\n     c. Suggest next steps for the user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Username must not be empty",
+    "User must exist in the system",
+    "User session must be active",
+    "User session must belong to the registering user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's chosen display name"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates if the user account is active"
+        }
+      },
+      "required": [
+        "userId",
+        "username"
+      ]
+    }
+  }
+}

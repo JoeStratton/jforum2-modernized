@@ -1,0 +1,94 @@
+{
+  "featureName": "ImportPrivateMessages",
+  "description": "Migrates private messages between users from phpBB to JForum.",
+  "inputValues": [
+    "sourceDatabase-object-PhpBBDatabase",
+    "targetDatabase-object-JForumDatabase",
+    "configurationSettings-object-MigrationConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect source database connection details (required)\n   - Collect target database connection details (required)\n   - Collect configuration settings (required)\n     - Table prefix for source database (required)\n     - Text formatting rules for message conversion (required)\n     - Batch size for processing messages (optional, default: 50)\n\n2. Data Validation:\n   - Validate source database connection\n     - Check if connection can be established\n     - Verify required tables exist in source database\n     - IF connection fails or tables missing, THEN display error and exit\n   - Validate target database connection\n     - Check if connection can be established\n     - Verify required tables exist in target database\n     - IF connection fails or tables missing, THEN display error and exit\n   - Validate configuration settings\n     - Ensure table prefix is valid\n     - Verify text formatting rules are properly defined\n     - IF configuration is invalid, THEN display error and exit\n\n3. Business Rule Processing:\n   - Check system state\n     - Verify target database is prepared for import\n     - Ensure no conflicts exist with existing message IDs\n   - Verify dependencies\n     - Confirm user accounts have been migrated first\n     - Ensure user IDs match between systems\n     - IF user migration is incomplete, THEN display warning and confirm continuation\n   - Prepare text conversion rules\n     - Load formatting patterns for BBCode conversion\n     - Initialize text processing engine\n\n4. Core Operation Execution:\n   - Initialize progress tracking\n     - Count total private messages to be migrated\n     - Set up progress reporting mechanism\n   - Process private message records\n     - Retrieve messages from source database in batches\n     - FOR EACH message:\n       - Extract message ID, sender ID, recipient ID, and metadata\n       - Convert message text using formatting rules\n       - Map sender and recipient IDs to target system\n       - Insert message header into target message table\n       - Insert converted message content into message text table\n       - Update progress indicator\n     - END FOR\n   - Verify message integrity\n     - Count messages in target system\n     - Compare with source count\n     - IF counts don't match, THEN log discrepancy\n   - Update user message counters\n     - FOR EACH user with messages:\n       - Count new and unread messages\n       - Update user record with message counts\n     - END FOR\n\n5. Response Generation:\n   - Generate migration summary\n     - Total messages processed\n     - Success count\n     - Failure count with reasons\n     - Processing time\n   - Provide next steps\n     - Suggest verification process\n     - Recommend user notification about migrated messages\n   - Return completion status\n     - Success or failure indication\n     - Detailed log reference for troubleshooting if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "Source database must be accessible and contain valid phpBB tables",
+    "Target database must be accessible and contain valid JForum tables",
+    "User accounts must be migrated before private messages",
+    "Message text must be properly converted from phpBB format to JForum format",
+    "All message relationships between users must be preserved",
+    "Message read/unread status must be maintained",
+    "User message counters must be updated after migration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PhpBBDatabase": {
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "description": "Database connection string for phpBB database"
+        },
+        "tablePrefix": {
+          "type": "string",
+          "description": "Prefix used for phpBB tables"
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "JForumDatabase": {
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "description": "Database connection string for JForum database"
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "MigrationConfig": {
+      "type": "object",
+      "properties": {
+        "batchSize": {
+          "type": "number",
+          "description": "Number of messages to process in each batch"
+        },
+        "textFormatRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string"
+              },
+              "replacement": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

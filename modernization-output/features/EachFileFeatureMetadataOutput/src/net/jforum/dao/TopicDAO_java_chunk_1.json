@@ -1,0 +1,118 @@
+[
+  {
+    "featureName": "SelectTopicById",
+    "description": "Retrieves a specific topic by its ID with complete information"
+  },
+  {
+    "featureName": "SelectRawTopic",
+    "description": "Retrieves basic topic information without additional data like usernames"
+  },
+  {
+    "featureName": "SelectTopicsByForum",
+    "description": "Retrieves all topics associated with a specific forum"
+  },
+  {
+    "featureName": "SelectTopicTitlesByIds",
+    "description": "Retrieves topic titles for a collection of topic IDs"
+  },
+  {
+    "featureName": "SelectTopicsByForumWithPagination",
+    "description": "Retrieves paginated topics for a specific forum"
+  },
+  {
+    "featureName": "SelectTopicsByUser",
+    "description": "Retrieves topics created by a specific user with pagination"
+  },
+  {
+    "featureName": "CountUserTopics",
+    "description": "Counts the number of topics created by a specific user"
+  },
+  {
+    "featureName": "DeleteTopic",
+    "description": "Deletes a specific topic with moderation flag"
+  },
+  {
+    "featureName": "DeleteMultipleTopics",
+    "description": "Deletes multiple topics with moderation flag"
+  },
+  {
+    "featureName": "DeleteTopicsByForum",
+    "description": "Deletes all topics belonging to a specific forum"
+  },
+  {
+    "featureName": "UpdateTopic",
+    "description": "Updates topic information"
+  },
+  {
+    "featureName": "CreateTopic",
+    "description": "Creates a new topic and returns its ID"
+  },
+  {
+    "featureName": "IncrementTopicViews",
+    "description": "Increments the view count for a specific topic"
+  },
+  {
+    "featureName": "IncrementTopicReplies",
+    "description": "Increments the reply count for a specific topic"
+  },
+  {
+    "featureName": "DecrementTopicReplies",
+    "description": "Decrements the reply count for a specific topic"
+  },
+  {
+    "featureName": "ManageTopicSubscription",
+    "description": "Manages user subscriptions for topic notifications"
+  },
+  {
+    "featureName": "CheckUserSubscription",
+    "description": "Checks if a user is subscribed to a specific topic"
+  },
+  {
+    "featureName": "RemoveTopicSubscription",
+    "description": "Removes a user's subscription from a topic"
+  },
+  {
+    "featureName": "RemoveAllTopicSubscriptions",
+    "description": "Removes all subscriptions for a specific topic"
+  },
+  {
+    "featureName": "UpdateTopicReadStatus",
+    "description": "Updates the read status of a topic for a specific user"
+  },
+  {
+    "featureName": "LockUnlockTopics",
+    "description": "Locks or unlocks topics to prevent or allow new replies"
+  },
+  {
+    "featureName": "SelectRecentTopics",
+    "description": "Retrieves the most recent topics with a specified limit"
+  },
+  {
+    "featureName": "SelectHottestTopics",
+    "description": "Retrieves the most active/popular topics with a specified limit"
+  },
+  {
+    "featureName": "SetTopicModerationStatus",
+    "description": "Sets moderation status for topics in a forum or for a specific topic"
+  },
+  {
+    "featureName": "GetTopicPosters",
+    "description": "Retrieves all unique users who posted in a specific topic"
+  },
+  {
+    "featureName": "FindTopicsByDateRange",
+    "description": "Searches for topics within a specified date range"
+  },
+  {
+    "featureName": "ManageTopicPostIds",
+    "description": "Manages first and last post IDs for a topic"
+  },
+  {
+    "featureName": "FixTopicPostIds",
+    "description": "Fixes the first and last post IDs for a topic"
+  },
+  {
+    "featureName": "GetTopicNotificationUsers",
+    "description": "Retrieves users to be notified about new posts in a topic"
+  }
+]

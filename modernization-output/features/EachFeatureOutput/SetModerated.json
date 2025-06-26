@@ -1,0 +1,41 @@
+{
+  "featureName": "SetModerated",
+  "description": "Sets the moderation status for a forum category.",
+  "inputValues": [
+    "categoryId-number-Category",
+    "status-boolean-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect categoryId (mandatory, number): The identifier of the category to modify\n   - Collect status (mandatory, boolean): The new moderation status to set\n   - System will use current user session for authorization\n\n2. Data Validation:\n   - Validate categoryId:\n     a. Verify categoryId is a positive integer\n     b. Verify categoryId exists in the system\n     c. IF categoryId is invalid or not found, THEN return error message \"Invalid category identifier\"\n   - Validate status:\n     a. Verify status is a boolean value\n     b. IF status is not a valid boolean, THEN return error message \"Invalid moderation status value\"\n   - Validate user permissions:\n     a. Verify current user has administrator privileges\n     b. IF user lacks required permissions, THEN return error message \"Insufficient permissions to modify forum moderation settings\"\n\n3. Business Rule Processing:\n   - Check if the category is available for moderation changes:\n     a. Verify the category is active in the system\n     b. IF category is not active, THEN return error message \"Cannot modify moderation settings for inactive category\"\n   - Check if the moderation status is already set to the requested value:\n     a. Retrieve current moderation status for the category\n     b. IF current status equals requested status, THEN return message \"Category already has the requested moderation status\"\n\n4. Core Operation Execution:\n   - Update moderation status:\n     a. Set the moderation flag for the specified category to the new status value\n     b. IF status is set to true, THEN:\n        i. All new topics in this category will require approval before becoming visible\n        ii. Update related forum settings to reflect moderation requirements\n     c. IF status is set to false, THEN:\n        i. All new topics in this category will be automatically approved\n        ii. Update related forum settings to reflect automatic approval\n   - Update affected topics:\n     a. IF configuration requires it, update moderation status for existing topics in the category\n     b. Record the change in the system activity log\n     c. IF any error occurs during update, THEN:\n        i. Revert any partial changes\n        ii. Return error message \"Failed to update moderation status\"\n\n5. Response Generation:\n   - On success:\n     a. Return confirmation message \"Moderation status for category [categoryId] has been updated successfully\"\n     b. Include summary of affected forums and topics\n     c. Provide information about next steps for moderators\n   - On failure:\n     a. Return appropriate error message\n     b. Include troubleshooting information\n     c. Suggest alternative actions if applicable",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Category ID must be a positive integer",
+    "Category ID must exist in the system",
+    "Moderation status must be a boolean value",
+    "User must have administrator privileges to change moderation settings",
+    "Category must be active to modify its moderation settings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "moderated": "boolean"
+    },
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "moderated": "boolean",
+      "totalTopics": "number",
+      "totalPosts": "number"
+    }
+  }
+}

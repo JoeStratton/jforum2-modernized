@@ -1,0 +1,47 @@
+{
+  "featureName": "SelectPostsByUserWithPagination",
+  "description": "Retrieves paginated posts created by a specific user.",
+  "inputValues": [
+    "userId-number-User",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Unique identifier of the user whose posts are being retrieved\n   - Collect startFrom (mandatory): Starting position for pagination\n   - Collect count (mandatory): Number of posts to retrieve\n   - System will use these parameters to build a paginated result set\n\n2. Data Validation:\n   - Validate userId:\n      * Verify userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid or not found, THEN return appropriate error message\n   - Validate pagination parameters:\n      * Verify startFrom is a non-negative integer\n      * Verify count is a positive integer\n      * IF either parameter is invalid, THEN use system default values or return error\n\n3. Business Rule Processing:\n   - Check user access permissions:\n      * Verify the requesting user has permission to view the target user's posts\n      * IF permission check fails, THEN return access denied error\n   - Check forum access permissions:\n      * Retrieve list of forums the current user is allowed to access\n      * Only posts from these allowed forums will be included in results\n   - Check system resource availability:\n      * Verify the system can handle the requested pagination size\n      * IF count exceeds maximum allowed limit, THEN adjust to maximum allowed value\n\n4. Core Operation Execution:\n   - Calculate pagination boundaries:\n      * Determine the starting record position based on startFrom\n      * Determine the ending record position based on startFrom + count\n   - Retrieve posts:\n      * Fetch posts created by the specified user within the calculated boundaries\n      * Filter posts to only include those from forums the user has access to\n      * Include relevant post metadata (creation date, topic association, etc.)\n      * Sort posts according to system default sorting (typically by date, newest first)\n   - Process retrieved posts:\n      * Format post content for display\n      * Resolve any user-specific display preferences\n      * Create a structured list of post objects with all required information\n\n5. Response Generation:\n   - Prepare success response:\n      * Include the list of retrieved posts\n      * Include pagination metadata (current page, total posts, total pages)\n      * Include any relevant user information\n   - Handle empty results:\n      * IF no posts are found, THEN return empty list with appropriate message\n      * Include pagination metadata even for empty results\n   - Return the complete response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must exist in the system",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Requesting user must have permission to view the target user's posts",
+    "Posts must be filtered to only include those from forums the user has access to"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "userId": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "subject": "string",
+      "text": "string",
+      "creationDate": "date",
+      "editCount": "number",
+      "lastEditDate": "date",
+      "username": "string",
+      "postTime": "date"
+    },
+    "Pagination": {
+      "startFrom": "number",
+      "count": "number",
+      "totalRecords": "number",
+      "totalPages": "number"
+    }
+  }
+}

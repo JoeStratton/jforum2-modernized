@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "CreateFileItem",
+    "description": "Creates disk or memory-based file items for handling uploaded files based on configurable size threshold"
+  },
+  {
+    "featureName": "ConfigureFileStorage",
+    "description": "Manages configuration for temporary file storage location and size thresholds for uploaded content"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "AuthenticateRemoteUser",
+    "description": "Authenticates users by checking if request.getRemoteUser() is not null"
+  },
+  {
+    "featureName": "ValidateUserSession",
+    "description": "Validates if a user session is still valid based on remote user information"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "featureName": "ValidateCaptchaResponse",
+  "description": "Validates user's captcha response against the stored challenge.",
+  "inputValues": [
+    "userResponse-string-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user response (userResponse-string): The text entered by the user as their captcha solution\n   - System retrieves current captcha challenge from user session\n\n2. Data Validation:\n   - Validate userResponse:\n     a. Check if userResponse is not null or empty\n     b. Check if userResponse contains only valid characters\n     c. If validation fails, return appropriate error message\n\n3. Business Rule Processing:\n   - Check if captcha validation is enabled in system configuration:\n     a. IF captcha is required for registration OR captcha is required for posts THEN\n        i. Verify that a captcha challenge exists in the current user session\n        ii. IF no captcha challenge exists THEN\n            - Return error indicating captcha challenge is missing\n     b. ELSE\n        i. Skip validation and return success\n   - Check if case-insensitive validation is enabled:\n     a. IF case should be ignored THEN\n        i. Convert userResponse to lowercase for comparison\n\n4. Core Operation Execution:\n   - Compare user's response against the stored captcha challenge:\n     a. Pass userResponse to the captcha validation engine\n     b. Get validation result (boolean)\n   - Clean up resources:\n     a. Destroy the current captcha challenge from session\n     b. Release any associated resources\n\n5. Response Generation:\n   - Return validation result:\n     a. IF validation successful THEN\n        i. Return success status (true)\n     b. ELSE\n        i. Return failure status (false)\n   - Include appropriate message based on result",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User response must not be empty",
+    "Captcha challenge must exist in the user session if captcha validation is enabled",
+    "User response must match the expected solution for the captcha challenge"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "imageCaptcha": {
+          "type": "object",
+          "description": "The captcha challenge object stored in the user session"
+        },
+        "userResponse": {
+          "type": "string",
+          "description": "The text entered by the user as their captcha solution"
+        }
+      }
+    }
+  }
+}

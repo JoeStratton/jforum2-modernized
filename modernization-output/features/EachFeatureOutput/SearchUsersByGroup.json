@@ -1,0 +1,34 @@
+{
+  "featureName": "SearchUsersByGroup",
+  "description": "Searches and displays users filtered by their group membership.",
+  "inputValues": [
+    "group_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the group_id (number) from the user input\n   - The group_id is mandatory to filter users by group membership\n   - If no group_id is provided, the system should default to showing all users\n\n2. Data Validation:\n   - Validate that the group_id is a valid number\n   - Verify that the group_id corresponds to an existing group in the system\n   - IF group_id equals 0, THEN treat as a request to show all users\n   - IF group_id is invalid or does not exist, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify that the current user has permission to view users by group\n   - Check if the requested group exists in the system\n   - Determine the total number of users in the specified group for pagination purposes\n   - Calculate pagination parameters based on system configuration for users per page\n\n4. Core Operation Execution:\n   - Retrieve the list of users belonging to the specified group\n   - Apply pagination to limit the number of users displayed per page\n   - Sort the user list according to the system's default sorting criteria\n   - Prepare the group information for display in the selection interface\n   - Mark the selected group as active in the interface\n\n5. Response Generation:\n   - Format the user list for display with relevant user information\n   - Include pagination controls if the number of users exceeds the display limit\n   - Provide group selection interface with the current group marked as selected\n   - Display the total number of users found in the group\n   - Provide options for further actions on the displayed users",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a valid number",
+    "Group ID must correspond to an existing group in the system",
+    "User must have permission to view users by group",
+    "Pagination parameters must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "active": "boolean"
+    }
+  }
+}

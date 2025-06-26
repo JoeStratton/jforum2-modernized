@@ -1,0 +1,17 @@
+{
+  "featureName": "ListGroups",
+  "description": "Displays a list of all user groups in a tree structure.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection\n   - No user inputs required for this feature\n   - System will retrieve all group data automatically\n\n2. Data Validation\n   - No input validation required as this is a read-only operation\n   - System will verify user has appropriate permissions to view groups\n     - IF user does not have sufficient permissions THEN\n       - Display access denied message\n       - Terminate operation\n     - END IF\n\n3. Business Rule Processing\n   - System verifies the user session is active\n     - IF session is expired THEN\n       - Redirect to login page\n       - Terminate operation\n     - END IF\n   - System checks if groups data is accessible\n     - IF groups data cannot be accessed THEN\n       - Generate appropriate error message\n       - Terminate operation\n     - END IF\n\n4. Core Operation Execution\n   - System retrieves all group records from the data store\n     - Fetch all group records with their attributes\n     - Include group ID, name, description, and parent-child relationships\n   - System organizes groups into hierarchical tree structure\n     - Sort groups based on their parent-child relationships\n     - Groups with no parent are placed at the root level\n     - Child groups are nested under their respective parents\n     - Maintain proper indentation to represent hierarchy levels\n   - System prepares the display data\n     - Format group names and descriptions for display\n     - Apply appropriate styling for different hierarchy levels\n     - Include visual indicators for expandable/collapsible nodes\n\n5. Response Generation\n   - System generates the tree view display\n     - Present groups in hierarchical format with proper indentation\n     - Display group names as primary identifiers\n     - Include group descriptions where appropriate\n     - Provide visual cues for hierarchy levels\n   - System includes action options for each group\n     - Edit option for modifying group details\n     - Delete option for removing groups\n     - Permissions option for managing group access rights\n   - System provides option to add new groups\n     - Include 'Add Group' button or link\n   - IF no groups exist THEN\n     - Display appropriate message indicating no groups are available\n   - END IF",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to view group list",
+    "Group hierarchy must be properly displayed with parent-child relationships",
+    "All groups in the system must be included in the list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

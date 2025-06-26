@@ -1,0 +1,21 @@
+{
+  "featureName": "UndeleteUser",
+  "description": "Restores a previously deleted user account in the system.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The unique identifier of the deleted user to restore\n\n2. Data Validation:\n   - Validate userId:\n      a. Check if userId is provided\n         IF userId is missing or null THEN\n            Return error: \"User ID is required\"\n      b. Check if userId is a positive integer\n         IF userId is not a positive integer THEN\n            Return error: \"User ID must be a positive integer\"\n      c. Check if user exists in the system\n         IF user does not exist THEN\n            Return error: \"User not found in the system\"\n      d. Check if user is currently in deleted state\n         IF user is not in deleted state THEN\n            Return error: \"User is not in deleted state and cannot be undeleted\"\n\n3. Business Rule Processing:\n   - Verify system permissions:\n      a. Check if the current user has administrative privileges to undelete users\n         IF current user lacks required permissions THEN\n            Return error: \"Insufficient permissions to undelete users\"\n   - Verify system constraints:\n      a. Check if restoring the user would violate any system constraints\n         IF any system constraints would be violated THEN\n            Return error with specific constraint violation details\n\n4. Core Operation Execution:\n   - Restore user account:\n      a. Update user record to remove deleted status flag\n      b. Restore user's association with their groups\n         FOR EACH group the user belonged to before deletion DO\n            Reestablish user's membership in the group\n      c. Restore user's access permissions\n      d. Update any related records that may have been affected by deletion\n      e. IF any step fails during restoration THEN\n            Rollback all changes\n            Return error: \"Failed to restore user account\"\n\n5. Response Generation:\n   - On successful restoration:\n      a. Generate success response with restored user details\n      b. Include user ID and username in the response\n      c. Include timestamp of restoration\n      d. Return success message: \"User successfully restored\"\n   - On failure:\n      a. Generate detailed error response\n      b. Include specific reason for failure\n      c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be provided",
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User must be in deleted state to be undeleted",
+    "Current user must have administrative privileges to undelete users"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

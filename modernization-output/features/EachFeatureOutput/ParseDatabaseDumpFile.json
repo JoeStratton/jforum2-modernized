@@ -1,0 +1,19 @@
+{
+  "featureName": "ParseDatabaseDumpFile",
+  "description": "Parses SQL dump files by reading and filtering statements, removing comments and empty lines.",
+  "inputValues": [
+    "filePath-string-File"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the file path (filePath-string) to the SQL dump file that needs to be parsed\n   - Verify the file path is not empty or null\n   - Ensure the file exists in the specified location\n\n2. Data Validation:\n   - Validate that the provided file path is not empty\n     * IF file path is empty or null THEN\n       * Generate an error message indicating a valid file path is required\n       * Abort processing and return error\n   - Validate that the file exists at the specified location\n     * IF file does not exist THEN\n       * Generate an error message indicating the file could not be found\n       * Abort processing and return error\n   - Validate that the file is readable\n     * IF file is not readable THEN\n       * Generate an error message indicating permission issues\n       * Abort processing and return error\n\n3. Business Rule Processing:\n   - Initialize an empty collection to store valid SQL statements\n   - Prepare file reading resources\n     * Create a file reader for the specified file path\n     * Create a buffered reader to efficiently read the file line by line\n\n4. Core Operation Execution:\n   - Read the file line by line\n     * WHILE there are more lines to read DO\n       * Read the next line from the file\n       * Trim whitespace from the beginning and end of the line\n       * IF line is empty THEN\n         * Skip to the next line\n       * Check the first character of the line\n         * IF first character is '-' or '#' (indicating a comment) THEN\n           * Skip to the next line\n       * Check if the line ends with a semicolon\n         * IF line ends with semicolon THEN\n           * Remove the semicolon from the end of the line\n       * Add the processed line to the collection of valid SQL statements\n     * END WHILE\n   - Close all file reading resources\n     * Ensure the buffered reader is properly closed\n     * Handle any exceptions that occur during file closing\n\n5. Response Generation:\n   - Return the collection of valid SQL statements\n   - IF any errors occurred during processing THEN\n     * Return appropriate error information\n     * Include details about the nature of the error (file not found, permission issues, etc.)\n   - IF processing completed successfully THEN\n     * Return the collection of valid SQL statements\n     * Include the count of statements processed",
+  "databaseEntities": [],
+  "validationRules": [
+    "File path must not be empty",
+    "File must exist at the specified location",
+    "File must be readable",
+    "Empty lines in the file must be skipped",
+    "Lines starting with '-' or '#' (comments) must be skipped",
+    "Semicolons at the end of statements must be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

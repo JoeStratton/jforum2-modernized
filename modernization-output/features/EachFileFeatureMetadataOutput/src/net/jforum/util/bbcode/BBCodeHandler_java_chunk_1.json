@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ParseBBCodeConfiguration",
+    "description": "Parses BB code configuration from XML file to create BBCode handlers"
+  },
+  {
+    "featureName": "ManageBBCodeTags",
+    "description": "Manages BB code tags with their regex patterns and replacement templates"
+  },
+  {
+    "featureName": "FindBBCodeByName",
+    "description": "Retrieves specific BB code definitions by tag name"
+  }
+]

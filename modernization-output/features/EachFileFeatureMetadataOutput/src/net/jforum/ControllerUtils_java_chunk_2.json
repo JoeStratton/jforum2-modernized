@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "PrepareTemplateContext",
+    "description": "Sets up common variables used by templates with forum configuration and user context"
+  },
+  {
+    "featureName": "CheckAutoLogin",
+    "description": "Verifies user credentials for automatic login using cookies and database validation"
+  },
+  {
+    "featureName": "ConfigureUserSession",
+    "description": "Sets up user session with preferences and authentication details after successful login"
+  },
+  {
+    "featureName": "CheckSSO",
+    "description": "Authenticates users via Single Sign-On implementation and creates accounts if needed"
+  },
+  {
+    "featureName": "RefreshSession",
+    "description": "Updates user session data including last visit time and authentication status"
+  },
+  {
+    "featureName": "GetCookie",
+    "description": "Retrieves a cookie by name from the current request"
+  },
+  {
+    "featureName": "AddCookie",
+    "description": "Creates or updates a cookie with specified name, value and expiration settings"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "featureName": "FindMailIntegration",
+  "description": "Retrieves mail integration configuration for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number, mandatory) - Identifier of the forum to retrieve mail integration for\n   - No default values or special formats required\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     a. Check if a forum with the provided forumId exists in the system\n     b. IF forum does not exist, THEN return appropriate error message\n   - Verify user permissions:\n     a. Check if the current user has permission to view mail integration settings\n     b. IF user lacks permission, THEN return access denied error\n\n4. Core Operation Execution:\n   - Retrieve mail integration configuration:\n     a. Search for mail integration configuration associated with the provided forumId\n     b. IF configuration is found, THEN prepare complete configuration details including:\n        i. Forum email address\n        ii. POP server host\n        iii. POP username\n        iv. POP password (secured/masked)\n        v. POP port number\n        vi. SSL configuration status\n     c. IF no configuration is found, THEN prepare empty/null result\n\n5. Response Generation:\n   - Success scenario:\n     a. Return the complete mail integration configuration if found\n     b. Include forum identifier in the response for reference\n   - Error scenarios:\n     a. Return appropriate error message if forum does not exist\n     b. Return access denied message if user lacks permission\n     c. Return system error message if retrieval operation fails",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to view mail integration settings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "forumId": "number",
+      "forumEmail": "string",
+      "popHost": "string",
+      "popUsername": "string",
+      "popPassword": "string",
+      "popPort": "number",
+      "ssl": "boolean"
+    }
+  }
+}

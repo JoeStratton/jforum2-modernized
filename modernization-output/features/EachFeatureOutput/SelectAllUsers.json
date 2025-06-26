@@ -1,0 +1,55 @@
+{
+  "featureName": "SelectAllUsers",
+  "description": "Retrieves a paginated list of users with custom pagination logic for Oracle database.",
+  "inputValues": [
+    "startFrom-number-Pagination",
+    "count-number-Pagination",
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect pagination parameters:\n       1.1.1. startFrom (mandatory): The starting index for pagination.\n       1.1.2. count (mandatory): The number of records to retrieve.\n       1.1.3. groupId (optional): The group identifier to filter users by group.\n\n2. Data Validation:\n   2.1. Validate startFrom parameter:\n       2.1.1. IF startFrom is negative THEN\n             Return error message: \"Starting index cannot be negative.\"\n       2.1.2. IF startFrom is not a whole number THEN\n             Return error message: \"Starting index must be a whole number.\"\n   2.2. Validate count parameter:\n       2.2.1. IF count is negative THEN\n             Return error message: \"Count cannot be negative.\"\n       2.2.2. IF count is not a whole number THEN\n             Return error message: \"Count must be a whole number.\"\n   2.3. Validate groupId parameter (if provided):\n       2.3.1. IF groupId is provided THEN\n             IF groupId is not a positive integer THEN\n                 Return error message: \"Group ID must be a positive integer.\"\n             IF group with groupId does not exist THEN\n                 Return error message: \"Specified group does not exist.\"\n\n3. Business Rule Processing:\n   3.1. Determine the query type based on inputs:\n       3.1.1. IF groupId is provided THEN\n             Set operation mode to \"filter by group\"\n       3.1.2. ELSE\n             Set operation mode to \"all users\"\n   3.2. Determine the ending index for pagination:\n       3.2.1. IF count is greater than zero THEN\n             Set endIndex to startFrom + count\n       3.2.2. ELSE\n             Set endIndex to 0 (indicating no upper limit)\n   3.3. Check system state:\n       3.3.1. Verify user database is accessible\n       3.3.2. Verify current user has permission to view user list\n       3.3.3. IF operation mode is \"filter by group\" THEN\n             Verify current user has permission to view the specified group\n\n4. Core Operation Execution:\n   4.1. Prepare user retrieval operation:\n       4.1.1. IF operation mode is \"all users\" THEN\n             4.1.1.1. IF count is greater than 0 THEN\n                   Set up query with startFrom and endIndex limits\n                   Configure result set for scrollable navigation\n                   Execute query to retrieve limited user records\n                   Position cursor at the startFrom position in the result set\n             4.1.1.2. ELSE\n                   Set up query to retrieve all users without limits\n                   Execute query to retrieve all user records\n       4.1.2. ELSE IF operation mode is \"filter by group\" THEN\n             Set up query with groupId, startFrom, and count parameters\n   4.2. Execute the query to retrieve users:\n       4.2.1. Fetch user records from the database\n       4.2.2. IF query fails THEN\n             Log the error details\n             Return error message: \"Unable to retrieve user list.\"\n   4.3. Process the retrieved user records:\n       4.3.1. Format each user record for display\n       4.3.2. Remove sensitive information from user records\n       4.3.3. Sort users according to default or specified criteria\n       4.3.4. IF operation mode is \"all users\" AND count is greater than 0 THEN\n             Load additional karma information for each user\n\n5. Response Generation:\n   5.1. Prepare success response:\n       5.1.1. Include the list of retrieved users\n       5.1.2. Include pagination metadata:\n             - Total number of users in the system or group\n             - Current page information\n             - More pages indicator\n       5.1.3. IF operation mode is \"filter by group\" THEN\n             Include group information in the response\n   5.2. Return the formatted user list with pagination details",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Starting index must be a non-negative whole number",
+    "Count must be a non-negative whole number",
+    "Group ID, if provided, must be a positive integer",
+    "User must have permission to view the user list",
+    "User must have permission to view the specified group if filtering by group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "startFrom": {
+          "type": "number",
+          "description": "The starting index for pagination"
+        },
+        "count": {
+          "type": "number",
+          "description": "The number of records to retrieve"
+        }
+      },
+      "required": [
+        "startFrom",
+        "count"
+      ]
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "number",
+          "description": "The identifier of the group to filter users by"
+        }
+      },
+      "required": [
+        "groupId"
+      ]
+    }
+  }
+}

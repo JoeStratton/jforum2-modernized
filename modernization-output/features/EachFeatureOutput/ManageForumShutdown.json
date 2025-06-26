@@ -1,0 +1,55 @@
+{
+  "featureName": "ManageForumShutdown",
+  "description": "Handles graceful shutdown of forum resources including database connections.",
+  "inputValues": [
+    "shutdownRequest-object-ShutdownRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect shutdownRequest object containing:\n     - requestSource (mandatory): identifies the source initiating the shutdown\n     - shutdownReason (optional): reason for the shutdown\n     - immediateShutdown (mandatory): boolean flag indicating if shutdown should be immediate\n     - notifyUsers (optional): boolean flag indicating if users should be notified\n     - systemGeneratedTimestamp (system-generated): timestamp when shutdown was initiated\n\n2. Data Validation:\n   - Validate shutdownRequest object:\n     - Verify requestSource is not empty and is a valid source\n     - If shutdownReason is provided, ensure it's not exceeding maximum allowed length\n     - Verify immediateShutdown is a valid boolean value\n     - If notifyUsers is true, ensure system is in a state where notifications can be sent\n     - Error message should be generated for each invalid field\n\n3. Business Rule Processing:\n   - Verify system state allows for shutdown:\n     - Check if any critical operations are in progress\n     - Verify administrator privileges for the shutdown request\n     - Check if minimum uptime requirements have been met\n     - Ensure no data backup or maintenance tasks are currently running\n\n4. Core Operation Execution:\n   - Prepare for shutdown:\n     - IF notifyUsers is true, THEN prepare shutdown notification for active users\n     - Log the shutdown event with reason and timestamp\n   - Execute resource cleanup:\n     - Stop accepting new user connections\n     - Wait for existing requests to complete (unless immediateShutdown is true)\n     - Release all database connections:\n       - Call database implementation's connection release method\n       - Verify all connections are properly closed\n       - Log any connection closure failures\n     - Stop cache engine:\n       - Flush any pending cache writes to persistent storage\n       - Release cache resources\n       - Log cache shutdown status\n   - Handle component shutdown:\n     - Shutdown each forum component in proper sequence\n     - For each component:\n       - Attempt graceful shutdown\n       - Log component shutdown status\n       - IF component fails to shutdown AND immediateShutdown is false, THEN retry shutdown\n       - IF retry fails, log error but continue with next component\n   - Finalize shutdown:\n     - Record final system state\n     - Update shutdown status in system records\n     - Release remaining system resources\n\n5. Response Generation:\n   - Generate shutdown completion response:\n     - Include timestamp of completed shutdown\n     - List of successfully closed resources\n     - List of any resources that failed to close properly\n     - Recommendations for system restart if applicable\n     - IF any critical errors occurred during shutdown, include detailed error information\n     - Support contact information for shutdown-related issues",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Shutdown request must come from an authenticated administrator",
+    "All active database transactions must be completed or rolled back before shutdown",
+    "Cache engine must be properly stopped to prevent data loss",
+    "All database connections must be properly released",
+    "System must log all shutdown steps for audit purposes"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ShutdownRequest": {
+      "type": "object",
+      "properties": {
+        "requestSource": {
+          "type": "string",
+          "description": "Source initiating the shutdown"
+        },
+        "shutdownReason": {
+          "type": "string",
+          "description": "Reason for the shutdown"
+        },
+        "immediateShutdown": {
+          "type": "boolean",
+          "description": "Flag indicating if shutdown should be immediate"
+        },
+        "notifyUsers": {
+          "type": "boolean",
+          "description": "Flag indicating if users should be notified"
+        },
+        "systemGeneratedTimestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when shutdown was initiated"
+        }
+      },
+      "required": [
+        "requestSource",
+        "immediateShutdown"
+      ]
+    }
+  }
+}

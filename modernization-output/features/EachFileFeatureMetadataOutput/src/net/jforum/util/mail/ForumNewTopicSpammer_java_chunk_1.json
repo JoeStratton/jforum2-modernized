@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SendNewTopicNotifications",
+    "description": "Sends email notifications to subscribed users when a new forum topic is created"
+  },
+  {
+    "featureName": "GenerateTopicEmailContent",
+    "description": "Creates formatted email content with topic details, links, and post content for notifications"
+  },
+  {
+    "featureName": "CreateUnwatchForumLink",
+    "description": "Generates unsubscribe links allowing users to stop watching specific forums"
+  }
+]

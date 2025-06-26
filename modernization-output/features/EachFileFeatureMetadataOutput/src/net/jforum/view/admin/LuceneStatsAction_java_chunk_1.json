@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ListLuceneStats",
+    "description": "Displays statistics about the Lucene search index including status, document count, and index location"
+  },
+  {
+    "featureName": "CreateIndexDirectory",
+    "description": "Creates a new Lucene index directory for search functionality"
+  },
+  {
+    "featureName": "ReconstructSearchIndex",
+    "description": "Rebuilds the Lucene search index from scratch with configurable parameters"
+  },
+  {
+    "featureName": "CancelIndexing",
+    "description": "Stops an ongoing Lucene indexing process"
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "featureName": "GetFileSize",
+  "description": "Calculates the size of the uploaded file in bytes.",
+  "inputValues": [
+    "fileItem-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the FileItem object\n   - Determine if the file content is already cached in memory\n   - Identify the file storage location (memory or disk)\n\n2. Data Validation:\n   - Verify the FileItem object is not null\n   - Check if the file exists and is accessible\n   - Ensure the file has been properly uploaded and stored\n\n3. Business Rule Processing:\n   - Determine the appropriate method to calculate file size based on storage location:\n     a. IF file content is cached in memory:\n        - Use the cached content length\n     b. ELSE IF file is stored in memory but not cached:\n        - Retrieve the data from memory storage\n        - Calculate the length of the data\n     c. ELSE (file is stored on disk):\n        - Access the file from the disk storage location\n        - Calculate the file length from the disk file\n\n4. Core Operation Execution:\n   - Calculate the file size based on the determined method:\n     a. IF cached content exists:\n        - Return the length of the cached content array\n     b. ELSE IF file is in memory:\n        - Get the data from memory storage\n        - Return the length of the data array\n     c. ELSE:\n        - Access the file from disk\n        - Return the file length in bytes\n   - Convert the size to appropriate numeric format (long integer)\n\n5. Response Generation:\n   - Return the calculated file size in bytes as a long integer value\n   - IF any errors occurred during size calculation:\n     - Return appropriate error information\n     - Include details about the nature of the failure",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "FileItem object must not be null",
+    "File must be accessible for size calculation",
+    "File size must be returned as a non-negative long integer value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the file"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "integer",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored"
+        },
+        "cachedContent": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Cached contents of the file"
+        }
+      }
+    }
+  }
+}

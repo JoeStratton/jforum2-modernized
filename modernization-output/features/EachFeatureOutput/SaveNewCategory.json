@@ -1,0 +1,30 @@
+{
+  "featureName": "SaveNewCategory",
+  "description": "Creates a new forum category with moderation settings and security permissions.",
+  "inputValues": [
+    "categoryName-string-Category",
+    "isModerated-boolean-Category",
+    "securityGroups-object-SecurityGroups"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. categoryName (string, mandatory): The name for the new category\n     1.2. isModerated (boolean, mandatory): Flag indicating if the category should be moderated\n     1.3. securityGroups (array, optional): List of group IDs that have access to this category\n\n2. Data Validation:\n   2.1. Validate categoryName:\n      2.1.1. Check if categoryName is not empty\n      2.1.2. Check if categoryName length is within acceptable limits (3-100 characters)\n      2.1.3. IF validation fails, THEN display appropriate error message\n   2.2. Validate isModerated:\n      2.2.1. Ensure isModerated is a valid boolean value\n      2.2.2. IF validation fails, THEN use default value (false)\n   2.3. Validate securityGroups (if provided):\n      2.3.1. Verify each group ID exists in the system\n      2.3.2. IF any group ID is invalid, THEN remove it from the list\n\n3. Business Rule Processing:\n   3.1. Check system state:\n      3.1.1. Verify the user has administrative permissions to create categories\n      3.1.2. IF user lacks permissions, THEN display access denied message and terminate process\n   3.2. Check category constraints:\n      3.2.1. Verify the maximum number of categories has not been reached\n      3.2.2. IF maximum reached, THEN display limit error message and terminate process\n\n4. Core Operation Execution:\n   4.1. Create new category record:\n      4.1.1. Generate a new Category object with provided name\n      4.1.2. Set moderation status based on isModerated input\n      4.1.3. Assign default display order (typically at the end of the list)\n      4.1.4. Save the category to the database\n      4.1.5. Retrieve the generated category ID\n   4.2. Update repository:\n      4.2.1. Add the new category to the forum repository for runtime access\n   4.3. Set security permissions:\n      4.3.1. IF securityGroups is provided and not empty, THEN:\n         4.3.1.1. For each group ID in securityGroups:\n            - Create security role for category access\n            - Associate the role with the group\n            - Set the category ID as the role value\n      4.3.2. ELSE:\n         4.3.2.1. Apply default security settings based on system configuration\n   4.4. Update security repositories:\n      4.4.1. Clear security cache\n      4.4.2. Clear roles repository\n\n5. Response Generation:\n   5.1. Generate success response:\n      5.1.1. Include the newly created category ID\n      5.1.2. Include confirmation message\n   5.2. Prepare view:\n      5.2.1. Retrieve updated list of all categories\n      5.2.2. Display the category listing page with success message\n   5.3. Error handling:\n      5.3.1. IF any errors occurred during processing, THEN:\n         - Display appropriate error message\n         - Maintain any valid input for correction",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Category name must not be empty",
+    "Category name must be between 3 and 100 characters",
+    "User must have administrative permissions to create categories",
+    "Security groups must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SecurityGroups": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Group ID with access to the category"
+      }
+    }
+  }
+}

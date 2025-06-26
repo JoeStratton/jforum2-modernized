@@ -1,0 +1,27 @@
+{
+  "featureName": "UpdatePostText",
+  "description": "Updates the subject and text content of an existing forum post.",
+  "inputValues": [
+    "postId-number-Post",
+    "subject-string-Post",
+    "text-string-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. postId (mandatory): Unique identifier of the post to update\n     1.2. subject (mandatory): New subject line for the post\n     1.3. text (mandatory): New content text for the post\n     1.4. userId (system-generated): Identifier of the user performing the update\n\n2. Data Validation\n   - Validate all input fields:\n     2.1. Validate postId:\n         2.1.1. Check if postId is provided\n         2.1.2. Verify postId is a positive integer\n         2.1.3. Return error message if validation fails: \"Invalid post identifier\"\n     2.2. Validate subject:\n         2.2.1. Check if subject is provided\n         2.2.2. Verify subject is not empty after trimming\n         2.2.3. Verify subject length is within allowed limits (1-255 characters)\n         2.2.4. Return error message if validation fails: \"Subject cannot be empty and must be between 1-255 characters\"\n     2.3. Validate text:\n         2.3.1. Check if text is provided\n         2.3.2. Verify text is not empty after trimming\n         2.3.3. Verify text length is within allowed limits (minimum 1 character)\n         2.3.4. Return error message if validation fails: \"Post content cannot be empty\"\n\n3. Business Rule Processing\n   - Verify system state and permissions:\n     3.1. Check if the post exists in the system\n         3.1.1. IF post does not exist THEN\n             3.1.2. Return error message: \"Post not found\"\n     3.2. Verify user has permission to edit the post\n         3.2.1. Check if user is the original post author OR has moderator privileges\n         3.2.2. IF user lacks permission THEN\n             3.2.3. Return error message: \"You do not have permission to edit this post\"\n     3.3. Check if the post is locked or in a locked topic\n         3.3.1. IF post is locked THEN\n             3.3.2. Return error message: \"This post cannot be edited because it is locked\"\n     3.4. Check if editing time limit has expired (if applicable)\n         3.4.1. IF time limit for editing has passed AND user is not a moderator THEN\n             3.4.2. Return error message: \"The time limit for editing this post has expired\"\n\n4. Core Operation Execution\n   - Update the post content in the system:\n     4.1. Retrieve the existing post record\n         4.1.1. Load current post data including metadata\n     4.2. Update post subject\n         4.2.1. Replace current subject with new subject\n     4.3. Update post text content\n         4.3.1. Replace current text with new text\n     4.4. Update modification metadata\n         4.4.1. Set last edit timestamp to current time\n         4.4.2. Set last edit user ID to current user ID\n         4.4.3. Increment edit count\n     4.5. Save changes to the database\n         4.5.1. Update post record with new information\n         4.5.2. IF update fails THEN\n             4.5.3. Revert any partial changes\n             4.5.4. Return error message: \"Failed to update post content\"\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. IF update is successful THEN\n         5.1.1. Return success response with updated post details\n         5.1.2. Include post ID, subject, and confirmation message\n     5.2. IF update fails at any point THEN\n         5.2.1. Return error response with specific error message\n         5.2.2. Include guidance on how to resolve the issue if applicable",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post ID must exist in the system",
+    "Subject must not be empty",
+    "Subject must be between 1-255 characters",
+    "Post text content must not be empty",
+    "User must have permission to edit the post",
+    "Post must not be in a locked state",
+    "Time limit for editing must not have expired (if applicable)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "InsertBookmark",
+    "description": "Creates a new bookmark based on relation type (forum, topic, or user)"
+  },
+  {
+    "featureName": "AddForumBookmark",
+    "description": "Creates a bookmark for a specific forum with title and description"
+  },
+  {
+    "featureName": "AddTopicBookmark",
+    "description": "Creates a bookmark for a specific topic with title and description"
+  },
+  {
+    "featureName": "AddUserBookmark",
+    "description": "Creates a bookmark for a specific user with title and description"
+  },
+  {
+    "featureName": "SaveBookmark",
+    "description": "Saves a new bookmark with user-provided details and visibility settings"
+  },
+  {
+    "featureName": "UpdateBookmark",
+    "description": "Updates an existing bookmark's title, description, and visibility settings"
+  },
+  {
+    "featureName": "EditBookmark",
+    "description": "Displays form for editing an existing bookmark"
+  },
+  {
+    "featureName": "DeleteBookmark",
+    "description": "Removes a bookmark from the system"
+  },
+  {
+    "featureName": "ListBookmarks",
+    "description": "Displays all bookmarks for a specific user"
+  }
+]

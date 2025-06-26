@@ -1,0 +1,45 @@
+{
+  "featureName": "MakeSafeHtml",
+  "description": "Sanitizes HTML content by removing unsafe tags and attributes to prevent XSS attacks.",
+  "inputValues": [
+    "htmlContent-string-Content",
+    "sanitizationMode-string-Mode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HTML content to be sanitized (htmlContent-string-Content)\n   - Determine the sanitization mode (sanitizationMode-string-Mode)\n     - Valid modes: \"full\" (complete sanitization) or \"attributesOnly\" (only check attributes)\n     - Default mode is \"full\" if not specified\n   - System loads configuration for allowed HTML tags, attributes, and protocols\n\n2. Data Validation:\n   - Validate HTML content:\n     - Check if content is null or empty\n       - IF content is null or empty THEN return the content as-is without processing\n     - Check if content contains HTML tags\n       - IF no HTML tags are detected THEN return content as-is\n   - Validate sanitization mode:\n     - IF mode is not \"full\" or \"attributesOnly\" THEN default to \"full\"\n\n3. Business Rule Processing:\n   - Load system configuration settings:\n     - Retrieve list of allowed HTML tags from system configuration\n     - Retrieve list of allowed HTML attributes from system configuration\n     - Retrieve list of allowed URL protocols from system configuration\n   - Determine processing approach based on sanitization mode:\n     - IF mode is \"attributesOnly\" THEN prepare for attribute-only sanitization\n     - IF mode is \"full\" THEN prepare for complete HTML sanitization\n\n4. Core Operation Execution:\n   - Parse the HTML content into a structured format\n   - IF sanitization mode is \"full\":\n     - For each HTML node in the content:\n       - IF node is a text node:\n         - Escape any HTML-like characters (< and >)\n       - IF node is an HTML tag:\n         - Check if the tag is in the allowed tags list\n           - IF tag is allowed:\n             - Validate and sanitize all attributes of the tag\n             - Keep the tag with sanitized attributes\n           - IF tag is not allowed:\n             - Convert tag to escaped text to prevent execution\n     - Reconstruct the sanitized HTML content\n   - IF sanitization mode is \"attributesOnly\":\n     - For each HTML tag in the content:\n       - Validate all attributes against security rules:\n         - Remove event handler attributes (starting with \"on\")\n         - Remove attributes with newlines, carriage returns, or null characters\n         - Validate href and src attributes to ensure they use allowed protocols\n         - Check style attributes for potentially dangerous constructs\n       - Keep the tag with sanitized attributes\n     - Reconstruct the HTML content with sanitized attributes\n\n5. Response Generation:\n   - Return the sanitized HTML content\n   - IF any parsing errors occurred during processing:\n     - Log the error details\n     - Return an appropriate error message\n   - Include information about what was sanitized (optional for debugging)",
+  "databaseEntities": [],
+  "validationRules": [
+    "HTML content must be properly formatted for parsing",
+    "Sanitization mode must be either 'full' or 'attributesOnly'",
+    "HTML tags must be in the allowed tags list to be preserved",
+    "HTML attributes must be in the allowed attributes list to be preserved",
+    "URL protocols in href and src attributes must be in the allowed protocols list",
+    "Attributes with event handlers (starting with 'on') are not allowed",
+    "Attributes containing newlines, carriage returns, or null characters are not allowed",
+    "Style attributes must not contain parentheses to prevent JavaScript execution"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Content": {
+      "type": "object",
+      "properties": {
+        "htmlContent": {
+          "type": "string",
+          "description": "The HTML content to be sanitized"
+        }
+      }
+    },
+    "Mode": {
+      "type": "object",
+      "properties": {
+        "sanitizationMode": {
+          "type": "string",
+          "enum": [
+            "full",
+            "attributesOnly"
+          ],
+          "description": "The mode of sanitization to apply"
+        }
+      }
+    }
+  }
+}

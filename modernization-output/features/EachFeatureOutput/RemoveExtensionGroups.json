@@ -1,0 +1,27 @@
+{
+  "featureName": "RemoveExtensionGroups",
+  "description": "Deletes one or more attachment extension groups from the system.",
+  "inputValues": [
+    "extensionGroupIds-object-StringArray"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. extensionGroupIds (mandatory): Array of string identifiers for extension groups to be deleted\n\n2. Data Validation\n   - Validate extensionGroupIds input:\n     a. Check if extensionGroupIds is not null\n        IF extensionGroupIds is null THEN\n          Return error: \"Extension group IDs cannot be null\"\n     b. Check if extensionGroupIds array is not empty\n        IF extensionGroupIds array is empty THEN\n          Return error: \"At least one extension group ID must be provided\"\n     c. For each ID in extensionGroupIds:\n        i. Verify the ID is a valid numeric string\n           IF ID is not numeric THEN\n             Return error: \"Invalid extension group ID format: [ID]\"\n        ii. Verify the ID corresponds to an existing extension group\n            IF extension group with ID does not exist THEN\n              Return error: \"Extension group with ID [ID] does not exist\"\n\n3. Business Rule Processing\n   - Check for dependencies:\n     a. For each extension group ID:\n        i. Check if there are any extensions associated with this group\n           IF extensions exist for this group THEN\n             Return warning: \"Extension group [ID] has associated extensions that will also be removed\"\n     b. Check if removing these groups would leave the system without any valid extension groups\n        IF all extension groups would be removed AND no groups would remain THEN\n          Return error: \"Cannot remove all extension groups from the system\"\n\n4. Core Operation Execution\n   - Process deletion of extension groups:\n     a. Begin transaction\n     b. For each ID in extensionGroupIds:\n        i. Delete the extension group record\n        ii. Log the deletion operation with group details\n     c. If any deletion fails:\n        i. Rollback the transaction\n        ii. Return error: \"Failed to delete one or more extension groups\"\n     d. Commit the transaction\n\n5. Response Generation\n   - Generate success response:\n     a. Include count of successfully deleted extension groups\n     b. Include list of deleted extension group IDs\n     c. Include any warnings about associated extensions that were affected\n     d. Return success message: \"Successfully removed [count] extension groups\"",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Extension group IDs must not be null or empty",
+    "Extension group IDs must be valid numeric strings",
+    "Extension groups to be deleted must exist in the system",
+    "System must maintain at least one extension group after deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "StringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of string identifiers for extension groups to be deleted"
+    }
+  }
+}

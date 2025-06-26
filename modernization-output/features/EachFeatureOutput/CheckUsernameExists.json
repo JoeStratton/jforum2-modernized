@@ -1,0 +1,19 @@
+{
+  "featureName": "CheckUsernameExists",
+  "description": "Verifies if a username is already registered in the system.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the username (string) to be checked\n   - Username is a mandatory field\n   - No default values are provided\n\n2. Data Validation:\n   - Validate username format:\n     a. Check if username is not null or empty\n     b. Check if username meets minimum length requirements\n     c. Check if username contains only allowed characters\n   - IF any validation fails, THEN:\n     a. Generate appropriate error message\n     b. Return validation error response\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the user database is accessible\n     b. Ensure the username lookup functionality is available\n   - IF system is not in proper state, THEN:\n     a. Generate system unavailable error\n     b. Return error response\n\n4. Core Operation Execution:\n   - Search for the username in the user database:\n     a. Perform case-insensitive search for exact username match\n     b. Determine if the username exists in the system\n   - Record the result of the search operation\n   - IF search operation fails, THEN:\n     a. Generate appropriate error message\n     b. Return error response with details\n\n5. Response Generation:\n   - Prepare response with existence status:\n     a. IF username exists, THEN:\n        i. Set existence flag to true\n        ii. Include appropriate message indicating username is already taken\n     b. IF username does not exist, THEN:\n        i. Set existence flag to false\n        ii. Include appropriate message indicating username is available\n   - Return the final response with existence status",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Username must not be null or empty",
+    "Username must meet minimum length requirements",
+    "Username must contain only allowed characters",
+    "System must be able to access user database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

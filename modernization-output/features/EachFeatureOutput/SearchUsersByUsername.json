@@ -1,0 +1,20 @@
+{
+  "featureName": "SearchUsersByUsername",
+  "description": "Searches and displays users by matching username pattern.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the username search pattern from the user\n       1.1.1. Username pattern is optional\n       1.1.2. If not provided, system will default to listing all users\n\n2. Data Validation:\n   2.1. Validate the username search pattern\n       2.1.1. Check if username pattern is not null\n       2.1.2. Check if username pattern is not empty\n       2.1.3. IF username pattern is null or empty, THEN proceed to list all users\n\n3. Business Rule Processing:\n   3.1. Determine the search type based on input\n       3.1.1. IF username pattern is provided, THEN perform username search\n       3.1.2. IF username pattern is not provided, THEN perform standard user listing\n   3.2. Check user permissions\n       3.2.1. Verify current user has permission to search users\n       3.2.2. IF user does not have permission, THEN display access denied message\n\n4. Core Operation Execution:\n   4.1. Execute the search operation\n       4.1.1. IF username pattern is provided, THEN search for users matching the pattern\n           4.1.1.1. Retrieve all users whose username contains the search pattern\n           4.1.1.2. Sort results alphabetically by username\n       4.1.2. IF username pattern is not provided, THEN retrieve all users with pagination\n           4.1.2.1. Calculate pagination parameters (start position, items per page)\n           4.1.2.2. Retrieve users for the current page\n   4.2. Prepare the result data\n       4.2.1. Format user data for display\n       4.2.2. Include relevant user information (username, registration date, status)\n\n5. Response Generation:\n   5.1. Display search results to the user\n       5.1.1. Show the list of matching users\n       5.1.2. IF no users found, THEN display appropriate message\n       5.1.3. IF listing all users, THEN include pagination controls\n   5.2. Provide options for further actions\n       5.2.1. Allow selection of users for administrative actions\n       5.2.2. Provide option to perform a new search",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username search pattern must be a valid string",
+    "User must have permission to search users",
+    "Pagination parameters must be valid integers"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,40 @@
+{
+  "featureName": "ParseFriendlyURL",
+  "description": "Parses friendly URLs to extract module, action, and parameters from the request URI.",
+  "inputValues": [
+    "requestUri-string-Request",
+    "servletExtension-string-System",
+    "urlModel-object-URLComponents"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect requestUri (string, mandatory): The URI from the HTTP request\n   - Collect servletExtension (string, mandatory): The extension used for servlet requests\n   - System will generate urlModel (array, system-generated): Components of the URL after splitting\n\n2. Data Validation:\n   - Validate requestUri:\n      * Check if requestUri is not null or empty\n      * Verify requestUri ends with the servletExtension\n      * Error message if validation fails: \"Invalid request URI format\"\n   - Validate servletExtension:\n      * Check if servletExtension is not null or empty\n      * Error message if validation fails: \"Servlet extension not configured\"\n\n3. Business Rule Processing:\n   - Prepare requestUri for parsing:\n      * Remove the servlet extension from the end of requestUri\n      * Split the modified requestUri by \"/\" character to create urlModel array\n   - Verify URL structure:\n      * Check if urlModel has at least 3 components (baseLen)\n      * IF urlModel length < baseLen THEN\n         > Set module and action parameters to null\n         > Skip to Response Generation\n      * Define moduleIndex as 1 (position of module name in urlModel)\n      * Define actionIndex as 2 (position of action name in urlModel)\n\n4. Core Operation Execution:\n   - Construct pattern identifier:\n      * Create a string in format: \"[moduleName].[actionName].[numberOfParameters]\"\n      * Number of parameters = urlModel.length - baseLen\n   - Look up URL pattern:\n      * Search for matching pattern in pattern collection using the identifier\n      * IF matching pattern found THEN\n         > Check if pattern has enough variables for the parameters\n         > IF pattern.size >= (urlModel.length - baseLen) THEN\n            * FOR each variable in pattern:\n               - Extract corresponding value from urlModel\n               - Add parameter with name=pattern variable and value=urlModel component\n         > Add or replace \"module\" parameter with moduleName from urlModel\n         > Add \"action\" parameter with actionName from urlModel\n      * ELSE (no matching pattern)\n         > Set \"module\" parameter to null\n         > Set \"action\" parameter to null\n\n5. Response Generation:\n   - Return success with:\n      * Updated parameter collection containing:\n         > Module name (or null if not found)\n         > Action name (or null if not found)\n         > Any extracted parameters from the URL\n   - In case of errors:\n      * Return error details indicating the parsing failure\n      * Include the original requestUri for debugging",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request URI must not be null or empty",
+    "Request URI must end with the configured servlet extension",
+    "URL must have at least a module and action component to be parsed",
+    "URL pattern must exist in the pattern collection to extract parameters"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "URLComponents": {
+      "type": "object",
+      "properties": {
+        "moduleIndex": {
+          "type": "integer",
+          "description": "Index position of the module name in the URL array"
+        },
+        "actionIndex": {
+          "type": "integer",
+          "description": "Index position of the action name in the URL array"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of URL path components after splitting"
+        }
+      }
+    }
+  }
+}

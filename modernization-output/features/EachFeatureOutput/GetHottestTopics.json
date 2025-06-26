@@ -1,0 +1,40 @@
+{
+  "featureName": "GetHottestTopics",
+  "description": "Retrieves a list of the most popular forum topics from cache or database.",
+  "inputValues": [
+    "limit-number-Integer"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - limit (number): Maximum number of topics to retrieve (optional, system will use default if not provided)\n   - System will use configuration value for HOTTEST_TOPICS if limit is not provided\n\n2. Data Validation:\n   - Validate limit parameter:\n     - IF limit is provided THEN\n       - Verify limit is a positive integer\n       - IF limit is negative or zero THEN\n         - Return error message indicating limit must be positive\n     - ELSE\n       - Use system default value for hottest topics limit\n\n3. Business Rule Processing:\n   - Check system configuration:\n     - Verify if topic caching is enabled in system configuration\n     - Determine appropriate data source (cache or database) based on configuration\n   - Check cache status:\n     - IF topic caching is enabled THEN\n       - Check if hottest topics are already cached\n       - IF cache is empty or invalid THEN\n         - Mark cache as requiring refresh\n\n4. Core Operation Execution:\n   - Retrieve hottest topics:\n     - IF cache is valid and contains hottest topics THEN\n       - Retrieve topics list from cache\n     - ELSE\n       - Query database for hottest topics:\n         - Sort topics by popularity metrics (view count, reply count)\n         - Limit results to requested number of topics\n         - Format topic data for response\n       - IF caching is enabled THEN\n         - Store retrieved topics in cache for future requests\n         - Set cache expiration according to system configuration\n   - Process topic list:\n     - Ensure each topic contains required information:\n       - Topic ID\n       - Topic title\n       - Forum ID\n       - Creation date\n       - Last post date\n       - Number of replies\n       - Number of views\n       - Topic starter information\n       - Last poster information\n     - Create a new list to avoid modifying cached data\n\n5. Response Generation:\n   - Format response with hottest topics:\n     - Return list of topics sorted by popularity\n     - Include all relevant topic information\n   - Handle error cases:\n     - IF database access fails THEN\n       - Return appropriate error message\n       - Log system error\n     - IF no topics are found THEN\n       - Return empty list\n       - Include message indicating no hot topics are available",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Limit parameter must be a positive integer if provided",
+    "System must have access to topic data either through cache or database",
+    "Topic cache must be refreshed if empty or invalid",
+    "Each topic must contain complete information including popularity metrics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "replies": "number",
+      "views": "number",
+      "starter": {
+        "id": "number",
+        "username": "string"
+      },
+      "lastPoster": {
+        "id": "number",
+        "username": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/view/forum/JSAction.java\n\n Original Content: /*\n * Created on 27/06/2005 00:20:38\n */\npackage net.jforum.view.forum;\n\nimport net.jforum.Command;\nimport net.jforum.JForumExecutionContext;\n/**\n * Loads and parse javascript files with FTL statements.\n * \n * @author Rafael Steil\n * @version $Id: JSAction.java,v 1.5 2006/08/20 12:19:16 sergemaslyukov Exp $\n */\npublic class JSAction extends Command\n{\n\t/**\n\t * Loads and parses a javascript file. \n\t * The filename should be into the \"js\" directory and should\n\t * have the extension \".js\".\n\t * @see net.jforum.Command#list()\n\t */\n\tpublic void list() \n\t{\n\t\tJForumExecutionContext.setContentType(\"text/javascript\");\n\t\t\n\t\tString filename = this.request.getParameter(\"js\");\n\t\t\n\t\tthis.templateName = \"js/\" + filename + \".js\";\n\t}\n}",
+  "metadata": {
+    "fileId": "JSAction_java_chunk_1",
+    "fileName": "JSAction.java",
+    "filePath": "src/net/jforum/view/forum/JSAction.java"
+  }
+}

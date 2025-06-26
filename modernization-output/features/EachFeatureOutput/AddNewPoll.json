@@ -1,0 +1,48 @@
+{
+  "featureName": "AddNewPoll",
+  "description": "Creates a new poll with options for a topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "label-string-Poll",
+    "length-number-Poll",
+    "options-object-PollOptions"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. topicId (number): The identifier of the topic to which the poll belongs\n     b. label (string): The text description or question for the poll\n     c. length (number): The duration in days for which the poll remains active\n     d. options (array): List of poll options for voting\n       - Each option must contain text (string) describing the choice\n\n2. Data Validation:\n   a. Topic Validation:\n      - Verify topicId exists in the system\n      - Verify topic is active and available for polls\n      - IF topic does not exist or is not active THEN\n         - Return error message \"Invalid or inactive topic\"\n   \n   b. Poll Content Validation:\n      - Verify label is not empty\n      - Verify label length is within acceptable limits (5-255 characters)\n      - Verify length is a positive number\n      - IF any validation fails THEN\n         - Return appropriate error message\n   \n   c. Options Validation:\n      - Verify at least 2 options are provided\n      - Verify each option has non-empty text\n      - Verify each option text is within acceptable limits (1-255 characters)\n      - Verify no duplicate option texts exist\n      - IF any validation fails THEN\n         - Return appropriate error message\n\n3. Business Rule Processing:\n   a. Topic Poll Eligibility Check:\n      - Verify topic does not already have an active poll\n      - IF topic already has a poll THEN\n         - Return error message \"Topic already has an active poll\"\n   \n   b. User Permission Check:\n      - Verify current user has permission to create polls\n      - IF user lacks permission THEN\n         - Return error message \"Insufficient permissions to create poll\"\n\n4. Core Operation Execution:\n   a. Poll Creation:\n      - Create new poll record with:\n         - Provided topicId\n         - Provided label\n         - Current system date as start time\n         - Provided length (duration)\n      - Generate and assign unique identifier for the poll\n   \n   b. Options Creation:\n      - FOR EACH option in the options list:\n         - Create new poll option record with:\n            - Generated poll identifier\n            - Sequential option identifier\n            - Option text\n            - Initialize vote count to zero\n      - Link all options to the created poll\n\n5. Response Generation:\n   a. Success Response:\n      - Return success status\n      - Include created poll identifier\n      - Include confirmation message \"Poll successfully created\"\n      - Include summary of poll details (topic, question, number of options)\n   \n   b. Error Response:\n      - IF any operation fails during creation THEN\n         - Return error status\n         - Include specific error message\n         - Include guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_polls",
+    "jforum_poll_options",
+    "jforum_poll_voters"
+  ],
+  "validationRules": [
+    "Topic must exist and be active",
+    "Poll label must not be empty",
+    "Poll label must be between 5 and 255 characters",
+    "Poll length must be a positive number",
+    "Poll must have at least 2 options",
+    "Each poll option must have non-empty text",
+    "Each poll option text must be unique",
+    "Each poll option text must be between 1 and 255 characters",
+    "Topic must not already have an active poll",
+    "User must have permission to create polls"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PollOptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The text description of the poll option"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "minItems": 2
+    }
+  }
+}

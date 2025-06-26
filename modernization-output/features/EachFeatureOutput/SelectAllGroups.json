@@ -1,0 +1,35 @@
+{
+  "featureName": "SelectAllGroups",
+  "description": "Retrieves all groups in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all groups without filtering parameters\n\n2. Data Validation:\n   - Verify user has appropriate permissions to view groups\n   - IF user does not have sufficient permissions THEN\n     - Generate appropriate access denied message\n     - Terminate process\n   - END IF\n\n3. Business Rule Processing:\n   - Check system state to ensure group data is accessible\n   - IF system is in maintenance mode THEN\n     - Generate system unavailable message\n     - Terminate process\n   - END IF\n   - Verify group repository is available\n   - IF group repository is unavailable THEN\n     - Generate repository unavailable message\n     - Log system error\n     - Terminate process\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve all group records from the data store\n   - Sort groups according to system default ordering (typically by name or ID)\n   - IF no groups exist in the system THEN\n     - Prepare empty result set\n   - ELSE\n     - Prepare result set with all group data\n   - END IF\n   - Apply any system-level filtering rules to the result set\n   - Format group data for presentation\n\n5. Response Generation:\n   - Prepare success response containing:\n     - Complete list of groups with their properties\n     - Total count of groups retrieved\n     - Any pagination metadata if applicable\n   - IF operation failed at any point THEN\n     - Generate error response with appropriate message\n     - Include troubleshooting information\n   - END IF",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have permission to view groups",
+    "System must not be in maintenance mode",
+    "Group repository must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group's purpose"
+        }
+      }
+    }
+  }
+}

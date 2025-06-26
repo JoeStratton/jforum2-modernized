@@ -1,0 +1,77 @@
+{
+  "featureName": "CheckSSO",
+  "description": "Authenticates users via Single Sign-On implementation and creates accounts if needed.",
+  "inputValues": [
+    "request-object-RequestContext",
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the user session object containing current session information\n   - Collect the HTTP request object containing SSO authentication data\n   - System configuration settings for SSO implementation class\n   - System configuration settings for email and password attributes\n\n2. Data Validation:\n   - Validate SSO implementation class is properly configured\n     * IF SSO implementation class is not found or invalid THEN\n       * Throw configuration error\n       * Log error details\n       * End process\n   - Validate request object contains necessary authentication data\n     * IF request is null THEN\n       * Throw invalid request error\n       * End process\n\n3. Business Rule Processing:\n   - Instantiate the configured SSO implementation class\n   - Attempt to authenticate the user through SSO implementation\n     * Pass the request object to the SSO authenticator\n     * Retrieve username from SSO authenticator\n   - Verify authentication result\n     * IF username is null or empty THEN\n       * Mark user session as anonymous\n       * End authentication process\n     * ELSE\n       * Continue to user verification\n\n4. Core Operation Execution:\n   - Check if authenticated user exists in the system\n     * IF user does not exist THEN\n       * Retrieve email from session context using configured attribute name\n         * IF email is not found THEN\n           * Use default email from system configuration\n       * Retrieve password from session context using configured attribute name\n         * IF password is not found THEN\n           * Use default password from system configuration\n       * Register new user with retrieved username, password, and email\n         * Create user record in database\n         * Assign default user groups and permissions\n     * ELSE\n       * Retrieve existing user information\n   - Configure user session with authenticated user data\n     * Copy user data to session\n     * Check if user has an existing session\n       * IF existing session found THEN\n         * Store existing session data\n         * Remove old session\n         * Set last visit time based on previous session\n       * ELSE\n         * Set last visit time to current time\n     * Mark session as authenticated\n     * Set auto-login flag\n     * Load user's language preferences\n\n5. Response Generation:\n   - Return configured user session with authentication status\n   - IF authentication successful THEN\n     * Session contains user information and permissions\n     * User is marked as logged in\n   - ELSE\n     * Session is marked as anonymous\n     * Basic session data is maintained",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "SSO implementation class must be properly configured",
+    "Request object must contain valid authentication data",
+    "Username must be provided by SSO implementation for successful authentication",
+    "User email must be available from session or default configuration",
+    "User password must be available from session or default configuration"
+  ],
+  "dbSeedingOperations": [
+    "Default system configuration values for SSO implementation class",
+    "Default system configuration values for email and password attributes",
+    "Default email address for new SSO users",
+    "Default password for new SSO users"
+  ],
+  "schema": {
+    "RequestContext": {
+      "properties": {
+        "sessionContext": {
+          "type": "object",
+          "description": "Session context containing attributes and session ID"
+        },
+        "remoteAddr": {
+          "type": "string",
+          "description": "IP address of the client"
+        },
+        "cookies": {
+          "type": "array",
+          "description": "HTTP cookies from the request"
+        }
+      }
+    },
+    "UserSession": {
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "description": "User ID of the authenticated user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the authenticated user"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Date and time of the user's last visit"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Unique session identifier"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP address associated with the session"
+        },
+        "isAnonymous": {
+          "type": "boolean",
+          "description": "Flag indicating if the session is anonymous"
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "description": "Flag indicating if auto-login is enabled"
+        }
+      }
+    }
+  }
+}

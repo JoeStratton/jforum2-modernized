@@ -1,0 +1,72 @@
+{
+  "featureName": "FinishInstallation",
+  "description": "Completes installation process and prepares system for first use.",
+  "inputValues": [
+    "language-string-SystemConfig",
+    "database-string-DatabaseConfig",
+    "dbHost-string-DatabaseConfig",
+    "dbUser-string-DatabaseConfig",
+    "dbName-string-DatabaseConfig",
+    "dbPort-string-DatabaseConfig",
+    "dbPassword-string-DatabaseConfig",
+    "dbEncoding-string-DatabaseConfig",
+    "usePool-boolean-DatabaseConfig",
+    "forumLink-string-SystemConfig",
+    "siteLink-string-SystemConfig",
+    "dbdatasource-string-DatabaseConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect all installation configuration parameters:\n     a. System configuration parameters (language, forumLink, siteLink)\n     b. Database configuration parameters (database type, host, user, name, port, password, encoding)\n     c. Connection pool settings (usePool, dbdatasource)\n   - All parameters should be previously collected and stored in session\n\n2. Data Validation:\n   - Validate system directory permissions:\n     a. Check if configuration directories are writable\n     b. IF directories are not writable THEN\n        i. Display error message\n        ii. Halt installation process\n     c. ELSE continue with installation\n   - Validate database configuration:\n     a. Verify database connection parameters are valid\n     b. IF database connection fails THEN\n        i. Display database error message\n        ii. Halt installation process\n     c. ELSE mark database configuration as passed\n\n3. Business Rule Processing:\n   - Process database setup:\n     a. IF tables creation has not been completed THEN\n        i. Create database tables\n        ii. IF table creation fails THEN\n           - Display table creation error message\n           - Rollback changes\n           - Halt installation process\n        iii. ELSE mark table creation as passed\n     b. IF data import has not been completed THEN\n        i. Import initial data into tables\n        ii. IF data import fails THEN\n           - Display data import error message\n           - Rollback changes\n           - Halt installation process\n        iii. ELSE mark data import as passed\n     c. Update administrator password\n        i. IF password update fails THEN\n           - Display admin update error message\n           - Rollback changes\n           - Halt installation process\n     d. Store support project information\n\n4. Core Operation Execution:\n   - Configure system settings:\n     a. Remove temporary user configuration files\n     b. Fix modules mapping:\n        i. Remove installation module from active modules\n        ii. Save updated module configuration\n     c. Set system global parameters:\n        i. Generate and set security hash sequence\n        ii. Set forum and site links\n        iii. Set default language\n        iv. Mark system as installed\n     d. Save installation configuration\n     e. Restart system globals\n\n5. Response Generation:\n   - Prepare completion response:\n     a. Set template to installation finished view\n     b. Include forum link in context\n     c. Include language setting in context\n     d. Include success message and next steps\n   - Clean up session data:\n     a. Remove installation session data\n     b. Prepare system for first use",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Configuration directories must be writable",
+    "Database connection must be established successfully",
+    "Database tables must be created without errors",
+    "Initial data must be imported without errors",
+    "Administrator password must be updated successfully",
+    "System global parameters must be configured properly",
+    "Installation configuration must be saved successfully"
+  ],
+  "dbSeedingOperations": [
+    "Import initial data from database-specific SQL dump file",
+    "Create administrator account with updated password",
+    "Store support project information"
+  ],
+  "schema": {
+    "SystemConfig": {
+      "language": "string",
+      "forumLink": "string",
+      "siteLink": "string"
+    },
+    "DatabaseConfig": {
+      "database": "string",
+      "dbHost": "string",
+      "dbUser": "string",
+      "dbName": "string",
+      "dbPort": "string",
+      "dbPassword": "string",
+      "dbEncoding": "string",
+      "usePool": "boolean",
+      "dbdatasource": "string"
+    }
+  }
+}

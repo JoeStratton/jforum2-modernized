@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "FillPollFromRequest",
+    "description": "Creates a new Poll object from HTTP request parameters including options and poll duration"
+  }
+]

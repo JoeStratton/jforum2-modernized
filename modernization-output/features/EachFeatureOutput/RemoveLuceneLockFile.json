@@ -1,0 +1,17 @@
+{
+  "featureName": "RemoveLuceneLockFile",
+  "description": "Removes index lock files to prevent access conflicts in the search system.",
+  "inputValues": [
+    "indexDirectory-string-Directory"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect indexDirectory (string, mandatory): The directory path where the index files are stored\n   - System will use default directory if not explicitly provided\n\n2. Data Validation:\n   - Validate indexDirectory existence:\n     a. Check if the directory path exists\n     b. Verify the system has read/write permissions to the directory\n     c. IF directory does not exist or is not accessible, THEN generate appropriate error message\n   - Validate index structure:\n     a. Verify the directory contains valid index files\n     b. IF directory does not contain valid index structure, THEN log warning but continue process\n\n3. Business Rule Processing:\n   - Check lock status:\n     a. Determine if the index is currently locked\n     b. IF index is not locked, THEN no action is needed, proceed to success response\n     c. IF index is locked, THEN proceed with lock removal\n   - Verify system state:\n     a. Check if any indexing operations are currently in progress\n     b. IF operations are in progress, THEN evaluate if force unlock is appropriate\n     c. Log the lock removal attempt with reason\n\n4. Core Operation Execution:\n   - Lock file identification:\n     a. Locate the lock file in the index directory\n     b. Verify the lock file is a valid index lock and not another file type\n   - Lock removal process:\n     a. Attempt to unlock the index\n     b. Handle potential file system errors during unlock operation\n     c. IF unlock fails, THEN retry with escalated permissions if possible\n     d. IF unlock still fails after retry, THEN prepare detailed error information\n   - Post-removal verification:\n     a. Verify the lock has been successfully removed\n     b. Update system state to reflect unlocked status\n     c. IF verification fails, THEN log the issue and prepare error response\n\n5. Response Generation:\n   - Success response:\n     a. Generate confirmation that lock file was successfully removed\n     b. Include timestamp of the operation\n     c. Provide information about the unlocked index\n   - Error response:\n     a. Generate detailed error information if lock removal failed\n     b. Include specific error codes and messages\n     c. Provide troubleshooting suggestions based on error type\n     d. Include system administrator contact information if applicable",
+  "databaseEntities": [],
+  "validationRules": [
+    "Index directory must exist and be accessible",
+    "System must have appropriate permissions to modify the index directory",
+    "Lock file must be a valid index lock file",
+    "No active indexing operations should be in progress during lock removal"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

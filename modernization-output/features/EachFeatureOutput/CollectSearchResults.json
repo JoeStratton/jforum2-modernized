@@ -1,0 +1,54 @@
+{
+  "featureName": "CollectSearchResults",
+  "description": "Collects and processes search results from the search index, retrieving post data and highlighting matched content.",
+  "inputValues": [
+    "searchArgs-object-SearchArgs",
+    "searchHits-object-Hits",
+    "searchQuery-object-Query"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search arguments (searchArgs) containing:\n     * startFrom: starting position for results\n     * fetchCount: number of results to retrieve\n   - Collect search hits (searchHits) containing:\n     * Document references matching the search criteria\n     * Total number of matches available\n   - Collect search query (searchQuery) containing:\n     * The original search terms and parameters\n\n2. Data Validation:\n   - Validate search arguments:\n     * Ensure startFrom is a non-negative integer\n     * Ensure fetchCount is a positive integer\n     * IF either validation fails, THEN return appropriate error message\n   - Validate search hits:\n     * Ensure search hits object is not null\n     * Ensure hits length is accessible\n     * IF validation fails, THEN return appropriate error message\n   - Validate search query:\n     * Ensure query object is properly formed\n     * IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Determine actual number of results to process:\n     * Calculate effective fetch count as minimum of requested fetch count and available hits\n     * IF effective fetch count is zero, THEN return empty result list\n   - Prepare for post ID extraction:\n     * Initialize array to store post IDs\n     * Calculate end index for iteration\n\n4. Core Operation Execution:\n   - Extract post IDs from search hits:\n     * FOR each document from startFrom to (startFrom + fetchCount) or hits length (whichever is smaller):\n       * Retrieve document from hits collection\n       * Extract post ID from document\n       * Store post ID in array\n   - Retrieve complete post data:\n     * Query database to get full post information for all extracted post IDs\n     * FOR each retrieved post:\n       * Create text highlighter using the search query\n       * Process post text to identify matching fragments\n       * IF matching fragment found, THEN replace post text with highlighted fragment\n       * ELSE keep original post text\n\n5. Response Generation:\n   - Prepare final result list containing:\n     * Post objects with highlighted text showing search term matches\n     * Each post containing its ID, text, and associated metadata\n   - Return the processed post list to the caller\n   - IF any exceptions occur during processing, THEN:\n     * Capture exception details\n     * Generate appropriate error response\n     * Include support information for troubleshooting",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Search arguments must contain valid startFrom and fetchCount values",
+    "Search hits object must not be null",
+    "Search query must be properly formed",
+    "Post IDs must be valid integers",
+    "Retrieved posts must contain text content for highlighting"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "startFrom": {
+          "type": "number",
+          "description": "Starting position for results"
+        },
+        "fetchCount": {
+          "type": "number",
+          "description": "Number of results to retrieve"
+        }
+      }
+    },
+    "Hits": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "number",
+          "description": "Total number of hits found"
+        },
+        "doc": {
+          "type": "function",
+          "description": "Method to retrieve document at specified index"
+        }
+      }
+    },
+    "Query": {
+      "type": "object",
+      "description": "Search query containing search terms and parameters"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "GetGroupHierarchy",
+    "description": "Retrieves the complete hierarchical structure of groups with parent-child relationships"
+  },
+  {
+    "featureName": "ProcessSubgroups",
+    "description": "Recursively processes group hierarchies by finding and attaching child groups to their parents"
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "featureName": "ConfigureFileStorage",
+  "description": "Manages configuration for temporary file storage location and size thresholds for uploaded content.",
+  "inputValues": [
+    "repository-object-FileRepository",
+    "sizeThreshold-number-SizeThreshold"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. repository (optional): The directory where files will be stored\n     b. sizeThreshold (optional): The size threshold in bytes\n   - System will use default values if inputs are not provided:\n     a. Default repository: System temporary directory\n     b. Default size threshold: 10240 bytes (10KB)\n\n2. Data Validation\n   - Validate repository input:\n     a. IF repository is provided THEN\n        i. Check if repository path is valid\n        ii. Verify if repository directory exists\n        iii. Verify if repository directory is writable\n        iv. IF any validation fails THEN\n            - Generate appropriate error message\n            - Request valid repository path\n     b. IF repository is not provided THEN\n        i. Use system default temporary directory\n\n   - Validate size threshold input:\n     a. IF size threshold is provided THEN\n        i. Verify size threshold is a positive number\n        ii. Verify size threshold is within acceptable range\n        iii. IF validation fails THEN\n             - Generate appropriate error message\n             - Request valid size threshold\n     b. IF size threshold is not provided THEN\n        i. Use default size threshold (10240 bytes)\n\n3. Business Rule Processing\n   - Check system constraints:\n     a. Verify system has sufficient disk space in repository location\n     b. Verify system has appropriate permissions to create files in repository\n     c. IF repository is system default AND not accessible THEN\n        i. Notify user of permission issues\n        ii. Suggest alternative repository location\n   - Validate configuration compatibility:\n     a. Check if size threshold is appropriate for expected file uploads\n     b. Warn if size threshold is set too low for typical usage\n     c. Check if repository has sufficient space for expected usage\n\n4. Core Operation Execution\n   - Apply configuration settings:\n     a. Set the repository location for file storage\n        i. IF custom repository provided THEN use provided location\n        ii. ELSE use system default temporary directory\n     b. Set the size threshold for memory vs. disk storage\n        i. IF custom threshold provided THEN use provided value\n        ii. ELSE use default threshold (10240 bytes)\n     c. Update the file storage configuration with new settings\n     d. Initialize the storage system with updated configuration\n     e. Verify configuration was applied successfully\n\n5. Response Generation\n   - Generate success response:\n     a. Confirmation message that configuration was updated\n     b. Summary of applied configuration settings:\n        i. Repository location (path)\n        ii. Size threshold (in bytes)\n     c. Provide recommendations if configuration may cause issues:\n        i. Warning if threshold is unusually high or low\n        ii. Warning if repository space is limited\n   - IF configuration failed THEN:\n     a. Generate detailed error message\n     b. Provide troubleshooting steps\n     c. Suggest alternative configuration options",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Repository path must be a valid directory path",
+    "Repository directory must exist and be accessible",
+    "Repository directory must have write permissions",
+    "Size threshold must be a positive integer",
+    "Size threshold must be appropriate for expected file sizes"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileRepository": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Directory path where files will be stored"
+        },
+        "isWritable": {
+          "type": "boolean",
+          "description": "Indicates if the directory has write permissions"
+        }
+      }
+    },
+    "SizeThreshold": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Size threshold in bytes"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement (bytes, KB, MB)",
+          "enum": [
+            "bytes",
+            "KB",
+            "MB"
+          ]
+        }
+      }
+    }
+  }
+}

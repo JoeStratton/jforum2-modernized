@@ -1,0 +1,60 @@
+{
+  "featureName": "ExtractFileAttachments",
+  "description": "Extracts file attachments from multipart requests with proper header parsing.",
+  "inputValues": [
+    "contentType-string-Request",
+    "requestSize-number-Request",
+    "inputStream-object-InputStream",
+    "headerEncoding-string-Request",
+    "sizeMax-number-Configuration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect contentType (string) from the request headers\n   - Collect requestSize (number) representing the total size of the request\n   - Collect inputStream (object) containing the raw request data\n   - Collect headerEncoding (string) for parsing headers\n   - Collect sizeMax (number) representing the maximum allowed request size\n\n2. Data Validation:\n   - Validate request size:\n     a. IF requestSize is -1 (unknown)\n        THEN reject the request with \"unknown size\" error message\n     b. IF sizeMax is defined (not negative) AND requestSize exceeds sizeMax\n        THEN reject the request with \"size exceeds allowed range\" error message\n   - Validate content type:\n     a. Extract boundary parameter from contentType\n     b. IF boundary is not found\n        THEN reject the request with \"no multipart boundary found\" error message\n\n3. Business Rule Processing:\n   - Prepare for multipart processing:\n     a. Create a collection to store extracted file items\n     b. Convert boundary string to appropriate byte representation\n     c. Initialize multipart stream processor with input stream and boundary\n     d. Set header encoding for proper character interpretation\n\n4. Core Operation Execution:\n   - Process multipart content:\n     a. Skip preamble section of the multipart content\n     b. WHILE more parts exist in the multipart content:\n        i. Read and parse headers for the current part\n        ii. Extract field name from headers\n        iii. IF field name exists:\n             1. Determine content type of the part\n             2. IF content type indicates nested multipart content (multipart/mixed):\n                a. Extract sub-boundary from content type\n                b. Process nested multipart content:\n                   - WHILE more sub-parts exist:\n                     * Parse sub-part headers\n                     * IF file name exists in headers:\n                       - Create file item with appropriate attributes\n                       - Read body data into file item\n                       - Add file item to collection\n                     * ELSE:\n                       - Discard body data (non-file content)\n                c. Reset boundary to original boundary\n             3. ELSE (regular part):\n                a. Create appropriate file item based on headers\n                b. Read body data into file item\n                c. Add file item to collection\n        iv. ELSE (no field name):\n             1. Skip this part by discarding body data\n        v. Check for next boundary\n   - Handle any I/O errors during processing:\n     a. IF I/O error occurs:\n        i. Convert to appropriate exception with descriptive message\n\n5. Response Generation:\n   - Return collection of extracted file items\n   - Each file item contains:\n     a. Field name from the request\n     b. File name (if applicable)\n     c. Content type\n     d. Indicator whether it's a form field or file\n     e. The actual file data",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Request size must be known (not -1)",
+    "Request size must not exceed maximum allowed size if defined",
+    "Content type must contain a valid multipart boundary",
+    "Headers must be properly formatted with name-value pairs",
+    "File attachments must have valid content disposition",
+    "Maximum header size must not be exceeded"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "binary",
+          "description": "Raw binary data stream"
+        }
+      }
+    },
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "Name of the form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Original name of the uploaded file"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the content"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether this item is a regular form field or a file"
+        },
+        "content": {
+          "type": "binary",
+          "description": "The file content data"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "featureName": "GetRecentTopics",
+  "description": "Retrieves a list of the most recent forum topics from cache or database.",
+  "inputValues": [
+    "limit-number-TopicLimit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the maximum number of topics to retrieve (limit)\n   - If limit is not provided, use system configuration value for recent topics\n\n2. Data Validation:\n   - Validate that limit is a positive integer\n   - IF limit is negative or zero THEN\n     - Set limit to default system configuration value\n   - IF limit exceeds maximum allowed value THEN\n     - Cap limit to maximum allowed value\n\n3. Business Rule Processing:\n   - Check if topic caching is enabled in system configuration\n   - IF caching is enabled THEN\n     - Check if recent topics are already cached\n   - ELSE\n     - Skip cache check and proceed to database retrieval\n\n4. Core Operation Execution:\n   - IF caching is enabled AND recent topics exist in cache THEN\n     - Retrieve recent topics list from cache\n     - Return a copy of the cached list to prevent modification of cached data\n   - ELSE\n     - Query database for most recent topics\n     - Sort topics by last post date in descending order\n     - Limit results to requested number of topics\n     - IF caching is enabled THEN\n       - Store retrieved topics in cache for future use\n     - Return the list of recent topics\n\n5. Response Generation:\n   - Format the list of topics for display\n   - Include for each topic:\n     - Topic ID\n     - Topic title\n     - Forum ID\n     - Creation date\n     - Last post date\n     - Number of replies\n     - Number of views\n     - Topic starter information\n     - Last poster information\n   - Return the formatted list of recent topics",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Limit must be a positive integer",
+    "Limit cannot exceed system-defined maximum value",
+    "User must have permission to view topics",
+    "Only topics from publicly accessible forums should be included",
+    "Topics from restricted forums should only be visible to authorized users"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "replies": "number",
+      "views": "number",
+      "starter": "object",
+      "lastPoster": "object"
+    }
+  }
+}

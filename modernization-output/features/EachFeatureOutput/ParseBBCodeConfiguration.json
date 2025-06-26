@@ -1,0 +1,47 @@
+{
+  "featureName": "ParseBBCodeConfiguration",
+  "description": "Parses BB code configuration from XML file to create BBCode handlers.",
+  "inputValues": [
+    "configPath-string-Configuration",
+    "bbCodeConfig-object-BBCodeConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect configPath (string): Path to the BB code configuration file\n   - Collect bbCodeConfig (object): Configuration object containing BB code settings\n     - configDir (string): Directory containing configuration files\n     - Optional: parserOptions (object): Additional parsing options\n\n2. Data Validation:\n   - Validate configPath:\n     - Check if configPath is not empty or null\n     - Verify the path format is valid\n     - IF configPath is invalid THEN generate appropriate error message\n   - Validate bbCodeConfig:\n     - Check if bbCodeConfig is not null\n     - Verify configDir exists within bbCodeConfig\n     - IF bbCodeConfig is invalid THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Determine configuration file location:\n     - Construct full path to BB code configuration file using configDir and filename\n     - Check if configuration file exists\n     - IF file does not exist THEN check if resource exists in system path\n     - IF neither file nor resource exists THEN generate error message\n   - Initialize data structures:\n     - Create collection for regular BB codes\n     - Create collection for \"always process\" BB codes\n     - Prepare parsing environment\n\n4. Core Operation Execution:\n   - Parse XML configuration file:\n     - Initialize XML parser\n     - Read configuration file content\n     - FOR each BB code tag in configuration:\n       - Extract tag attributes (name, removeQuotes, alwaysProcess)\n       - Extract regex pattern for matching\n       - Extract replacement pattern\n       - Create BB code object with extracted information\n       - IF alwaysProcess attribute is true THEN add to always process collection\n       - ELSE add to regular BB codes collection\n     - Handle any parsing exceptions\n   - Process parsed BB codes:\n     - Validate all BB code entries for required fields\n     - Check for duplicate tag names\n     - Verify regex patterns are valid\n\n5. Response Generation:\n   - Create BB code handler result object:\n     - Include collection of regular BB codes\n     - Include collection of \"always process\" BB codes\n     - Include lookup methods for finding BB codes by name\n   - Generate success response:\n     - Include counts of loaded BB codes\n     - Include status information\n   - IF any errors occurred during parsing:\n     - Generate error response with details\n     - Include information about problematic entries",
+  "databaseEntities": [],
+  "validationRules": [
+    "Configuration path must not be empty",
+    "Configuration directory must exist",
+    "BB code configuration file must be accessible",
+    "BB code tags must have a name attribute",
+    "BB code tags must have valid regex patterns",
+    "BB code tags must have replacement patterns"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCodeConfig": {
+      "type": "object",
+      "properties": {
+        "configDir": {
+          "type": "string",
+          "description": "Directory containing configuration files"
+        },
+        "parserOptions": {
+          "type": "object",
+          "description": "Additional parsing options",
+          "properties": {
+            "removeQuotes": {
+              "type": "boolean",
+              "description": "Whether to remove quotes from BB code tags"
+            },
+            "alwaysProcess": {
+              "type": "boolean",
+              "description": "Whether to always process certain BB code tags"
+            }
+          }
+        }
+      },
+      "required": [
+        "configDir"
+      ]
+    }
+  }
+}

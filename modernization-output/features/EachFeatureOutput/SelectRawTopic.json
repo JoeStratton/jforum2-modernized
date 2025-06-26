@@ -1,0 +1,77 @@
+{
+  "featureName": "SelectRawTopic",
+  "description": "Retrieves basic topic information without additional data like usernames.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (number, mandatory) to identify the topic to retrieve\n   - No optional fields required\n   - No default values needed\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the system is operational\n     b. Verify the database connection is active\n   - Verify resource availability:\n     a. Ensure the topics database is accessible\n     b. Check if the user has permission to view topics\n\n4. Core Operation Execution:\n   - Retrieve topic data:\n     a. Fetch only the basic topic information from the topics table\n     b. Do not retrieve associated user information\n     c. Do not retrieve post content or other related data\n     d. IF topic with specified ID exists:\n        i. Collect topic data including topic ID, title, status, creation date, and other basic attributes\n     e. ELSE:\n        i. Prepare for \"topic not found\" response\n        ii. Log the failed retrieval attempt\n\n5. Response Generation:\n   - Success response:\n     a. Return the topic object with basic information\n     b. Include topic ID, title, status, and other basic attributes\n   - Error response:\n     a. IF topic not found:\n        i. Return appropriate \"topic not found\" message\n     b. IF system error occurred:\n        i. Return error details\n        ii. Include support information",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic ID must reference an existing topic",
+    "User must have permission to view topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "status": {
+          "type": "number",
+          "description": "Status code of the topic (locked, unlocked, etc.)"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this topic belongs to"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in this topic"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "ID of the first post in this topic"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Count of replies in this topic"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Count of views for this topic"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the topic was created"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the topic is moderated"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of the topic"
+        },
+        "voteId": {
+          "type": "number",
+          "description": "ID of the associated vote/poll if any"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "forumId"
+      ]
+    }
+  }
+}

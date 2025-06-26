@@ -1,0 +1,79 @@
+{
+  "featureName": "GetSessionInformation",
+  "description": "Retrieves information about all sessions, logged sessions, and session counts.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current session context for data retrieval\n\n2. Data Validation:\n   - Verify cache system is initialized and available\n   - IF cache is null THEN\n     2.1. Log warning message\n     2.2. Return appropriate error response\n   - END IF\n\n3. Business Rule Processing:\n   - Verify session data access permissions\n   - Check if current user has administrative privileges to view session data\n   - IF user does not have required permissions THEN\n     3.1. Generate access denied response\n     3.2. Log unauthorized access attempt\n     3.3. Return error response\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve session information:\n     4.1. Acquire synchronization lock on session data to ensure thread safety\n     4.2. Collect all active sessions from the cache system\n     4.3. Collect all logged-in user sessions from the cache system\n     4.4. Calculate session counts:\n       4.4.1. Retrieve logged user count from cache\n       4.4.2. Retrieve anonymous user count from cache\n       4.4.3. Calculate total user count (sum of logged and anonymous users)\n     4.5. Release synchronization lock\n   - Process session data for presentation:\n     4.6. Filter out system sessions if applicable\n     4.7. Sort sessions based on predefined criteria (e.g., login time, username)\n     4.8. Format session data for display\n\n5. Response Generation:\n   - Prepare response with session information:\n     5.1. Include total number of active sessions\n     5.2. Include breakdown of logged vs. anonymous users\n     5.3. Include detailed list of all sessions with relevant attributes\n     5.4. Include detailed list of logged sessions with relevant attributes\n   - Format response according to display requirements\n   - Return complete session information package",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Cache system must be initialized before retrieving session information",
+    "User must have appropriate permissions to view session data",
+    "Session counts must accurately reflect the number of active sessions",
+    "Session data must be protected with proper synchronization"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Session": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "User identifier associated with the session"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the logged-in user"
+        },
+        "isLogged": {
+          "type": "boolean",
+          "description": "Indicates if the session belongs to a logged-in user"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Timestamp of the last activity in the session"
+        },
+        "isBot": {
+          "type": "boolean",
+          "description": "Indicates if the session belongs to a web crawler or bot"
+        }
+      }
+    },
+    "SessionSummary": {
+      "type": "object",
+      "properties": {
+        "totalSessions": {
+          "type": "integer",
+          "description": "Total number of active sessions"
+        },
+        "loggedUsers": {
+          "type": "integer",
+          "description": "Number of logged-in users"
+        },
+        "anonymousUsers": {
+          "type": "integer",
+          "description": "Number of anonymous users"
+        },
+        "allSessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/Session"
+          },
+          "description": "List of all active sessions"
+        },
+        "loggedSessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/Session"
+          },
+          "description": "List of sessions for logged-in users"
+        }
+      }
+    }
+  }
+}

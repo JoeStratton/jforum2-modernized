@@ -1,0 +1,62 @@
+{
+  "featureName": "LoadKarma",
+  "description": "Loads karma status for a list of users.",
+  "inputValues": [
+    "users-object-UserList"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect list of User objects (users)\n     - Each User object must contain at minimum a user ID\n     - The list may contain one or more User objects\n     - The list must not be null\n\n2. Data Validation\n   - Validate the user list input\n     - IF the user list is null or empty THEN\n       - Return an empty result list\n       - Log appropriate warning message\n     - FOR EACH user in the list\n       - Verify user object has valid ID\n       - IF any user has invalid ID THEN\n         - Skip that user\n         - Log warning about skipped user\n\n3. Business Rule Processing\n   - Verify system access permissions\n     - Check if current operation is allowed to access karma data\n     - IF access is not permitted THEN\n       - Log access violation attempt\n       - Return empty result list\n   - Verify karma feature is enabled in system settings\n     - IF karma feature is disabled THEN\n       - Return original user list without karma data\n       - Log information message about disabled feature\n\n4. Core Operation Execution\n   - Initialize result list to store users with karma data\n   - FOR EACH valid user in the input list\n     - Retrieve user's total karma value from karma data store\n     - Update the user object with karma information\n     - Add the updated user to the result list\n     - IF karma retrieval fails for a user THEN\n       - Set default karma value (0)\n       - Log error about karma retrieval failure\n       - Continue processing remaining users\n\n5. Response Generation\n   - Return the list of users with karma data\n   - Include the following in each user object:\n     - Original user information\n     - Total karma points\n     - Karma rating status (positive/negative/neutral)\n   - IF any errors occurred during processing\n     - Include error information in response\n     - Provide partial results where available",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User list must not be null",
+    "Each user must have a valid ID",
+    "Karma feature must be enabled in system settings",
+    "Current operation must have permission to access karma data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the user"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's display name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address"
+          },
+          "deleted": {
+            "type": "integer",
+            "description": "Flag indicating if user is deleted"
+          },
+          "karma": {
+            "type": "object",
+            "description": "User's karma information",
+            "properties": {
+              "totalPoints": {
+                "type": "integer",
+                "description": "Total karma points for the user"
+              },
+              "karmaStatus": {
+                "type": "string",
+                "description": "Status based on karma points (positive/negative/neutral)"
+              }
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "featureName": "ActivateUserAccount",
+  "description": "Sets a user account to active status.",
+  "inputValues": [
+    "userId-number-User",
+    "activationKey-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The unique identifier of the user account to activate\n   - Collect activationKey (string, mandatory) - The activation key provided to the user\n   - System will use current timestamp (system-generated) for activation date\n\n2. Data Validation:\n   - Validate userId:\n      * Ensure userId is a positive integer\n      * Verify userId exists in the system\n      * If validation fails, generate appropriate error message\n   - Validate activationKey:\n      * Ensure activationKey is not empty\n      * Ensure activationKey follows the required format\n      * If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if user account exists:\n      * IF user account does not exist, THEN return error message\n   - Check if user account is already active:\n      * IF user account is already active, THEN return appropriate message\n   - Validate activation key against stored hash:\n      * Retrieve stored activation key hash for the user\n      * Compare provided activationKey with stored hash\n      * IF keys do not match, THEN return error message about invalid activation key\n\n4. Core Operation Execution:\n   - Set user account status to active:\n      * Update user record to mark account as active\n      * Set activation date to current timestamp\n      * Clear activation key hash from user record (optional security measure)\n   - Update related user permissions:\n      * Apply default active user permissions if applicable\n   - IF any operation fails:\n      * Revert any partial changes\n      * Log the failure details\n      * Return appropriate error message\n\n5. Response Generation:\n   - For successful activation:\n      * Generate success message confirming account activation\n      * Include next steps for the user (e.g., login instructions)\n      * Provide support contact information if needed\n   - For failed activation:\n      * Return specific error message based on the failure reason\n      * Provide guidance on how to resolve the issue\n      * Include support contact information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must exist in the system",
+    "Activation key must match the stored hash for the user",
+    "User account must not be already active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

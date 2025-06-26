@@ -1,0 +1,30 @@
+{
+  "featureName": "AddPrivateMessageText",
+  "description": "Adds text content to a private message by writing to a database storage field.",
+  "inputValues": [
+    "messageId-number-PrivateMessage",
+    "messageText-string-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. messageId (number, mandatory): The unique identifier of the private message\n     b. messageText (string, mandatory): The text content to be added to the private message\n\n2. Data Validation:\n   - Validate messageId:\n     a. Check if messageId is provided\n     b. Verify messageId is a positive integer\n     c. IF validation fails, THEN generate error message \"Invalid message identifier provided\"\n   - Validate messageText:\n     a. Check if messageText is provided\n     b. Verify messageText is not empty\n     c. IF validation fails, THEN generate error message \"Message text cannot be empty\"\n\n3. Business Rule Processing:\n   - Verify message existence:\n     a. Check if a private message with the provided messageId exists in the system\n     b. IF message does not exist, THEN generate error \"Private message not found\"\n   - Verify user permissions:\n     a. Check if the current user has permission to modify this private message\n     b. IF user lacks permission, THEN generate error \"Insufficient permissions to modify this message\"\n   - Check message state:\n     a. Verify if the message is in an editable state\n     b. IF message is not editable, THEN generate error \"Message cannot be modified in its current state\"\n\n4. Core Operation Execution:\n   - Prepare message text storage:\n     a. Format the message text according to system requirements\n     b. Prepare the storage mechanism for the text content\n   - Store message text:\n     a. Associate the text content with the private message using messageId\n     b. Write the text content to the storage field\n     c. IF storage operation fails, THEN:\n        i. Revert any partial changes\n        ii. Generate error \"Failed to store message text\"\n   - Update message metadata:\n     a. Update the last modified timestamp\n     b. Update any relevant flags or indicators\n\n5. Response Generation:\n   - For successful operation:\n     a. Generate success confirmation\n     b. Include the messageId in the response\n     c. Provide timestamp of the operation\n   - For failed operation:\n     a. Include specific error message explaining the failure\n     b. Provide guidance on how to resolve the issue\n     c. Include any relevant error codes for troubleshooting",
+  "databaseEntities": [
+    "PrivateMessage",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "Message ID must be a positive integer",
+    "Message text cannot be empty",
+    "Private message must exist in the system",
+    "User must have permission to modify the message",
+    "Message must be in an editable state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "post": {
+        "text": "string"
+      }
+    }
+  }
+}

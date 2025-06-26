@@ -1,0 +1,53 @@
+{
+  "featureName": "CreateCategory",
+  "description": "Adds a new category to the forum system.",
+  "inputValues": [
+    "name-string-Category",
+    "displayOrder-number-Category",
+    "description-string-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. name (string): The name of the category to be created\n     b. displayOrder (number): The position where the category will appear in listings\n     c. description (string): Optional description of the category\n   - System will generate:\n     a. categoryId: A unique identifier for the new category\n     b. creationDate: Timestamp of category creation\n\n2. Data Validation:\n   - Validate category name:\n     a. Check if name is not empty or null\n     b. Verify name length is within acceptable limits (3-50 characters)\n     c. Check for invalid characters in the name\n     d. IF validation fails, THEN return appropriate error message\n   - Validate display order:\n     a. Ensure displayOrder is a positive integer\n     b. IF displayOrder is negative or not a number, THEN set to default value (end of list)\n   - Validate description:\n     a. IF provided, check that description length is within acceptable limits (0-255 characters)\n     b. IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify current user has administrator privileges to create categories\n     b. IF user lacks required permissions, THEN return access denied error\n   - Check system constraints:\n     a. Verify maximum number of categories has not been reached\n     b. IF system limit reached, THEN return system constraint error\n   - Check for duplicate categories:\n     a. Verify no existing category has the same name\n     b. IF duplicate found, THEN return duplicate error message\n\n4. Core Operation Execution:\n   - Prepare category data:\n     a. Create new Category object with validated inputs\n     b. Assign system-generated values (categoryId, creationDate)\n   - Save category to database:\n     a. Insert new record in categories table\n     b. Store categoryId, name, description, displayOrder, and creationDate\n     c. IF database operation fails, THEN:\n        i. Log detailed error information\n        ii. Roll back any partial changes\n        iii. Return system error message\n   - Update display order of other categories if needed:\n     a. IF specific display order was requested, THEN:\n        i. Adjust the order of existing categories to accommodate the new position\n        ii. Update all affected category records\n\n5. Response Generation:\n   - On success:\n     a. Return success status\n     b. Include the newly created category details including generated categoryId\n     c. Provide confirmation message to user\n   - On failure:\n     a. Return failure status\n     b. Include specific error code and user-friendly message\n     c. Provide guidance on how to resolve the issue if applicable",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category name must not be empty",
+    "Category name must be between 3 and 50 characters",
+    "Category name must not contain invalid characters",
+    "Display order must be a positive integer",
+    "Description must not exceed 255 characters",
+    "Category name must be unique in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "Position where the category appears in listings"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the category"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the category was created"
+        }
+      },
+      "required": [
+        "name",
+        "displayOrder"
+      ]
+    }
+  }
+}

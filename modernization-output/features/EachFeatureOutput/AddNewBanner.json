@@ -1,0 +1,103 @@
+{
+  "featureName": "AddNewBanner",
+  "description": "Creates a new banner in the system.",
+  "inputValues": [
+    "name-string-Banner",
+    "comment-string-Banner",
+    "active-boolean-Banner",
+    "placement-number-Banner",
+    "description-string-Banner",
+    "clicks-number-Banner",
+    "views-number-Banner",
+    "url-string-Banner",
+    "weight-number-Banner",
+    "type-number-Banner",
+    "width-number-Banner",
+    "height-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following banner information from the user:\n       - name (mandatory): The name of the banner\n       - comment (optional): A descriptive comment for the banner\n       - active (mandatory): Whether the banner is active or not\n       - placement (mandatory): The placement position number for the banner\n       - description (mandatory): Detailed description of the banner\n       - url (mandatory): The target URL when the banner is clicked\n       - weight (optional): The weight/priority of the banner, default to 1\n       - type (mandatory): The type of banner\n       - width (optional): The width of the banner in pixels\n       - height (optional): The height of the banner in pixels\n   1.2. System will initialize:\n       - clicks: Set to 0 for new banners\n       - views: Set to 0 for new banners\n\n2. Data Validation\n   2.1. Validate name field\n       2.1.1. Check if name is not empty\n       2.1.2. Check if name length is between 1 and 255 characters\n       2.1.3. IF validation fails, THEN return error message \"Banner name is required and must be between 1 and 255 characters\"\n   \n   2.2. Validate comment field\n       2.2.1. IF comment is provided, THEN check if comment length is between 1 and 255 characters\n       2.2.2. IF validation fails, THEN return error message \"Banner comment must be between 1 and 255 characters\"\n   \n   2.3. Validate placement field\n       2.3.1. Check if placement is a positive integer\n       2.3.2. IF validation fails, THEN return error message \"Banner placement must be a positive integer\"\n   \n   2.4. Validate description field\n       2.4.1. Check if description is not empty\n       2.4.2. IF validation fails, THEN return error message \"Banner description is required\"\n   \n   2.5. Validate URL field\n       2.5.1. Check if URL is not empty\n       2.5.2. Check if URL is in a valid format\n       2.5.3. IF validation fails, THEN return error message \"Banner URL is required and must be in a valid format\"\n   \n   2.6. Validate weight field\n       2.6.1. IF weight is provided, THEN check if it is a positive integer\n       2.6.2. IF validation fails, THEN return error message \"Banner weight must be a positive integer\"\n   \n   2.7. Validate type field\n       2.7.1. Check if type is a valid banner type value\n       2.7.2. IF validation fails, THEN return error message \"Invalid banner type\"\n   \n   2.8. Validate width and height fields\n       2.8.1. IF width is provided, THEN check if it is a positive integer\n       2.8.2. IF height is provided, THEN check if it is a positive integer\n       2.8.3. IF validation fails, THEN return error message \"Banner dimensions must be positive integers\"\n\n3. Business Rule Processing\n   3.1. Check system constraints\n       3.1.1. Verify if the system has reached the maximum number of allowed banners\n       3.1.2. IF maximum reached, THEN return error message \"Maximum number of banners reached\"\n   \n   3.2. Check placement availability\n       3.2.1. Determine if the requested placement has space for another banner\n       3.2.2. IF placement is full, THEN return warning message \"The selected placement already has many banners, which may affect visibility\"\n   \n   3.3. Check banner type compatibility\n       3.3.1. Verify if the banner type is supported for the selected placement\n       3.3.2. IF incompatible, THEN return error message \"Banner type is not compatible with the selected placement\"\n\n4. Core Operation Execution\n   4.1. Create banner record\n       4.1.1. Prepare banner data object with all validated fields\n       4.1.2. Set initial values for system-managed fields (clicks, views)\n       4.1.3. Generate a unique identifier for the banner\n       4.1.4. Store the banner information in the system\n       4.1.5. IF storage operation fails, THEN rollback any partial changes and return error message \"Failed to create banner\"\n   \n   4.2. Update related records\n       4.2.1. Update placement counters or related metrics if needed\n       4.2.2. IF update fails, THEN log warning but continue with banner creation\n\n5. Response Generation\n   5.1. Success response\n       5.1.1. Generate success message \"Banner successfully created\"\n       5.1.2. Include the banner ID in the response\n       5.1.3. Include a summary of the created banner details\n   \n   5.2. Error response\n       5.2.1. IF any error occurred during the process, THEN include detailed error information\n       5.2.2. Provide guidance on how to correct the error\n       5.2.3. Preserve any valid input data for re-submission",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner name must not be empty",
+    "Banner name must be between 1 and 255 characters",
+    "Banner comment must be between 1 and 255 characters if provided",
+    "Banner placement must be a positive integer",
+    "Banner description must not be empty",
+    "Banner URL must not be empty",
+    "Banner URL must be in a valid format",
+    "Banner weight must be a positive integer",
+    "Banner type must be a valid value",
+    "Banner width must be a positive integer if provided",
+    "Banner height must be a positive integer if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the banner"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the banner"
+        },
+        "placement": {
+          "type": "number",
+          "description": "Placement position number for the banner"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the banner"
+        },
+        "clicks": {
+          "type": "number",
+          "description": "Number of clicks on the banner"
+        },
+        "views": {
+          "type": "number",
+          "description": "Number of views of the banner"
+        },
+        "url": {
+          "type": "string",
+          "description": "Target URL when the banner is clicked"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Weight/priority of the banner"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the banner is active or not"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Descriptive comment for the banner"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of banner"
+        },
+        "width": {
+          "type": "number",
+          "description": "Width of the banner in pixels"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the banner in pixels"
+        }
+      },
+      "required": [
+        "name",
+        "placement",
+        "description",
+        "url",
+        "active",
+        "type"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CheckUserExists",
+    "description": "Verifies if a user exists in the database by username"
+  },
+  {
+    "featureName": "RegisterSsoUser",
+    "description": "Creates a new user account with provided credentials for SSO integration"
+  },
+  {
+    "featureName": "GetSsoUser",
+    "description": "Retrieves user information associated with the current SSO authentication context"
+  }
+]

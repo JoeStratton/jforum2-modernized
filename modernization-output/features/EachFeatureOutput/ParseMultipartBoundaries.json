@@ -1,0 +1,38 @@
+{
+  "featureName": "ParseMultipartBoundaries",
+  "description": "Extracts and processes boundary markers from multipart content types.",
+  "inputValues": [
+    "contentType-string-RequestHeader",
+    "headers-object-HeaderCollection",
+    "headerPart-string-HeaderData"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect contentType (string): The content type header value from the request\n   - Collect headers (object): Map containing HTTP request headers\n   - Collect headerPart (string): Raw header part data from the multipart request\n   - System will use these inputs to extract boundary information and parse headers\n\n2. Data Validation:\n   - Validate contentType:\n      * Check if contentType is not null\n      * Verify contentType contains multipart format information\n      * Ensure boundary parameter exists within contentType\n      * Generate appropriate error if validation fails\n   - Validate headers:\n      * Verify headers collection is properly structured\n      * Check for required headers like Content-Disposition\n      * Ensure headers follow expected format with name-value pairs\n   - Validate headerPart:\n      * Check if headerPart is not null\n      * Verify headerPart does not exceed maximum allowed size\n      * Ensure headerPart contains valid header format\n\n3. Business Rule Processing:\n   - Check request size constraints:\n      * IF request size is unknown (-1), THEN reject with appropriate message\n      * IF maximum size is defined AND request exceeds it, THEN reject with size limit message\n   - Process content type information:\n      * Extract boundary parameter from content type\n      * IF boundary is null, THEN reject the request with appropriate message\n      * Convert boundary string to byte array using appropriate character encoding\n   - Verify multipart structure integrity:\n      * Check for proper multipart format compliance\n      * Verify boundary markers are correctly positioned\n      * Ensure nested multipart sections (if any) have valid sub-boundaries\n\n4. Core Operation Execution:\n   - Parse boundary information:\n      * Extract boundary string from content type using parameter parser\n      * Convert boundary string to byte array using ISO-8859-1 encoding\n      * Fall back to default encoding if ISO-8859-1 is unsupported\n   - Process header information:\n      * Parse raw header part into structured header map\n      * Extract field names from Content-Disposition headers\n      * Extract file names from Content-Disposition headers when present\n      * Handle special cases like empty filenames\n   - Parse multipart headers:\n      * Read header lines until empty line is encountered\n      * Split each header at the colon character\n      * Extract header name (converting to lowercase) and value\n      * Handle multiple headers with the same name by combining values\n      * Skip malformed headers that don't contain a colon\n\n5. Response Generation:\n   - For boundary extraction:\n      * Return extracted boundary as byte array\n      * Return null if boundary parameter is not found\n   - For field name extraction:\n      * Return field name string if found\n      * Return null if Content-Disposition header is missing or malformed\n   - For file name extraction:\n      * Return file name string if found\n      * Return empty string if filename parameter exists but has no value\n      * Return null if no filename parameter exists\n   - For header parsing:\n      * Return map of header names to header values\n      * Combine multiple headers with same name using comma separation",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Content type must contain a boundary parameter",
+    "Request size must not exceed the maximum allowed size",
+    "Request size must be known (not -1)",
+    "Headers must be properly formatted with name-value pairs",
+    "Header part must not exceed maximum header size",
+    "Content-Disposition header must be present for field name extraction",
+    "Boundary string must be convertible to byte array"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HeaderCollection": {
+      "type": "object",
+      "properties": {
+        "contentDisposition": {
+          "type": "string",
+          "description": "Content disposition header value"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Content type header value"
+        }
+      }
+    }
+  }
+}

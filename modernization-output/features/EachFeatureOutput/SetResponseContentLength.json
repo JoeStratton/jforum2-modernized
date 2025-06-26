@@ -1,0 +1,16 @@
+{
+  "featureName": "SetResponseContentLength",
+  "description": "Sets the content length of the HTTP response.",
+  "inputValues": [
+    "contentLength-number-Response"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the content length value (number) from the caller\n   - The content length is mandatory\n   - No default value is provided\n\n2. Data Validation:\n   - Validate the content length value\n     - Ensure the content length is a positive integer\n     - IF content length is negative or zero THEN\n       - Generate an error indicating invalid content length\n       - Abort the operation\n     - END IF\n   - Ensure the content length value is within acceptable range\n     - IF content length exceeds system maximum allowed size THEN\n       - Generate a warning or error based on system configuration\n       - Consider truncation or rejection based on system policy\n     - END IF\n\n3. Business Rule Processing:\n   - Check if response is still modifiable\n     - IF response has already been committed THEN\n       - Log warning that content length cannot be modified\n       - Abort the operation\n     - END IF\n   - Determine if setting content length is appropriate for current response type\n     - IF response is using chunked encoding THEN\n       - Log information that content length might be ignored\n     - END IF\n\n4. Core Operation Execution:\n   - Apply the content length value to the response\n   - Update internal response state to reflect the new content length\n   - Record the change in any relevant logging or monitoring systems\n   - IF operation fails due to system constraints THEN\n     - Log the failure reason\n     - Provide appropriate error information\n   - END IF\n\n5. Response Generation:\n   - Return success indication if content length was set successfully\n   - IF any errors occurred during the process THEN\n     - Return appropriate error information\n     - Include details about why the operation failed\n   - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Content length must be a positive integer",
+    "Content length must not exceed system maximum allowed size",
+    "Response must not be already committed before setting content length"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

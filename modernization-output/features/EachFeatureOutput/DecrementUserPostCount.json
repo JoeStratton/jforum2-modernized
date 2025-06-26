@@ -1,0 +1,18 @@
+{
+  "featureName": "DecrementUserPostCount",
+  "description": "Decreases the post count for a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect userId (mandatory, number): The unique identifier of the user whose post count needs to be decremented\n   - System will use the current database connection from the execution context\n\n2. Data Validation\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing\n   - Check if user exists in the system\n     a. IF user does not exist, THEN abort operation and return error\n     b. IF user exists, THEN continue\n   - Check if user's post count is greater than zero\n     a. IF post count is already zero, THEN consider whether to abort or leave unchanged\n     b. IF post count is greater than zero, THEN continue\n\n4. Core Operation Execution\n   - Prepare database operation to decrement post count\n   - Execute update operation to reduce user's post count by one\n   - IF operation fails:\n     a. Roll back any changes\n     b. Log the error details\n     c. Return appropriate error message\n   - IF operation succeeds:\n     a. Commit the changes\n     b. Proceed to response generation\n\n5. Response Generation\n   - IF operation was successful:\n     a. Return success status\n     b. Include updated user information if needed\n   - IF operation failed:\n     a. Return failure status\n     b. Include error details and reason for failure\n     c. Provide guidance for resolution if applicable",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "User must exist in the system",
+    "User's post count should preferably be greater than zero before decrementing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

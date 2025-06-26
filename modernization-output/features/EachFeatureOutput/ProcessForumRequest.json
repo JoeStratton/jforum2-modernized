@@ -1,0 +1,71 @@
+{
+  "featureName": "ProcessForumRequest",
+  "description": "Processes HTTP requests by routing to appropriate module controllers with security checks.",
+  "inputValues": [
+    "request-object-HttpRequest",
+    "response-object-HttpResponse"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HTTP request object with all parameters, headers, and session data\n   - Collect the HTTP response object for output generation\n   - Extract module name from the request URL\n   - Extract action name from the request URL\n   - Retrieve user session information from the request\n   - Determine client IP address from the request\n\n2. Data Validation:\n   - Validate that the request contains a valid module name\n     * IF module name is missing or empty, prepare a 404 error response\n     * IF module name is provided, verify it exists in the modules repository\n   - Validate user authentication status\n     * Check if user session exists\n     * Determine if user is logged in\n   - Validate IP address against ban list\n     * Check if the requesting IP address is in the system ban list\n     * IF IP is banned, redirect to banned page or send 403 Forbidden based on system configuration\n\n3. Business Rule Processing:\n   - Initialize execution context\n     * Create a new forum context with request and response information\n     * Set up template context with common variables\n   - Process security requirements\n     * Load security permissions for the current user\n     * Verify user has access to the requested module and action\n   - Check database connectivity\n     * Verify database connection is active\n     * IF database is not available, attempt to reconnect\n\n4. Core Operation Execution:\n   - Resolve module controller\n     * Look up the appropriate controller class for the requested module\n     * Instantiate the controller class\n   - Process the request\n     * Pass request and response objects to the controller\n     * Execute the requested action on the controller\n     * Generate response template\n   - Handle content generation\n     * IF redirect is requested, store redirect URL\n     * ELSE IF custom content is specified, use controller-generated content\n     * ELSE process template with context data\n   - Manage transaction state\n     * Commit database transaction if successful\n     * Enable rollback if exceptions occur\n\n5. Response Generation:\n   - Set appropriate content type headers\n     * Use default encoding or controller-specified encoding\n   - Generate response output\n     * IF redirect is requested, send redirect response\n     * ELSE IF binary content, write directly to output stream\n     * ELSE write processed template to response writer\n   - Handle error conditions\n     * Format appropriate error messages\n     * Set correct HTTP status codes\n   - Finalize response\n     * Close output streams\n     * Complete database transactions\n     * Clean up resources",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_sessions",
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "Module name must exist in the modules repository",
+    "User must have permission to access the requested module and action",
+    "User IP address must not be in the ban list",
+    "Database connection must be available",
+    "Content type must be properly set before sending response"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpRequest": {
+      "type": "object",
+      "properties": {
+        "module": {
+          "type": "string",
+          "description": "The requested module name"
+        },
+        "action": {
+          "type": "string",
+          "description": "The requested action within the module"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Collection of request parameters"
+        },
+        "remoteAddr": {
+          "type": "string",
+          "description": "IP address of the client"
+        },
+        "contextPath": {
+          "type": "string",
+          "description": "Base path of the application"
+        },
+        "session": {
+          "type": "object",
+          "description": "User session information"
+        }
+      }
+    },
+    "HttpResponse": {
+      "type": "object",
+      "properties": {
+        "outputStream": {
+          "type": "object",
+          "description": "Stream for writing response data"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the response content"
+        },
+        "encoding": {
+          "type": "string",
+          "description": "Character encoding of the response"
+        }
+      }
+    }
+  }
+}

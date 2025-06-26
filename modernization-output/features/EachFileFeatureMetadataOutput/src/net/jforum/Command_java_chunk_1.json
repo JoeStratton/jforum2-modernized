@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ProcessRequest",
+    "description": "Processes HTTP requests by invoking the appropriate action method based on request parameters"
+  },
+  {
+    "featureName": "RenderTemplate",
+    "description": "Renders the appropriate template view after processing the request action"
+  }
+]

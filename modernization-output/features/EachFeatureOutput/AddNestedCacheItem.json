@@ -1,0 +1,25 @@
+{
+  "featureName": "AddNestedCacheItem",
+  "description": "Adds a nested item to the cache using a fully qualified name, key and value.",
+  "inputValues": [
+    "fqn-string-CacheEntry",
+    "key-string-CacheKey",
+    "value-object-CacheValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the fully qualified name (fqn) as a string identifier for the cache group\n   - Collect the key as a string identifier for the specific item within the cache group\n   - Collect the value object to be stored in the cache\n   - All inputs are mandatory with no default values\n\n2. Data Validation:\n   - Validate the fully qualified name (fqn):\n     * Check if fqn is not null\n     * Check if fqn is not an empty string\n     * If validation fails, generate an error message indicating invalid fqn\n   - Validate the key:\n     * Check if key is not null\n     * Check if key is not an empty string\n     * If validation fails, generate an error message indicating invalid key\n   - Validate the value:\n     * Check if value is not null\n     * If validation fails, generate an error message indicating invalid value\n\n3. Business Rule Processing:\n   - Check if the cache system is initialized:\n     * IF cache system is not initialized, THEN initialize the cache system\n   - Check if the specified cache group (fqn) already exists:\n     * IF the cache group does not exist, THEN create a new empty map for this group\n     * IF the cache group exists, THEN retrieve the existing map\n\n4. Core Operation Execution:\n   - Add the key-value pair to the map associated with the fqn:\n     * Put the key and value into the map\n   - Update the main cache with the modified or new map:\n     * Associate the map with the fqn in the main cache\n   - IF any operation fails during execution:\n     * Log the failure details\n     * Preserve the previous cache state\n     * Prepare appropriate error information\n\n5. Response Generation:\n   - For successful operation:\n     * Confirm the item was added to the cache\n     * Return success status\n   - For failed operation:\n     * Return error status with details about the failure\n     * Include information about which validation or processing step failed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Fully qualified name (fqn) must not be null or empty",
+    "Key must not be null or empty",
+    "Value must not be null",
+    "Cache system must be initialized before adding items"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CacheValue": {
+      "type": "object",
+      "description": "Any object that needs to be stored in the cache",
+      "properties": {}
+    }
+  }
+}

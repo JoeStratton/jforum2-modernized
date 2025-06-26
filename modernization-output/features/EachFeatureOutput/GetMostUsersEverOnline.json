@@ -1,0 +1,37 @@
+{
+  "featureName": "GetMostUsersEverOnline",
+  "description": "Retrieves statistics about the highest number of users ever online simultaneously.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal data sources\n\n2. Data Validation:\n   - Verify system access permissions\n     - IF user does not have permission to view statistics\n       THEN return appropriate error message\n     - IF system is in maintenance mode\n       THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check cache availability\n     - IF cache system is operational\n       THEN proceed with cache-based retrieval\n     - ELSE notify administrator about cache system failure\n       AND proceed with direct database retrieval\n\n4. Core Operation Execution:\n   - Attempt to retrieve most users ever online data from cache\n     - IF data exists in cache\n       THEN retrieve MostUsersEverOnline object from cache\n     - ELSE\n       - Synchronize access to prevent concurrent database queries\n       - Check cache again (double-check locking pattern)\n         - IF data now exists in cache\n           THEN retrieve MostUsersEverOnline object from cache\n         - ELSE\n           - Load MostUsersEverOnline data from configuration database\n           - Store retrieved data in cache for future use\n   - Extract relevant statistics from MostUsersEverOnline object:\n     - Total number of users that were online simultaneously\n     - Date and time when this record occurred\n\n5. Response Generation:\n   - Format the statistics data for presentation\n     - Include the total number of users\n     - Include the formatted date and time of the record\n   - Return the formatted statistics to the requester\n     - IF successful retrieval\n       THEN return complete statistics with success status\n     - ELSE return error information with appropriate message",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have permission to view statistics",
+    "Cache system must be operational for optimal performance",
+    "Database must contain valid configuration entries for user statistics"
+  ],
+  "dbSeedingOperations": [
+    "Ensure configuration entries exist for MOST_USERS_EVER_ONLINE and MOST_USER_EVER_ONLINE_DATE"
+  ],
+  "schema": {
+    "MostUsersEverOnline": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": "The highest number of users ever online simultaneously"
+        },
+        "timeInMillis": {
+          "type": "integer",
+          "description": "The timestamp (in milliseconds) when the record occurred"
+        }
+      },
+      "required": [
+        "total",
+        "timeInMillis"
+      ]
+    }
+  }
+}

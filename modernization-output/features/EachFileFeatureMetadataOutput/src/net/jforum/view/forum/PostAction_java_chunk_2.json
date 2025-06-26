@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ListTopicPosts",
+    "description": "Displays posts within a topic with pagination, access control, and view tracking"
+  },
+  {
+    "featureName": "NavigateToSpecificPost",
+    "description": "Redirects user to the correct page containing a specific post within a topic"
+  },
+  {
+    "featureName": "VoteOnPoll",
+    "description": "Processes user votes on topic polls with validation and records the vote"
+  },
+  {
+    "featureName": "ListUserPosts",
+    "description": "Retrieves and displays posts made by a specific user with pagination"
+  }
+]

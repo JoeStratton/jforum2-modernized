@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "GetRecentTopics",
+    "description": "Retrieves a list of the most recent forum topics from cache or database"
+  },
+  {
+    "featureName": "GetHottestTopics",
+    "description": "Retrieves a list of the most popular forum topics from cache or database"
+  },
+  {
+    "featureName": "AddTopicToCache",
+    "description": "Adds a forum topic to the cache with proper sorting and management"
+  },
+  {
+    "featureName": "UpdateCachedTopic",
+    "description": "Updates an existing topic in the cache while maintaining cache integrity"
+  },
+  {
+    "featureName": "GetCachedTopic",
+    "description": "Retrieves a specific topic from the cache based on topic and forum identifiers"
+  },
+  {
+    "featureName": "GetForumTopics",
+    "description": "Retrieves all cached topics related to a specific forum"
+  },
+  {
+    "featureName": "ClearForumCache",
+    "description": "Clears the topic cache for a specific forum"
+  },
+  {
+    "featureName": "LoadMostRecentTopics",
+    "description": "Loads the most recent topics from the database and adds them to the cache"
+  },
+  {
+    "featureName": "LoadHottestTopics",
+    "description": "Loads the most popular topics from the database and adds them to the cache"
+  }
+]

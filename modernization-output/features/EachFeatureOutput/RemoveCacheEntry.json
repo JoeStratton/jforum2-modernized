@@ -1,0 +1,19 @@
+{
+  "featureName": "RemoveCacheEntry",
+  "description": "Removes a specific entry from the cache by namespace and key.",
+  "inputValues": [
+    "namespace-string-CacheNamespace",
+    "key-string-CacheKey"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. namespace (mandatory): The fully qualified namespace of the cache entry\n     b. key (optional): The specific key within the namespace to remove\n\n2. Data Validation\n   - Validate namespace input:\n     a. Check if namespace is provided\n        IF namespace is null or empty THEN\n          Generate error message: \"Cache namespace cannot be empty\"\n          Return error response\n     b. Check if namespace format is valid\n        IF namespace format is invalid THEN\n          Generate error message: \"Invalid namespace format\"\n          Return error response\n   - Validate key input (if provided):\n     a. Check if key format is valid\n        IF key is provided AND key format is invalid THEN\n          Generate error message: \"Invalid key format\"\n          Return error response\n\n3. Business Rule Processing\n   - Check cache system availability:\n     a. Verify cache service is initialized and running\n        IF cache service is not available THEN\n          Log error: \"Cache service unavailable\"\n          Generate error message: \"Cache system is currently unavailable\"\n          Return error response\n   - Check access permissions:\n     a. Verify current user has permission to modify cache\n        IF user lacks permission THEN\n          Log access attempt: \"Unauthorized cache modification attempt\"\n          Generate error message: \"Insufficient permissions to modify cache\"\n          Return error response\n\n4. Core Operation Execution\n   - Determine removal operation type:\n     a. IF key is provided THEN\n          Attempt to remove specific key from namespace:\n          - Locate the namespace node in cache\n          - Remove the specific key-value pair from the namespace\n          - Log operation: \"Removed key [key] from namespace [namespace]\"\n     b. IF key is not provided THEN\n          Attempt to remove entire namespace:\n          - Remove the entire namespace node from cache\n          - Log operation: \"Removed entire namespace [namespace]\"\n   - Handle operation failures:\n     a. IF removal operation fails THEN\n        - Capture error details\n        - Log error: \"Failed to remove from cache: [error details]\"\n        - Generate error message: \"Cache removal operation failed\"\n        - Return error response\n\n5. Response Generation\n   - Generate success response:\n     a. Create response with operation status\n     b. Include details about what was removed:\n        - If key was provided: \"Successfully removed key [key] from namespace [namespace]\"\n        - If only namespace was provided: \"Successfully removed entire namespace [namespace]\"\n     c. Include timestamp of operation\n   - Return success response to caller",
+  "databaseEntities": [],
+  "validationRules": [
+    "Cache namespace must not be empty",
+    "Cache namespace must be in valid format",
+    "Cache key must be in valid format if provided",
+    "User must have permission to modify cache",
+    "Cache service must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

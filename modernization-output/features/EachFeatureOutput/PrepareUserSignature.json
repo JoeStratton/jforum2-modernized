@@ -1,0 +1,40 @@
+{
+  "featureName": "PrepareUserSignature",
+  "description": "Formats user signatures for display with proper HTML formatting and security.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user object that contains signature data\n     1.1. Verify user object is not null\n     1.2. Check if signature field exists within the user object\n\n2. Data Validation:\n   - Validate signature content\n     2.1. IF signature is null THEN\n         2.1.1. Skip processing and return\n     2.2. Check signature length\n         2.2.1. IF signature exceeds maximum allowed length THEN\n             2.2.1.1. Truncate signature to maximum allowed length\n\n3. Business Rule Processing:\n   - Apply signature formatting rules\n     3.1. Check system settings for signature formatting options\n     3.2. Determine which formatting features are enabled\n         3.2.1. Check if HTML is allowed in signatures\n         3.2.2. Check if BBCode is allowed in signatures\n         3.2.3. Check if image embedding is allowed in signatures\n\n4. Core Operation Execution:\n   - Format signature for display\n     4.1. Create a buffer to hold the formatted signature\n     4.2. Replace newline characters with HTML line breaks\n         4.2.1. Find all occurrences of '\\n' in the signature\n         4.2.2. Replace each occurrence with '<br />'\n     4.3. Apply security measures to prevent XSS attacks\n         4.3.1. Escape HTML special characters\n             4.3.1.1. Replace '<' with '&lt;'\n             4.3.1.2. Replace '>' with '&gt;'\n     4.4. Process allowed formatting tags\n         4.4.1. IF HTML is allowed THEN\n             4.4.1.1. Process allowed HTML tags\n         4.4.2. IF BBCode is allowed THEN\n             4.4.2.1. Convert BBCode to corresponding HTML\n     4.5. Update the user object with the formatted signature\n\n5. Response Generation:\n   - Return updated user object\n     5.1. Ensure the user object now contains properly formatted signature\n     5.2. IF any errors occurred during processing THEN\n         5.2.1. Log the error details\n         5.2.2. Return user object with original unformatted signature",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User object must not be null",
+    "Signature must be properly escaped to prevent XSS attacks",
+    "HTML formatting must follow system configuration rules",
+    "Line breaks must be converted to HTML break tags",
+    "Signature must maintain content integrity after formatting"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string",
+          "description": "User's forum signature that may contain text formatting"
+        }
+      },
+      "required": [
+        "id",
+        "username"
+      ]
+    }
+  }
+}

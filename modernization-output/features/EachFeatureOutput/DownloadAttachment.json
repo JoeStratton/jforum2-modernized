@@ -1,0 +1,39 @@
+{
+  "featureName": "DownloadAttachment",
+  "description": "Handles file attachment downloads with permission checks and download tracking.",
+  "inputValues": [
+    "attach_id-number-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect attachment ID from user request\n   - Attachment ID is mandatory\n   - User session information is retrieved from the system\n\n2. Data Validation:\n   - Validate attachment ID exists\n     * Verify attachment ID is a positive integer\n     * Check if attachment ID exists in the database\n     * IF attachment ID is invalid or not found, THEN display error message\n   - Validate user authentication status\n     * Check if user is logged in\n     * IF user is not logged in AND anonymous downloads are not allowed, THEN redirect to login page\n\n3. Business Rule Processing:\n   - Check user permissions\n     * Retrieve post associated with the attachment\n     * Identify forum ID from the post\n     * Verify if attachments are enabled in the forum\n     * Verify if user has download permissions for the forum\n     * IF user lacks necessary permissions, THEN display access denied message\n   - Verify attachment file existence\n     * Determine physical file location on server\n     * Check if file exists in the storage directory\n     * IF file does not exist, THEN display not found message\n\n4. Core Operation Execution:\n   - Prepare file for download\n     * Increment download counter for the attachment\n     * Update attachment record with new download count\n     * Determine appropriate content type based on file extension\n     * Set appropriate HTTP headers for download\n       > Content-Type header based on file type\n       > Content-Disposition header with filename\n       > Content-Length header with file size\n   - Process file download\n     * Open file input stream from storage location\n     * Stream file contents to user's browser\n     * Close all streams after transfer completes\n     * IF any errors occur during transfer, THEN handle gracefully\n\n5. Response Generation:\n   - For successful downloads:\n     * File is streamed directly to user's browser\n     * No additional UI response needed\n   - For error conditions:\n     * Display appropriate error message\n       > Authentication required message\n       > Permission denied message\n       > File not found message\n     * Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Attachment ID must be a valid positive integer",
+    "Attachment must exist in the database",
+    "User must be logged in if anonymous downloads are not allowed",
+    "User must have permission to download attachments from the forum",
+    "Attachment file must exist in the storage directory"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "info": {
+        "physicalFilename": "string",
+        "realFilename": "string",
+        "downloadCount": "number",
+        "filesize": "number",
+        "mimetype": "string",
+        "extension": {
+          "extensionGroupId": "number"
+        }
+      }
+    }
+  }
+}

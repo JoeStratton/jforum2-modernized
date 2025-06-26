@@ -1,0 +1,59 @@
+{
+  "featureName": "LoadRoles",
+  "description": "Retrieves all security roles associated with a specific group.",
+  "inputValues": [
+    "groupIds-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     - groupIds (number array): The unique identifiers of the groups whose roles need to be retrieved\n   - No optional fields are required for this operation\n   - No default values are applicable\n\n2. Data Validation:\n   - Validate the groupIds input:\n     - Check if at least one groupId is provided\n     - Verify each groupId is a positive integer\n     - Ensure each groupId represents an existing group in the system\n   - IF any validation fails, THEN:\n     - Generate appropriate error message\n     - Abort the operation\n\n3. Business Rule Processing:\n   - Verify the system state:\n     - Check if the security subsystem is properly initialized\n     - Verify the current user has permission to view role information\n   - Check dependencies:\n     - Ensure all specified groups exist in the system\n     - Verify the groups are active and not marked for deletion\n   - IF any business rule fails, THEN:\n     - Log the failure reason\n     - Return appropriate error message\n\n4. Core Operation Execution:\n   - Convert the group IDs into a comma-separated string format for processing\n   - Retrieve all role records associated with the specified groups:\n     - Query the role storage system using the groupIds as keys\n     - Collect all roles linked to the groups\n     - For each role found:\n       - Retrieve the role name\n       - Retrieve the role values/permissions\n       - Build the role object with its properties\n     - Organize the roles into a structured collection\n   - IF no roles are found, THEN:\n     - Return an empty role collection\n   - IF retrieval operation fails, THEN:\n     - Log the error details\n     - Handle the exception appropriately\n     - Ensure all database resources are properly closed\n\n5. Response Generation:\n   - On success:\n     - Return the complete collection of roles\n     - Include metadata about the collection (total count, etc.)\n   - On failure:\n     - Return error details including:\n       - Error code\n       - User-friendly error message\n       - Suggested resolution steps if applicable\n     - Ensure proper cleanup of any allocated resources",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_roles",
+    "jforum_role_values"
+  ],
+  "validationRules": [
+    "Group IDs must be positive integers",
+    "At least one group ID must be provided",
+    "All specified groups must exist in the system",
+    "User must have permission to view role information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "The unique identifier of the role"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the security role"
+        },
+        "values": {
+          "type": "array",
+          "description": "Collection of values/permissions associated with this role",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RoleCollection": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "description": "List of roles",
+          "items": {
+            "$ref": "#/Role"
+          }
+        },
+        "count": {
+          "type": "number",
+          "description": "Total number of roles in the collection"
+        }
+      }
+    }
+  }
+}

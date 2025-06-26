@@ -1,0 +1,53 @@
+{
+  "featureName": "SelectPostsByTopicWithPagination",
+  "description": "Retrieves paginated posts for a specific forum topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following required inputs:\n       - topicId (number): Unique identifier of the topic\n       - startFrom (number): Starting position for pagination\n       - count (number): Maximum number of posts to retrieve\n   1.2. All fields are mandatory for this operation\n   1.3. System will use these values to determine which posts to retrieve\n\n2. Data Validation\n   2.1. Validate topicId\n       2.1.1. Ensure topicId is a positive integer\n       2.1.2. IF topicId is invalid or missing, THEN generate error message: \"Valid topic identifier required\"\n   2.2. Validate pagination parameters\n       2.2.1. Ensure startFrom is a non-negative integer\n       2.2.2. Ensure count is a positive integer\n       2.2.3. IF startFrom is invalid, THEN generate error message: \"Valid starting position required\"\n       2.2.4. IF count is invalid, THEN generate error message: \"Valid count value required\"\n\n3. Business Rule Processing\n   3.1. Verify topic existence\n       3.1.1. Check if the specified topic exists in the system\n       3.1.2. IF topic does not exist, THEN generate error message: \"Topic not found\"\n   3.2. Verify user access permissions\n       3.2.1. Check if the current user has permission to view the topic\n       3.2.2. IF user lacks permission, THEN generate error message: \"Insufficient permissions to view this topic\"\n   3.3. Determine actual pagination range\n       3.3.1. Calculate the ending position as startFrom + count\n       3.3.2. Adjust pagination parameters if they exceed available data boundaries\n\n4. Core Operation Execution\n   4.1. Retrieve posts for the specified topic\n       4.1.1. Query the posts associated with the topic ID\n       4.1.2. Apply pagination parameters to limit results\n       4.1.3. Include all relevant post information (content, author, timestamp, etc.)\n       4.1.4. Sort posts by their creation date in ascending order\n   4.2. Process retrieved posts\n       4.2.1. For each post, retrieve the associated text content\n       4.2.2. For each post, retrieve author information\n       4.2.3. For each post, check for attachments\n       4.2.4. Format post content according to system settings\n   4.3. Handle empty result sets\n       4.3.1. IF no posts are found within the pagination range, THEN return an empty collection\n       4.3.2. Do not generate an error for empty results\n\n5. Response Generation\n   5.1. Prepare success response\n       5.1.1. Include the collection of retrieved posts\n       5.1.2. Include pagination metadata (current page, total posts, etc.)\n       5.1.3. Include topic information for context\n   5.2. Handle potential errors\n       5.2.1. For validation errors, return appropriate error messages\n       5.2.2. For permission errors, return access denied message\n       5.2.3. For system errors, return generic error message with support information",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Starting position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to view the topic",
+    "Forum must be in the list of allowed forums for the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "creationDate": "date",
+      "hasAttachments": "boolean",
+      "postUsername": "string",
+      "forumId": "number"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "postCount": "number",
+      "status": "string"
+    },
+    "Pagination": {
+      "startFrom": "number",
+      "count": "number",
+      "totalItems": "number",
+      "currentPage": "number"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "HandleFileUploadErrors",
+    "description": "Provides exception handling for errors encountered during file upload processing"
+  }
+]

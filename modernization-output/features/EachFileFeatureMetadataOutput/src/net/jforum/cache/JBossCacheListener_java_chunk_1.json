@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "HandleNodeModification",
+    "description": "Processes cache node modification events with conditional handling for notification nodes"
+  }
+]

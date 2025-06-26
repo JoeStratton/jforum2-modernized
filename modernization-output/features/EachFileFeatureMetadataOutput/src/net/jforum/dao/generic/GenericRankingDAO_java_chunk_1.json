@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "SelectRankingById",
+    "description": "Retrieves a specific ranking by its ID from the database"
+  },
+  {
+    "featureName": "SelectAllRankings",
+    "description": "Retrieves all rankings from the database"
+  },
+  {
+    "featureName": "DeleteRanking",
+    "description": "Removes a ranking from the database by its ID"
+  },
+  {
+    "featureName": "UpdateRanking",
+    "description": "Updates an existing ranking's information in the database"
+  },
+  {
+    "featureName": "AddNewRanking",
+    "description": "Creates a new ranking record in the database"
+  },
+  {
+    "featureName": "SelectSpecialRankings",
+    "description": "Retrieves all special rankings from the database"
+  }
+]

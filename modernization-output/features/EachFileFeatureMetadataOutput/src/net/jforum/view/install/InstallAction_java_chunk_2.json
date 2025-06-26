@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "WelcomeInstallation",
+    "description": "Prepares installation welcome page with configuration parameters from session"
+  },
+  {
+    "featureName": "CheckLanguage",
+    "description": "Validates and sets user language preference for installation process"
+  },
+  {
+    "featureName": "DoInstall",
+    "description": "Executes the forum installation process including database setup and configuration"
+  },
+  {
+    "featureName": "ConfigureDatabase",
+    "description": "Sets up database connection based on user configuration parameters"
+  },
+  {
+    "featureName": "CreateTables",
+    "description": "Creates database tables required for forum functionality"
+  },
+  {
+    "featureName": "ImportTablesData",
+    "description": "Populates database tables with initial required data"
+  },
+  {
+    "featureName": "UpdateAdminPassword",
+    "description": "Sets the administrator password during installation"
+  },
+  {
+    "featureName": "FinishInstallation",
+    "description": "Completes installation process and prepares system for first use"
+  },
+  {
+    "featureName": "ConfigureSystemGlobals",
+    "description": "Sets system-wide configuration parameters after successful installation"
+  },
+  {
+    "featureName": "FixModulesMapping",
+    "description": "Updates module mappings to disable installer after successful installation"
+  }
+]

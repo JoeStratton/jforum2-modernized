@@ -1,0 +1,66 @@
+[
+  {
+    "featureName": "FindTopicsByDateRange",
+    "description": "Searches for forum topics within a specified date range with pagination support"
+  },
+  {
+    "featureName": "FixFirstLastPostId",
+    "description": "Updates the first and last post IDs for a topic to maintain proper reference integrity"
+  },
+  {
+    "featureName": "SelectTopicById",
+    "description": "Retrieves a complete topic by its unique identifier"
+  },
+  {
+    "featureName": "SelectRawTopic",
+    "description": "Retrieves basic topic data without associated information"
+  },
+  {
+    "featureName": "DeleteTopic",
+    "description": "Removes a topic and its associated data including posts, polls and subscriptions"
+  },
+  {
+    "featureName": "DeleteTopics",
+    "description": "Batch deletes multiple topics and their associated content"
+  },
+  {
+    "featureName": "DeleteTopicsByForum",
+    "description": "Removes all topics belonging to a specific forum"
+  },
+  {
+    "featureName": "UpdateTopic",
+    "description": "Updates topic information including title, post references and status"
+  },
+  {
+    "featureName": "AddNewTopic",
+    "description": "Creates a new forum topic with initial metadata"
+  },
+  {
+    "featureName": "IncrementTotalViews",
+    "description": "Increases the view counter for a topic"
+  },
+  {
+    "featureName": "IncrementTotalReplies",
+    "description": "Increases the reply counter for a topic"
+  },
+  {
+    "featureName": "DecrementTotalReplies",
+    "description": "Decreases the reply counter for a topic"
+  },
+  {
+    "featureName": "SetLastPostId",
+    "description": "Updates the reference to the most recent post in a topic"
+  },
+  {
+    "featureName": "SelectAllTopicsByForum",
+    "description": "Retrieves all topics belonging to a specific forum"
+  },
+  {
+    "featureName": "SelectTopicsByForumWithPagination",
+    "description": "Retrieves topics from a forum with pagination support"
+  },
+  {
+    "featureName": "SelectTopicsByUserWithPagination",
+    "description": "Retrieves topics created by a specific user with pagination support"
+  }
+]

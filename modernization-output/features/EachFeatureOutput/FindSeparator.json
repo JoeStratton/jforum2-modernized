@@ -1,0 +1,43 @@
+{
+  "featureName": "FindSeparator",
+  "description": "Searches for boundary separator in the buffer to identify encapsulation boundaries.",
+  "inputValues": [
+    "buffer-object-ByteBuffer",
+    "boundary-object-ByteArray",
+    "head-number-Position",
+    "tail-number-Position",
+    "boundaryLength-number-Length"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the buffer data structure containing the content to search through\n   - Collect the boundary pattern to search for\n   - Collect the head position indicating the start of the search area\n   - Collect the tail position indicating the end of the search area\n   - Collect the boundary length for comparison purposes\n   - All inputs are mandatory for the search operation\n\n2. Data Validation:\n   - Validate that the buffer is not null\n     * IF buffer is null THEN return error indicating invalid buffer\n   - Validate that the boundary pattern is not null and has length greater than 0\n     * IF boundary is null or empty THEN return error indicating invalid boundary pattern\n   - Validate that head position is within valid range (0 <= head < buffer length)\n     * IF head is out of range THEN return error indicating invalid head position\n   - Validate that tail position is within valid range (head <= tail <= buffer length)\n     * IF tail is out of range THEN return error indicating invalid tail position\n   - Validate that boundaryLength is equal to the actual boundary length\n     * IF boundaryLength is incorrect THEN return error indicating boundary length mismatch\n\n3. Business Rule Processing:\n   - Calculate the maximum position where a boundary could start\n     * maxpos = tail - boundaryLength\n   - IF maxpos < head THEN\n     * Return -1 as there's not enough space for the boundary to exist\n   - Prepare variables for the search process:\n     * first = head (starting position for the search)\n     * match = 0 (counter for matched bytes)\n\n4. Core Operation Execution:\n   - WHILE first <= maxpos AND match != boundaryLength:\n     * Find the first occurrence of the first byte of the boundary pattern\n       - Search from position 'first' to 'tail' for boundary[0]\n       - IF not found OR found position > maxpos THEN return -1\n       - Update 'first' to the found position\n     * Compare subsequent bytes with the boundary pattern\n       - FOR match = 1 to boundaryLength-1:\n         * IF buffer[first + match] != boundary[match] THEN break the loop\n       - IF match reached boundaryLength THEN all bytes matched\n   - IF match equals boundaryLength THEN:\n     * Return (first - 1) as the position where the boundary starts\n   - ELSE:\n     * Return -1 indicating boundary not found\n\n5. Response Generation:\n   - Return the position of the boundary in the buffer (counting from the beginning)\n     * Success: Position value (0 or positive integer) indicating where boundary was found\n     * Not found: -1 indicating the boundary pattern does not exist in the specified region\n   - The returned position can be used by calling functions to process data before the boundary",
+  "databaseEntities": [],
+  "validationRules": [
+    "Buffer must not be null",
+    "Boundary pattern must not be null or empty",
+    "Head position must be within valid range (0 <= head < buffer length)",
+    "Tail position must be within valid range (head <= tail <= buffer length)",
+    "Boundary length must match the actual length of the boundary array"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ByteBuffer": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "length": {
+          "type": "integer"
+        }
+      }
+    },
+    "ByteArray": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    }
+  }
+}

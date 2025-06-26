@@ -1,0 +1,54 @@
+{
+  "featureName": "GetRssDocumentProperties",
+  "description": "Retrieves RSS document properties including title, description, encoding and link.",
+  "inputValues": [
+    "rssDocument-object-RSS"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the RSS document object with the following properties:\n     * title (mandatory): The title of the RSS document\n     * description (mandatory): The description of the RSS document\n     * encoding (mandatory): The character encoding of the document\n     * link (mandatory): The main link of the RSS document\n     * items (optional): List of RSS items associated with the document\n\n2. Data Validation:\n   - Validate RSS document object:\n     * Check if the RSS document object is not null\n     * IF RSS document is null THEN\n       - Return an error indicating invalid RSS document\n     * END IF\n\n3. Business Rule Processing:\n   - Verify RSS document integrity:\n     * Check if all required properties (title, description, encoding, link) are present\n     * IF any required property is missing THEN\n       - Return an error indicating which required property is missing\n     * END IF\n\n4. Core Operation Execution:\n   - Extract RSS document properties:\n     * Retrieve the title property from the RSS document\n     * Retrieve the description property from the RSS document\n     * Retrieve the encoding property from the RSS document\n     * Retrieve the link property from the RSS document\n     * Optionally retrieve the list of RSS items if needed\n\n5. Response Generation:\n   - Compile the RSS document properties:\n     * Create a response containing:\n       - title: The document title\n       - description: The document description\n       - encoding: The character encoding\n       - link: The main document link\n       - itemCount: The number of items in the RSS document (if items were retrieved)\n     * Return the compiled properties to the requester",
+  "databaseEntities": [],
+  "validationRules": [
+    "RSS document object must not be null",
+    "Title property must be present in the RSS document",
+    "Description property must be present in the RSS document",
+    "Encoding property must be present in the RSS document",
+    "Link property must be present in the RSS document"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RSS": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the RSS document"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the RSS document"
+        },
+        "encoding": {
+          "type": "string",
+          "description": "The character encoding of the document"
+        },
+        "link": {
+          "type": "string",
+          "description": "The main link of the RSS document"
+        },
+        "items": {
+          "type": "array",
+          "description": "List of RSS items in the document",
+          "items": {
+            "type": "object",
+            "description": "Individual RSS item"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "encoding",
+        "link"
+      ]
+    }
+  }
+}

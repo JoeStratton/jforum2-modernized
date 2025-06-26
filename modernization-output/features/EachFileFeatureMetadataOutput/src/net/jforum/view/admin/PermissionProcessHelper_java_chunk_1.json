@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ProcessPermissionData",
+    "description": "Processes permission data from request parameters and updates role-based permissions for groups"
+  },
+  {
+    "featureName": "InitializePermissions",
+    "description": "Initializes the permission system by deleting all existing roles for a group"
+  }
+]

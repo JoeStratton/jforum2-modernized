@@ -1,0 +1,297 @@
+{
+  "feature_name": "Post and Reply System",
+  "description": "The Post and Reply System handles the creation, editing, and management of user content in the form of topics and replies within forums.",
+  "business_logic": {
+    "topic_creation": {
+      "description": "Process for creating new discussion topics within forums",
+      "workflow": [
+        "User selects a forum and initiates topic creation",
+        "User provides topic title and content",
+        "System validates input based on forum rules (min length, etc.)",
+        "If forum is moderated, topic may be held for approval",
+        "On creation, forum statistics are updated (topic count, last post)",
+        "Notifications sent to forum subscribers"
+      ],
+      "topic_types": [
+        "Normal - standard discussion topics",
+        "Sticky - pinned to top of forum listing",
+        "Announcement - special visibility across forums",
+        "Poll - includes voting options"
+      ]
+    },
+    "post_creation": {
+      "description": "Process for replying to existing topics",
+      "workflow": [
+        "User views a topic and initiates reply",
+        "User provides reply content",
+        "System validates input based on forum rules",
+        "If forum is moderated, reply may be held for approval",
+        "On creation, forum and topic statistics are updated",
+        "Notifications sent to topic subscribers"
+      ]
+    },
+    "content_editing": {
+      "description": "Rules and workflow for editing existing content",
+      "workflow": [
+        "Users can edit their own posts within time limits set by configuration",
+        "Moderators can edit any post in forums they moderate",
+        "Administrators can edit any post",
+        "Edit history can be tracked based on configuration",
+        "Edit notifications can be sent to subscribers"
+      ]
+    },
+    "content_formatting": {
+      "description": "Options for formatting post content",
+      "supported_formats": [
+        "BBCode - forum-specific markup language",
+        "Smilies/emoticons",
+        "Code highlighting for programming snippets",
+        "Quote system for referencing other posts"
+      ]
+    },
+    "attachments": {
+      "description": "File attachment capabilities for posts",
+      "workflow": [
+        "Users can attach files to posts based on permissions",
+        "File types restricted by configuration",
+        "File size limits based on user group quotas",
+        "Attachments can be downloaded by users with appropriate permissions"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "topics": {
+      "list": {
+        "path": "/api/forums/{forumId}/topics",
+        "method": "GET",
+        "query_params": {
+          "page": "integer",
+          "size": "integer",
+          "sort": "string"
+        },
+        "responses": {
+          "200": "Paginated list of topics"
+        }
+      },
+      "create": {
+        "path": "/api/forums/{forumId}/topics",
+        "method": "POST",
+        "request_body": {
+          "title": "string",
+          "content": "string",
+          "type": "integer",
+          "attachments": "array"
+        },
+        "responses": {
+          "201": "Topic created",
+          "202": "Topic submitted for moderation",
+          "400": "Validation error"
+        }
+      },
+      "get": {
+        "path": "/api/topics/{topicId}",
+        "method": "GET",
+        "responses": {
+          "200": "Topic with paginated posts",
+          "404": "Topic not found"
+        }
+      },
+      "update": {
+        "path": "/api/topics/{topicId}",
+        "method": "PUT",
+        "request_body": {
+          "title": "string",
+          "type": "integer"
+        },
+        "responses": {
+          "200": "Topic updated",
+          "403": "Permission denied",
+          "404": "Topic not found"
+        }
+      },
+      "delete": {
+        "path": "/api/topics/{topicId}",
+        "method": "DELETE",
+        "responses": {
+          "204": "Topic deleted",
+          "403": "Permission denied",
+          "404": "Topic not found"
+        }
+      },
+      "move": {
+        "path": "/api/topics/{topicId}/move",
+        "method": "POST",
+        "request_body": {
+          "destinationForumId": "integer"
+        }
+      },
+      "lock": {
+        "path": "/api/topics/{topicId}/lock",
+        "method": "POST"
+      },
+      "unlock": {
+        "path": "/api/topics/{topicId}/unlock",
+        "method": "POST"
+      },
+      "subscribe": {
+        "path": "/api/topics/{topicId}/subscriptions",
+        "method": "POST"
+      },
+      "unsubscribe": {
+        "path": "/api/topics/{topicId}/subscriptions",
+        "method": "DELETE"
+      }
+    },
+    "posts": {
+      "list": {
+        "path": "/api/topics/{topicId}/posts",
+        "method": "GET",
+        "query_params": {
+          "page": "integer",
+          "size": "integer"
+        }
+      },
+      "create": {
+        "path": "/api/topics/{topicId}/posts",
+        "method": "POST",
+        "request_body": {
+          "content": "string",
+          "attachments": "array"
+        },
+        "responses": {
+          "201": "Post created",
+          "202": "Post submitted for moderation",
+          "400": "Validation error"
+        }
+      },
+      "get": {
+        "path": "/api/posts/{postId}",
+        "method": "GET"
+      },
+      "update": {
+        "path": "/api/posts/{postId}",
+        "method": "PUT",
+        "request_body": {
+          "content": "string",
+          "attachments": "array"
+        }
+      },
+      "delete": {
+        "path": "/api/posts/{postId}",
+        "method": "DELETE"
+      },
+      "quote": {
+        "path": "/api/posts/{postId}/quote",
+        "method": "GET"
+      }
+    }
+  },
+  "database_schema": {
+    "topics": {
+      "fields": [
+        {"name": "topic_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "forum_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "topic_title", "type": "VARCHAR(100)", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "topic_time", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "topic_views", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "topic_replies", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "topic_status", "type": "SMALLINT", "constraints": "DEFAULT 0"},
+        {"name": "topic_type", "type": "SMALLINT", "constraints": "DEFAULT 0"},
+        {"name": "topic_first_post_id", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "topic_last_post_id", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "moderated", "type": "SMALLINT", "constraints": "DEFAULT 0"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (forum_id) REFERENCES forums(forum_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_topics_forum ON topics(forum_id)",
+        "CREATE INDEX idx_topics_user ON topics(user_id)",
+        "CREATE INDEX idx_topics_time ON topics(topic_time)"
+      ]
+    },
+    "posts": {
+      "fields": [
+        {"name": "post_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "topic_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "forum_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "post_time", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "poster_ip", "type": "VARCHAR(45)", "constraints": "NOT NULL"},
+        {"name": "post_text", "type": "TEXT", "constraints": "NOT NULL"},
+        {"name": "post_edit_time", "type": "TIMESTAMP"},
+        {"name": "post_edit_count", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "status", "type": "SMALLINT", "constraints": "DEFAULT 0"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (topic_id) REFERENCES topics(topic_id)",
+        "FOREIGN KEY (forum_id) REFERENCES forums(forum_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_posts_topic ON posts(topic_id)",
+        "CREATE INDEX idx_posts_forum ON posts(forum_id)",
+        "CREATE INDEX idx_posts_user ON posts(user_id)",
+        "CREATE INDEX idx_posts_time ON posts(post_time)"
+      ]
+    },
+    "topics_watch": {
+      "fields": [
+        {"name": "topic_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "PRIMARY KEY (topic_id, user_id)",
+        "FOREIGN KEY (topic_id) REFERENCES topics(topic_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ]
+    },
+    "attachments": {
+      "fields": [
+        {"name": "attach_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "post_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "attach_filename", "type": "VARCHAR(255)", "constraints": "NOT NULL"},
+        {"name": "attach_filesize", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "attach_content_type", "type": "VARCHAR(100)", "constraints": "NOT NULL"},
+        {"name": "attach_download_count", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "attachment_extension_id", "type": "INTEGER"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (post_id) REFERENCES posts(post_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ]
+    }
+  },
+  "security_considerations": {
+    "content_validation": [
+      "Sanitize all user input to prevent XSS attacks",
+      "Validate content against forum rules (min/max length)",
+      "Filter disallowed HTML/scripts",
+      "Rate limiting to prevent spam"
+    ],
+    "permissions": [
+      "Check forum permissions before allowing topic creation",
+      "Verify topic permissions before allowing replies",
+      "Restrict edit/delete operations to post owners, moderators, or admins",
+      "Implement time-based edit restrictions based on configuration"
+    ],
+    "attachment_security": [
+      "Validate file types against allowed extensions",
+      "Scan uploads for malware/viruses",
+      "Enforce size limits based on user group quotas",
+      "Store files with randomized names to prevent direct access"
+    ]
+  },
+  "integration_points": {
+    "user_management": "Posts are associated with user accounts",
+    "forum_structure": "Topics exist within forums which are organized in categories",
+    "notification_system": "Notifications for new posts sent to subscribers",
+    "search_system": "Post content is indexed for searching",
+    "moderation_system": "Posts may require moderation before becoming visible",
+    "karma_system": "Users can receive karma for their posts",
+    "attachment_system": "Files can be attached to posts"
+  }
+}

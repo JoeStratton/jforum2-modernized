@@ -1,0 +1,44 @@
+{
+  "featureName": "HandleRedirection",
+  "description": "Sets and retrieves URL redirection information for forum navigation.",
+  "inputValues": [
+    "redirectUrl-string-Navigation",
+    "contentType-string-Response",
+    "customContent-boolean-Response"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect redirectUrl (string): The URL to redirect to\n   - Collect contentType (string): The content type for the response\n   - Collect customContent (boolean): Flag indicating if custom content is being used\n   - System will use current execution context if available\n\n2. Data Validation:\n   - Validate redirectUrl:\n     2.1. Check if redirectUrl is not null when setting a redirection\n     2.2. Verify redirectUrl follows valid URL format\n     2.3. Return error if validation fails\n   - Validate contentType:\n     2.4. Check if contentType is a recognized MIME type\n     2.5. Return error if validation fails\n   - Validate execution context:\n     2.6. Verify that a forum execution context exists\n     2.7. If no context exists, create a new context\n     2.8. Return error if context cannot be established\n\n3. Business Rule Processing:\n   - Check execution context state:\n     3.1. Verify the current thread has an active execution context\n     3.2. IF no context exists, create a new execution context\n     3.3. Store the context in thread-local storage\n   - Process redirection settings:\n     3.4. IF redirectUrl is provided, store it in the execution context\n     3.5. IF contentType is provided, store it in the execution context\n     3.6. IF customContent flag is provided, update the custom content setting\n\n4. Core Operation Execution:\n   - Set redirection information:\n     4.1. Store the redirectUrl in the current execution context\n     4.2. Update the content type if specified\n     4.3. Update custom content flag if specified\n   - Retrieve redirection information:\n     4.4. Access the current execution context\n     4.5. Retrieve the stored redirectUrl\n     4.6. Retrieve the content type setting\n     4.7. Retrieve the custom content flag\n   - Handle special redirection cases:\n     4.8. IF basic authentication is requested, add appropriate headers\n     4.9. Set response status code to 401 (Unauthorized) if needed\n     4.10. Enable custom content handling for special responses\n\n5. Response Generation:\n   - For redirection setting:\n     5.1. Return confirmation that redirection has been set\n     5.2. Include the set URL in the confirmation\n   - For redirection retrieval:\n     5.3. Return the current redirection URL\n     5.4. Include content type information\n     5.5. Include custom content flag status\n   - For authentication requests:\n     5.6. Return authentication challenge response\n     5.7. Include appropriate authentication headers",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Redirection URL must be properly formatted",
+    "Content type must be a valid MIME type",
+    "An execution context must exist or be created",
+    "Custom content flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Navigation": {
+      "type": "object",
+      "properties": {
+        "redirectUrl": {
+          "type": "string",
+          "description": "URL to redirect the user to"
+        }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "MIME type for the response"
+        },
+        "customContent": {
+          "type": "boolean",
+          "description": "Flag indicating if custom content is being used"
+        }
+      }
+    }
+  }
+}

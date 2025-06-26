@@ -1,0 +1,51 @@
+{
+  "featureName": "ShowBannedMessage",
+  "description": "Displays a message when a banned user attempts to access the forum.",
+  "inputValues": [
+    "userId-number-User",
+    "forumId-number-Forum",
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory) from the current user session\n   - Collect forumId (mandatory) from the request parameters\n   - Collect userSession (mandatory) containing user status and permissions\n\n2. Data Validation:\n   - Validate userId:\n     a. Verify userId is a positive integer\n     b. Verify userId exists in the system\n     c. Return error if validation fails\n   - Validate forumId:\n     a. Verify forumId is a positive integer\n     b. Verify forumId exists in the system\n     c. Return error if validation fails\n   - Validate userSession:\n     a. Verify userSession is active\n     b. Verify userSession contains required user information\n     c. Return error if validation fails\n\n3. Business Rule Processing:\n   - Check user ban status:\n     a. Retrieve user status from user profile\n     b. IF user status is \"banned\":\n        i. Proceed to banned message display\n     c. ELSE:\n        i. Allow normal forum access\n   - Check forum access permissions:\n     a. Retrieve forum access rules\n     b. Verify if user has permission to access the requested forum\n     c. IF user lacks permission:\n        i. Proceed to banned message display\n     d. ELSE:\n        i. Allow normal forum access\n\n4. Core Operation Execution:\n   - Prepare banned message display:\n     a. Set appropriate template for banned message\n     b. Load localized message text based on user language preference\n     c. Add context information explaining the ban reason if available\n     d. Format the message for display\n   - Log the banned access attempt:\n     a. Record timestamp of access attempt\n     b. Record user information\n     c. Record requested resource\n     d. Store log entry\n\n5. Response Generation:\n   - Generate banned message response:\n     a. Set response template to banned message view\n     b. Include formatted ban message in the response\n     c. Include any available support contact information\n     d. Include any available appeal process information\n     e. Return the formatted response to the user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Forum ID must be a valid positive integer",
+    "User session must be active",
+    "User ban status must be checked before forum access",
+    "Access permissions must be verified for the requested forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The unique identifier of the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user"
+        },
+        "isBanned": {
+          "type": "boolean",
+          "description": "Flag indicating if the user is banned"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Date and time of the user's last visit"
+        },
+        "permissions": {
+          "type": "object",
+          "description": "User's permission settings"
+        }
+      }
+    }
+  }
+}

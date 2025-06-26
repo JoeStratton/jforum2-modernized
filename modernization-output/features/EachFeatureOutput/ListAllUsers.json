@@ -1,0 +1,33 @@
+{
+  "featureName": "ListAllUsers",
+  "description": "Retrieves all users in the system.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect optional pagination parameters:\n     - startFrom: The index position to start fetching users (optional, defaults to 0)\n     - count: The maximum number of users to retrieve (optional, defaults to system maximum)\n\n2. Data Validation:\n   - Validate pagination parameters:\n     - IF startFrom is provided THEN\n       - Verify startFrom is a non-negative integer\n       - IF startFrom is negative THEN\n         - Generate error message: \"Start index must be a non-negative value\"\n     - IF count is provided THEN\n       - Verify count is a positive integer\n       - IF count is not positive THEN\n         - Generate error message: \"Count must be a positive value\"\n       - IF count exceeds system maximum THEN\n         - Set count to system maximum\n\n3. Business Rule Processing:\n   - Check user access permissions:\n     - Verify current user has permission to list users\n     - IF user lacks permission THEN\n       - Generate error: \"Insufficient permissions to view user list\"\n   - Determine if additional user data should be included:\n     - Check if karma information is requested\n     - Check if group information is requested\n\n4. Core Operation Execution:\n   - Retrieve users from the system:\n     - IF no pagination parameters provided THEN\n       - Retrieve all users from the system\n     - ELSE\n       - Retrieve users starting from 'startFrom' index\n       - Limit results to 'count' number of records\n     - For each retrieved user:\n       - Include basic user information (id, username, email, registration date)\n       - IF karma information requested THEN\n         - Include karma status for each user\n       - IF group information requested THEN\n         - Include group memberships for each user\n   - Count total number of users in system for pagination information\n\n5. Response Generation:\n   - Prepare success response:\n     - Format list of user records with requested information\n     - Include pagination metadata:\n       - Total number of users in system\n       - Current page information\n       - Number of records returned\n   - IF no users found THEN\n     - Return empty list with appropriate metadata\n   - ELSE\n     - Return formatted user list with pagination metadata",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Start index must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must have permission to view user list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "active": "boolean",
+      "posts": "number",
+      "karma": "object",
+      "groups": "array"
+    }
+  }
+}

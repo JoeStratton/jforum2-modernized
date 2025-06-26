@@ -1,0 +1,32 @@
+{
+  "featureName": "SaveGroupChanges",
+  "description": "Persists changes to an existing user group in the system.",
+  "inputValues": [
+    "group_id-number-Group",
+    "group_name-string-Group",
+    "group_description-string-Group",
+    "parent_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. group_id (mandatory): Unique identifier for the group being updated\n     b. group_name (mandatory): New name for the group\n     c. group_description (mandatory): Updated description for the group\n     d. parent_id (optional): Identifier of the parent group, if hierarchical structure is used\n\n2. Data Validation:\n   - Validate group_id:\n     a. Ensure group_id is provided and is a valid number\n     b. Verify the group exists in the system\n     c. IF group_id is invalid or not found, THEN display error message and abort operation\n   - Validate group_name:\n     a. Ensure group_name is not empty\n     b. Verify the length meets system requirements\n     c. IF validation fails, THEN display appropriate error message\n   - Validate group_description:\n     a. Ensure description is provided\n     b. Verify the length meets system requirements\n     c. IF validation fails, THEN display appropriate error message\n   - Validate parent_id:\n     a. IF parent_id is provided, THEN verify it exists in the system\n     b. Ensure parent_id is not the same as group_id (prevent self-reference)\n     c. IF parent_id equals group_id, THEN set parent_id to 0 (no parent)\n     d. IF parent_id is invalid, THEN display error message\n\n3. Business Rule Processing:\n   - Check for circular references in group hierarchy:\n     a. Ensure the parent_id does not create a circular reference in the group hierarchy\n     b. IF circular reference is detected, THEN display error message and abort operation\n   - Check for name conflicts:\n     a. Verify the new group name doesn't conflict with existing groups (excluding the current group)\n     b. IF name conflict exists, THEN display error message and abort operation\n   - Check for system-protected groups:\n     a. Verify the group is not a system-protected group that cannot be modified\n     b. IF group is protected, THEN display error message and abort operation\n\n4. Core Operation Execution:\n   - Prepare group data for update:\n     a. Create group object with updated information\n     b. Set group ID, name, description, and parent ID\n   - Update group record in the system:\n     a. Save the updated group information to the database\n     b. Update any related hierarchical structures if parent_id changed\n     c. IF update fails, THEN log error details and display error message\n   - Update related data if necessary:\n     a. Update any cached group information in the system\n     b. Update any dependent relationships affected by the changes\n\n5. Response Generation:\n   - For successful update:\n     a. Generate success message indicating the group was updated successfully\n     b. Provide updated group details in the response\n     c. Return to the group listing page showing all groups\n   - For failed update:\n     a. Generate appropriate error message explaining the failure reason\n     b. Preserve user input to allow correction\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must exist in the system",
+    "Group name must not be empty",
+    "Group description must not be empty",
+    "Parent ID must not create a circular reference",
+    "Parent ID cannot be the same as the group ID",
+    "Group name must be unique across the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number"
+    }
+  }
+}

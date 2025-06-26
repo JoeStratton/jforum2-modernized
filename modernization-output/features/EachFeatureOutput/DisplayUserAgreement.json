@@ -1,0 +1,22 @@
+{
+  "featureName": "DisplayUserAgreement",
+  "description": "Shows terms and conditions agreement for user registration.",
+  "inputValues": [
+    "username-string-User",
+    "email-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user registration information:\n     - username (mandatory string)\n     - email (mandatory string)\n     - password (mandatory string)\n     - captcha response (mandatory string if captcha is enabled)\n   - System determines if agreement display is required based on configuration\n\n2. Data Validation:\n   - Validate if user registration is enabled in the system\n     - IF registration is disabled, THEN show registration disabled message\n     - IF using SSO authentication, THEN show registration disabled message\n   - Validate if agreement needs to be shown\n     - IF agreement display is configured AND agreement not yet accepted, THEN proceed to agreement display\n     - IF agreement already accepted OR not required, THEN proceed to registration form\n\n3. Business Rule Processing:\n   - Load agreement content:\n     - Attempt to load language-specific agreement file\n     - IF language-specific file not found, THEN load default agreement file\n     - IF no agreement file found, THEN display \"no agreement available\" message\n   - Present agreement content to user\n   - Provide option to accept or decline agreement\n     - IF user declines agreement, THEN registration process is terminated\n     - IF user accepts agreement, THEN:\n       - Record agreement acceptance in user session\n       - Proceed to registration form\n\n4. Core Operation Execution:\n   - Display agreement content to user\n   - Record user's acceptance decision\n   - IF accepted, THEN redirect user to registration form\n   - IF declined, THEN terminate registration process\n\n5. Response Generation:\n   - For agreement display:\n     - Show complete agreement text\n     - Provide accept/decline options\n   - For acceptance confirmation:\n     - Record acceptance in session\n     - Redirect to registration form\n   - For registration disabled:\n     - Show appropriate message explaining registration is not available",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Registration must be enabled in system settings",
+    "Agreement must be shown if configured in system settings",
+    "User must accept agreement before proceeding with registration",
+    "Agreement file must be available in the system"
+  ],
+  "dbSeedingOperations": [
+    "Ensure agreement text files are available in the configured directory"
+  ],
+  "schema": {}
+}

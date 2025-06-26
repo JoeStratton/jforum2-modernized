@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CreatePostDAO",
+    "description": "Creates and returns a HSQLDB-specific implementation of the Post Data Access Object"
+  },
+  {
+    "featureName": "CreateTopicDAO",
+    "description": "Creates and returns a HSQLDB-specific implementation of the Topic Data Access Object"
+  },
+  {
+    "featureName": "CreateUserDAO",
+    "description": "Creates and returns a HSQLDB-specific implementation of the User Data Access Object"
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "featureName": "HasUsernameChanged",
+  "description": "Checks if a username has been changed for a specific user ID.",
+  "inputValues": [
+    "userId-number-User",
+    "usernameToCheck-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - The unique identifier of the user\n   - Collect usernameToCheck (string, mandatory) - The username to compare with the stored username\n\n2. Data Validation:\n   - Validate userId:\n      * Ensure userId is a positive integer\n      * Ensure userId is not null or empty\n      * IF validation fails, THEN return appropriate error message\n   - Validate usernameToCheck:\n      * Ensure usernameToCheck is not null or empty\n      * Ensure usernameToCheck follows username format rules\n      * IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check if the user exists in the system:\n      * Verify the userId corresponds to an existing user record\n      * IF user does not exist, THEN return error indicating invalid user\n   - Prepare for username comparison:\n      * Determine if case sensitivity should be applied based on system settings\n      * Set up comparison parameters accordingly\n\n4. Core Operation Execution:\n   - Retrieve the current username from the database:\n      * Query the user record using the provided userId\n      * Extract the stored username value\n      * IF retrieval fails, THEN handle the error and return appropriate message\n   - Compare the stored username with the provided usernameToCheck:\n      * Apply case sensitivity rules as determined in step 3\n      * IF usernameToCheck is different from the stored username, THEN set status to true (changed)\n      * ELSE set status to false (not changed)\n\n5. Response Generation:\n   - Prepare the response with the comparison result:\n      * Include the boolean status indicating whether the username has changed\n      * IF status is true, THEN include additional information about the username change\n      * IF any errors occurred during processing, THEN include error details\n   - Return the final response to the caller",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Username to check must not be empty",
+    "User ID must correspond to an existing user in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        }
+      },
+      "required": [
+        "userId",
+        "username"
+      ]
+    }
+  }
+}

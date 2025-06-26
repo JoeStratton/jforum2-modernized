@@ -1,0 +1,64 @@
+{
+  "featureName": "AddRole",
+  "description": "Adds a new security role to a user group.",
+  "inputValues": [
+    "groupId-number-Group",
+    "role-object-Role",
+    "roleValues-object-RoleValueCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. groupId (number): The identifier of the group to which the role will be added\n     b. role (object): The security role to be added\n     c. roleValues (object, optional): Collection of values associated with the role\n\n2. Data Validation:\n   - Validate groupId:\n     a. Check if groupId is provided\n     b. Verify groupId is a positive integer\n     c. IF groupId is invalid THEN generate appropriate error message\n   - Validate role object:\n     a. Check if role is provided\n     b. Verify role has required properties (name, etc.)\n     c. IF role is invalid THEN generate appropriate error message\n   - Validate roleValues (if provided):\n     a. Check if roleValues collection is properly structured\n     b. Verify roleValues contains valid entries\n     c. IF roleValues is invalid THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check group existence:\n     a. Verify the group with provided groupId exists in the system\n     b. IF group does not exist THEN return error indicating invalid group\n   - Check user permissions:\n     a. Verify current user has permission to modify group security roles\n     b. IF user lacks permission THEN return access denied error\n   - Check role uniqueness:\n     a. Query the system to determine if the role is already assigned to the group\n     b. IF role already exists for this group THEN determine if update is needed instead of add\n     c. IF role exists with same name but different group THEN verify it can be added to multiple groups\n   - Check role collection capacity:\n     a. Verify the role collection can accommodate another role\n     b. IF collection has reached capacity THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Prepare role assignment:\n     a. Format role data for storage\n     b. Generate unique identifiers for the role if required\n     c. Prepare role values for association with the role if provided\n   - Perform role addition:\n     a. Create a new role entry for the specified group\n     b. Associate the role with the specified group using the role name as key\n     c. IF roleValues are provided THEN associate the role values with the role\n     d. IF any operation fails THEN rollback all changes and return error\n   - Update related records:\n     a. Update group's security information to reflect new role\n     b. Update any cached security information in the role repository\n     c. Record the change in system audit logs\n\n5. Response Generation:\n   - For successful addition:\n     a. Generate success confirmation\n     b. Include summary of the added role\n     c. Include the updated group security information\n     d. Include the role ID for reference\n   - For failed addition:\n     a. Generate detailed error message\n     b. Include specific reason for failure\n     c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "Role object must be properly structured",
+    "Role name must not be empty",
+    "User must have permission to modify group security",
+    "Role values must be properly formatted",
+    "Role name must be unique within the collection"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Role": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the security role"
+        },
+        "id": {
+          "type": "number",
+          "description": "The identifier of the role"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "RoleValueCollection": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "description": "The identifier of the role value"
+              },
+              "value": {
+                "type": "string",
+                "description": "The value associated with the role"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

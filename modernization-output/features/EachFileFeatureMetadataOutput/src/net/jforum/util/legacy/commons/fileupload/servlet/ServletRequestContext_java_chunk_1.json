@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "GetRequestContentType",
+    "description": "Retrieves the content type of an HTTP servlet request"
+  },
+  {
+    "featureName": "GetRequestContentLength",
+    "description": "Retrieves the content length of an HTTP servlet request"
+  },
+  {
+    "featureName": "GetRequestInputStream",
+    "description": "Provides access to the input stream of an HTTP servlet request"
+  },
+  {
+    "featureName": "FormatRequestContext",
+    "description": "Formats request context information showing content length and type"
+  }
+]

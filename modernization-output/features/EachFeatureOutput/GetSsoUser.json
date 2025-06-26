@@ -1,0 +1,45 @@
+{
+  "featureName": "GetSsoUser",
+  "description": "Retrieves user information associated with the current SSO authentication context.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the username (string) from the SSO context\n   - Username is mandatory for this operation\n   - No default values are provided\n\n2. Data Validation:\n   - Validate username input:\n     a. Check if username is not empty or null\n     b. Verify username format meets system requirements\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify system is configured for SSO authentication\n   - Check if the current session has valid SSO credentials\n   - Determine if the system should create new users automatically if not found\n\n4. Core Operation Execution:\n   - Check if user exists in the system database:\n     a. Search for user by the provided username\n     b. IF user is found:\n        i. Retrieve complete user profile information\n        ii. Update last access timestamp if required\n     c. IF user is not found:\n        i. Mark user as non-existent in the system\n        ii. Prepare system for potential user registration\n   - Handle any exceptions during user retrieval process\n\n5. Response Generation:\n   - IF user exists:\n     a. Return complete user information including:\n        i. User identification details\n        ii. User profile information\n        iii. User permissions and group memberships\n   - IF user does not exist:\n     a. Return user existence status as false\n     b. Provide information that registration may be required\n   - Include operation status in the response",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must exist in the system for successful retrieval",
+    "SSO authentication must be properly configured",
+    "User session must have valid SSO context"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "active": {
+          "type": "number",
+          "description": "Flag indicating if user account is active"
+        }
+      },
+      "required": [
+        "username"
+      ]
+    }
+  }
+}

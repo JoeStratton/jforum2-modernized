@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SelectAllUsers",
+    "description": "Retrieves a paginated list of users with custom pagination logic for Oracle database"
+  }
+]

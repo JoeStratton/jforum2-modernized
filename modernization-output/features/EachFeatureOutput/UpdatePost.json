@@ -1,0 +1,55 @@
+{
+  "featureName": "UpdatePost",
+  "description": "Updates an existing post's content and metadata in the forum system.",
+  "inputValues": [
+    "postId-number-Post",
+    "topicId-number-Post",
+    "forumId-number-Post",
+    "subject-string-Post",
+    "text-string-Post",
+    "userIp-string-Post",
+    "bbCodeEnabled-boolean-Post",
+    "htmlEnabled-boolean-Post",
+    "smiliesEnabled-boolean-Post",
+    "signatureEnabled-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. postId (mandatory): Unique identifier of the post to update\n     b. subject (mandatory): Updated subject line for the post\n     c. text (mandatory): Updated content text for the post\n     d. topicId (mandatory): Topic identifier the post belongs to\n     e. forumId (mandatory): Forum identifier the post belongs to\n     f. userIp (mandatory): IP address of the user making the update\n     g. bbCodeEnabled (optional): Flag indicating if BBCode is enabled, default is current setting\n     h. htmlEnabled (optional): Flag indicating if HTML is enabled, default is current setting\n     i. smiliesEnabled (optional): Flag indicating if smilies are enabled, default is current setting\n     j. signatureEnabled (optional): Flag indicating if signature is enabled, default is current setting\n\n2. Data Validation\n   - Validate post existence:\n     a. Check if postId corresponds to an existing post\n     b. IF post does not exist, THEN\n        i. Generate error message: \"Post not found\"\n        ii. Terminate the operation\n   - Validate subject field:\n     a. Check if subject is not empty\n     b. Check if subject length is within allowed limits (1-255 characters)\n     c. IF validation fails, THEN\n        i. Generate appropriate error message\n        ii. Terminate the operation\n   - Validate text field:\n     a. Check if text is not empty\n     b. Check if text length is within allowed limits\n     c. IF validation fails, THEN\n        i. Generate appropriate error message\n        ii. Terminate the operation\n   - Validate topic and forum consistency:\n     a. Verify that the provided topicId and forumId are valid\n     b. Verify that the topic belongs to the specified forum\n     c. IF validation fails, THEN\n        i. Generate error message: \"Invalid topic or forum information\"\n        ii. Terminate the operation\n\n3. Business Rule Processing\n   - Check user permissions:\n     a. Verify if the current user has permission to edit this post\n     b. IF user is not the post creator and not a moderator/administrator, THEN\n        i. Generate error message: \"Insufficient permissions to edit this post\"\n        ii. Terminate the operation\n   - Check edit time restrictions:\n     a. Determine if there are time limitations for editing posts\n     b. IF time limit exists and has been exceeded, THEN\n        i. Generate error message: \"Edit time limit exceeded\"\n        ii. Terminate the operation\n   - Handle moderation requirements:\n     a. Determine if the edited post requires moderation based on forum settings\n     b. IF moderation is required, THEN\n        i. Set moderation flag for the post\n   - Check cache status:\n     a. Determine if the post is currently cached in the system\n     b. IF post is cached, THEN\n        i. Mark for cache update after successful edit\n\n4. Core Operation Execution\n   - Update post metadata:\n     a. Increment the edit count by 1\n     b. Set the edit timestamp to current time\n     c. Update the user IP address\n     d. Update forum and topic IDs if changed\n     e. Update formatting preferences (BBCode, HTML, smilies, signature)\n   - Update post content:\n     a. Update the post subject\n     b. Update the post text content\n   - Update cache if necessary:\n     a. IF post is in cache, THEN\n        i. Update the cached post with new content\n        ii. Ensure cache consistency for the associated topic\n   - Handle search indexing:\n     a. Update the post in the search index to reflect new content\n   - Process notifications:\n     a. Determine if notifications should be sent for post edits\n     b. IF notifications are enabled, THEN\n        i. Queue notifications for relevant users\n\n5. Response Generation\n   - Generate success response:\n     a. Include confirmation message: \"Post successfully updated\"\n     b. Include post identifier\n     c. Include timestamp of the update\n     d. Include new edit count\n   - Generate navigation information:\n     a. Include link to view the updated post\n     b. Include link to return to the topic\n     c. Include link to return to the forum",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Post ID must correspond to an existing post",
+    "Subject must not be empty",
+    "Subject must be between 1 and 255 characters",
+    "Post text must not be empty",
+    "Topic ID must be valid and match the post's topic",
+    "Forum ID must be valid and match the topic's forum",
+    "User must have permission to edit the post",
+    "Edit time limit must not be exceeded if applicable",
+    "Post must be properly prepared for display after update"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "time": "date",
+      "editTime": "date",
+      "editCount": "number",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "moderate": "boolean"
+    }
+  }
+}

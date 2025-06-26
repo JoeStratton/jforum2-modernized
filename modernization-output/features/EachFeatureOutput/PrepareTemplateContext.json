@@ -1,0 +1,36 @@
+{
+  "featureName": "PrepareTemplateContext",
+  "description": "Sets up common variables used by templates with forum configuration and user context.",
+  "inputValues": [
+    "context-object-SimpleHash",
+    "jforumContext-object-ForumContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect template context object (SimpleHash)\n   - Collect forum context object (ForumContext)\n   - Retrieve current request from JForumExecutionContext\n\n2. Data Validation:\n   - Verify context object is not null\n     - IF context is null THEN return error message indicating missing template context\n   - Verify forum context object is not null\n     - IF forum context is null THEN return error message indicating missing forum context\n\n3. Business Rule Processing:\n   - Check system permissions for current user\n     - Verify if karma feature is enabled for current user\n     - Verify if bookmarks feature is enabled for current user\n     - Verify if moderation log access is permitted for current user\n   - Retrieve system configuration values\n     - Get date/time format configuration\n     - Get authentication settings (auto login enabled, SSO type)\n     - Get template directory name\n     - Get file extension configuration\n     - Get version information\n     - Get forum title and page metadata\n     - Get encoding settings\n\n4. Core Operation Execution:\n   - Populate context with permission-based variables\n     - Add karma permission status to context\n     - Add bookmarks permission status to context\n     - Add moderation log access permission to context\n   - Populate context with system configuration variables\n     - Add date/time format to context\n     - Add auto login status to context\n     - Add SSO status to context\n     - Add template name to context\n     - Add file extension to context\n     - Add version information to context\n     - Add forum title and page title to context\n     - Add meta keywords and description to context\n     - Add encoding information to context\n   - Populate context with request-based variables\n     - Add context path to context\n     - Add server name to context\n     - Add server port to context\n   - Populate context with additional utility objects\n     - Add internationalization instance to context\n     - Add forum link and homepage link to context\n     - Add forum context object to context\n     - Add current timestamp to context\n\n5. Response Generation:\n   - Return populated context object with all required template variables\n   - No explicit response is needed as the context object is modified in-place",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Template context object must not be null",
+    "Forum context object must not be null",
+    "System configuration values must be accessible",
+    "User permissions must be properly verified"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SimpleHash": {
+      "type": "object",
+      "description": "Template context container that stores key-value pairs for template rendering",
+      "properties": {
+        "put": {
+          "type": "function",
+          "description": "Adds a key-value pair to the context"
+        }
+      }
+    },
+    "ForumContext": {
+      "type": "object",
+      "description": "Contains forum-specific context information for the current request"
+    }
+  }
+}

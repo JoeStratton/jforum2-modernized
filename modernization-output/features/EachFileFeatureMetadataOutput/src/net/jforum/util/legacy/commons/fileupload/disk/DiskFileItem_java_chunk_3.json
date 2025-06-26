@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "GetFileContentAsString",
+    "description": "Retrieves file contents as a string using specified character encoding"
+  },
+  {
+    "featureName": "WriteUploadedFileToLocation",
+    "description": "Writes an uploaded file item to a specified disk location"
+  },
+  {
+    "featureName": "DeleteTemporaryStorage",
+    "description": "Deletes the underlying storage for a file item including temporary disk files"
+  },
+  {
+    "featureName": "ManageFormFieldProperties",
+    "description": "Gets and sets form field properties for file items"
+  },
+  {
+    "featureName": "GetFileOutputStream",
+    "description": "Provides output stream for storing file contents"
+  },
+  {
+    "featureName": "GetFileStoreLocation",
+    "description": "Retrieves the File object for the temporary storage location"
+  },
+  {
+    "featureName": "CreateTemporaryFile",
+    "description": "Creates a uniquely named temporary file in the configured repository path"
+  }
+]

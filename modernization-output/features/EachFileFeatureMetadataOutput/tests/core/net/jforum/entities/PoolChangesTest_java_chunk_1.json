@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "DetectPollChanges",
+    "description": "Identifies differences between two poll instances including label changes and option modifications"
+  },
+  {
+    "featureName": "TrackChangedPollOptions",
+    "description": "Tracks poll options that have been modified between poll versions"
+  },
+  {
+    "featureName": "TrackNewPollOptions",
+    "description": "Identifies new poll options added in an updated poll"
+  },
+  {
+    "featureName": "TrackDeletedPollOptions",
+    "description": "Identifies poll options that have been removed in an updated poll"
+  }
+]

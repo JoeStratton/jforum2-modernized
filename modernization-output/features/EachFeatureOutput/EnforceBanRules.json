@@ -1,0 +1,39 @@
+{
+  "featureName": "EnforceBanRules",
+  "description": "Checks if user IP is banned and redirects to banned page or sends 403 error.",
+  "inputValues": [
+    "remoteAddress-string-User",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect remote IP address (mandatory)\n   - Retrieve user ID from current session (system-generated)\n\n2. Data Validation:\n   - Validate IP address format\n     * Ensure IP address is in valid IPv4 or IPv6 format\n     * Verify IP address is not empty\n     * If invalid, log error and proceed with default handling\n   - Validate user ID\n     * Ensure user ID is a positive integer\n     * If invalid, use anonymous user ID (typically 0 or -1)\n\n3. Business Rule Processing:\n   - Check system ban enforcement settings\n     * Verify if ban system is enabled in system configuration\n     * Determine ban response type (redirect vs error code) from configuration\n   - Create ban check object\n     * Populate with collected user ID\n     * Populate with validated IP address\n   - Query ban repository\n     * Check if IP address matches any banned IP patterns\n     * Check if user ID is explicitly banned\n     * IF either condition is true, THEN mark user as banned\n\n4. Core Operation Execution:\n   - IF user should be banned THEN\n     * Check ban response configuration setting\n     * IF system is configured to send HTTP 403 error THEN\n       - Set response status to 403 (Forbidden)\n       - End request processing\n     * ELSE\n       - Change module context to \"forums\"\n       - Set action context to \"banned\"\n       - Prepare banned page template\n   - ELSE\n     * Allow normal request processing to continue\n     * Maintain original module and action contexts\n\n5. Response Generation:\n   - For banned users with 403 response:\n     * Return HTTP 403 Forbidden status code\n     * No additional content required\n   - For banned users with redirect response:\n     * Set appropriate template variables for banned page\n     * Return banned page content with explanation\n   - For non-banned users:\n     * Continue normal request processing\n     * No special response handling needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "IP address must be in valid format",
+    "User ID must be a positive integer if provided",
+    "Ban check must be performed before processing any forum action",
+    "System must honor the configured ban response type"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BanEntry": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "ID of the banned user"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP address or pattern that is banned"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether this ban is currently active"
+        }
+      }
+    }
+  }
+}

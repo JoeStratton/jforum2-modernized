@@ -1,0 +1,34 @@
+{
+  "featureName": "UpdateGroupInformation",
+  "description": "Modifies an existing group's name, parent, and description.",
+  "inputValues": [
+    "groupId-number-Group",
+    "name-string-Group",
+    "parentId-number-Group",
+    "description-string-Group"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following required inputs:\n       - groupId (number): Unique identifier of the group to update\n       - name (string): New name for the group\n       - parentId (number): Identifier of the parent group\n       - description (string): New description for the group\n   1.2. Validate that groupId is provided and is a positive integer\n\n2. Data Validation\n   2.1. Validate group identifier\n       2.1.1. Check if groupId is a valid positive integer\n       2.1.2. IF groupId is invalid or missing, THEN generate an error message indicating invalid group identifier\n   2.2. Validate group name\n       2.2.1. Check if name is provided and not empty\n       2.2.2. Check if name length is within acceptable limits (1-50 characters)\n       2.2.3. IF name validation fails, THEN generate an error message indicating invalid group name\n   2.3. Validate parent group identifier\n       2.3.1. Check if parentId is a valid non-negative integer\n       2.3.2. IF parentId equals groupId, THEN generate an error message indicating a group cannot be its own parent\n       2.3.3. IF parentId is invalid, THEN generate an error message indicating invalid parent group\n   2.4. Validate description\n       2.4.1. Check if description is provided\n       2.4.2. Check if description length is within acceptable limits (0-255 characters)\n       2.4.3. IF description validation fails, THEN generate an error message indicating invalid description\n\n3. Business Rule Processing\n   3.1. Verify group existence\n       3.1.1. Check if a group with the provided groupId exists in the system\n       3.1.2. IF group does not exist, THEN generate an error message indicating group not found\n   3.2. Verify parent group existence (if parentId is provided and not zero)\n       3.2.1. Check if a group with the provided parentId exists in the system\n       3.2.2. IF parent group does not exist, THEN generate an error message indicating parent group not found\n   3.3. Check for circular parent references\n       3.3.1. IF parentId is not zero, THEN verify that setting this parent would not create a circular reference\n       3.3.2. IF circular reference would be created, THEN generate an error message indicating invalid parent relationship\n   3.4. Check for name uniqueness\n       3.4.1. Verify that no other group (except the current one) has the same name\n       3.4.2. IF name is already taken, THEN generate an error message indicating duplicate group name\n\n4. Core Operation Execution\n   4.1. Prepare group update operation\n       4.1.1. Create a group object with the updated information\n       4.1.2. Set the group's ID to the provided groupId\n       4.1.3. Set the group's name to the provided name\n       4.1.4. Set the group's parent ID to the provided parentId\n       4.1.5. Set the group's description to the provided description\n   4.2. Execute group update\n       4.2.1. Update the group record in the database\n       4.2.2. IF update operation fails, THEN generate an error message and roll back any changes\n   4.3. Update related records if necessary\n       4.3.1. IF any related records need to be updated based on group changes, THEN update them\n       4.3.2. IF any related update fails, THEN generate an error message and roll back all changes\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Create a response indicating successful group update\n       5.1.2. Include the updated group information in the response\n       5.1.3. Include any relevant messages or notifications\n   5.2. Handle error responses\n       5.2.1. IF any errors occurred during the process, THEN include detailed error information\n       5.2.2. Provide guidance on how to resolve the error if applicable",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a valid positive integer",
+    "Group name must not be empty",
+    "Group name must be between 1 and 50 characters",
+    "Group description must not exceed 255 characters",
+    "Parent ID must be a valid non-negative integer",
+    "A group cannot be its own parent",
+    "Parent group must exist in the system if specified",
+    "Group name must be unique across all groups",
+    "No circular parent references are allowed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number"
+    }
+  }
+}

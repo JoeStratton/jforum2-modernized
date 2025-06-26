@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "CreateBBCode",
+    "description": "Creates a BBCode tag with specified name, regex pattern, and replacement text"
+  },
+  {
+    "featureName": "ConfigureBBCodeProcessing",
+    "description": "Configures BBCode processing options including quote removal and always-process settings"
+  }
+]

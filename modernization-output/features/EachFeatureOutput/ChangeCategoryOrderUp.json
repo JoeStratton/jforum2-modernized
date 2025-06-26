@@ -1,0 +1,19 @@
+{
+  "featureName": "ChangeCategoryOrderUp",
+  "description": "Moves a category up in the display order by swapping its position with the category above it.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect categoryId (number, mandatory) to identify the category to move up\n   - System will determine the current display order of the category\n   - System will identify the category positioned above the selected category\n\n2. Data Validation:\n   - Validate that categoryId exists in the system\n     * IF categoryId does not exist THEN\n       - Return error: \"Category not found\"\n     * END IF\n   - Validate that the category is not already at the top position\n     * IF category is already at the top position THEN\n       - Return error: \"Category is already at the top position\"\n     * END IF\n   - Validate that the system contains at least two categories\n     * IF system has fewer than two categories THEN\n       - Return error: \"Reordering requires at least two categories\"\n     * END IF\n\n3. Business Rule Processing:\n   - Retrieve the current category using the provided categoryId\n   - Determine the current display order value of the category\n   - Identify the category positioned directly above (with next lower display order value)\n     * IF no category exists above the current one THEN\n       - Return error: \"No category exists above the current one\"\n     * END IF\n   - Verify that both categories are accessible and modifiable\n     * IF either category is locked or in use by another process THEN\n       - Return error: \"Cannot modify category order at this time\"\n     * END IF\n\n4. Core Operation Execution:\n   - Begin transaction to ensure data integrity\n   - Store the display order value of the current category (currentOrder)\n   - Store the display order value of the category above (aboveOrder)\n   - Swap the display order values between the two categories:\n     * Set current category's display order to aboveOrder\n     * Set above category's display order to currentOrder\n   - Commit the transaction\n     * IF any error occurs during the swap THEN\n       - Rollback transaction\n       - Return error: \"Failed to change category order\"\n     * END IF\n\n5. Response Generation:\n   - Return success response with updated category information\n   - Include the new display order of the moved category\n   - Include the list of all categories in their new order\n   - Provide confirmation message: \"Category successfully moved up in display order\"",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category ID must exist in the system",
+    "Category must not already be at the top position",
+    "System must have at least two categories",
+    "Categories must be available for modification"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

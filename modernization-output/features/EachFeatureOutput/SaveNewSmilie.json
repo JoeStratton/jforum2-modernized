@@ -1,0 +1,49 @@
+{
+  "featureName": "SaveNewSmilie",
+  "description": "Processes and saves a new smilie with uploaded image to the system.",
+  "inputValues": [
+    "code-string-Smilie",
+    "smilie_img-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. code (string, mandatory): The text code that represents the smilie\n     b. smilie_img (file, mandatory): The image file to be used as the smilie\n   - System will generate:\n     a. imgName: A unique identifier for the image file\n     b. url: The URL pattern to access the smilie\n     c. diskName: The name of the file as stored on disk\n\n2. Data Validation:\n   - Validate smilie code:\n     a. Check if code is not empty\n     b. Verify code follows proper format (special characters surrounded by colons)\n     c. Generate error message if code is invalid\n   - Validate uploaded image:\n     a. Verify file is present\n     b. Check if file is a valid image format (gif, jpg, png)\n     c. Verify file size is within acceptable limits\n     d. Generate error message if image is invalid or missing\n\n3. Business Rule Processing:\n   - Check if the system is ready to accept new smilies:\n     a. Verify smilie directory exists and is writable\n     b. Check if maximum number of smilies has not been reached\n   - Check if similar smilie code already exists:\n     a. IF duplicate code exists THEN\n        i. Generate warning about potential confusion\n        ii. Require confirmation to proceed\n     b. ELSE continue processing\n\n4. Core Operation Execution:\n   - Process the uploaded image:\n     a. Generate a unique filename using encryption of original filename\n     b. Determine file extension from uploaded file\n     c. Save the physical file to the smilie directory\n     d. Create the complete image name with extension\n   - Create new smilie record:\n     a. Set the smilie code from input\n     b. Set the URL using system pattern and new image name\n     c. Set the disk name for future reference\n     d. Save the new smilie to the database\n   - Update smilie repository:\n     a. Reload all smilies to refresh the system cache\n     b. Make new smilie immediately available\n   - IF any operation fails THEN:\n     a. Remove any partially created files\n     b. Revert any database changes\n     c. Generate appropriate error message\n\n5. Response Generation:\n   - On success:\n     a. Provide confirmation message that smilie was created\n     b. Display the new smilie in the list of available smilies\n     c. Offer option to create another smilie\n   - On failure:\n     a. Display specific error message about what went wrong\n     b. Preserve user input for correction\n     c. Provide guidance on how to fix the issue",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie code must not be empty",
+    "Image file must be uploaded",
+    "Image file must be a valid image format",
+    "Image file size must be within acceptable limits",
+    "Smilie directory must exist and be writable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Original filename of the uploaded file"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the uploaded file"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the uploaded file in bytes"
+        },
+        "content": {
+          "type": "binary",
+          "description": "Binary content of the uploaded file"
+        }
+      },
+      "required": [
+        "name",
+        "contentType",
+        "size",
+        "content"
+      ]
+    }
+  }
+}

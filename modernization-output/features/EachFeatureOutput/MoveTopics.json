@@ -1,0 +1,71 @@
+{
+  "featureName": "MoveTopics",
+  "description": "Moves topics from one forum to another with proper count adjustments.",
+  "inputValues": [
+    "topics-object-TopicList",
+    "fromForumId-number-Forum",
+    "toForumId-number-Forum",
+    "logDescription-string-ModerationLog"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     * topics: List of topic IDs to be moved (mandatory)\n     * fromForumId: Source forum ID (mandatory)\n     * toForumId: Destination forum ID (mandatory)\n     * logDescription: Description for the moderation log (optional)\n\n2. Data Validation:\n   - Validate topic list:\n     * Ensure the topic list is not empty\n     * Verify all topic IDs are valid numbers\n     * Check that all topics exist in the system\n   - Validate forum IDs:\n     * Ensure fromForumId is a valid number and exists\n     * Ensure toForumId is a valid number and exists\n     * Verify fromForumId and toForumId are different\n   - Validate user permissions:\n     * Verify the current user has permission to move topics\n     * Ensure user has access to both source and destination forums\n\n3. Business Rule Processing:\n   - Check system state:\n     * Verify both forums are active and not locked\n     * Ensure the destination forum allows new topics\n   - Verify dependencies:\n     * Check if any of the topics are sticky or announcement topics that may have special handling\n     * Determine if the destination forum is moderated\n   - Prepare moderation log:\n     * Create a new moderation log entry with current user information\n     * Include the description of the action being performed\n     * Record the original forum information for audit purposes\n\n4. Core Operation Execution:\n   - Update topic records:\n     * For each topic in the list:\n       * Change the forum ID from source to destination\n       * Update moderation status based on destination forum settings\n       * Create individual moderation log entries for each topic moved\n   - Update associated post records:\n     * Update forum ID for all posts belonging to the moved topics\n   - Update forum statistics:\n     * Decrement total topic count in the source forum\n     * Increment total topic count in the destination forum\n     * Recalculate and update the last post information for both forums\n   - Update caches:\n     * Clear topic cache for both source and destination forums\n     * Reload forum information for both forums\n     * Update most recent topics list\n     * Update hottest topics list if applicable\n   - Handle forum subscriptions:\n     * Notify subscribed users about topic movement if applicable\n\n5. Response Generation:\n   - Success response:\n     * Return confirmation of successful topic movement\n     * Include the number of topics moved\n     * Provide updated forum information for both source and destination\n     * Display a moderation completion message with a redirect URL\n   - Error response:\n     * Return appropriate error messages for any failures\n     * Include specific details about which topics could not be moved and why\n     * Display a permission denied message if user lacks required permissions",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "Topic list must not be empty",
+    "All topic IDs must be valid and exist in the system",
+    "Source forum ID must be valid and exist",
+    "Destination forum ID must be valid and exist",
+    "Source and destination forums must be different",
+    "User must have permission to move topics",
+    "Both forums must be active and not locked",
+    "User must have PERM_MODERATION_TOPIC_MOVE permission"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TopicList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Topic ID"
+      }
+    },
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Forum identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Forum name"
+        },
+        "isModerated": {
+          "type": "boolean",
+          "description": "Indicates if the forum is moderated"
+        }
+      }
+    },
+    "ModerationLog": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the moderation action"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of moderation action"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user performing the moderation"
+        }
+      }
+    }
+  }
+}

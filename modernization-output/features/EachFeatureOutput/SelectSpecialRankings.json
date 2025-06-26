@@ -1,0 +1,49 @@
+{
+  "featureName": "SelectSpecialRankings",
+  "description": "Retrieves all special rankings from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal parameters to retrieve special rankings\n\n2. Data Validation:\n   - Verify database connection is available\n   - IF database connection is unavailable THEN\n     - Generate appropriate error message\n     - Log connection failure\n     - Exit process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view rankings\n   - IF user lacks required permissions THEN\n     - Generate access denied message\n     - Log unauthorized access attempt\n     - Exit process\n   - END IF\n   - Determine which rankings qualify as \"special\"\n     - Special rankings are those not tied to post count thresholds\n     - Special rankings are manually assigned to users\n\n4. Core Operation Execution:\n   - Query the ranking data store for all special rankings\n   - Filter rankings based on the special designation\n   - Sort rankings according to predefined order (if applicable)\n   - Collect all matching ranking records\n   - IF no special rankings are found THEN\n     - Prepare empty result set\n   - ELSE\n     - Prepare result set with found special rankings\n   - END IF\n\n5. Response Generation:\n   - Format the retrieved special rankings into appropriate structure\n   - Include all relevant ranking attributes in the response:\n     - Ranking ID\n     - Ranking title\n     - Ranking image path (if available)\n     - Minimum post count (always 0 for special rankings)\n     - Special status flag (always true)\n   - Return the complete list of special rankings\n   - IF any errors occurred during retrieval THEN\n     - Include error details in response\n     - Provide guidance for resolving the issue\n   - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_ranks"
+  ],
+  "validationRules": [
+    "User must have permission to view rankings",
+    "Database connection must be available",
+    "Special rankings must be properly identified in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the ranking"
+        },
+        "title": {
+          "type": "string",
+          "description": "Display name of the ranking"
+        },
+        "image": {
+          "type": "string",
+          "description": "Path to the ranking image"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum post count required for this ranking (0 for special rankings)"
+        },
+        "special": {
+          "type": "boolean",
+          "description": "Flag indicating if this is a special ranking"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "special"
+      ]
+    }
+  }
+}

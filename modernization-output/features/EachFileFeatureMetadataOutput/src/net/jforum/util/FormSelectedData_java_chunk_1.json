@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ManageFormFieldSelection",
+    "description": "Manages form field selection state with name, ID, and selection status for UI components"
+  }
+]

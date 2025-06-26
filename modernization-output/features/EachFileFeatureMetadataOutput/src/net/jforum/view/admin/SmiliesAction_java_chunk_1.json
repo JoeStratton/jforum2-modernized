@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "ListSmilies",
+    "description": "Displays a list of all available smilies in the system"
+  },
+  {
+    "featureName": "InsertSmilie",
+    "description": "Displays the form for adding a new smilie"
+  },
+  {
+    "featureName": "SaveNewSmilie",
+    "description": "Processes and saves a new smilie with uploaded image"
+  },
+  {
+    "featureName": "EditSmilie",
+    "description": "Displays the form for editing an existing smilie"
+  },
+  {
+    "featureName": "UpdateSmilie",
+    "description": "Processes and saves changes to an existing smilie"
+  },
+  {
+    "featureName": "DeleteSmilies",
+    "description": "Removes selected smilies from the system including their image files"
+  }
+]

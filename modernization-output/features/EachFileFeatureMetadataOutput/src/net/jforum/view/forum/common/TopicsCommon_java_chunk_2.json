@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "GetTopicsByForum",
+    "description": "Retrieves a paginated list of topics for a specific forum with caching support"
+  },
+  {
+    "featureName": "PrepareTopicsForDisplay",
+    "description": "Processes topics for display with read status, pagination, and hot topic indicators"
+  },
+  {
+    "featureName": "SetupTopicListingContext",
+    "description": "Configures template context with topic types, statuses, and moderation permissions"
+  },
+  {
+    "featureName": "CheckTopicAccessibility",
+    "description": "Verifies if the current user has permission to view a specific topic"
+  },
+  {
+    "featureName": "NotifySubscribedUsers",
+    "description": "Sends email notifications to users watching a topic when a new post is added"
+  },
+  {
+    "featureName": "UpdateBoardStatus",
+    "description": "Updates forum statistics and cache after new post creation"
+  },
+  {
+    "featureName": "DeleteTopic",
+    "description": "Removes a topic from the database and updates related forum statistics"
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "featureName": "LoadSmilies",
+  "description": "Loads all smilies from the database into the cache for system-wide use.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will automatically trigger this process\n\n2. Data Validation:\n   - Verify cache system is properly initialized\n   - Check that database connection is available\n   - Ensure smilie data access components are functional\n\n3. Business Rule Processing:\n   3.1. Check if cache engine is properly configured\n      - IF cache engine is not initialized THEN\n         - Log error condition\n         - Abort operation\n      - END IF\n   3.2. Verify database access layer is available\n      - IF database access is unavailable THEN\n         - Record system error\n         - Abort operation with appropriate message\n      - END IF\n\n4. Core Operation Execution:\n   4.1. Retrieve all smilies from database\n      - Access smilie data store\n      - Retrieve complete list of smilie records\n      - IF retrieval fails THEN\n         - Generate smilie load exception\n         - Include error details in exception message\n         - Abort operation\n      - END IF\n   4.2. Store smilies in cache\n      - Add retrieved smilie collection to cache under designated key\n      - Reset context flag to indicate fresh cache load\n   4.3. Process context-specific URL formatting\n      - When smilies are requested (not during initial load):\n         - IF context formatting not yet applied THEN\n            - Retrieve system configuration for forum link\n            - FOR EACH smilie in the collection:\n               - Replace placeholder patterns in URL with actual forum link\n               - Clean up any escape characters in URL\n            - END FOR\n            - Update cache with context-formatted smilies\n            - Mark context formatting as completed\n         - END IF\n\n5. Response Generation:\n   5.1. For successful operation:\n      - Cache is populated with smilie data\n      - No explicit response needed as this is a system operation\n   5.2. For failed operation:\n      - Throw exception with detailed error information\n      - Include original error cause in exception message",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Cache engine must be properly initialized",
+    "Database connection must be available",
+    "Smilie data access components must be functional",
+    "All smilie records must be successfully retrieved from database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the smilie"
+        },
+        "code": {
+          "type": "string",
+          "description": "Text code that represents the smilie"
+        },
+        "url": {
+          "type": "string",
+          "description": "Path to the smilie image file"
+        },
+        "diskName": {
+          "type": "string",
+          "description": "Filename of the smilie on disk"
+        }
+      }
+    }
+  }
+}

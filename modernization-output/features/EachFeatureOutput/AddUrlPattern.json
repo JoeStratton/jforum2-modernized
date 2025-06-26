@@ -1,0 +1,37 @@
+{
+  "featureName": "AddUrlPattern",
+  "description": "Adds a new URL pattern with name and value to the patterns collection.",
+  "inputValues": [
+    "name-string-UrlPattern",
+    "value-string-UrlPattern"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following inputs:\n       - name (string, mandatory): The unique identifier for the URL pattern\n       - value (string, mandatory): The pattern value to be associated with the name\n   1.2. No default values are provided for these fields\n   1.3. Both fields must be provided by the user\n\n2. Data Validation\n   2.1. Validate the name input:\n       2.1.1. Check IF name is not null\n       2.1.2. Check IF name is not an empty string\n       2.1.3. IF any validation fails, prepare error message \"Pattern name cannot be empty\"\n   2.2. Validate the value input:\n       2.2.1. Check IF value is not null\n       2.2.2. Check IF value is not an empty string\n       2.2.3. IF any validation fails, prepare error message \"Pattern value cannot be empty\"\n   2.3. Check for duplicate pattern names:\n       2.3.1. Check IF a pattern with the same name already exists in the collection\n       2.3.2. IF duplicate found, prepare error message \"A pattern with this name already exists\"\n\n3. Business Rule Processing\n   3.1. Verify system state:\n       3.1.1. Check IF the patterns collection is initialized\n       3.1.2. IF not initialized, prepare error message \"Pattern collection is not ready\"\n   3.2. Verify pattern name format:\n       3.2.1. Check IF the pattern name follows naming conventions (alphanumeric with no special characters except underscores)\n       3.2.2. IF format is invalid, prepare error message \"Pattern name contains invalid characters\"\n   3.3. Verify pattern value format:\n       3.3.1. Check IF the pattern value is in a valid format\n       3.3.2. IF format is invalid, prepare error message \"Pattern value is in an invalid format\"\n\n4. Core Operation Execution\n   4.1. Create a new URL pattern object:\n       4.1.1. Initialize a new pattern object with the provided name and value\n   4.2. Add the pattern to the collection:\n       4.2.1. Store the pattern in the collection using the name as the key\n       4.2.2. IF storage operation fails, prepare error message \"Failed to add pattern to collection\"\n       4.2.3. Set up rollback procedure to remove the pattern if subsequent operations fail\n\n5. Response Generation\n   5.1. For successful addition:\n       5.1.1. Prepare success message indicating the pattern was added successfully\n       5.1.2. Include the name and value of the added pattern in the response\n   5.2. For failed addition:\n       5.2.1. Include specific error message from the validation or processing steps\n       5.2.2. Provide guidance on how to correct the issue\n   5.3. Return the appropriate response to the caller",
+  "databaseEntities": [],
+  "validationRules": [
+    "Pattern name must not be empty",
+    "Pattern value must not be empty",
+    "Pattern name must be unique in the collection",
+    "Pattern name should follow naming conventions",
+    "Pattern value must be in a valid format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlPattern": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique identifier for the URL pattern"
+        },
+        "value": {
+          "type": "string",
+          "description": "The pattern value associated with the name"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

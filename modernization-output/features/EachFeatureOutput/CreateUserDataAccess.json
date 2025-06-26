@@ -1,0 +1,121 @@
+{
+  "featureName": "CreateUserDataAccess",
+  "description": "Provides data access functionality for forum users in SQL Server environment.",
+  "inputValues": [
+    "userData-object-User",
+    "databaseConnection-object-DatabaseConnection",
+    "databaseType-string-DatabaseType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user data object containing:\n     - username (mandatory): User's login name\n     - email (mandatory): User's email address\n     - password (mandatory): User's encrypted password\n     - registrationDate (system-generated): Current timestamp\n     - lastVisit (system-generated): Current timestamp\n     - activationStatus (optional): Default to 'inactive' if not provided\n     - signature (optional): User's forum signature\n     - avatar (optional): User's profile image reference\n     - userRank (optional): Default to 'member' if not provided\n   - Obtain database connection object for data operations\n   - Determine database type from input (SQL Server in this case)\n\n2. Data Validation:\n   - Validate username:\n     - Check if username is not empty\n     - Verify username length is between 3 and 25 characters\n     - Ensure username contains only alphanumeric characters and underscores\n     - Verify username is unique in the system\n     - Return error message if validation fails: \"Invalid username format or username already exists\"\n   - Validate email:\n     - Check if email is not empty\n     - Verify email follows standard email format\n     - Ensure email is unique in the system\n     - Return error message if validation fails: \"Invalid email format or email already in use\"\n   - Validate password:\n     - Check if password is not empty\n     - Verify password meets minimum complexity requirements\n     - Return error message if validation fails: \"Password does not meet security requirements\"\n   - Validate database type:\n     - Check if database type is supported\n     - Verify database connection is compatible with specified type\n     - Return error message if validation fails: \"Unsupported database type or incompatible connection\"\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify user registration is currently allowed in system settings\n     - Check if maximum user limit has not been reached\n     - Return error message if checks fail: \"User registration is currently disabled\"\n   - Prepare user group associations:\n     - Determine default groups for new user based on system configuration\n     - Verify groups exist and are valid for new user assignment\n     - Return error message if validation fails: \"Unable to assign default user groups\"\n   - Initialize database access driver:\n     - Select appropriate data access implementation based on database type\n     - For SQL Server, use SQL Server specific implementation\n     - Verify driver availability for the database type\n     - Return error message if initialization fails: \"Unable to initialize data access driver for the specified database\"\n\n4. Core Operation Execution:\n   - Initialize the user data access object:\n     - Create instance of appropriate user DAO implementation\n     - Configure DAO with database connection parameters\n     - IF initialization fails, abort process and return error\n   - Create new user record:\n     - Generate unique user ID\n     - Set registration date and last visit to current time\n     - Set default values for optional fields if not provided\n     - Store user record in database using database-specific operations\n     - IF storage operation fails, abort process and return error\n   - Create user group associations:\n     - Link user to default groups in the system\n     - IF group association fails:\n       - Roll back user creation\n       - Return error message: \"Failed to create user group associations\"\n   - Initialize user preferences:\n     - Create default notification settings\n     - Set default forum view preferences\n     - IF preference initialization fails, log warning but continue\n\n5. Response Generation:\n   - On success:\n     - Return created user object with assigned ID\n     - Include success status indicator\n     - Include timestamp of user creation\n     - Return reference to the created user data access object\n   - On failure:\n     - Return error status\n     - Include specific error message explaining the failure reason\n     - Include error code for programmatic handling\n     - Provide guidance for resolving common errors",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must be between 3 and 25 characters",
+    "Username must contain only alphanumeric characters and underscores",
+    "Username must be unique in the system",
+    "Email must not be empty",
+    "Email must follow standard email format",
+    "Email must be unique in the system",
+    "Password must not be empty",
+    "Password must meet minimum complexity requirements",
+    "User registration must be currently allowed in system settings",
+    "Maximum user limit must not be reached",
+    "Database type must be supported by the system",
+    "Database connection must be compatible with specified database type"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default user groups exist in jforum_groups",
+    "Ensure system settings for user registration are configured",
+    "Ensure database driver configurations are properly set for SQL Server"
+  ],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's encrypted password"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Date of user's last system access"
+        },
+        "activationStatus": {
+          "type": "string",
+          "description": "Account activation status"
+        },
+        "signature": {
+          "type": "string",
+          "description": "User's forum signature"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "User's profile image reference"
+        },
+        "userRank": {
+          "type": "string",
+          "description": "User's rank in the forum"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "password"
+      ]
+    },
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "type": "string",
+          "description": "Unique identifier for the database connection"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the connection"
+        },
+        "databaseType": {
+          "type": "string",
+          "description": "Type of database being connected to"
+        }
+      },
+      "required": [
+        "connectionId",
+        "status"
+      ]
+    },
+    "DatabaseType": {
+      "type": "string",
+      "enum": [
+        "SQLServer",
+        "MySQL",
+        "PostgreSQL",
+        "Oracle",
+        "Generic"
+      ],
+      "description": "Supported database types for the forum system"
+    }
+  }
+}

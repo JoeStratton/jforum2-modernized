@@ -1,0 +1,61 @@
+{
+  "featureName": "UpdateTopic",
+  "description": "Updates topic information in the forum system.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "title-string-Topic",
+    "type-number-Topic",
+    "status-number-Topic",
+    "isModerated-boolean-Topic",
+    "voteId-number-Topic",
+    "lastPostId-number-Post",
+    "firstPostId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - topicId: Unique identifier for the topic to update (mandatory)\n       - title: New title for the topic (mandatory)\n       - type: Type classification for the topic (mandatory)\n   1.2. Collect the following optional inputs:\n       - status: Current status of the topic (optional)\n       - isModerated: Flag indicating if topic requires moderation (optional)\n       - voteId: Reference to associated poll/vote (optional)\n       - lastPostId: Reference to the most recent post in the topic (optional)\n       - firstPostId: Reference to the initial post in the topic (optional)\n\n2. Data Validation:\n   2.1. Validate topicId:\n       - VERIFY topicId is a positive integer\n       - VERIFY topicId exists in the system\n       - IF topicId is invalid or not found THEN\n           - Generate error message: \"Invalid topic identifier provided\"\n           - Terminate process\n   2.2. Validate title:\n       - VERIFY title is not empty\n       - VERIFY title length is between 1 and 100 characters\n       - IF title validation fails THEN\n           - Generate error message: \"Topic title must be between 1 and 100 characters\"\n           - Terminate process\n   2.3. Validate type:\n       - VERIFY type is within valid range of topic types\n       - IF type is invalid THEN\n           - Generate error message: \"Invalid topic type specified\"\n           - Terminate process\n   2.4. Validate post references if provided:\n       - IF lastPostId is provided THEN\n           - VERIFY lastPostId exists in the system\n           - VERIFY lastPostId is associated with this topic\n       - IF firstPostId is provided THEN\n           - VERIFY firstPostId exists in the system\n           - VERIFY firstPostId is associated with this topic\n       - IF validation fails THEN\n           - Generate error message: \"Invalid post reference provided\"\n           - Terminate process\n   2.5. Validate voteId if provided:\n       - VERIFY voteId exists in the system\n       - IF validation fails THEN\n           - Generate error message: \"Invalid vote reference provided\"\n           - Terminate process\n\n3. Business Rule Processing:\n   3.1. Check user permissions:\n       - VERIFY current user has permission to update the topic\n       - IF user is not the topic creator AND not a moderator THEN\n           - Generate error message: \"Insufficient permissions to update this topic\"\n           - Terminate process\n   3.2. Check forum status:\n       - RETRIEVE forum information associated with the topic\n       - VERIFY the forum is active and not locked\n       - IF forum is locked or inactive THEN\n           - Generate error message: \"Cannot update topic in a locked or inactive forum\"\n           - Terminate process\n   3.3. Check topic status:\n       - IF topic is locked AND user is not a moderator THEN\n           - Generate error message: \"Cannot update a locked topic without moderator privileges\"\n           - Terminate process\n   3.4. Check moderation requirements:\n       - IF isModerated flag is changing THEN\n           - VERIFY user has permission to change moderation settings\n           - IF user lacks permission THEN\n               - Generate error message: \"Insufficient permissions to change moderation settings\"\n               - Terminate process\n\n4. Core Operation Execution:\n   4.1. Retrieve existing topic data:\n       - Load current topic information from database\n       - Store original values for comparison and audit purposes\n   4.2. Update topic information:\n       - Update topic title with new value\n       - Update topic type with new value\n       - IF isModerated is provided THEN\n           - Update moderation flag with new value\n       - IF voteId is provided THEN\n           - Update vote/poll reference with new value\n   4.3. Update post references if provided:\n       - IF lastPostId is provided THEN\n           - Update topic's last post reference\n       - IF firstPostId is provided THEN\n           - Update topic's first post reference\n   4.4. Save changes to database:\n       - Persist all topic changes to database\n       - IF database operation fails THEN\n           - Roll back all changes\n           - Generate error message: \"Failed to update topic information\"\n           - Terminate process\n   4.5. Update related data:\n       - IF post references were updated THEN\n           - Ensure post-topic relationships are consistent\n       - Update search indexes with new topic information\n\n5. Response Generation:\n   5.1. Prepare success response:\n       - Include updated topic identifier\n       - Include confirmation message: \"Topic successfully updated\"\n       - Include timestamp of update\n   5.2. Include next action options:\n       - Option to view the updated topic\n       - Option to return to forum listing\n       - Option to make additional edits\n   5.3. Return success response to user",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must exist in the system",
+    "Topic title must not be empty",
+    "Topic title must be between 1 and 100 characters",
+    "Topic type must be a valid type value",
+    "User must have permission to update the topic",
+    "Last post ID must exist in the system if provided",
+    "First post ID must exist in the system if provided",
+    "Vote ID must exist in the system if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "type": "number",
+      "isModerated": "boolean",
+      "forumId": "number",
+      "lastPostId": "number",
+      "firstPostId": "number",
+      "voteId": "number",
+      "totalReplies": "number",
+      "totalViews": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "text": "string",
+      "creationDate": "date"
+    }
+  }
+}

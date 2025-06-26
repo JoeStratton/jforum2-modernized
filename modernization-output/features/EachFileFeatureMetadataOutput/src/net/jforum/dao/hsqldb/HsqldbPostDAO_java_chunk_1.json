@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SelectLatestByForumForRSS",
+    "description": "Retrieves latest posts from a specific forum for RSS feed generation"
+  },
+  {
+    "featureName": "SelectAllByTopicByLimit",
+    "description": "Retrieves paginated posts from a specific topic with limit and offset parameters"
+  },
+  {
+    "featureName": "SelectByUserByLimit",
+    "description": "Retrieves paginated posts made by a specific user with limit and offset parameters"
+  }
+]

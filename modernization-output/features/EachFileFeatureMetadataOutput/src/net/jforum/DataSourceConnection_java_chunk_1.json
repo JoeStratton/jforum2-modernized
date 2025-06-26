@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "InitializeDatabaseConnection",
+    "description": "Initializes the database connection by looking up a DataSource from JNDI"
+  },
+  {
+    "featureName": "GetDatabaseConnection",
+    "description": "Retrieves a database connection from the configured DataSource"
+  },
+  {
+    "featureName": "ReleaseConnection",
+    "description": "Safely closes and releases a database connection back to the pool"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "featureName": "DeleteUser",
+  "description": "Marks a user as deleted in the system.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. userId (number, mandatory): The unique identifier of the user to be deleted\n\n2. Data Validation\n   - Validate the userId input:\n     a. Check if userId is provided\n        IF userId is missing or null THEN\n          RETURN error message \"User ID is required\"\n     b. Check if userId is a positive integer\n        IF userId is not a positive integer THEN\n          RETURN error message \"User ID must be a positive integer\"\n     c. Check if user exists in the system\n        IF user with userId does not exist THEN\n          RETURN error message \"User not found\"\n     d. Check if user is already deleted\n        IF user is already marked as deleted THEN\n          RETURN error message \"User is already deleted\"\n\n3. Business Rule Processing\n   - Verify system constraints:\n     a. Check if the user has any active dependencies\n        IF user has active dependencies that prevent deletion THEN\n          RETURN error message \"Cannot delete user with active dependencies\"\n     b. Check if current user has permission to delete users\n        IF current user lacks delete permissions THEN\n          RETURN error message \"Insufficient permissions to delete user\"\n\n4. Core Operation Execution\n   - Perform the user deletion process:\n     a. Mark the user as deleted in the database\n        - Update the user's deletion status flag to true\n        - Record the deletion timestamp\n     b. Handle user's active sessions\n        - Invalidate any active sessions for the user\n     c. Update related records\n        - Update any necessary counters or references\n     d. IF any operation fails during the deletion process THEN\n        - Rollback all changes\n        - Log the failure details\n        - RETURN error message \"Failed to delete user due to system error\"\n\n5. Response Generation\n   - Generate appropriate response:\n     a. IF deletion is successful THEN\n        - RETURN success message \"User successfully deleted\"\n        - Include user identifier in response\n     b. IF deletion fails THEN\n        - RETURN appropriate error message based on the failure reason\n        - Include guidance for resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_privmsgs"
+  ],
+  "validationRules": [
+    "User ID must be provided",
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User must not already be deleted",
+    "Current user must have permission to delete users"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

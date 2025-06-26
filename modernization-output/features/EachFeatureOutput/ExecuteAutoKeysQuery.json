@@ -1,0 +1,72 @@
+{
+  "featureName": "ExecuteAutoKeysQuery",
+  "description": "Executes SQL queries with support for auto-generated keys and retrieves the generated ID.",
+  "inputValues": [
+    "sqlQuery-string-Query",
+    "connection-object-DatabaseConnection",
+    "preparedStatement-object-PreparedStatement"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the SQL query to be executed (mandatory)\n   - Obtain database connection (mandatory)\n   - Prepare statement with appropriate configuration (mandatory)\n   - Check auto-generated keys support configuration (system-generated)\n   - Retrieve auto-generated keys query if needed (system-generated or pre-configured)\n\n2. Data Validation:\n   - Validate SQL query is not empty\n     * IF query is empty or null THEN return error\n     * Error message: \"SQL query cannot be empty\"\n   - Validate database connection is active\n     * IF connection is null or closed THEN return error\n     * Error message: \"Valid database connection required\"\n   - Validate prepared statement is properly initialized\n     * IF prepared statement is null THEN return error\n     * Error message: \"Prepared statement must be initialized\"\n\n3. Business Rule Processing:\n   - Determine if system supports auto-generated keys\n     * Check system configuration for auto keys support\n     * IF auto keys are supported THEN use native database key generation\n     * ELSE use custom query to retrieve last generated key\n   - Verify appropriate permissions for query execution\n     * Ensure current user has permission to execute the query\n     * IF permissions are insufficient THEN return error\n     * Error message: \"Insufficient permissions to execute this query\"\n\n4. Core Operation Execution:\n   - Execute the prepared statement\n     * Execute the update operation on the database\n     * IF execution fails THEN handle database exception\n     * Error message: Include specific database error details\n   - Retrieve the generated key\n     * IF auto keys are supported THEN\n       * Get generated keys from the statement\n       * Extract the first key value\n     * ELSE\n       * Execute the auto-generated keys query\n       * Extract the key value from result\n   - Validate key retrieval success\n     * IF key value is invalid (-1) THEN throw exception\n     * Error message: \"Could not obtain the latest generated key\"\n   - Clean up database resources\n     * Close result sets\n     * Close statements if not managed externally\n\n5. Response Generation:\n   - Return the generated key value\n     * Format: Integer representing the new record's ID\n   - IF operation was successful THEN\n     * Return the generated key with success status\n   - ELSE\n     * Return error details with failure status\n     * Include specific error message and suggestion for resolution",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "SQL query must not be empty",
+    "Database connection must be active",
+    "Prepared statement must be properly initialized",
+    "User must have sufficient permissions to execute the query",
+    "Generated key must be a valid positive integer",
+    "Database resources must be properly released after operation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Connection status (active/closed)"
+        },
+        "autoCommit": {
+          "type": "boolean",
+          "description": "Auto-commit setting for the connection"
+        }
+      }
+    },
+    "PreparedStatement": {
+      "type": "object",
+      "properties": {
+        "sql": {
+          "type": "string",
+          "description": "SQL query text"
+        },
+        "parameters": {
+          "type": "array",
+          "description": "Query parameters"
+        },
+        "options": {
+          "type": "object",
+          "description": "Statement configuration options"
+        }
+      }
+    }
+  }
+}

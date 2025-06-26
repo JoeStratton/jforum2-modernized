@@ -1,0 +1,14 @@
+{
+  "featureName": "FixModulesMapping",
+  "description": "Updates module mappings to disable installer after successful installation.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required as this is a system operation\n   - System-generated input: modules mapping file path from system configuration\n\n2. Data Validation:\n   - Verify modules mapping file exists\n   - Verify modules mapping file is writable\n   - Verify system has proper permissions to modify the file\n   - IF any validation fails, log warning message and exit process\n\n3. Business Rule Processing:\n   - Check if installation process has completed successfully\n   - Verify that the 'install' module entry exists in the mapping file\n   - IF 'install' module entry doesn't exist, no action needed\n\n4. Core Operation Execution:\n   - Load current modules mapping configuration from file\n   - Check if the 'install' module entry exists in the configuration\n   - IF 'install' module entry exists:\n     a. Remove the 'install' module entry from the configuration\n     b. Save updated configuration back to the modules mapping file\n     c. Reload modules mapping in the system configuration\n   - Set session attribute to indicate mapping has been fixed\n\n5. Response Generation:\n   - IF operation completes successfully:\n     a. Log success message\n     b. Set session attribute 'mappingFixed' to 'true'\n   - IF operation fails:\n     a. Log warning message with error details\n     b. Continue with remaining installation steps",
+  "databaseEntities": [],
+  "validationRules": [
+    "Modules mapping file must exist",
+    "Modules mapping file must be writable",
+    "System must have proper permissions to modify the file"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

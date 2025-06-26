@@ -1,0 +1,79 @@
+{
+  "featureName": "DeleteForumRoles",
+  "description": "Deletes all security roles related to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory, number) that identifies the forum whose roles will be deleted\n   - System must verify the user has administrative privileges to perform this operation\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided and is a positive integer\n     b. Verify the forum exists in the system\n     c. Return appropriate error message if validation fails\n   - Validate user permissions:\n     a. Verify current user has permission to manage forum security roles\n     b. Return appropriate error message if user lacks required permissions\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the system is not in maintenance mode\n     b. Ensure no conflicting operations are in progress\n   - Check dependencies:\n     a. Determine if any active sessions depend on these roles\n     b. Identify if any critical system functions rely on these roles\n   - IF critical dependencies exist THEN:\n     a. Generate warning about potential system impact\n     b. Request confirmation before proceeding\n\n4. Core Operation Execution:\n   - Retrieve all security roles associated with the specified forum:\n     a. Query the system to identify all role IDs linked to the forumId\n     b. Create a list to store these role IDs for processing\n   - Execute deletion process:\n     a. Begin transaction to ensure data integrity\n     b. Construct a string of role IDs for batch processing\n     c. Delete all role-value associations for the forum using the role IDs\n     d. Commit transaction if all operations succeed\n     e. IF any operation fails THEN rollback transaction and log error details\n   - Update related records:\n     a. Update any cached security information in the roles repository\n     b. Clear relevant permission caches to ensure system consistency\n\n5. Response Generation:\n   - For successful deletion:\n     a. Generate success message indicating roles were deleted\n     b. Include count of deleted roles in response\n     c. Provide timestamp of operation\n   - For failed deletion:\n     a. Generate detailed error message\n     b. Include error code and specific failure reason\n     c. Provide troubleshooting information\n   - Log the operation:\n     a. Record the operation details in system audit log\n     b. Include user who performed the operation, timestamp, and result",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_roles",
+    "jforum_role_values"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have administrative privileges to delete forum roles",
+    "System must not be in maintenance mode during role deletion",
+    "All role values must be properly identified before deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the role"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the security role"
+        },
+        "values": {
+          "type": "array",
+          "description": "Collection of values associated with this role"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "RoleValue": {
+      "type": "object",
+      "properties": {
+        "roleId": {
+          "type": "number",
+          "description": "ID of the associated role"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value assigned to this role"
+        }
+      },
+      "required": [
+        "roleId",
+        "value"
+      ]
+    }
+  }
+}

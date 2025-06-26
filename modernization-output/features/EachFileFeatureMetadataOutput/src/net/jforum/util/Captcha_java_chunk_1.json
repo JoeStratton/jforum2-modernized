@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "GenerateCaptchaImage",
+    "description": "Creates CAPTCHA images with random words, fonts, and backgrounds for user verification"
+  },
+  {
+    "featureName": "WriteCaptchaImage",
+    "description": "Outputs the generated CAPTCHA image to the response stream for display to users"
+  }
+]

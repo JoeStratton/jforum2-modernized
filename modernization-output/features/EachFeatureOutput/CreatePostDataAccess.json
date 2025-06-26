@@ -1,0 +1,95 @@
+{
+  "featureName": "CreatePostDataAccess",
+  "description": "Provides data access functionality for forum posts in SQL Server environment.",
+  "inputValues": [
+    "postContent-string-Post",
+    "postTitle-string-Post",
+    "authorId-number-User",
+    "forumId-number-Forum",
+    "topicId-number-Topic",
+    "attachments-object-Attachment",
+    "postDate-date-Post",
+    "postOptions-object-PostOptions"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect required post information:\n       - postContent (mandatory): The content of the post\n       - postTitle (mandatory): The title of the post\n       - authorId (mandatory): Identifier of the post author\n       - forumId (mandatory): Identifier of the forum where the post belongs\n       - topicId (mandatory): Identifier of the topic where the post belongs\n       - attachments (optional): Any files attached to the post\n       - postDate (system-generated): Current timestamp if not provided\n       - postOptions (optional): Additional post settings like notification preferences\n\n2. Data Validation:\n   2.1. Validate post content:\n       - Check if postContent is not empty\n       - Verify content length is within allowed limits\n       - IF validation fails, THEN return appropriate error message\n   2.2. Validate post title:\n       - Check if postTitle is not empty\n       - Verify title length is within allowed limits\n       - IF validation fails, THEN return appropriate error message\n   2.3. Validate author information:\n       - Verify authorId exists in the user database\n       - Check if user has permission to create posts\n       - IF validation fails, THEN return appropriate error message\n   2.4. Validate forum and topic:\n       - Verify forumId exists in the forum database\n       - Verify topicId exists in the topic database\n       - Check if topic belongs to the specified forum\n       - Verify forum and topic are not locked or archived\n       - IF validation fails, THEN return appropriate error message\n   2.5. Validate attachments if present:\n       - Check file types against allowed extensions\n       - Verify file sizes are within allowed limits\n       - Count total attachments to ensure they don't exceed maximum\n       - IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify database connection is available\n       - Check system is not in maintenance mode\n       - IF system unavailable, THEN return appropriate error message\n   3.2. Apply posting rules:\n       - Check if user is banned or restricted\n       - Verify user hasn't exceeded posting limits\n       - Check for duplicate post content if enabled\n       - IF rules violated, THEN return appropriate error message\n   3.3. Process content filters:\n       - Apply word censoring if enabled\n       - Check content against spam filters\n       - Process any BBCode or formatting\n       - IF content violates policies, THEN return appropriate error message\n   3.4. Apply SQL Server specific rules:\n       - Handle text field size limitations\n       - Manage SQL Server specific data type constraints\n       - Process any special character escaping needed for SQL Server\n       - IF any SQL Server specific constraints are violated, THEN return appropriate error message\n\n4. Core Operation Execution:\n   4.1. Prepare post data:\n       - Generate unique post identifier\n       - Format post content for storage\n       - Prepare metadata (creation date, IP address)\n   4.2. Store post information:\n       - Create post record in jforum_posts table\n       - Store post content in jforum_posts_text table\n       - Update topic information with new post count and last post data\n       - Update forum statistics with new post count and last post data\n   4.3. Process attachments if present:\n       - Store attachment metadata in jforum_attachments table\n       - Link attachments to the post\n   4.4. Update user statistics:\n       - Increment user post count\n       - Update user's last posting date\n   4.5. Handle failure scenarios:\n       - IF any storage operation fails, THEN rollback all changes\n       - Log detailed error information\n       - Return appropriate error message\n   4.6. Handle SQL Server transaction management:\n       - Ensure proper transaction isolation level\n       - Manage transaction locks appropriately\n       - Handle deadlock prevention strategies\n\n5. Response Generation:\n   5.1. For successful post creation:\n       - Return success status\n       - Include created post identifier\n       - Include timestamp of creation\n       - Provide navigation information to view the post\n   5.2. For failed operations:\n       - Return failure status\n       - Include specific error code\n       - Provide user-friendly error message\n       - Include troubleshooting information when appropriate\n   5.3. For SQL Server specific issues:\n       - Return database-specific error information\n       - Provide SQL Server error codes when applicable\n       - Include guidance for SQL Server specific resolution steps",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "Post content must not be empty",
+    "Post title must not be empty",
+    "Author ID must reference an existing user",
+    "Forum ID must reference an existing forum",
+    "Topic ID must reference an existing topic",
+    "Topic must belong to the specified forum",
+    "Forum and topic must not be locked or archived",
+    "Attachment file types must be allowed by the system",
+    "Attachment file sizes must not exceed configured limits",
+    "Total number of attachments must not exceed maximum allowed",
+    "User must have permission to create posts",
+    "User must not be banned or restricted",
+    "User must not have exceeded posting limits",
+    "System must not be in maintenance mode",
+    "Content must comply with SQL Server text field size limitations",
+    "Post data must conform to SQL Server data type constraints"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string",
+          "description": "Name of the attached file"
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "fileType": {
+          "type": "string",
+          "description": "MIME type of the file"
+        },
+        "fileContent": {
+          "type": "string",
+          "description": "Base64 encoded file content"
+        }
+      },
+      "required": [
+        "fileName",
+        "fileSize",
+        "fileType",
+        "fileContent"
+      ]
+    },
+    "PostOptions": {
+      "type": "object",
+      "properties": {
+        "notifyReplies": {
+          "type": "boolean",
+          "description": "Whether to notify the author of replies"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Whether BBCode formatting is enabled for this post"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Whether smilies are enabled for this post"
+        },
+        "signatureEnabled": {
+          "type": "boolean",
+          "description": "Whether to include user signature with the post"
+        }
+      }
+    }
+  }
+}

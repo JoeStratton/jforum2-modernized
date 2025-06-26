@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "GetRoleValueByName",
+    "description": "Retrieves a RoleValue object by its name from the collection"
+  },
+  {
+    "featureName": "AddRoleValue",
+    "description": "Adds a RoleValue object to the collection with type validation"
+  },
+  {
+    "featureName": "AddMultipleRoleValues",
+    "description": "Adds multiple RoleValue objects from another collection"
+  }
+]

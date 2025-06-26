@@ -1,0 +1,68 @@
+{
+  "featureName": "ProcessRSSRequest",
+  "description": "Processes RSS requests with proper authentication and content type handling.",
+  "inputValues": [
+    "requestType-string-RSSRequest",
+    "forumId-number-Forum",
+    "topicId-number-Topic",
+    "authentication-object-Authentication"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the request type (forumTopics, topicPosts, recentTopics)\n   - Collect forumId (required for forumTopics request type)\n   - Collect topicId (required for topicPosts request type)\n   - System will use authentication information from the current session\n   - System will use configured system preferences for content limits\n\n2. Data Validation:\n   - Validate request type:\n     a. Verify request type is one of the supported types (forumTopics, topicPosts, recentTopics)\n     b. Return error message if request type is invalid\n   - Validate parameters based on request type:\n     a. IF request type is forumTopics:\n        i. Verify forumId is provided and is a valid number\n        ii. Return error message if forumId is missing or invalid\n     b. IF request type is topicPosts:\n        i. Verify topicId is provided and is a valid number\n        ii. Return error message if topicId is missing or invalid\n   - Validate authentication:\n     a. Check if user has access to the requested resource\n     b. IF authentication fails, request basic authentication\n     c. Return error message if authentication fails after basic authentication attempt\n\n3. Business Rule Processing:\n   - Check access permissions:\n     a. IF request type is forumTopics:\n        i. Verify user has access to the specified forum\n        ii. IF not accessible, request basic authentication\n        iii. Return error if still not accessible after authentication\n     b. IF request type is topicPosts:\n        i. Verify topic exists\n        ii. Verify user has access to the forum containing the topic\n        iii. IF not accessible, request basic authentication\n        iv. Return error if still not accessible after authentication\n   - Apply system constraints:\n     a. Determine maximum number of items to return based on system configuration\n     b. Apply content filtering rules based on user permissions\n\n4. Core Operation Execution:\n   - Process request based on type:\n     a. IF request type is forumTopics:\n        i. Retrieve forum information\n        ii. Retrieve latest posts from the forum (limited by system configuration)\n        iii. Increment view counters if applicable\n        iv. Format data for RSS output with forum name in title and description\n     b. IF request type is topicPosts:\n        i. Retrieve topic information\n        ii. Increment topic view counter\n        iii. Retrieve all posts for the topic\n        iv. Format data for RSS output with topic title in title and description\n     c. IF request type is recentTopics:\n        i. Retrieve system name for RSS title\n        ii. Retrieve hot/recent posts across the system (limited by system configuration)\n        iii. Format data for RSS output\n   - Generate RSS content:\n     a. Create appropriate RSS object based on request type\n     b. Generate XML content with proper RSS formatting\n     c. Store generated content for response\n\n5. Response Generation:\n   - Set response content type to XML\n   - Set template for RSS output\n   - Return generated RSS content\n   - IF any errors occurred during processing:\n     a. Generate appropriate error message\n     b. Set appropriate HTTP status code\n     c. Include error details in response",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Request type must be one of: forumTopics, topicPosts, recentTopics",
+    "ForumId must be provided and valid when request type is forumTopics",
+    "TopicId must be provided and valid when request type is topicPosts",
+    "User must have access permissions to the requested forum or topic",
+    "Topic must exist when requesting topic posts",
+    "Forum must exist when requesting forum topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Authentication": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's password"
+        },
+        "isLoggedIn": {
+          "type": "boolean",
+          "description": "Whether the user is currently logged in"
+        }
+      }
+    },
+    "RSSRequest": {
+      "type": "object",
+      "properties": {
+        "requestType": {
+          "type": "string",
+          "enum": [
+            "forumTopics",
+            "topicPosts",
+            "recentTopics"
+          ],
+          "description": "Type of RSS content being requested"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum when requesting forum topics"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic when requesting topic posts"
+        }
+      }
+    }
+  }
+}

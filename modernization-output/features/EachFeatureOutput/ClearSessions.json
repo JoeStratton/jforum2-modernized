@@ -1,0 +1,16 @@
+{
+  "featureName": "ClearSessions",
+  "description": "Clears all session data and resets session counters.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will use current cache state as input\n\n2. Data Validation:\n   - Verify cache system is properly initialized\n     - IF cache system is null THEN\n       - Log warning message\n       - Abort operation\n       - Return appropriate error message\n     - END IF\n\n3. Business Rule Processing:\n   - Check if session clearing operation is permitted\n     - Verify user has appropriate permissions to clear sessions\n     - IF user lacks required permissions THEN\n       - Deny operation\n       - Log unauthorized attempt\n       - Return permission denied message\n     - END IF\n   - Determine impact of session clearing\n     - Calculate number of active sessions to be cleared\n     - Determine number of logged-in users to be affected\n     - Prepare system notification if needed\n\n4. Core Operation Execution:\n   - Acquire synchronization lock on session data\n     - Ensure no concurrent modifications during clearing process\n   - Clear all session data\n     - Remove all entries from main session storage\n     - Reset logged user count to zero\n     - Reset anonymous user count to zero\n   - Clear logged sessions data\n     - Remove all entries from logged sessions storage\n   - Clear user ID mappings\n     - Remove all user ID to session mappings\n   - Release synchronization lock\n   - Log session clearing event with timestamp and initiator information\n\n5. Response Generation:\n   - Generate success response\n     - Include total number of sessions cleared\n     - Include breakdown of logged vs. anonymous sessions cleared\n     - Include timestamp of operation completion\n   - IF any errors occurred during clearing process THEN\n     - Generate error response with details\n     - Include specific error conditions encountered\n     - Provide troubleshooting information\n   - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Cache system must be initialized before clearing sessions",
+    "User must have appropriate permissions to clear sessions",
+    "Session clearing operation must be atomic to prevent inconsistent state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

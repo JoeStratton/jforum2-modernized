@@ -1,0 +1,73 @@
+{
+  "featureName": "BatchCreatePostIndex",
+  "description": "Adds a post to the search index in batch mode using RAM directory.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Post object containing all post information\n     - Post ID (mandatory)\n     - Forum ID (mandatory)\n     - Topic ID (mandatory)\n     - User ID (mandatory)\n     - Post date/time (mandatory)\n     - Post subject (mandatory)\n     - Post text content (mandatory)\n\n2. Data Validation:\n   - Validate Post object\n     - Verify Post object is not null\n     - Verify Post ID is a valid positive integer\n     - Verify Forum ID is a valid positive integer\n     - Verify Topic ID is a valid positive integer\n     - Verify User ID is a valid positive integer\n     - Verify post date/time is a valid date format\n     - Verify post subject is not empty\n     - Verify post text content is not empty\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Abort indexing process\n\n3. Business Rule Processing:\n   - Check system resources\n     - Verify RAM directory is initialized\n     - Verify RAM writer is available\n     - IF RAM directory or writer is not initialized THEN\n       - Initialize RAM directory and writer\n   - Check concurrent access\n     - Acquire synchronization lock to prevent concurrent modifications\n     - IF lock cannot be acquired THEN\n       - Wait for lock or timeout after predefined period\n       - IF timeout occurs THEN\n         - Generate error message about system busy\n         - Abort indexing process\n\n4. Core Operation Execution:\n   - Create search document\n     - Extract post metadata (IDs, date)\n     - Prepare post content (subject and text)\n     - Format data according to search index requirements\n     - Create document with appropriate fields and indexing settings\n   - Add document to RAM index\n     - Add the created document to RAM directory\n     - Update document count in RAM index\n   - Check RAM directory threshold\n     - IF number of documents in RAM exceeds configured threshold THEN\n       - Flush RAM directory to persistent storage\n       - Create new RAM directory and writer\n       - Reset document count\n   - Release synchronization lock\n\n5. Response Generation:\n   - Success response\n     - Indicate post was successfully added to search index\n     - Return confirmation of indexing operation\n   - Error response\n     - Provide detailed error information if indexing failed\n     - Include error type and suggested resolution steps",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Post date/time must be a valid date format",
+    "Post subject must not be empty",
+    "Post text content must not be empty",
+    "RAM directory must be initialized before adding documents",
+    "System must have sufficient memory for RAM directory operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the post"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "ID of the forum containing this post"
+        },
+        "topicId": {
+          "type": "integer",
+          "description": "ID of the topic containing this post"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "ID of the user who created the post"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time when the post was created"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject/title of the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Main content of the post"
+        }
+      },
+      "required": [
+        "id",
+        "forumId",
+        "topicId",
+        "userId",
+        "time",
+        "subject",
+        "text"
+      ]
+    }
+  }
+}

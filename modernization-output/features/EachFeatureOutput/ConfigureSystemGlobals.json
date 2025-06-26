@@ -1,0 +1,58 @@
+{
+  "featureName": "ConfigureSystemGlobals",
+  "description": "Sets system-wide configuration parameters after successful installation.",
+  "inputValues": [
+    "dbPassword-string-SystemConfig",
+    "forumLink-string-SystemConfig",
+    "siteLink-string-SystemConfig",
+    "language-string-SystemConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following configuration parameters:\n     - dbPassword (mandatory): Database password used for generating hash sequence\n     - forumLink (mandatory): URL link to the forum\n     - siteLink (mandatory): URL link to the main site\n     - language (mandatory): Default language setting for the system\n\n2. Data Validation:\n   - Validate forumLink:\n     - Must be a properly formatted URL\n     - Must not be empty\n     - IF invalid, THEN display error message and request correction\n   - Validate siteLink:\n     - Must be a properly formatted URL\n     - Must not be empty\n     - IF invalid, THEN display error message and request correction\n   - Validate language:\n     - Must be a supported language code\n     - IF language code doesn't exist in the system, THEN use default language\n\n3. Business Rule Processing:\n   - Check if system is in proper state for configuration:\n     - Verify installation process has completed database setup\n     - Verify required files are accessible and writable\n     - IF any prerequisite checks fail, THEN abort configuration process and display appropriate error\n\n4. Core Operation Execution:\n   - Generate unique hash sequence:\n     - Create a cryptographic hash using database password and current timestamp\n     - Store hash sequence in system configuration\n   - Set system configuration values:\n     - Set forum link URL in system configuration\n     - Set homepage link URL in system configuration\n     - Set default language in system configuration\n     - Set installation status to \"true\"\n   - Save configuration changes to persistent storage:\n     - Write all configuration values to system configuration files\n     - Ensure all values are properly formatted and escaped\n     - IF writing fails, THEN display error message and suggest manual configuration\n   - Restart system globals:\n     - Reload configuration from storage\n     - Apply new settings to running system\n\n5. Response Generation:\n   - IF configuration completes successfully:\n     - Display success message to user\n     - Provide link to access the newly configured system\n     - Include instructions for any additional steps if needed\n   - IF configuration fails:\n     - Display detailed error message\n     - Provide troubleshooting information\n     - Suggest alternative configuration methods",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Forum link must be a valid URL",
+    "Site link must be a valid URL",
+    "Language code must be supported by the system",
+    "Database password must be available for hash generation",
+    "Configuration files must be writable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SystemConfig": {
+      "type": "object",
+      "properties": {
+        "dbPassword": {
+          "type": "string",
+          "description": "Database password used for generating hash sequence"
+        },
+        "forumLink": {
+          "type": "string",
+          "description": "URL link to the forum"
+        },
+        "siteLink": {
+          "type": "string",
+          "description": "URL link to the main site"
+        },
+        "language": {
+          "type": "string",
+          "description": "Default language setting for the system"
+        }
+      },
+      "required": [
+        "dbPassword",
+        "forumLink",
+        "siteLink",
+        "language"
+      ]
+    }
+  }
+}

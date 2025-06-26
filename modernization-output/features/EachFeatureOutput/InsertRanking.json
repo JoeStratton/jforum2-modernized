@@ -1,0 +1,30 @@
+{
+  "featureName": "InsertRanking",
+  "description": "Displays the form for creating a new user ranking and processes the submitted data.",
+  "inputValues": [
+    "rank_title-string-Ranking",
+    "rank_special-boolean-Ranking",
+    "rank_min-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs from the user:\n     a. rank_title (mandatory): The title of the ranking\n     b. rank_special (mandatory): Boolean flag indicating if this is a special ranking\n     c. rank_min (conditional): Minimum post count required for this ranking, required only if rank_special is false\n\n2. Data Validation:\n   - Validate rank_title:\n     a. Check if rank_title is not empty\n     b. Check if rank_title length is within acceptable limits\n     c. IF validation fails, THEN display appropriate error message\n   - Validate rank_special:\n     a. Ensure rank_special is a valid boolean value\n     b. IF validation fails, THEN display appropriate error message\n   - Validate rank_min:\n     a. IF rank_special is false, THEN:\n        i. Ensure rank_min is provided\n        ii. Verify rank_min is a positive integer\n        iii. Check if rank_min does not overlap with existing non-special rankings\n     b. IF validation fails, THEN display appropriate error message\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the user has appropriate permissions to create rankings\n     b. IF user lacks permissions, THEN display access denied message and terminate process\n   - Verify ranking constraints:\n     a. IF rank_special is false, THEN:\n        i. Check if the rank_min value conflicts with existing rankings\n        ii. IF conflict exists, THEN notify user and request modification\n\n4. Core Operation Execution:\n   - Create new Ranking object:\n     a. Set the title to the provided rank_title\n     b. Set the special flag to the provided rank_special value\n     c. IF rank_special is false, THEN set the minimum post count to rank_min\n   - Save the new ranking to the database:\n     a. Generate a unique identifier for the new ranking\n     b. Store the ranking information\n     c. IF storage operation fails, THEN display error message and allow user to retry\n   - Update ranking repository:\n     a. Refresh the system's cached ranking information\n     b. IF refresh fails, THEN log the error but continue process\n\n5. Response Generation:\n   - On successful creation:\n     a. Display confirmation message that the ranking was created successfully\n     b. Show the updated list of all rankings in the system\n     c. Provide option to create another ranking or return to management screen\n   - On failure:\n     a. Display specific error message based on the failure reason\n     b. Preserve user inputs to allow correction and resubmission\n     c. Provide option to cancel the operation",
+  "databaseEntities": [
+    "Ranking"
+  ],
+  "validationRules": [
+    "Ranking title must not be empty",
+    "Ranking title must have an acceptable length",
+    "Special ranking flag must be a valid boolean value",
+    "For non-special rankings, minimum post count must be provided",
+    "For non-special rankings, minimum post count must be a positive integer",
+    "For non-special rankings, minimum post count must not overlap with existing rankings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "special": "boolean",
+      "min": "number"
+    }
+  }
+}

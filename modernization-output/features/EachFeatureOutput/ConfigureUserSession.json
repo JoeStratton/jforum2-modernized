@@ -1,0 +1,42 @@
+{
+  "featureName": "ConfigureUserSession",
+  "description": "Sets up user session with preferences and authentication details after successful login.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect UserSession object containing current session information\n   - Collect User object containing authenticated user details\n   - System will use current date/time for session timestamps\n\n2. Data Validation:\n   - Validate UserSession object is not null\n      * IF UserSession is null THEN generate error message\n   - Validate User object is not null\n      * IF User is null THEN generate error message\n   - Verify User ID is valid\n      * IF User ID is invalid or zero THEN generate error message\n   - Check if User account is active\n      * IF User is marked as deleted THEN reject session configuration\n\n3. Business Rule Processing:\n   - Transfer User data to UserSession\n      * Copy user ID, username, and other profile information\n      * Set authentication status to logged in\n   - Check for existing session information\n      * IF user already has an active session THEN\n         > Retrieve existing session data\n         > Store current session data to database\n         > Remove old session information\n   - Determine last visit timestamp\n      * IF previous session exists THEN\n         > Calculate last visit time based on previous session start time and duration\n      * ELSE\n         > Set last visit time to current system time\n   - Set auto-login flag to true\n   - Mark session as authenticated\n\n4. Core Operation Execution:\n   - Update user's session with profile preferences\n   - Load user's language preference\n   - Set session start time\n   - Associate user permissions with session\n   - Store updated session in session repository\n   - Update last activity timestamp\n\n5. Response Generation:\n   - Return configured UserSession object\n   - Include authentication status\n   - Include user preferences\n   - Include permission settings\n   - Include timestamp information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "UserSession object must not be null",
+    "User object must not be null",
+    "User ID must be valid and greater than zero",
+    "User account must not be marked as deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "userId": "number",
+      "username": "string",
+      "lastVisit": "date",
+      "startTime": "date",
+      "sessionTime": "number",
+      "sessionId": "string",
+      "ip": "string",
+      "isLogged": "boolean",
+      "autoLogin": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "lang": "string",
+      "isDeleted": "boolean"
+    }
+  }
+}

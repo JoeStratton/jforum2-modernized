@@ -1,0 +1,41 @@
+{
+  "featureName": "FindDocumentByPostId",
+  "description": "Retrieves a specific document from the search index using a post ID.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (number, mandatory) from the request\n   - No optional fields are required\n   - No default values are needed\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if search index is accessible\n   - Verify search functionality is properly initialized\n   - IF search index is not available THEN\n     a. Log the error\n     b. Prepare system unavailable message\n     c. Return error response\n\n4. Core Operation Execution:\n   - Create a search term using the provided postId\n   - Execute search operation against the index\n   - IF search returns results THEN\n     a. Retrieve the first document from results (as postId should be unique)\n     b. Extract document details from the search result\n   - ELSE\n     a. Set document result to null\n     b. Prepare not found message\n\n5. Response Generation:\n   - IF document was found THEN\n     a. Format document data for response\n     b. Include all relevant document fields\n     c. Return success response with document data\n   - ELSE\n     a. Return appropriate not found response\n     b. Include search parameters in response for debugging\n     c. Suggest alternative actions to the user",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Post ID must reference an existing post in the system",
+    "Search index must be available and accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Document": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "number",
+          "description": "Unique identifier of the post"
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum containing the post"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date when the post was created"
+        }
+      }
+    }
+  }
+}

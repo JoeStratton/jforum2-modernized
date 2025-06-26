@@ -1,0 +1,236 @@
+{
+  "feature_name": "Forum Structure Management",
+  "description": "The Forum Structure Management system handles the organization of discussion areas through a hierarchical structure of categories, forums, and topics.",
+  "business_logic": {
+    "category_management": {
+      "description": "Categories are top-level containers for organizing forums",
+      "workflow": [
+        "Administrators can create, edit, delete, and reorder categories",
+        "Categories can be displayed or hidden based on configuration",
+        "Categories maintain order for display purposes",
+        "Categories can be moderated"
+      ]
+    },
+    "forum_management": {
+      "description": "Forums are containers for topics within categories",
+      "workflow": [
+        "Administrators can create, edit, delete, and reorder forums within categories",
+        "Forums can have specific permissions assigned to user groups",
+        "Forums can be set as moderated, requiring post approval",
+        "Forums track statistics like total topics, posts, and last post information"
+      ],
+      "forum_types": [
+        "Standard forums - contain user-created topics",
+        "Read-only forums - users can read but not create topics"
+      ]
+    },
+    "topic_organization": {
+      "description": "Topics are organized within forums and can be managed by moderators",
+      "workflow": [
+        "Topics can be moved between forums",
+        "Topics can be pinned (sticky) to appear at top of forum",
+        "Topics can be locked to prevent further replies",
+        "Topics can be marked as announcements with special visibility"
+      ]
+    },
+    "subscription_system": {
+      "description": "Users can subscribe to forums or topics to receive notifications",
+      "workflow": [
+        "Users can subscribe to specific forums",
+        "Users can subscribe to specific topics",
+        "Notification options configurable (email, in-app)"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "categories": {
+      "list": {
+        "path": "/api/categories",
+        "method": "GET",
+        "responses": {
+          "200": "List of categories with forums"
+        }
+      },
+      "create": {
+        "path": "/api/categories",
+        "method": "POST",
+        "request_body": {
+          "name": "string",
+          "order": "integer",
+          "moderated": "boolean"
+        },
+        "responses": {
+          "201": "Category created",
+          "400": "Validation error"
+        }
+      },
+      "get": {
+        "path": "/api/categories/{categoryId}",
+        "method": "GET",
+        "responses": {
+          "200": "Category details",
+          "404": "Category not found"
+        }
+      },
+      "update": {
+        "path": "/api/categories/{categoryId}",
+        "method": "PUT",
+        "request_body": {
+          "name": "string",
+          "order": "integer",
+          "moderated": "boolean"
+        },
+        "responses": {
+          "200": "Category updated",
+          "404": "Category not found"
+        }
+      },
+      "delete": {
+        "path": "/api/categories/{categoryId}",
+        "method": "DELETE",
+        "responses": {
+          "204": "Category deleted",
+          "400": "Cannot delete category with forums",
+          "404": "Category not found"
+        }
+      }
+    },
+    "forums": {
+      "list": {
+        "path": "/api/categories/{categoryId}/forums",
+        "method": "GET",
+        "responses": {
+          "200": "List of forums in category"
+        }
+      },
+      "create": {
+        "path": "/api/categories/{categoryId}/forums",
+        "method": "POST",
+        "request_body": {
+          "name": "string",
+          "description": "string",
+          "order": "integer",
+          "moderated": "boolean"
+        },
+        "responses": {
+          "201": "Forum created",
+          "400": "Validation error",
+          "404": "Category not found"
+        }
+      },
+      "get": {
+        "path": "/api/forums/{forumId}",
+        "method": "GET",
+        "responses": {
+          "200": "Forum details",
+          "404": "Forum not found"
+        }
+      },
+      "update": {
+        "path": "/api/forums/{forumId}",
+        "method": "PUT",
+        "request_body": {
+          "name": "string",
+          "description": "string",
+          "order": "integer",
+          "moderated": "boolean",
+          "categoryId": "integer"
+        },
+        "responses": {
+          "200": "Forum updated",
+          "404": "Forum not found"
+        }
+      },
+      "delete": {
+        "path": "/api/forums/{forumId}",
+        "method": "DELETE",
+        "responses": {
+          "204": "Forum deleted",
+          "400": "Cannot delete forum with topics",
+          "404": "Forum not found"
+        }
+      }
+    },
+    "forum_subscriptions": {
+      "subscribe": {
+        "path": "/api/forums/{forumId}/subscriptions",
+        "method": "POST",
+        "responses": {
+          "201": "Subscription created",
+          "400": "Already subscribed"
+        }
+      },
+      "unsubscribe": {
+        "path": "/api/forums/{forumId}/subscriptions",
+        "method": "DELETE",
+        "responses": {
+          "204": "Subscription removed"
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "categories": {
+      "fields": [
+        {"name": "category_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "category_name", "type": "VARCHAR(100)", "constraints": "NOT NULL"},
+        {"name": "category_order", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "category_moderated", "type": "SMALLINT", "constraints": "DEFAULT 0"}
+      ]
+    },
+    "forums": {
+      "fields": [
+        {"name": "forum_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "category_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "forum_name", "type": "VARCHAR(150)", "constraints": "NOT NULL"},
+        {"name": "forum_description", "type": "TEXT"},
+        {"name": "forum_order", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "forum_topics", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "forum_posts", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "forum_last_post_id", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "moderated", "type": "SMALLINT", "constraints": "DEFAULT 0"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (category_id) REFERENCES categories(category_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_forums_category ON forums(category_id)"
+      ]
+    },
+    "forums_watch": {
+      "fields": [
+        {"name": "forum_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "PRIMARY KEY (forum_id, user_id)",
+        "FOREIGN KEY (forum_id) REFERENCES forums(forum_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_fw_forum ON forums_watch(forum_id)",
+        "CREATE INDEX idx_fw_user ON forums_watch(user_id)"
+      ]
+    }
+  },
+  "security_considerations": {
+    "permissions": [
+      "Category management restricted to administrators only",
+      "Forum management restricted to administrators only",
+      "Forum permissions can be set per user group",
+      "Permission types include read, create topics, reply, etc."
+    ],
+    "data_integrity": [
+      "Cascading deletes should be handled carefully",
+      "Consider soft deletion for forums with content",
+      "Ensure proper transaction handling for operations affecting multiple tables"
+    ]
+  },
+  "integration_points": {
+    "user_management": "Forum permissions are based on user groups",
+    "post_system": "Forums contain topics which contain posts",
+    "moderation_system": "Forums can be set as moderated, requiring post approval",
+    "search_system": "Forums and their content are indexed for searching",
+    "notification_system": "Users can subscribe to forums for notifications"
+  }
+}

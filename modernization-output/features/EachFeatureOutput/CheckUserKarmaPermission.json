@@ -1,0 +1,24 @@
+{
+  "featureName": "CheckUserKarmaPermission",
+  "description": "Verifies if a user can add karma to a specific post.",
+  "inputValues": [
+    "userId-number-User",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, number): The identifier of the user attempting to add karma\n   - Collect postId (mandatory, number): The identifier of the post to which karma would be added\n   - System will use these inputs to determine if the user has permission to add karma\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. Return error message if validation fails: \"Invalid user identifier provided\"\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. Return error message if validation fails: \"Invalid post identifier provided\"\n\n3. Business Rule Processing:\n   - Verify user existence:\n     a. Check if the user with the provided userId exists in the system\n     b. IF user does not exist, THEN return error: \"User not found\"\n   - Verify post existence:\n     a. Check if the post with the provided postId exists in the system\n     b. IF post does not exist, THEN return error: \"Post not found\"\n   - Check user status:\n     a. Verify if the user account is active and not banned\n     b. IF user is banned or inactive, THEN return error: \"User account is not in good standing\"\n   - Check karma voting history:\n     a. Search for existing karma entries associated with both the userId and postId\n     b. IF an entry is found, THEN user has already voted on this post\n\n4. Core Operation Execution:\n   - Determine permission status:\n     a. IF no previous karma entry exists for this user-post combination, THEN:\n        i. Set permission status to \"allowed\"\n     b. ELSE:\n        i. Set permission status to \"denied\"\n   - Record permission check:\n     a. Log the permission check attempt with timestamp, userId, postId, and result\n     b. Update user's last activity timestamp\n\n5. Response Generation:\n   - Prepare permission response:\n     a. Include permission status (allowed/denied)\n     b. IF denied, include reason: \"User has already added karma to this post\"\n     c. Include timestamp of the permission check\n   - Return final response:\n     a. IF permission allowed, return success response with permission status\n     b. IF permission denied, return error response with reason",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "User must exist in the system",
+    "Post must exist in the system",
+    "User must not have previously added karma to the specified post",
+    "User account must be active and in good standing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

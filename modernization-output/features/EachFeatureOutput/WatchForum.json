@@ -1,0 +1,34 @@
+{
+  "featureName": "WatchForum",
+  "description": "Subscribes a user to receive notifications for a specific forum.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "user_id-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forum_id (mandatory): The unique identifier of the forum to watch\n   - Collect user_id (system-generated): The identifier of the current logged-in user\n\n2. Data Validation\n   - Validate forum_id:\n      * Check if forum_id is provided\n      * Verify forum_id represents a valid forum in the system\n      * Generate error message if forum does not exist\n   - Validate user authentication:\n      * Verify user is logged in\n      * Generate error message if user is not authenticated\n      * Redirect to login page if authentication fails\n\n3. Business Rule Processing\n   - Check subscription status:\n      * Verify if the user is already subscribed to this forum\n      * Skip subscription process if user is already watching the forum\n   - Verify forum access permissions:\n      * Check if the user has access rights to the specified forum\n      * Generate error message if user lacks necessary permissions\n\n4. Core Operation Execution\n   - Create forum subscription:\n      * Record the association between user and forum in the subscription system\n      * Store timestamp of when the subscription was created\n      * Update user's notification preferences for this forum\n   - Handle subscription conflicts:\n      * If any errors occur during subscription process, provide clear error message\n      * Roll back any partial subscription data if process fails\n\n5. Response Generation\n   - Generate success response:\n      * Create confirmation message indicating successful subscription\n      * Include forum name in the confirmation message\n      * Provide information about how notifications will be delivered\n   - Redirect user:\n      * Return user to the forum view they were previously viewing\n      * Maintain any pagination or view state from before the action",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must be logged in to subscribe to a forum",
+    "Forum must exist in the system",
+    "User must have access permissions to the forum",
+    "User should not already be subscribed to the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

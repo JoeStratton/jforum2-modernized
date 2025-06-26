@@ -1,0 +1,75 @@
+{
+  "featureName": "AddSecurityRole",
+  "description": "Adds security roles to users or groups with optional role values.",
+  "inputValues": [
+    "id-number-Entity",
+    "role-object-Role",
+    "roleValues-object-RoleValueCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the entity ID (required):\n       - Entity ID must be a positive integer representing a user or group\n       - System must determine if ID belongs to a user or group entity\n   1.2. Collect the role information (required):\n       - Role name must be provided as a non-empty string\n       - Role type must be specified (access, modification, administration, etc.)\n   1.3. Collect role values (optional):\n       - Collection of specific permissions or settings associated with the role\n       - Each role value must have a name and may have additional attributes\n\n2. Data Validation:\n   2.1. Validate entity ID:\n       - VERIFY that ID is a positive integer\n       - VERIFY that ID corresponds to an existing user or group in the system\n       - IF ID is invalid or not found, THEN return appropriate error message\n   2.2. Validate role information:\n       - VERIFY that role name is not empty\n       - VERIFY that role name follows system naming conventions\n       - VERIFY that role type is valid according to system definitions\n       - IF role information is invalid, THEN return appropriate error message\n   2.3. Validate role values (if provided):\n       - VERIFY that each role value has a valid name\n       - VERIFY that role values are compatible with the specified role\n       - IF any role value is invalid, THEN return appropriate error message\n\n3. Business Rule Processing:\n   3.1. Check for role assignment permissions:\n       - VERIFY that the current user has permission to assign roles\n       - VERIFY that the current user has access to the specified role\n       - IF permission check fails, THEN return authorization error\n   3.2. Check for role conflicts:\n       - VERIFY that the new role doesn't conflict with existing roles\n       - VERIFY that the role is appropriate for the entity type (user or group)\n       - IF conflicts exist, THEN return conflict error with details\n   3.3. Check system constraints:\n       - VERIFY that adding this role doesn't violate system constraints\n       - VERIFY that maximum number of roles per entity is not exceeded\n       - IF constraints are violated, THEN return constraint violation error\n\n4. Core Operation Execution:\n   4.1. Determine operation type based on inputs:\n       - IF only ID and role are provided, THEN perform basic role assignment\n       - IF ID, role, and role values are provided, THEN perform role assignment with values\n   4.2. Execute role assignment:\n       - FOR basic role assignment:\n           * Create association between entity and role\n           * Set default values for role if applicable\n       - FOR role assignment with values:\n           * Create association between entity and role\n           * Assign provided role values to the role\n   4.3. Update security cache:\n       - Refresh security permissions for affected entity\n       - Update any dependent security relationships\n   4.4. Log role assignment:\n       - Record role assignment details for audit purposes\n       - Include timestamp, entity ID, role details, and assigning user\n\n5. Response Generation:\n   5.1. Generate success response:\n       - Include confirmation message of successful role assignment\n       - Include summary of assigned role and values\n       - Include entity information that received the role\n   5.2. Generate error response (if needed):\n       - Include specific error code and message\n       - Include guidance on how to resolve the issue\n       - Include support reference information if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Entity ID must be a positive integer",
+    "Entity ID must correspond to an existing user or group",
+    "Role name must not be empty",
+    "Role name must follow system naming conventions",
+    "Role values must be compatible with the specified role",
+    "Current user must have permission to assign roles",
+    "New role must not conflict with existing roles",
+    "Maximum number of roles per entity must not be exceeded"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default roles exist in the system",
+    "Ensure role types are properly defined"
+  ],
+  "schema": {
+    "Role": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique name identifying the role"
+        },
+        "type": {
+          "type": "string",
+          "description": "Category or type of the role"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the role's purpose"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "RoleValueCollection": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the role value"
+              },
+              "value": {
+                "type": "string",
+                "description": "Actual value or setting"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

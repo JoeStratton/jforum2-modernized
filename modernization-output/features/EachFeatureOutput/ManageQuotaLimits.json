@@ -1,0 +1,67 @@
+{
+  "featureName": "ManageQuotaLimits",
+  "description": "Creates, updates, and removes quota limits for attachments.",
+  "inputValues": [
+    "quotaDescription-string-QuotaLimit",
+    "maxFilesize-number-QuotaLimit",
+    "quotaType-number-QuotaLimit",
+    "quotaId-number-QuotaLimit",
+    "groupId-number-Group",
+    "deleteIds-object-IdArray",
+    "totalRecords-number-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs based on the operation type:\n       1.1.1. For creation: \n           - quotaDescription: descriptive name for the quota limit\n           - maxFilesize: maximum file size allowed in bytes\n           - quotaType: type identifier for the quota limit\n       1.1.2. For update: \n           - quotaId: unique identifier of the quota limit to update\n           - quotaDescription: updated descriptive name\n           - maxFilesize: updated maximum file size\n           - quotaType: updated type identifier\n       1.1.3. For deletion: \n           - deleteIds: array of quota limit IDs to be removed\n       1.1.4. For group association: \n           - groupId: identifier of the group\n           - quotaId: identifier of the quota limit to associate\n       1.1.5. System inputs:\n           - totalRecords: count of records for batch operations\n   1.2. System will track creation and modification timestamps automatically\n\n2. Data Validation:\n   2.1. Validate quota limit inputs when creating:\n       2.1.1. Verify quotaDescription is not empty and follows naming conventions\n       2.1.2. Verify maxFilesize is a positive number and within allowed system boundaries\n       2.1.3. Verify quotaType is a valid type identifier in the system\n       2.1.4. Return appropriate error message if validation fails\n   2.2. Validate quota limit inputs when updating:\n       2.2.1. Verify quotaId exists in the system\n       2.2.2. Verify quotaDescription is not empty and follows naming conventions\n       2.2.3. Verify maxFilesize is a positive number and within allowed system boundaries\n       2.2.4. Verify quotaType is a valid type identifier in the system\n       2.2.5. Return appropriate error message if validation fails\n   2.3. Validate deletion parameters:\n       2.3.1. Verify all quota limit IDs in deleteIds exist in the system\n       2.3.2. Return appropriate error message if validation fails\n   2.4. Validate group association parameters:\n       2.4.1. Verify groupId exists in the system\n       2.4.2. Verify quotaId exists in the system\n       2.4.3. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   3.1. Check for existing quota limits with similar attributes:\n       3.1.1. IF a quota limit with the same description exists (for creation)\n              THEN warn user about potential duplicate\n   3.2. Check for quota limit usage before deletion:\n       3.2.1. IF quota limit is currently associated with any groups\n              THEN warn user about potential impact on those groups\n       3.2.2. IF quota limit is currently used by any attachments\n              THEN warn user about potential impact on those attachments\n   3.3. Verify system constraints:\n       3.3.1. Ensure the total number of quota limits doesn't exceed system capacity\n       3.3.2. Ensure the maxFilesize is within system-defined boundaries\n       3.3.3. Ensure quotaType is consistent with system requirements\n\n4. Core Operation Execution:\n   4.1. For quota limit creation:\n       4.1.1. Generate a unique identifier for the new quota limit\n       4.1.2. Create a new quota limit record with provided data:\n              - Description: quotaDescription\n              - Size: maxFilesize\n              - Type: quotaType\n       4.1.3. Store the record in the quota limits repository\n       4.1.4. IF operation fails, log the error and notify user\n   4.2. For quota limit update:\n       4.2.1. Retrieve all existing quota limit records\n       4.2.2. For each record to update (identified by quotaId):\n              - Update description with new quotaDescription\n              - Update size with new maxFilesize\n              - Update type with new quotaType\n       4.2.3. Save all updated records\n       4.2.4. IF operation fails, revert changes and notify user\n   4.3. For quota limit deletion:\n       4.3.1. Identify all quota limits to be deleted from deleteIds\n       4.3.2. Remove all identified quota limit records\n       4.3.3. Update any associations to these quota limits\n       4.3.4. IF operation fails, log the error and notify user\n   4.4. For group quota association:\n       4.4.1. IF cleaning all associations\n              THEN remove all group-quota associations\n       4.4.2. For each group-quota pair:\n              - Create or update association between specified group and quota\n       4.4.3. IF operation fails, revert changes and notify user\n\n5. Response Generation:\n   5.1. For successful operations:\n       5.1.1. Return success status\n       5.1.2. Include details of the created/updated/deleted quota limits\n       5.1.3. For listing operations, return:\n              - Complete list of quota limits\n              - List of available groups\n              - Current group-quota associations\n   5.2. For failed operations:\n       5.2.1. Return error status\n       5.2.2. Include specific error message and reason for failure\n       5.2.3. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_groups",
+    "jforum_extension_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Quota limit description must not be empty",
+    "Quota limit size (maxFilesize) must be a positive number",
+    "Quota limit type must be a valid system type",
+    "Quota limit IDs must exist when performing updates or deletions",
+    "Group ID must exist in the system when associating quotas",
+    "Quota ID must exist in the system when associating with groups"
+  ],
+  "dbSeedingOperations": [
+    "Create default quota limits for new installations",
+    "Associate default quota limits with default user groups"
+  ],
+  "schema": {
+    "QuotaLimit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the quota limit"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descriptive name for the quota limit"
+        },
+        "size": {
+          "type": "number",
+          "description": "Maximum file size allowed in bytes"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type identifier for the quota limit"
+        }
+      },
+      "required": [
+        "description",
+        "size",
+        "type"
+      ]
+    },
+    "IdArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "String representation of quota limit IDs"
+      }
+    }
+  }
+}

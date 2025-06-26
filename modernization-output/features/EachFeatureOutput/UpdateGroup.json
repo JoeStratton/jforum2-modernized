@@ -1,0 +1,63 @@
+{
+  "featureName": "UpdateGroup",
+  "description": "Updates an existing group's information in the system.",
+  "inputValues": [
+    "groupId-number-Group",
+    "groupName-string-Group",
+    "groupDescription-string-Group",
+    "permissions-object-GroupPermissions"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - groupId (mandatory): Unique identifier of the group to update\n       - groupName (mandatory): New name for the group\n       - groupDescription (mandatory): New description for the group\n       - permissions (mandatory): Set of permissions for the group\n   1.2. System will retrieve the current group information using the provided groupId\n\n2. Data Validation:\n   2.1. Validate groupId:\n       - IF groupId is not provided or not a positive integer THEN\n         - Return error: \"Group ID must be a valid positive integer\"\n       - IF group with provided groupId does not exist THEN\n         - Return error: \"Group not found with the specified ID\"\n   2.2. Validate groupName:\n       - IF groupName is empty or null THEN\n         - Return error: \"Group name cannot be empty\"\n       - IF groupName length is less than 3 characters THEN\n         - Return error: \"Group name must be at least 3 characters long\"\n       - IF groupName length exceeds 50 characters THEN\n         - Return error: \"Group name cannot exceed 50 characters\"\n       - IF groupName contains special characters other than spaces, hyphens, or underscores THEN\n         - Return error: \"Group name contains invalid characters\"\n   2.3. Validate groupDescription:\n       - IF groupDescription length exceeds 255 characters THEN\n         - Return error: \"Group description cannot exceed 255 characters\"\n   2.4. Validate permissions:\n       - FOR EACH permission in permissions object:\n         - IF permission value is not a boolean THEN\n           - Return error: \"Permission values must be true or false\"\n\n3. Business Rule Processing:\n   3.1. Check for name conflicts:\n       - IF another group (with different groupId) already has the same groupName THEN\n         - Return error: \"Another group with this name already exists\"\n   3.2. Check for system groups:\n       - IF the group is a system-reserved group THEN\n         - Verify the update doesn't compromise system integrity\n         - IF update would compromise system integrity THEN\n           - Return error: \"Cannot modify core properties of system groups\"\n   3.3. Check user associations:\n       - Retrieve list of users associated with this group\n       - IF group has associated users AND permissions are being restricted THEN\n         - Generate warning: \"This update will affect permissions for X users\"\n\n4. Core Operation Execution:\n   4.1. Prepare group data for update:\n       - Create updated group object with new information\n       - Preserve any fields not included in the update request\n   4.2. Update group record:\n       - Update the group information in the system\n       - Update associated permission records\n   4.3. Handle related updates:\n       - IF group name changed THEN\n         - Update any references to this group name in other parts of the system\n   4.4. Transaction handling:\n       - IF any part of the update fails THEN\n         - Rollback all changes\n         - Return appropriate error message\n\n5. Response Generation:\n   5.1. For successful update:\n       - Return success status\n       - Include updated group information\n       - Include timestamp of update\n       - Include summary of changes made\n   5.2. For failed update:\n       - Return failure status\n       - Include specific error message\n       - Include guidance on how to resolve the issue\n       - Log detailed error information for administrators",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a valid positive integer",
+    "Group must exist in the system",
+    "Group name cannot be empty",
+    "Group name must be at least 3 characters long",
+    "Group name cannot exceed 50 characters",
+    "Group name can only contain alphanumeric characters, spaces, hyphens, or underscores",
+    "Group name must be unique across all groups",
+    "Group description cannot exceed 255 characters",
+    "Permission values must be boolean (true/false)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupPermissions": {
+      "type": "object",
+      "properties": {
+        "canAccessForums": {
+          "type": "boolean",
+          "description": "Permission to access forums"
+        },
+        "canCreateTopics": {
+          "type": "boolean",
+          "description": "Permission to create new topics"
+        },
+        "canReplyTopics": {
+          "type": "boolean",
+          "description": "Permission to reply to existing topics"
+        },
+        "canEditPosts": {
+          "type": "boolean",
+          "description": "Permission to edit posts"
+        },
+        "canDeletePosts": {
+          "type": "boolean",
+          "description": "Permission to delete posts"
+        },
+        "canModerate": {
+          "type": "boolean",
+          "description": "Permission to moderate forums"
+        },
+        "canAdministrate": {
+          "type": "boolean",
+          "description": "Permission to access administration features"
+        }
+      }
+    }
+  }
+}

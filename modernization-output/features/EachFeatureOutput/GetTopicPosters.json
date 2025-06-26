@@ -1,0 +1,100 @@
+{
+  "featureName": "GetTopicPosters",
+  "description": "Retrieves all unique users who posted in a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory) - a unique identifier for the topic\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if topic with provided topicId exists in the system\n     b. IF topic does not exist, THEN return error indicating invalid topic\n   - Verify user access rights:\n     a. Check if current user has permission to view the topic\n     b. IF user lacks permission, THEN return access denied error\n\n4. Core Operation Execution:\n   - Retrieve all posts associated with the specified topic\n   - Extract unique user information from these posts:\n     a. Identify all distinct users who have posted in the topic\n     b. Remove duplicate user entries\n     c. For each unique user, collect comprehensive user information:\n        i. User identifier\n        ii. Username\n        iii. User registration date\n        iv. User karma status\n        v. Avatar information and settings\n        vi. Total post count across the system\n        vii. Location information\n        viii. Contact details (email, messaging handles)\n        ix. Signature settings and content\n        x. Website information\n        xi. Rank information\n   - Organize user information in a structured format\n   - Associate each user with their posting activity in the topic\n\n5. Response Generation:\n   - Success response:\n     a. Return collection of unique users who posted in the topic\n     b. Include comprehensive user profile details for each poster\n     c. Include user preferences and settings relevant for display\n     d. Structure data as a map with user IDs as keys\n   - Error response:\n     a. Return appropriate error message if topic doesn't exist\n     b. Return access denied message if user lacks permission\n     c. Return system error message if data retrieval fails\n     d. Include specific error codes for different failure scenarios",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to view the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "karma": {
+          "type": "object",
+          "description": "User's karma status information"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "User's avatar image path"
+        },
+        "avatarEnabled": {
+          "type": "boolean",
+          "description": "Whether user has enabled avatar display"
+        },
+        "totalPosts": {
+          "type": "number",
+          "description": "Total number of posts by this user across the system"
+        },
+        "from": {
+          "type": "string",
+          "description": "User's location information"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "rankId": {
+          "type": "number",
+          "description": "User's rank identifier"
+        },
+        "viewEmailEnabled": {
+          "type": "boolean",
+          "description": "Whether user allows others to view their email"
+        },
+        "contactInfo": {
+          "type": "object",
+          "description": "User's contact information including messaging handles",
+          "properties": {
+            "icq": {
+              "type": "string"
+            },
+            "msnm": {
+              "type": "string"
+            },
+            "yim": {
+              "type": "string"
+            },
+            "aim": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            }
+          }
+        },
+        "signature": {
+          "type": "string",
+          "description": "User's signature content"
+        },
+        "attachSignatureEnabled": {
+          "type": "boolean",
+          "description": "Whether user has enabled signature attachment to posts"
+        }
+      }
+    }
+  }
+}

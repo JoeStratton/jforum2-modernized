@@ -1,0 +1,36 @@
+{
+  "featureName": "UpdateSmilie",
+  "description": "Modifies an existing smilie emoticon's properties in the system.",
+  "inputValues": [
+    "id-number-Smilie",
+    "code-string-Smilie",
+    "smilie_img-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following inputs:\n       - id (number, mandatory): Unique identifier of the smilie to update\n       - code (string, mandatory): Text representation of the smilie\n       - smilie_img (object, optional): New image file for the smilie\n   1.2. System retrieves the current smilie record using the provided id\n\n2. Data Validation\n   2.1. Validate smilie id\n       2.1.1. Check if id is provided\n       2.1.2. Verify id is a positive integer\n       2.1.3. Confirm smilie with provided id exists in the system\n       2.1.4. IF smilie not found, THEN display error message \"Smilie not found\"\n   2.2. Validate smilie code\n       2.2.1. Check if code is provided\n       2.2.2. Verify code is not empty\n       2.2.3. Check if code length is within acceptable limits (1-50 characters)\n       2.2.4. IF code is invalid, THEN display error message \"Invalid smilie code\"\n   2.3. Validate smilie image (if provided)\n       2.3.1. Check if uploaded file is an image\n       2.3.2. Verify image file size is within acceptable limits\n       2.3.3. Confirm image format is supported (e.g., JPG, PNG, GIF)\n       2.3.4. IF image is invalid, THEN display error message \"Invalid smilie image\"\n\n3. Business Rule Processing\n   3.1. Check for duplicate smilie codes\n       3.1.1. Search for existing smilies with the same code (excluding current smilie)\n       3.1.2. IF duplicate found, THEN display error message \"Smilie code already exists\"\n   3.2. Verify system constraints\n       3.2.1. Verify user has permission to update smilies\n       3.2.2. IF user lacks permission, THEN display error message \"Insufficient privileges\"\n   3.3. Check storage availability (if new image provided)\n       3.3.1. Verify sufficient storage space for new image\n       3.3.2. IF storage space insufficient, THEN display error message \"Insufficient storage space\"\n\n4. Core Operation Execution\n   4.1. Process image upload (if new image provided)\n       4.1.1. Generate unique filename for the image using cryptographic hash\n       4.1.2. Save uploaded image to the smilie image directory\n       4.1.3. IF image save fails, THEN log error and display message \"Failed to save image\"\n   4.2. Prepare smilie data for update\n       4.2.1. Update smilie code with new value\n       4.2.2. IF new image uploaded, update URL and disk name properties\n       4.2.3. Preserve existing URL and disk name if no new image provided\n   4.3. Update smilie record\n       4.3.1. Update the smilie record in the database\n       4.3.2. IF update fails, THEN log error details and display message \"Failed to update smilie\"\n       4.3.3. Revert any file system changes if update fails\n   4.4. Update system cache\n       4.4.1. Refresh smilies repository to reflect changes\n       4.4.2. IF cache refresh fails, THEN log warning but continue\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Create confirmation message \"Smilie updated successfully\"\n       5.1.2. Prepare list of all smilies for display\n   5.2. Handle error responses\n       5.2.1. For validation errors, return specific error messages\n       5.2.2. For system errors, return generic error message with error code\n   5.3. Provide next steps\n       5.3.1. Display updated list of all smilies\n       5.3.2. Offer options to edit another smilie or return to administration panel",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie ID must exist in the system",
+    "Smilie code must not be empty",
+    "Smilie code must be unique across all smilies",
+    "If provided, smilie image must be a valid image file",
+    "If provided, smilie image must be within acceptable file size limits",
+    "If provided, smilie image must be in a supported format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "id": "number",
+      "code": "string",
+      "url": "string",
+      "diskName": "string"
+    },
+    "FileItem": {
+      "name": "string",
+      "size": "number",
+      "contentType": "string",
+      "content": "binary"
+    }
+  }
+}

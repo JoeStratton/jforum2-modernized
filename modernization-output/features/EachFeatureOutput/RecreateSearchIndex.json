@@ -1,0 +1,64 @@
+{
+  "featureName": "RecreateSearchIndex",
+  "description": "Creates a new search index directory when performing a full reindex operation.",
+  "inputValues": [
+    "settings-object-LuceneSettings",
+    "args-object-LuceneReindexArgs",
+    "recreate-boolean-Boolean"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect LuceneSettings object containing index configuration\n   - Collect LuceneReindexArgs object containing reindexing parameters\n   - Collect recreate flag (boolean) to determine if index should be recreated\n   - System will use configuration values for index paths and fetch count\n\n2. Data Validation:\n   - Validate LuceneSettings object is properly initialized\n     * Ensure index directory paths are valid\n     * Verify write permissions to index locations\n   - Validate LuceneReindexArgs object\n     * If filtering by date, ensure fromDate and toDate are valid\n     * If filtering by message, ensure firstPostId and lastPostId are valid\n   - Verify recreate flag is a valid boolean value\n\n3. Business Rule Processing:\n   - Check if system is already performing indexing operation\n     * IF system is already indexing, THEN prevent duplicate indexing processes\n   - Determine indexing mode (background or foreground)\n     * IF background mode requested, THEN prepare thread for asynchronous processing\n   - Calculate indexing scope based on provided arguments\n     * IF filtering by message, THEN use firstPostId and lastPostId from args\n     * IF filtering by date, THEN query for post IDs within date range\n\n4. Core Operation Execution:\n   - IF recreate flag is true, THEN:\n     * Create new index directory at configured location\n     * Initialize empty index structure\n   - Set indexing status flag to indicate process is running\n   - Initialize data access components for retrieving posts\n   - Calculate post ID range for processing\n     * Determine first post ID based on filter criteria\n     * Determine last post ID based on filter criteria\n   - Process posts in batches:\n     * WHILE more posts exist to process:\n       * Fetch next batch of posts (limited by configured fetch count)\n       * FOR each post in batch:\n         * IF avoiding duplicates AND post already indexed, THEN skip post\n         * Add post content to search index\n         * Update progress counters\n       * IF indexing canceled, THEN exit processing loop\n   - Flush any remaining documents to the index\n   - Update system status to indicate indexing is complete\n\n5. Response Generation:\n   - Record total indexing time and document count\n   - IF any errors occurred during indexing:\n     * Generate error response with details about failure point\n     * Ensure index is left in consistent state\n   - IF indexing completed successfully:\n     * Generate success response with statistics\n     * Include total documents indexed\n     * Include total processing time",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Index directory path must be valid and writable",
+    "Post ID ranges must be valid integers",
+    "Date ranges must be valid date formats if filtering by date",
+    "System must not already be performing an indexing operation",
+    "Fetch count must be a positive integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "LuceneSettings": {
+      "properties": {
+        "indexDirectory": {
+          "type": "string",
+          "description": "Path to the search index directory"
+        },
+        "writeEnabled": {
+          "type": "boolean",
+          "description": "Whether writing to the index is enabled"
+        }
+      }
+    },
+    "LuceneReindexArgs": {
+      "properties": {
+        "fromDate": {
+          "type": "date",
+          "description": "Start date for filtering posts by date"
+        },
+        "toDate": {
+          "type": "date",
+          "description": "End date for filtering posts by date"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "First post ID when filtering by message"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "Last post ID when filtering by message"
+        },
+        "filterByMessage": {
+          "type": "boolean",
+          "description": "Whether to filter by message IDs instead of dates"
+        },
+        "avoidDuplicatedRecords": {
+          "type": "boolean",
+          "description": "Whether to check for and skip already indexed posts"
+        }
+      }
+    }
+  }
+}

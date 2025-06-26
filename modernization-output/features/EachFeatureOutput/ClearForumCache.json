@@ -1,0 +1,19 @@
+{
+  "featureName": "ClearForumCache",
+  "description": "Clears the topic cache for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number, mandatory) - The identifier of the forum whose cache needs to be cleared\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF forumId is missing or invalid THEN\n        i. Generate an error message indicating invalid forum identifier\n        ii. Terminate the process\n\n3. Business Rule Processing:\n   - Check system configuration:\n     a. Verify if topic caching is enabled in the system\n     b. IF topic caching is not enabled THEN\n        i. Log information that caching is disabled\n        ii. Skip to Response Generation with appropriate message\n     c. Check if the forum exists in the system\n        i. IF forum does not exist THEN\n           1. Generate an error message indicating forum not found\n           2. Terminate the process\n\n4. Core Operation Execution:\n   - Acquire synchronization lock to prevent concurrent modifications\n     a. Locate the cache storage for the specified forum\n     b. Create an empty collection to replace existing cached topics\n     c. Remove any topic-to-forum relationship mappings for this forum\n     d. Update the cache with the empty collection\n     e. Mark the forum's cache as cleared in the system\n     f. Release the synchronization lock\n\n5. Response Generation:\n   - IF cache clearing operation was successful THEN\n     a. Generate success response indicating the forum cache was cleared\n     b. Include the forum identifier in the response\n     c. Include timestamp of when the operation was performed\n   - ELSE\n     a. Generate error response with details about what went wrong\n     b. Include any system error messages\n     c. Provide suggestions for troubleshooting",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Topic caching must be enabled for this operation to have effect"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

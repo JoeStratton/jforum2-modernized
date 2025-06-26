@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "GetCookie",
+    "description": "Retrieves a cookie by name from the request"
+  },
+  {
+    "featureName": "AddCookie",
+    "description": "Creates or updates a cookie with specified name and value with one year expiration"
+  }
+]

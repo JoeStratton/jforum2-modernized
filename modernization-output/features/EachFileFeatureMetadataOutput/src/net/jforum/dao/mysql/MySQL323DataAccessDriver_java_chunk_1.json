@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GetGroupSecurityDAO",
+    "description": "Provides access to MySQL 3.23 specific implementation of group security data access operations"
+  }
+]

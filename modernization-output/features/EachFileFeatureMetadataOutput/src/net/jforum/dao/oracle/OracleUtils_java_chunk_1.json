@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ReadBlobUTF16BinaryStream",
+    "description": "Reads binary data from a database BLOB field and converts it to a UTF-16 encoded string"
+  },
+  {
+    "featureName": "WriteBlobUTF16BinaryStream",
+    "description": "Writes UTF-16 encoded string data to a database BLOB field using binary streams"
+  }
+]

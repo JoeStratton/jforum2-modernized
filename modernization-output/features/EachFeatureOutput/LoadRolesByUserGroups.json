@@ -1,0 +1,96 @@
+{
+  "featureName": "LoadRolesByUserGroups",
+  "description": "Retrieves all security roles associated with a user's groups.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the User object which contains:\n     * User ID (mandatory)\n     * User group associations (mandatory)\n   - System will use these inputs to retrieve associated security roles\n\n2. Data Validation:\n   - Validate User object:\n     * IF User object is null THEN\n       - Return error: \"User object cannot be null\"\n     * IF User ID is invalid or not found THEN\n       - Return error: \"Invalid user identifier\"\n     * IF User has no associated groups THEN\n       - Log warning: \"User has no group associations\"\n       - Return empty role collection\n\n3. Business Rule Processing:\n   - Check user account status:\n     * IF User account is inactive or suspended THEN\n       - Log access attempt\n       - Return error: \"User account is not active\"\n   - Check system permissions:\n     * IF System is in maintenance mode AND user is not an administrator THEN\n       - Return error: \"System is currently in maintenance mode\"\n     * IF Role retrieval is restricted for this user THEN\n       - Log access attempt\n       - Return error: \"Insufficient permissions to retrieve roles\"\n\n4. Core Operation Execution:\n   - Initialize empty role collection to store results\n   - Extract group IDs from user's group list:\n     * Create an array to hold all group IDs\n     * FOR EACH group in the user's groups list:\n       - Add the group ID to the array\n     * END FOR\n     * Sort the group IDs in ascending order for consistent caching\n   - Check if roles for these groups are already cached:\n     * Generate a unique cache key based on the sorted group IDs\n     * IF roles exist in cache for this key THEN\n       - Retrieve cached roles collection\n       - Return the cached collection\n     * ELSE\n       - Continue with database retrieval\n   - Retrieve roles from database:\n     * Prepare query parameters using the group IDs\n     * Execute query to fetch all roles associated with these groups\n     * FOR EACH role record retrieved:\n       - Create role object with name and values\n       - Add to role collection\n     * END FOR\n   - Process role inheritance and overrides:\n     * FOR EACH role in the collection:\n       - Resolve any role conflicts where the same role appears in multiple groups\n       - Apply role inheritance rules\n       - Determine final role values and permissions\n     * END FOR\n   - Cache the final role collection:\n     * Store the role collection in cache using the group IDs as key\n     * Set appropriate cache expiration\n\n5. Response Generation:\n   - IF Role retrieval is successful THEN\n     * Return complete role collection with all roles and their values\n     * Include metadata about role sources (which group provided which role)\n   - IF Any errors occurred during processing THEN\n     * Return appropriate error message\n     * Include details about which part of the process failed\n   - Log the role retrieval operation for audit purposes",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_roles",
+    "jforum_role_values"
+  ],
+  "validationRules": [
+    "User object must not be null",
+    "User ID must be valid",
+    "User account must be active",
+    "System must not be in maintenance mode for non-admin users",
+    "User must have at least one associated group",
+    "Group IDs must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "groups": {
+          "type": "array",
+          "description": "Groups the user belongs to",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "description": "Group identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Group name"
+              }
+            }
+          }
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the user account is active"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "groups",
+        "active"
+      ]
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the role"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the security role"
+        },
+        "values": {
+          "type": "array",
+          "description": "Collection of values associated with this role",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "description": "The role value"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

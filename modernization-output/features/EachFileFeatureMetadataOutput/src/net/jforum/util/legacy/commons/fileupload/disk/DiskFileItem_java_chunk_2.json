@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "GetFileInputStream",
+    "description": "Retrieves file contents as an input stream from memory or disk storage"
+  },
+  {
+    "featureName": "GetFileContentType",
+    "description": "Retrieves the content type of the uploaded file"
+  },
+  {
+    "featureName": "GetFileCharSet",
+    "description": "Extracts the charset parameter from the content type of the uploaded file"
+  },
+  {
+    "featureName": "GetFileName",
+    "description": "Retrieves the original filename from the client's filesystem"
+  },
+  {
+    "featureName": "CheckFileInMemory",
+    "description": "Determines if file contents are stored in memory or on disk"
+  },
+  {
+    "featureName": "GetFileSize",
+    "description": "Calculates the size of the uploaded file in bytes"
+  },
+  {
+    "featureName": "GetFileBytes",
+    "description": "Retrieves the complete contents of the file as a byte array"
+  },
+  {
+    "featureName": "GetFileContentAsString",
+    "description": "Converts file contents to a string using specified or default character encoding"
+  }
+]

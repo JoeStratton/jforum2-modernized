@@ -1,0 +1,54 @@
+{
+  "featureName": "GetPaginatedUsers",
+  "description": "Retrieves a paginated list of users with specified start and count parameters.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - startFrom (number): The starting index for pagination (mandatory)\n     - count (number): The maximum number of users to retrieve (mandatory)\n\n2. Data Validation\n   - Validate startFrom parameter:\n     - IF startFrom is negative THEN\n       - Return error message indicating that startFrom must be non-negative\n     - END IF\n   - Validate count parameter:\n     - IF count is negative THEN\n       - Return error message indicating that count must be non-negative\n     - END IF\n\n3. Business Rule Processing\n   - Check system state:\n     - IF database connection is not available THEN\n       - Return appropriate error message about system unavailability\n     - END IF\n   - Determine query approach:\n     - IF count is greater than 0 THEN\n       - Prepare to execute paginated query with limits\n     - ELSE\n       - Prepare to execute query to retrieve all users\n     - END IF\n\n4. Core Operation Execution\n   - Execute the user retrieval operation:\n     - Query the user database with pagination parameters\n     - For each user record retrieved:\n       - Extract user information (ID, username, email, registration date, post count, etc.)\n       - Create user object with extracted information\n       - Add user object to result collection\n     - IF any errors occur during retrieval THEN\n       - Log the error details\n       - Prepare appropriate error response\n     - END IF\n\n5. Response Generation\n   - Prepare the success response:\n     - Include the list of retrieved user objects\n     - Include pagination metadata:\n       - Total number of users in the system\n       - Current page information (startFrom and count)\n       - More results indicator (if applicable)\n   - Return the formatted response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Start index must be a non-negative number",
+    "Count must be a non-negative number",
+    "Database connection must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "totalPosts": {
+          "type": "number",
+          "description": "Total number of posts by the user"
+        },
+        "karma": {
+          "type": "object",
+          "description": "User's karma information"
+        },
+        "deleted": {
+          "type": "number",
+          "description": "Indicates if the user is deleted"
+        }
+      }
+    }
+  }
+}

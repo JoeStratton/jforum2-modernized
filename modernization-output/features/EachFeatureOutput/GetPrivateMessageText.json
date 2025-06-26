@@ -1,0 +1,36 @@
+{
+  "featureName": "GetPrivateMessageText",
+  "description": "Retrieves text content of a private message from a database BLOB field.",
+  "inputValues": [
+    "messageId-number-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the private message ID (messageId) from the user request\n   - Verify that messageId is provided and is a valid numeric identifier\n   - Determine if any additional context information is required (e.g., user permissions)\n\n2. Data Validation\n   - Validate that the messageId is a positive integer\n   - Verify that the messageId is within valid range for the system\n   - IF messageId is invalid or missing THEN\n     - Generate appropriate error message\n     - Terminate process and return error response\n   - END IF\n\n3. Business Rule Processing\n   - Check if the requesting user has permission to access this private message\n     - Verify if the user is either the sender or recipient of the message\n     - IF user does not have permission THEN\n       - Log unauthorized access attempt\n       - Return access denied error\n     - END IF\n   - Check if the message exists in the system\n     - Query the private message record using messageId\n     - IF message not found THEN\n       - Generate appropriate error message\n       - Return not found error\n     - END IF\n   - Check if the message has been deleted or archived\n     - IF message is marked as deleted THEN\n       - Determine if recovery is possible based on system rules\n       - IF recovery not possible THEN\n         - Return appropriate error message\n       - END IF\n     - END IF\n\n4. Core Operation Execution\n   - Locate the private message record using the messageId\n   - Access the associated text content from the storage system\n     - Retrieve the BLOB field containing the message text\n     - Convert the BLOB data to appropriate text format\n     - Handle any character encoding requirements\n   - IF text retrieval fails THEN\n     - Log the error with appropriate details\n     - Prepare fallback response or error message\n   - END IF\n   - Update message read status if applicable\n     - IF message was unread AND recipient is requesting THEN\n       - Mark message as read\n       - Update read timestamp\n     - END IF\n\n5. Response Generation\n   - Prepare the response with the retrieved message text\n   - Include relevant metadata about the message:\n     - Message subject\n     - Sender information\n     - Timestamp information\n     - Read status\n   - Format the response according to system standards\n   - Return the complete message information to the requester\n   - IF any errors occurred during processing THEN\n     - Include appropriate error codes and messages\n     - Provide guidance on resolving the issue if applicable\n   - END IF",
+  "databaseEntities": [
+    "PrivateMessage",
+    "User"
+  ],
+  "validationRules": [
+    "Message ID must be a positive integer",
+    "User must be authorized to access the requested message",
+    "Message must exist in the system",
+    "Message text must be successfully decoded from storage format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "senderId": "number",
+      "recipientId": "number",
+      "subject": "string",
+      "text": "string",
+      "sentDate": "date",
+      "readDate": "date",
+      "isRead": "boolean",
+      "isDeleted": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

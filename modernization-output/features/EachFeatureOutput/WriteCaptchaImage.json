@@ -1,0 +1,36 @@
+{
+  "featureName": "WriteCaptchaImage",
+  "description": "Outputs the generated CAPTCHA image to the response stream for display to users.",
+  "inputValues": [
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve the current user session\n   - The user session should contain a previously generated CAPTCHA image\n   - No direct user inputs are required for this feature\n\n2. Data Validation:\n   - Verify that the user session exists and is valid\n   - Check if the CAPTCHA image exists in the user session\n     * IF the CAPTCHA image is null or invalid\n       THEN terminate the process and return without generating output\n     * IF the CAPTCHA image is valid\n       THEN proceed to the next step\n\n3. Business Rule Processing:\n   - Verify that the system is configured to use CAPTCHA functionality\n   - Check if the current user is exempt from CAPTCHA requirements based on system rules\n     * IF user is exempt\n       THEN log this information and continue anyway (for consistency)\n   - Determine the appropriate image format to use (default: JPEG)\n\n4. Core Operation Execution:\n   - Prepare the system response for image output\n     * Set the appropriate content type for image data\n     * Clear any existing output buffers if necessary\n   - Retrieve the CAPTCHA image from the user session\n   - Open an output stream to the response object\n   - Write the image data to the output stream in the selected format\n   - Ensure all data is flushed to the client\n   - Handle any errors during the writing process\n     * IF an error occurs during writing\n       THEN log the error details\n       AND ensure resources are properly released\n\n5. Response Generation:\n   - Close the output stream after successful writing\n   - No explicit success message is returned as this is a binary image output\n   - In case of errors:\n     * Log detailed error information\n     * Ensure the client receives appropriate HTTP error status if image cannot be generated",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User session must be valid and active",
+    "CAPTCHA image must exist in the user session",
+    "Output stream must be available for writing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "captchaImage": {
+          "type": "object",
+          "description": "BufferedImage containing the generated CAPTCHA challenge"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the user session"
+        }
+      },
+      "required": [
+        "captchaImage",
+        "sessionId"
+      ]
+    }
+  }
+}

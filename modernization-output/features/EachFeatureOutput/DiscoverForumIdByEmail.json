@@ -1,0 +1,18 @@
+{
+  "featureName": "DiscoverForumIdByEmail",
+  "description": "Retrieves a forum's ID based on its associated email address.",
+  "inputValues": [
+    "listEmail-string-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forum's email address (listEmail) as a string\n   - This input is mandatory\n   - No default values are provided\n\n2. Data Validation:\n   - Validate the listEmail input:\n     a. Check if listEmail is not null or empty\n        IF listEmail is null or empty THEN\n          Return an error message indicating email is required\n     b. Verify the listEmail has a valid email format\n        IF listEmail format is invalid THEN\n          Return an error message indicating invalid email format\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the database connection is available\n        IF database connection is unavailable THEN\n          Return an error indicating system unavailability\n     b. Verify user has permission to access forum information\n        IF user lacks permission THEN\n          Return an error indicating insufficient privileges\n\n4. Core Operation Execution:\n   - Search for forum with matching email address:\n     a. Query the forum database using the provided listEmail\n     b. Extract the forum ID if a match is found\n     c. IF no matching forum is found THEN\n          Set forumId to 0 (indicating no match)\n     d. IF database error occurs during search THEN\n          Handle the error gracefully\n          Log the error details\n          Return appropriate error message\n\n5. Response Generation:\n   - Success response:\n     a. IF forumId > 0 THEN\n          Return the found forum ID\n          Include forum ID in the response\n     b. IF forumId = 0 THEN\n          Return indication that no forum was found with the given email\n   - Error response:\n     a. For validation errors, return specific validation failure messages\n     b. For system errors, return appropriate error code and message\n     c. Include support information for unresolved issues",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum email must not be empty",
+    "Forum email must be in valid format",
+    "User must have permission to access forum information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

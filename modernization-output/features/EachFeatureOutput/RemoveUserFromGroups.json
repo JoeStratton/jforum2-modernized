@@ -1,0 +1,34 @@
+{
+  "featureName": "RemoveUserFromGroups",
+  "description": "Removes a user from specified groups.",
+  "inputValues": [
+    "userId-number-User",
+    "groupIds-object-GroupIdArray"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory): The unique identifier of the user to be removed from groups\n   - Collect groupIds (array of numbers, mandatory): The list of group identifiers from which the user will be removed\n   - System will use current authentication context to verify operation permissions\n\n2. Data Validation:\n   - Validate userId:\n      a. Verify userId is a positive integer\n      b. Verify userId is not null or empty\n      c. Return appropriate error message if validation fails\n   - Validate groupIds:\n      a. Verify groupIds is not null or empty\n      b. Verify each groupId in the array is a positive integer\n      c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify user exists:\n      a. Check if user with provided userId exists in the system\n      b. IF user does not exist, THEN return error message indicating user not found\n   - Verify groups exist:\n      a. For EACH groupId in groupIds:\n         i. Check if group with current groupId exists\n         ii. IF any group does not exist, THEN return error message with list of invalid group IDs\n   - Verify user membership:\n      a. For EACH groupId in groupIds:\n         i. Check if user is currently a member of the group\n         ii. IF user is not a member of any specified group, THEN remove that groupId from the list\n         iii. IF all groupIds are invalid (user not a member of any), THEN return appropriate message\n   - Verify removal permissions:\n      a. Check if current authenticated user has permission to remove users from groups\n      b. IF not authorized, THEN return permission denied error\n\n4. Core Operation Execution:\n   - Begin removal process:\n      a. Start a transaction to ensure data consistency\n      b. For EACH groupId in groupIds:\n         i. Remove association between user and current group\n         ii. Update user's group membership status\n         iii. Log the removal action for audit purposes\n      c. IF any removal operation fails:\n         i. Rollback all changes\n         ii. Return error message with details of the failure\n      d. Commit transaction if all removals are successful\n   - Update related data:\n      a. Recalculate user's permissions based on remaining group memberships\n      b. Update any cached user information to reflect new group memberships\n\n5. Response Generation:\n   - For successful operation:\n      a. Generate success response indicating user was removed from specified groups\n      b. Include list of groups from which the user was successfully removed\n      c. Include any warnings about groups where user was not a member\n   - For failed operation:\n      a. Generate error response with appropriate error code\n      b. Include detailed error message explaining the failure reason\n      c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Group IDs must be provided as an array of positive integers",
+    "User must exist in the system",
+    "All specified groups must exist in the system",
+    "User must be a member of at least one of the specified groups",
+    "Current user must have permission to remove users from groups"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupIdArray": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "description": "Group identifier"
+      },
+      "minItems": 1,
+      "description": "Array of group identifiers from which the user will be removed"
+    }
+  }
+}

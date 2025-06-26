@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GenerateTopicPostsRSS",
+    "description": "Creates RSS feed for topic posts with formatted content, author information, and publication dates"
+  }
+]

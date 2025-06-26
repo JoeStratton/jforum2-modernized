@@ -1,0 +1,22 @@
+{
+  "featureName": "SetUserActiveStatus",
+  "description": "Changes the active status of a user in the system.",
+  "inputValues": [
+    "userId-number-User",
+    "active-boolean-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - Unique identifier of the user\n   - Collect active (boolean, mandatory) - The desired active status\n\n2. Data Validation:\n   - Validate userId:\n      a. Ensure userId is provided\n      b. Ensure userId is a positive integer\n      c. If validation fails, generate appropriate error message\n   - Validate active parameter:\n      a. Ensure active status is provided\n      b. Ensure active status is a boolean value\n      c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if user exists:\n      a. Verify the userId corresponds to an existing user in the system\n      b. IF user does not exist, THEN generate error message and terminate process\n   - Check if user is deleted:\n      a. Verify if the user account is marked as deleted\n      b. IF user is deleted, THEN generate error message indicating operation cannot be performed on deleted accounts\n   - Check for permission:\n      a. Verify if the requesting entity has permission to change user status\n      b. IF permission check fails, THEN generate unauthorized access error\n\n4. Core Operation Execution:\n   - Update user active status:\n      a. Set the user's active status to the provided value (1 for active, 0 for inactive)\n      b. Record timestamp of status change\n      c. IF active status is being set to true:\n         i. Clear any pending activation requests\n         ii. Update user activation date\n      d. IF active status is being set to false:\n         i. Handle any active sessions for this user\n         ii. Log deactivation reason if provided\n      e. IF update operation fails, THEN generate system error and rollback changes\n\n5. Response Generation:\n   - For successful operation:\n      a. Generate success confirmation message\n      b. Include updated user status information\n      c. Include timestamp of the change\n   - For failed operation:\n      a. Generate appropriate error message based on failure reason\n      b. Include guidance on how to resolve the issue\n      c. Provide support contact information if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must correspond to an existing user",
+    "Active status must be a boolean value",
+    "User account must not be deleted",
+    "Requesting entity must have permission to change user status"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,46 @@
+{
+  "featureName": "GetFileStoreLocation",
+  "description": "Retrieves the File object for the temporary storage location.",
+  "inputValues": [
+    "fileItem-object-DiskFileItem"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the DiskFileItem object instance\n     - This is the file item for which the storage location is needed\n     - No additional inputs are required as the method operates on the instance state\n\n2. Data Validation\n   - Validate the DiskFileItem instance\n     - Check if the DiskFileItem object is not null\n     - IF DiskFileItem is null THEN\n       - Return appropriate error indicating invalid input\n     - END IF\n   - Validate the internal state of the DiskFileItem\n     - Check if the DeferredFileOutputStream (dfos) has been initialized\n     - IF dfos is null THEN\n       - The file data may be in memory only with no disk representation\n       - Return null to indicate no disk storage location exists\n     - END IF\n\n3. Business Rule Processing\n   - Determine the storage state of the file\n     - Check if the file is stored in memory or on disk\n     - IF file is stored entirely in memory THEN\n       - No physical file location exists\n       - Return null to indicate no disk storage location\n     - END IF\n   - Verify file accessibility\n     - Check if the temporary file exists and is accessible\n     - IF temporary file cannot be accessed THEN\n       - Return null or appropriate error\n     - END IF\n\n4. Core Operation Execution\n   - Retrieve the file storage location\n     - Access the internal DeferredFileOutputStream object\n     - Request the File object from the DeferredFileOutputStream\n     - Capture the returned File object representing the temporary storage location\n   - Prepare the response\n     - Package the File object for return to the caller\n     - Ensure no file operations are performed that would alter the file state\n\n5. Response Generation\n   - Return the File object\n     - IF successful retrieval THEN\n       - Return the File object representing the temporary storage location\n     - ELSE\n       - Return null to indicate no file storage location exists\n     - END IF\n   - No additional metadata is returned with the File object",
+  "databaseEntities": [],
+  "validationRules": [
+    "DiskFileItem object must not be null",
+    "Internal DeferredFileOutputStream must be initialized to return a valid file location",
+    "The temporary file must exist and be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DiskFileItem": {
+      "type": "object",
+      "properties": {
+        "dfos": {
+          "type": "object",
+          "description": "DeferredFileOutputStream that manages the file data"
+        },
+        "repository": {
+          "type": "object",
+          "description": "Directory where temporary files are stored"
+        },
+        "sizeThreshold": {
+          "type": "number",
+          "description": "Size threshold determining when data should be stored on disk"
+        },
+        "cachedContent": {
+          "type": "array",
+          "description": "Cached content when file is stored in memory"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Flag indicating if this item is a form field rather than a file"
+        },
+        "fieldName": {
+          "type": "string",
+          "description": "Name of the form field"
+        }
+      }
+    }
+  }
+}

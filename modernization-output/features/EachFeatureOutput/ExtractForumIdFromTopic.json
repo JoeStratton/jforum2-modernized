@@ -1,0 +1,41 @@
+{
+  "featureName": "ExtractForumIdFromTopic",
+  "description": "Extracts the forum ID from a Topic object for permission checking.",
+  "inputValues": [
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Topic object\n     - The Topic object is required\n     - No default values are provided\n\n2. Data Validation:\n   - Validate Topic object\n     - Check if Topic object is not null\n     - IF Topic object is null THEN\n       - Generate error message: \"Topic object cannot be null\"\n       - Return error response\n     - END IF\n     - Check if Topic object has valid structure\n     - IF Topic object structure is invalid THEN\n       - Generate error message: \"Invalid Topic object structure\"\n       - Return error response\n     - END IF\n\n3. Business Rule Processing:\n   - Verify Topic object contains forum ID\n     - Check if forumId property exists in the Topic object\n     - IF forumId property does not exist THEN\n       - Generate error message: \"Topic object does not contain forum ID\"\n       - Return error response\n     - END IF\n     - Check if forumId is a valid identifier\n     - IF forumId is not a valid identifier THEN\n       - Generate error message: \"Invalid forum ID in Topic object\"\n       - Return error response\n     - END IF\n\n4. Core Operation Execution:\n   - Extract forum ID from Topic object\n     - Retrieve the forumId value from the Topic object\n     - Store the extracted forum ID for return\n\n5. Response Generation:\n   - Return the extracted forum ID\n     - Format the forum ID as an integer value\n     - IF extraction was successful THEN\n       - Return success response with forum ID\n     - ELSE\n       - Return error response with appropriate message\n     - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "Topic object must contain a valid forum ID",
+    "Forum ID must be a positive integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the topic"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "Identifier of the forum this topic belongs to"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        }
+      },
+      "required": [
+        "id",
+        "forumId"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SelectAllUsers",
+    "description": "Retrieves all users with pagination support for SQL Server 2000"
+  },
+  {
+    "featureName": "SelectAllUsersWithKarma",
+    "description": "Retrieves all users with their karma information and pagination support"
+  }
+]

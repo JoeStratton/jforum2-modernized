@@ -1,0 +1,39 @@
+{
+  "featureName": "ViewPrivateMessageSentbox",
+  "description": "Displays the user's sent private messages.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, system-generated from current session)\n   - No additional user inputs required for this view operation\n\n2. Data Validation:\n   - Authentication Validation:\n     a. Verify user is logged in to the system\n     b. IF user is not logged in, THEN redirect to login page\n     c. Display appropriate authentication error if needed\n\n3. Business Rule Processing:\n   - User Access Verification:\n     a. Verify the user has permission to view their sent messages\n     b. Retrieve user information based on the session userId\n     c. Prepare user context for display purposes\n\n4. Core Operation Execution:\n   - Message Retrieval:\n     a. Query the database for all private messages sent by the current user\n     b. Retrieve complete message details including recipient information\n     c. Sort messages by appropriate criteria (typically date sent, newest first)\n   - Message Type Classification:\n     a. Identify message status types (new, read, unread)\n     b. Prepare type information for display context\n   - View Preparation:\n     a. Mark the current view as the sentbox view\n     b. Set appropriate page title for the sentbox\n     c. Prepare the message list for display\n\n5. Response Generation:\n   - Success Response:\n     a. Display the list of sent messages with appropriate formatting\n     b. For each message, show recipient, subject, send date, and status\n     c. Provide options to view individual messages in detail\n     d. Include navigation elements for inbox/sentbox switching\n   - Empty State Handling:\n     a. IF no sent messages exist, THEN display appropriate empty state message\n     b. Provide guidance on how to create new messages\n   - Error Response:\n     a. Display appropriate error messages if message retrieval fails\n     b. Provide navigation options to return to main areas of the system",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "User must be logged in to view sent messages",
+    "Only messages sent by the current user should be displayed",
+    "Message list should be properly sorted by send date"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object-User",
+      "toUser": "object-User",
+      "post": "object-Post",
+      "type": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    },
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "date": "date"
+    }
+  }
+}

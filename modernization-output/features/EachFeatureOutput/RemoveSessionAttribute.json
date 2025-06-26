@@ -1,0 +1,32 @@
+{
+  "featureName": "RemoveSessionAttribute",
+  "description": "Removes a specific attribute from the session context.",
+  "inputValues": [
+    "attributeName-string-Session"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. attributeName (string, mandatory): The name of the attribute to be removed from the session\n     b. sessionContext (object, system-provided): The current session context\n\n2. Data Validation:\n   - Validate the attribute name:\n     a. Check if attributeName is provided\n        IF attributeName is null or empty THEN\n          Return error message: \"Attribute name must be provided\"\n     b. Check if attributeName is not a reserved system attribute\n        IF attributeName equals SESSION_ID THEN\n          Return error message: \"Cannot remove system reserved attributes\"\n\n3. Business Rule Processing:\n   - Verify session state:\n     a. Check if the session is valid\n        IF session is null or invalid THEN\n          Return error message: \"Invalid session\"\n     b. Check if the attribute exists in the session\n        IF attribute does not exist in session THEN\n          Return warning message: \"Attribute not found in session\"\n\n4. Core Operation Execution:\n   - Remove the attribute from the session:\n     a. Locate the attribute in the session storage\n     b. Remove the attribute entry from the session data structure\n     c. IF removal operation fails THEN\n          Log the failure\n          Return error message: \"Failed to remove attribute from session\"\n\n5. Response Generation:\n   - Generate success response:\n     a. Confirm the attribute has been removed\n     b. Return success message: \"Attribute successfully removed from session\"\n   - Generate error response (if applicable):\n     a. Include specific error details\n     b. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Attribute name must not be empty",
+    "Session must be valid",
+    "Cannot remove system reserved attributes"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of key-value pairs representing session attributes"
+        }
+      }
+    }
+  }
+}

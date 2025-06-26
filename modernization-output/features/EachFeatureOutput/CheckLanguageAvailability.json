@@ -1,0 +1,15 @@
+{
+  "featureName": "CheckLanguageAvailability",
+  "description": "Verifies if a specific language is loaded or exists in the system.",
+  "inputValues": [
+    "language-string-Language"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the language identifier string.\n       1.1.1. The language identifier is a mandatory input.\n       1.1.2. No default value is provided.\n\n2. Data Validation:\n   2.1. Validate the language identifier format.\n       2.1.1. Ensure the language identifier is not null.\n       2.1.2. Ensure the language identifier is not an empty string.\n       2.1.3. IF validation fails, THEN return an error message indicating invalid language format.\n\n3. Business Rule Processing:\n   3.1. Check system state for language availability.\n       3.1.1. Verify if the language resources are initialized.\n       3.1.2. IF language resources are not initialized, THEN initialize the language system.\n   3.2. Determine the type of verification needed.\n       3.2.1. Decide whether to check if language is loaded in memory or if it exists as a valid option.\n\n4. Core Operation Execution:\n   4.1. Check if the language is currently loaded in the system.\n       4.1.1. Search the loaded languages collection for the specified language identifier.\n       4.1.2. IF the language is found in the loaded collection, THEN mark as \"loaded\".\n       4.1.3. IF the language is not found, THEN mark as \"not loaded\".\n   4.2. Check if the language exists as a valid option.\n       4.2.1. Search the available language definitions for the specified language identifier.\n       4.2.2. IF the language is found in the definitions, THEN mark as \"exists\".\n       4.2.3. IF the language is not found, THEN mark as \"does not exist\".\n\n5. Response Generation:\n   5.1. Prepare the verification result.\n       5.1.1. Include the language identifier in the response.\n       5.1.2. Include the \"loaded\" status in the response.\n       5.1.3. Include the \"exists\" status in the response.\n   5.2. Return the verification result.\n       5.2.1. IF both checks were successful, THEN return success response with availability details.\n       5.2.2. IF any check failed, THEN return appropriate status indicating which aspect of availability failed.",
+  "databaseEntities": [],
+  "validationRules": [
+    "Language identifier must not be null",
+    "Language identifier must not be an empty string"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

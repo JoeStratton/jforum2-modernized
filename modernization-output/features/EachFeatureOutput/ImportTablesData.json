@@ -1,0 +1,72 @@
+{
+  "featureName": "ImportTablesData",
+  "description": "Populates database tables with initial required data.",
+  "inputValues": [
+    "connection-object-Connection",
+    "database-string-Database"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database connection object (connection-object-Connection)\n   - Retrieve database type from session (database-string-Database)\n   - System will use configuration directory path for locating SQL files\n\n2. Data Validation:\n   - Validate database connection is active and valid\n     * IF connection is null or closed THEN return error\n   - Validate database type is supported\n     * IF database type is not recognized THEN return error\n   - Validate SQL dump file exists\n     * IF file path [config_dir]/database/[database_type]/[database_type]_data_dump.sql does not exist THEN return error\n\n3. Business Rule Processing:\n   - Check if tables are ready to receive data\n     * IF tables have not been created THEN return error\n   - Set up transaction environment\n     * Store current auto-commit state\n     * Set auto-commit to false for transaction control\n\n4. Core Operation Execution:\n   - Parse SQL dump file into executable statements\n     * Read file from [config_dir]/database/[database_type]/[database_type]_data_dump.sql\n     * Split file content into individual SQL statements\n   - Execute each SQL statement in sequence\n     * FOR EACH statement in parsed statements:\n       * Skip empty statements\n       * Trim whitespace from statement\n       * Create database statement object\n       * IF statement starts with \"UPDATE\" or \"INSERT\" or \"SET\" THEN\n         * Execute as update statement\n       * ELSE IF statement starts with \"SELECT\" THEN\n         * Execute as query statement\n       * ELSE\n         * Throw invalid query exception\n       * Close statement object\n     * IF any statement execution fails THEN\n       * Roll back transaction\n       * Log error details\n       * Store exception message in context\n       * Return failure status\n   - Restore original auto-commit setting\n   - Return success status\n\n5. Response Generation:\n   - IF operation completed successfully THEN\n     * Mark \"importTablesData\" as \"passed\" in session\n     * Return true to indicate successful import\n   - ELSE\n     * Set error message in context\n     * Return false to indicate import failure",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Database connection must be active and valid",
+    "Database type must be supported by the system",
+    "SQL dump file must exist in the expected location",
+    "Tables must be created before importing data",
+    "All SQL statements must be valid and executable"
+  ],
+  "dbSeedingOperations": [
+    "Execute all SQL statements from database-specific data dump file"
+  ],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "autoCommit": {
+          "type": "boolean",
+          "description": "Auto-commit setting for the connection"
+        },
+        "closed": {
+          "type": "boolean",
+          "description": "Indicates if connection is closed"
+        }
+      },
+      "methods": {
+        "setAutoCommit": {
+          "description": "Sets the auto-commit mode"
+        },
+        "getAutoCommit": {
+          "description": "Gets the current auto-commit mode"
+        },
+        "createStatement": {
+          "description": "Creates a statement object for executing SQL"
+        },
+        "rollback": {
+          "description": "Rolls back the current transaction"
+        },
+        "commit": {
+          "description": "Commits the current transaction"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SelectLastPosts",
+    "description": "Retrieves posts from the database within a specified date range"
+  },
+  {
+    "featureName": "ListRecipients",
+    "description": "Retrieves a list of recipients from the database"
+  }
+]

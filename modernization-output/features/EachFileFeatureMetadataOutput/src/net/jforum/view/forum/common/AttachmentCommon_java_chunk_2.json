@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "ProcessAttachmentUploads",
+    "description": "Validates and processes file attachments for forum posts with security and quota checks"
+  },
+  {
+    "featureName": "InsertAttachmentsToPost",
+    "description": "Saves uploaded attachments and associates them with forum posts"
+  },
+  {
+    "featureName": "CreateThumbnailImages",
+    "description": "Generates thumbnail versions of image attachments for preview purposes"
+  },
+  {
+    "featureName": "EditPostAttachments",
+    "description": "Updates or removes attachments from existing forum posts"
+  },
+  {
+    "featureName": "DeletePostAttachments",
+    "description": "Removes all attachments associated with a forum post"
+  },
+  {
+    "featureName": "GetPostAttachments",
+    "description": "Retrieves attachments associated with a specific forum post"
+  },
+  {
+    "featureName": "CheckAttachmentQuota",
+    "description": "Validates if uploaded attachments exceed the user's quota limits"
+  }
+]

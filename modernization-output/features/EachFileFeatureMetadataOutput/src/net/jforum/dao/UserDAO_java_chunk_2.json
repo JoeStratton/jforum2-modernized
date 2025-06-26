@@ -1,0 +1,142 @@
+[
+  {
+    "featureName": "GetUserById",
+    "description": "Retrieves a specific user by their ID"
+  },
+  {
+    "featureName": "GetUserByName",
+    "description": "Retrieves a specific user by their username"
+  },
+  {
+    "featureName": "ListAllUsers",
+    "description": "Retrieves all users in the system"
+  },
+  {
+    "featureName": "ListUsersWithKarma",
+    "description": "Retrieves all users with their karma status"
+  },
+  {
+    "featureName": "ListUsersByGroup",
+    "description": "Retrieves users belonging to a specific group with pagination"
+  },
+  {
+    "featureName": "SearchUsersByName",
+    "description": "Finds users by matching part or all of their username"
+  },
+  {
+    "featureName": "DeleteUser",
+    "description": "Marks a user as deleted in the system"
+  },
+  {
+    "featureName": "UndeleteUser",
+    "description": "Restores a previously deleted user"
+  },
+  {
+    "featureName": "UpdateUser",
+    "description": "Updates user information"
+  },
+  {
+    "featureName": "CreateUser",
+    "description": "Adds a new user to the system"
+  },
+  {
+    "featureName": "CreateUserWithId",
+    "description": "Adds a new user with a predefined ID for external login support"
+  },
+  {
+    "featureName": "SetUserActiveStatus",
+    "description": "Changes the active status of a user"
+  },
+  {
+    "featureName": "SetUserRanking",
+    "description": "Sets the ranking for a user"
+  },
+  {
+    "featureName": "IncrementUserPosts",
+    "description": "Increases the post count for a user"
+  },
+  {
+    "featureName": "DecrementUserPosts",
+    "description": "Decreases the post count for a user"
+  },
+  {
+    "featureName": "GetLastRegisteredUser",
+    "description": "Retrieves information about the most recently registered user"
+  },
+  {
+    "featureName": "GetTotalUserCount",
+    "description": "Counts the total number of users in the system"
+  },
+  {
+    "featureName": "GetUserCountByGroup",
+    "description": "Counts the total number of users in a specific group"
+  },
+  {
+    "featureName": "CheckUserDeletionStatus",
+    "description": "Checks if a user has been marked as deleted"
+  },
+  {
+    "featureName": "CheckUsernameExists",
+    "description": "Verifies if a username is already registered"
+  },
+  {
+    "featureName": "ValidateUserLogin",
+    "description": "Authenticates a user based on username and password"
+  },
+  {
+    "featureName": "AddUserToGroups",
+    "description": "Associates a user with specified groups"
+  },
+  {
+    "featureName": "RemoveUserFromGroups",
+    "description": "Removes a user from specified groups"
+  },
+  {
+    "featureName": "StoreLostPasswordHash",
+    "description": "Saves a security hash for password recovery"
+  },
+  {
+    "featureName": "ValidateLostPasswordHash",
+    "description": "Verifies a password recovery security hash"
+  },
+  {
+    "featureName": "ResetUserPassword",
+    "description": "Sets a new password for a user"
+  },
+  {
+    "featureName": "GetUsernameByEmail",
+    "description": "Retrieves a username associated with an email address"
+  },
+  {
+    "featureName": "ValidateActivationKey",
+    "description": "Verifies an account activation key"
+  },
+  {
+    "featureName": "ActivateUserAccount",
+    "description": "Sets a user account to active status"
+  },
+  {
+    "featureName": "UpdateUsername",
+    "description": "Changes the username for an existing user"
+  },
+  {
+    "featureName": "CheckUsernameChanged",
+    "description": "Verifies if a username differs from the one in the database"
+  },
+  {
+    "featureName": "SaveUserAuthHash",
+    "description": "Stores a user-specific security hash"
+  },
+  {
+    "featureName": "GetUserAuthHash",
+    "description": "Retrieves a user's security hash"
+  },
+  {
+    "featureName": "ListPendingActivations",
+    "description": "Retrieves users who haven't activated their accounts"
+  },
+  {
+    "featureName": "FindUserByEmail",
+    "description": "Locates a user by their email address"
+  }
+]

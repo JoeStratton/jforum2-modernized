@@ -1,0 +1,122 @@
+{
+  "featureName": "GetInboxMessages",
+  "description": "Retrieves all private messages from a user's inbox.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect User object with following properties:\n     - userId: Unique identifier for the user\n     - username: Name of the user\n     - All other user properties required for authentication\n   - System will determine if the user is authenticated\n\n2. Data Validation:\n   - Validate User object:\n     - Verify userId is not null and is a valid identifier\n     - Verify user exists in the system\n     - Verify user has proper permissions to access their inbox\n   - IF any validation fails THEN:\n     - Generate appropriate error message\n     - Terminate process and return error response\n\n3. Business Rule Processing:\n   - Verify user session is active\n   - Check if user has inbox access permission\n   - IF user lacks necessary permissions THEN:\n     - Generate permission denied error\n     - Terminate process and return error response\n   - Determine sorting criteria for messages (default: newest first)\n   - Determine if any filtering should be applied\n\n4. Core Operation Execution:\n   - Retrieve all private messages where:\n     - The recipient is the current user\n     - Messages are marked as inbox messages (type = NEW)\n   - For each message retrieved:\n     - Load message metadata (sender, date, subject)\n     - Load message content from message text storage\n     - Determine message status (read/unread)\n     - Format date according to system's configured date format\n   - Process message attributes:\n     - Check if BBCode is enabled for the message\n     - Check if HTML is enabled for the message\n     - Check if smilies are enabled for the message\n     - Check if signature is enabled for the message\n   - Sort messages according to determined criteria\n   - Count total number of messages\n   - Count number of unread messages\n\n5. Response Generation:\n   - Prepare response with:\n     - List of private messages with:\n       - Message ID\n       - Sender information (user ID and username)\n       - Subject\n       - Send date (both raw and formatted)\n       - Message status (read/unread)\n       - Message content\n       - Message formatting options (BBCode, HTML, smilies, signature)\n     - Total message count\n     - Unread message count\n   - IF no messages found THEN:\n     - Return empty list with appropriate indication\n   - Return success response with message collection",
+  "databaseEntities": [
+    "User",
+    "PrivateMessage",
+    "PrivateMessageText"
+  ],
+  "validationRules": [
+    "User must be authenticated",
+    "User must exist in the system",
+    "User must have permission to access their inbox",
+    "User session must be active",
+    "Private messages must be associated with the requesting user as recipient",
+    "Private messages must be of type NEW (inbox) for inbox retrieval"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user"
+        }
+      },
+      "required": [
+        "id",
+        "username"
+      ]
+    },
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the message"
+        },
+        "fromUser": {
+          "type": "object",
+          "description": "User who sent the message",
+          "$ref": "#/User"
+        },
+        "toUser": {
+          "type": "object",
+          "description": "User who received the message",
+          "$ref": "#/User"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject of the message"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the message"
+        },
+        "date": {
+          "type": "date",
+          "description": "Date when the message was sent"
+        },
+        "formattedDate": {
+          "type": "string",
+          "description": "Formatted date string according to system preferences"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of the message (NEW for inbox, SENT for sent items)"
+        },
+        "isBBCodeEnabled": {
+          "type": "boolean",
+          "description": "Indicates if BBCode is enabled for this message"
+        },
+        "isHtmlEnabled": {
+          "type": "boolean",
+          "description": "Indicates if HTML is enabled for this message"
+        },
+        "isSmiliesEnabled": {
+          "type": "boolean",
+          "description": "Indicates if smilies are enabled for this message"
+        },
+        "isSignatureEnabled": {
+          "type": "boolean",
+          "description": "Indicates if signature is enabled for this message"
+        }
+      },
+      "required": [
+        "id",
+        "fromUser",
+        "toUser",
+        "subject",
+        "text",
+        "date",
+        "type"
+      ]
+    },
+    "PrivateMessageText": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "number",
+          "description": "ID of the associated private message"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content text of the message"
+        }
+      },
+      "required": [
+        "messageId",
+        "text"
+      ]
+    }
+  }
+}

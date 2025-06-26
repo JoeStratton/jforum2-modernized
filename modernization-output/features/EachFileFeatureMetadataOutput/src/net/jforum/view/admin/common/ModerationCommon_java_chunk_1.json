@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SetForumsModerationStatus",
+    "description": "Updates moderation status for all forums within a category and their associated topics"
+  },
+  {
+    "featureName": "SetTopicModerationStatus",
+    "description": "Updates the moderation status for all topics within a specific forum"
+  }
+]

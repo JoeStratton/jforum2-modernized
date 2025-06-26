@@ -1,0 +1,32 @@
+{
+  "featureName": "GetStatementForAutoKeys",
+  "description": "Creates prepared statements configured for auto-generated keys based on system configuration.",
+  "inputValues": [
+    "queryName-string-Query",
+    "connection-object-DatabaseConnection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. queryName (mandatory): The name of the SQL query to be executed\n     b. connection (optional): The database connection to use\n     c. System configuration (system-generated): Auto-keys support configuration\n\n2. Data Validation:\n   - Validate queryName:\n     a. Check if queryName is not empty or null\n     b. Verify queryName exists in the system's SQL registry\n     c. IF validation fails, THEN return appropriate error message\n   - Validate connection:\n     a. IF connection is not provided, THEN use default system connection\n     b. Check if connection is valid and open\n     c. IF connection is invalid, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check system configuration for auto-generated keys support:\n     a. Retrieve auto-keys configuration from system settings\n     b. Determine if the current database supports auto-generated keys\n     c. IF auto-keys are supported, THEN prepare for retrieving generated keys\n     d. IF auto-keys are not supported, THEN prepare for using custom key retrieval query\n\n4. Core Operation Execution:\n   - Create prepared statement based on configuration:\n     a. IF auto-generated keys are supported:\n        i. Create prepared statement with RETURN_GENERATED_KEYS flag\n     b. ELSE:\n        i. Create standard prepared statement\n        ii. Ensure auto-generated keys query is properly configured for later use\n   - Configure the prepared statement:\n     a. Apply the SQL query from system registry using queryName\n     b. Set any additional statement properties as needed\n\n5. Response Generation:\n   - Return the properly configured prepared statement:\n     a. Include information about whether auto-keys are supported\n     b. Include connection information for statement execution\n     c. IF any errors occurred during preparation, THEN provide detailed error information\n     d. Return the prepared statement object for further use",
+  "databaseEntities": [],
+  "validationRules": [
+    "Query name must not be empty or null",
+    "Query name must exist in the system's SQL registry",
+    "Database connection must be valid and open",
+    "System configuration for auto-generated keys must be properly set"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "isOpen": {
+          "type": "boolean",
+          "description": "Indicates if the connection is open"
+        },
+        "isValid": {
+          "type": "boolean",
+          "description": "Indicates if the connection is valid"
+        }
+      }
+    }
+  }
+}

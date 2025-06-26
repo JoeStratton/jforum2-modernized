@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "InitModulesMapping",
+    "description": "Loads and initializes module mappings from configuration files"
+  },
+  {
+    "featureName": "GetModuleClass",
+    "description": "Retrieves the fully qualified class name for a given module name"
+  }
+]

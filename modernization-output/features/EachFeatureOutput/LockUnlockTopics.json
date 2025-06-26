@@ -1,0 +1,45 @@
+{
+  "featureName": "LockUnlockTopics",
+  "description": "Locks or unlocks topics to prevent or allow new replies.",
+  "inputValues": [
+    "topicIds-object-TopicIds",
+    "status-number-LockStatus",
+    "logDescription-string-LogDescription"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicIds (mandatory): Array of topic identifiers to be locked or unlocked\n     b. status (mandatory): Lock status value (locked or unlocked)\n     c. userId (system-generated): Identifier of the user performing the action\n     d. logDescription (optional): Description for the moderation log entry\n\n2. Data Validation:\n   - Validate topicIds:\n     a. Check if topicIds array is not empty\n     b. Verify each topicId is a valid positive integer\n     c. Return error if any topicId is invalid\n   - Validate status value:\n     a. Ensure status is one of the predefined values (locked or unlocked)\n     b. Return error if status value is invalid\n   - Validate user permissions:\n     a. Check if the current user has permission to lock/unlock topics\n     b. Verify if user has the specific lock/unlock permission\n     c. Return error if user lacks required permissions\n\n3. Business Rule Processing:\n   - Check topic existence:\n     a. Verify all specified topics exist in the system\n     b. Return error if any topic does not exist\n   - Check forum permissions:\n     a. Verify user has moderation rights for the forums containing these topics\n     b. Return error if user lacks permission for any of the forums\n   - Check current topic states:\n     a. Determine if any topics are already in the requested state\n     b. Skip processing for topics already in the target state\n   - Prepare moderation log:\n     a. Create log entry with user information\n     b. Include description of the action\n     c. Record original state information if needed\n\n4. Core Operation Execution:\n   - Update topic status:\n     a. Set the status field for all specified topics to the new value\n     b. Record the user who performed the action\n     c. Record the timestamp of the action\n   - Create moderation log entries:\n     a. For each topic being modified, create a log entry\n     b. Include topic ID, user ID, and action description\n     c. Store the log entries in the system\n   - Update related data:\n     a. Clear any cached topic information\n     b. Update forum statistics if necessary\n     c. Refresh topic repository data\n   - IF operation fails:\n     a. Revert any partial changes\n     b. Log the failure details\n     c. Return appropriate error message\n\n5. Response Generation:\n   - For successful operation:\n     a. Return success status\n     b. Include list of topics that were successfully updated\n     c. Redirect user to the appropriate page if a return URL was provided\n   - For partial success:\n     a. Return partial success status\n     b. Include list of topics successfully updated\n     c. Include list of topics that failed to update with reasons\n   - For failure:\n     a. Return failure status\n     b. Display access denied message\n     c. Include specific error message",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_moderator_groups",
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "Topic IDs must be valid positive integers",
+    "Status must be either locked or unlocked value",
+    "User must have permission to lock/unlock topics",
+    "All specified topics must exist in the system",
+    "User must have moderation rights for the forums containing the topics",
+    "User must have the PERM_MODERATION_TOPIC_LOCK_UNLOCK permission"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TopicIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Unique identifier for a topic"
+      }
+    },
+    "LockStatus": {
+      "type": "integer",
+      "description": "Status value indicating whether topics should be locked or unlocked"
+    },
+    "LogDescription": {
+      "type": "string",
+      "description": "Description text for the moderation log entry"
+    }
+  }
+}

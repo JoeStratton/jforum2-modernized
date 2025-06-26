@@ -1,0 +1,20 @@
+{
+  "featureName": "ListGroupUsers",
+  "description": "Displays paginated list of users belonging to a specific group.",
+  "inputValues": [
+    "group_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the group_id (mandatory) from the request\n   - System will determine pagination parameters:\n     - Current page number (derived from request)\n     - Users per page (loaded from system configuration)\n\n2. Data Validation:\n   - Validate group_id:\n     - Ensure group_id is provided\n     - Verify group_id is a valid integer\n     - Confirm group_id corresponds to an existing group\n     - IF validation fails, THEN display appropriate error message\n\n3. Business Rule Processing:\n   - Calculate pagination parameters:\n     - Determine total number of users in the specified group\n     - Calculate starting position based on current page\n     - Determine number of pages based on total users and users per page\n\n4. Core Operation Execution:\n   - Retrieve paginated list of users:\n     - Query users belonging to the specified group\n     - Apply pagination parameters (start position, users per page)\n     - Retrieve user details including username, registration date, and post count\n   - Prepare pagination navigation data:\n     - Calculate previous and next page links\n     - Generate page number links\n     - Set current page indicator\n\n5. Response Generation:\n   - Prepare display data:\n     - Format user list for display\n     - Include pagination controls\n     - Set page title and heading\n   - Generate view with:\n     - List of users with their details\n     - Pagination navigation\n     - Group information\n   - IF no users found in group, THEN display appropriate message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a valid integer",
+    "Group ID must correspond to an existing group",
+    "Pagination parameters must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

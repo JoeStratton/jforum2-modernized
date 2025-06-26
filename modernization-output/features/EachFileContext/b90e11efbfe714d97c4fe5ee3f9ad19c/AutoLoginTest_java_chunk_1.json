@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: tests/core/net/jforum/AutoLoginTest.java\n\n Original Content: /*\n * Created on 07/07/2005 21:28:45\n */\npackage net.jforum;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\nimport javax.servlet.http.Cookie;\n\nimport junit.framework.TestCase;\nimport net.jforum.entities.UserSession;\n\n/**\n * Tests the auto login feature\n * @author Rafael Steil\n * @version $Id: AutoLoginTest.java,v 1.4 2005/07/26 04:01:19 diegopires Exp $\n */\npublic class AutoLoginTest extends TestCase\n{\n\tpublic void testAutoLoginWithNullCookieExpectFail()\n\t{\n\t\tControllerUtils c = this.newControllerUtils();\n\t\tc.checkAutoLogin(this.newUserSession());\n\t}\n\t\n\tprivate UserSession newUserSession()\n\t{\n\t\treturn new UserSession() {\n\t\t\tpublic void makeAnonymous() {\n\t\t\t\tthrow new RuntimeException(\"went anonymous\");\n\t\t\t}\n\t\t};\n\t}\n\n\tprivate ControllerUtils newControllerUtils()\n\t{\n\t\treturn new ControllerUtils() {\n\t\t\tprivate Map cookiesMap = new HashMap();\n\t\t\t\n\t\t\tprotected Cookie getCookieTemplate(String name) {\n\t\t\t\treturn (Cookie)this.cookiesMap.get(name);\n\t\t\t}\n\t\t\t\n\t\t\tprotected void addCookieTemplate(String name, String value) {\n\t\t\t\tthis.cookiesMap.put(name, new Cookie(name, value));\n\t\t\t}\n\t\t\t\n\t\t\t\n\t\t};\n\t}\n}",
+  "metadata": {
+    "fileId": "AutoLoginTest_java_chunk_1",
+    "fileName": "AutoLoginTest.java",
+    "filePath": "tests/core/net/jforum/AutoLoginTest.java"
+  }
+}

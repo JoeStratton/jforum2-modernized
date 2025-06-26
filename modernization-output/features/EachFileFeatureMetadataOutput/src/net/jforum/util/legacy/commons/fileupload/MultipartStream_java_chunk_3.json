@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ReadHeadersFromMultipartStream",
+    "description": "Reads header part of a multipart encapsulation and returns it as a string"
+  },
+  {
+    "featureName": "ReadBodyDataFromMultipartStream",
+    "description": "Reads body data from current encapsulation and writes contents to output stream"
+  },
+  {
+    "featureName": "DiscardBodyData",
+    "description": "Skips unwanted encapsulation data by reading and discarding body content"
+  },
+  {
+    "featureName": "SkipPreamble",
+    "description": "Finds the beginning of the first encapsulation in a multipart stream"
+  },
+  {
+    "featureName": "FindSeparator",
+    "description": "Searches for boundary separator in the buffer to identify encapsulation boundaries"
+  }
+]

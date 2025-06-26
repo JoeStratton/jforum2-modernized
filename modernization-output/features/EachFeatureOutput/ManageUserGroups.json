@@ -1,0 +1,32 @@
+{
+  "featureName": "ManageUserGroups",
+  "description": "Displays and manages group associations for a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory) to identify the user whose groups will be managed\n   - System will retrieve user information based on userId\n   - System will retrieve available groups from the system\n\n2. Data Validation:\n   - Validate userId:\n     a. Verify userId is a valid number\n     b. Verify userId exists in the system\n     c. IF userId is invalid or not found, THEN display appropriate error message\n\n3. Business Rule Processing:\n   - Verify current user has permission to manage user groups\n   - IF current user lacks permission, THEN display access denied message\n   - Retrieve all available groups in the system\n   - Retrieve groups currently associated with the specified user\n   - Create a list of selected groups for the user\n\n4. Core Operation Execution:\n   - Display User Information:\n     a. Show user details (username, etc.)\n     b. Display title indicating group management for specific user\n   - Display Group Management Interface:\n     a. Show list of all available groups in the system\n     b. Mark groups that are already associated with the user as selected\n     c. Provide interface for adding/removing group associations\n   - Process Group Association Changes:\n     a. IF save action is triggered:\n       i. Collect all selected groups from the interface\n       ii. Remove user from all previous group associations\n       iii. Add user to newly selected groups\n       iv. Clear any cached security permissions for the user\n\n5. Response Generation:\n   - IF operation is successful:\n     a. Display confirmation message\n     b. Return to user list or user management screen\n   - IF operation fails:\n     a. Display appropriate error message\n     b. Maintain current group selections\n     c. Allow user to retry the operation",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid number",
+    "User ID must exist in the system",
+    "Current user must have permission to manage user groups",
+    "At least one group should be selected for the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "groupsList": "array"
+    },
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "featureName": "ViewForumModerationQueue",
+  "description": "Shows topics pending moderation for a specific forum.",
+  "inputValues": [
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forum_id (mandatory) to identify which forum's moderation queue to display\n   - System will use current user's authentication context (mandatory, system-generated)\n\n2. Data Validation\n   - Validate forum_id\n     - Verify forum_id is a positive integer\n     - Verify forum_id corresponds to an existing forum\n     - IF forum_id is invalid or missing THEN\n       - Generate error message \"Invalid forum selected\"\n       - Abort operation and return error\n   - Validate user permissions\n     - Verify current user has moderation privileges for the specified forum\n     - IF user lacks moderation privileges THEN\n       - Generate error message \"Insufficient permissions to view moderation queue\"\n       - Abort operation and return error\n\n3. Business Rule Processing\n   - Check forum status\n     - Verify forum is active and not locked\n     - IF forum is inactive or locked THEN\n       - Generate appropriate notification message\n       - Continue processing with this context information\n   - Check moderation settings\n     - Verify forum has moderation enabled\n     - IF moderation is disabled for this forum THEN\n       - Generate notification \"Moderation is not enabled for this forum\"\n       - Return empty queue with notification\n\n4. Core Operation Execution\n   - Retrieve forum details\n     - Load forum name, description, and settings\n   - Retrieve pending topics\n     - Fetch all topics requiring moderation in the specified forum\n     - For each topic, collect:\n       - Topic ID\n       - Topic title\n       - Creator username\n       - Creation date\n       - Post content preview\n       - Number of posts in the topic\n   - Sort pending topics\n     - Order topics by submission date (newest first)\n   - Prepare moderation actions\n     - For each topic, prepare approve/reject action options\n\n5. Response Generation\n   - Generate success response\n     - Include forum details (name, description)\n     - Include list of pending topics with their details\n     - Include moderation action controls for each topic\n     - IF no pending topics exist THEN\n       - Include notification \"No topics pending moderation\"\n   - In case of errors\n     - Return appropriate error message\n     - Include navigation options to return to forum list",
+  "databaseEntities": [
+    "Forum",
+    "Topic",
+    "Post",
+    "User"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have moderation privileges for the specified forum",
+    "Only topics pending moderation should be displayed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "moderationEnabled": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "creationDate": "date",
+      "userId": "number",
+      "forumId": "number",
+      "pendingModeration": "boolean",
+      "totalPosts": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "content": "string",
+      "postDate": "date",
+      "pendingModeration": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

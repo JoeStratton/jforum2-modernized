@@ -1,0 +1,43 @@
+{
+  "featureName": "RemoveTopics",
+  "description": "Deletes forum topics with proper permission checks and updates related forum data.",
+  "inputValues": [
+    "topic_id-string-Topic",
+    "log_description-string-ModerationLog",
+    "log_original_message-string-ModerationLog",
+    "log_type-number-ModerationLog"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - topic_id: List of topic identifiers to be removed\n       - log_description: Description of the moderation action\n       - log_original_message: Original message content for logging\n       - log_type: Type of moderation action being performed\n   1.2. System will use the current user's session information for authorization\n\n2. Data Validation:\n   2.1. Validate user permissions:\n       - Check if user has general moderation access\n       - Check if user has specific permission to remove posts\n       - IF permissions are not valid, THEN set status to FAILURE\n   2.2. Validate topic identifiers:\n       - Ensure topic_id values are provided\n       - Verify that each topic_id represents a valid topic\n       - IF no valid topic identifiers are found, THEN abort operation\n\n3. Business Rule Processing:\n   3.1. Check system constraints:\n       - Verify that removing topics won't violate system integrity\n       - Identify all forums affected by the topic removal\n   3.2. Create moderation log entries:\n       - Create a log entry for each topic being removed\n       - Include user ID of moderator performing the action\n       - Include original poster information for each topic\n       - Store description and original message in log\n\n4. Core Operation Execution:\n   4.1. For each topic to be removed:\n       - Retrieve complete topic information\n       - Create and save moderation log entry\n       - Track forum ID for later updates\n       - Clear topic from cache system\n   4.2. Delete all selected topics:\n       - Remove topics and their associated data\n       - Update post counts in related forums\n   4.3. Update forum data:\n       - For each affected forum:\n           - Clear forum cache\n           - Find new last post ID\n           - Update forum's last post reference\n           - Reload forum data\n   4.4. Update global topic repositories:\n       - Refresh most recent topics list\n       - Clear topic caches\n\n5. Response Generation:\n   5.1. IF operation status is SUCCESS:\n       - Redirect user to return URL if provided\n   5.2. IF operation status is FAILURE:\n       - Display access denied message\n       - Show appropriate error information\n   5.3. Return operation status code:\n       - SUCCESS (1): Operation completed successfully\n       - FAILURE (2): Operation failed due to permissions or validation\n       - IGNORE (3): No action taken",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have general moderation access permission",
+    "User must have specific permission to remove posts",
+    "At least one valid topic ID must be provided",
+    "Topics must exist in the system to be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "postedBy": "number"
+    },
+    "ModerationLog": {
+      "user": "object",
+      "description": "string",
+      "originalMessage": "string",
+      "type": "number",
+      "postId": "number",
+      "topicId": "number",
+      "posterUser": "number"
+    },
+    "User": {
+      "id": "number"
+    }
+  }
+}

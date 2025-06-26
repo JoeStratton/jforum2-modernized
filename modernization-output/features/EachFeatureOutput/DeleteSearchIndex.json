@@ -1,0 +1,59 @@
+{
+  "featureName": "DeleteSearchIndex",
+  "description": "Removes a post from the search index to ensure it no longer appears in search results.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Post object that needs to be removed from the search index\n     1.1. Verify Post object is provided and contains required identifier\n     1.2. Check if Post contains all necessary metadata for search index operations\n\n2. Data Validation:\n   - Validate the Post object and system state\n     2.1. Verify Post object is not null\n     2.2. Verify Post contains valid identifier\n     2.3. Check if search functionality is enabled in the system\n        2.3.1. IF search is disabled, THEN exit the process without attempting deletion\n        2.3.2. IF search manager is not initialized, THEN log error and exit process\n\n3. Business Rule Processing:\n   - Check system conditions for search index deletion\n     3.1. Verify search manager is properly initialized\n     3.2. Check if the Post exists in the search index\n        3.2.1. IF Post does not exist in index, log information and exit process\n     3.3. Verify user has appropriate permissions to modify search index\n     3.4. Check if any system-wide indexing operations are in progress\n        3.4.1. IF indexing is in progress, queue deletion for later processing\n\n4. Core Operation Execution:\n   - Remove the Post from search index\n     4.1. Prepare deletion request with Post identifier\n     4.2. Submit deletion request to search manager\n     4.3. Wait for confirmation of deletion\n     4.4. IF deletion fails, retry operation up to configured number of attempts\n        4.4.1. IF all retries fail, log error and notify administrator\n     4.5. Update related indices that may reference the deleted Post\n     4.6. Perform cleanup of any temporary resources\n\n5. Response Generation:\n   - Generate appropriate response based on operation outcome\n     5.1. IF deletion was successful:\n        5.1.1. Log successful deletion with Post identifier\n        5.1.2. Return success status\n     5.2. IF deletion failed:\n        5.2.1. Log failure with specific error details\n        5.2.2. Return error status with appropriate message\n     5.3. Include timestamp of operation in response",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post must have a valid identifier",
+    "Search functionality must be enabled in the system",
+    "Search manager must be properly initialized",
+    "User must have appropriate permissions to modify search index"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject/title of the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "Identifier of the user who created the post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "Identifier of the topic this post belongs to"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Identifier of the forum this post belongs to"
+        },
+        "postDate": {
+          "type": "date",
+          "description": "Date when the post was created"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

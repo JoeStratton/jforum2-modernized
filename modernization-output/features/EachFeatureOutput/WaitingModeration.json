@@ -1,0 +1,21 @@
+{
+  "featureName": "WaitingModeration",
+  "description": "Displays a waiting for moderation message after posting content requiring approval.",
+  "inputValues": [
+    "topic_id-number-Topic",
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topic_id (number, optional): The identifier of the topic if the post is a reply\n   - Collect forum_id (number, required): The identifier of the forum where content was posted\n   - System determines if this is a new topic (topic_id is 0) or a reply to existing topic\n\n2. Data Validation:\n   - Validate forum_id exists in the system\n     * IF forum_id is invalid or not provided\n       THEN display error message and terminate process\n   - Validate topic_id if provided\n     * IF topic_id is provided but does not exist\n       THEN display error message and terminate process\n\n3. Business Rule Processing:\n   - Determine appropriate return path based on post type\n     * IF topic_id is 0 (new topic submission)\n       THEN set return path to forum view\n     * ELSE set return path to topic view\n   - Format the complete return path with system extension\n     * Combine base path with appropriate identifier (forum_id or topic_id)\n     * Append system extension to create complete URL\n\n4. Core Operation Execution:\n   - Set template to display waiting for moderation message\n   - Prepare context with appropriate message\n     * Include formatted return path in the message\n     * Format message using localization system with appropriate parameters\n   - Store message in context for template rendering\n\n5. Response Generation:\n   - Display waiting for moderation template to user\n   - Show informative message explaining that content requires approval\n   - Provide link to return to appropriate location (forum or topic)\n   - Ensure user understands next steps in the moderation process",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Forum ID must exist in the system",
+    "Topic ID must exist in the system if provided",
+    "User must have permission to post in the specified forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

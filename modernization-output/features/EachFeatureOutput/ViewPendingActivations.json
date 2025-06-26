@@ -1,0 +1,17 @@
+{
+  "featureName": "ViewPendingActivations",
+  "description": "Shows list of users with pending account activations.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for initial display\n   - System will retrieve all users with pending activation status\n\n2. Data Validation:\n   - Verify user has administrative access rights\n   - IF user does not have administrative rights THEN\n     - Display access denied message\n     - Redirect to appropriate error page\n   - ELSE continue processing\n\n3. Business Rule Processing:\n   - Check system configuration for user activation settings\n   - IF user activation feature is disabled in system settings THEN\n     - Display appropriate message indicating feature is not available\n     - Provide link to system settings page\n   - ELSE continue processing\n\n4. Core Operation Execution:\n   - Retrieve all user accounts with pending activation status from database\n   - Sort users by registration date (newest first)\n   - Group users by registration source if applicable\n   - Prepare user data for display including:\n     - Username\n     - Email address\n     - Registration date\n     - Registration IP address\n     - Any additional relevant user information\n   - IF no pending activations exist THEN\n     - Display message indicating no pending activations\n   - ELSE\n     - Display list of users with pending activations\n     - Include checkboxes for selecting users for batch activation\n     - Provide activation button for processing selected users\n\n5. Response Generation:\n   - Display formatted list of pending activation users\n   - Include pagination if number of users exceeds display limit\n   - Provide action buttons for:\n     - Activating selected accounts\n     - Rejecting/deleting selected accounts\n     - Viewing detailed information for specific accounts\n   - Include summary statistics (total pending activations)\n   - Provide refresh option to update the list",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to view pending activations",
+    "User activation feature must be enabled in system settings",
+    "Only users with pending activation status should be displayed in the list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

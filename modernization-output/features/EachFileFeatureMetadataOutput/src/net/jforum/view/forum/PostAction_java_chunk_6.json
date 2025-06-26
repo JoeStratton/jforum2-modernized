@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "DeletePost",
+    "description": "Removes a post with associated karma updates, attachments, and topic/forum adjustments"
+  },
+  {
+    "featureName": "WatchTopic",
+    "description": "Subscribes a user to receive notifications for a specific topic"
+  },
+  {
+    "featureName": "UnwatchTopic",
+    "description": "Removes a user's subscription from a topic"
+  },
+  {
+    "featureName": "DownloadAttachment",
+    "description": "Handles file attachment downloads with permission checks and download tracking"
+  },
+  {
+    "featureName": "ListSmilies",
+    "description": "Displays available emoticons/smilies for use in posts"
+  }
+]

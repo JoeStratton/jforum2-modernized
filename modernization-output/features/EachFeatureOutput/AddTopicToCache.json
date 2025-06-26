@@ -1,0 +1,35 @@
+{
+  "featureName": "AddTopicToCache",
+  "description": "Adds a forum topic to the cache with proper sorting and management.",
+  "inputValues": [
+    "topic-object-Topic",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Topic object containing all topic details\n   - Obtain the forumId associated with the topic\n   - System configuration parameters:\n     * Topic cache enabled flag\n     * Maximum items per page setting\n\n2. Data Validation:\n   - Validate Topic object:\n     * Ensure topic is not null\n     * Verify topic ID is valid (greater than 0)\n     * Confirm topic has valid forumId associated\n   - Validate system state:\n     * Check if topic caching is enabled in system configuration\n     * IF caching is disabled, THEN exit the process\n\n3. Business Rule Processing:\n   - Check cache availability:\n     * Verify cache engine is properly initialized\n     * Ensure forum cache structure exists\n   - Determine topic placement:\n     * Check if topic already exists in cache\n     * Determine if topic should be added to recent topics list\n     * Determine if topic should be added to forum-specific topic list\n\n4. Core Operation Execution:\n   - Synchronize access to forum cache:\n     * Retrieve current forum topic list from cache using forumId\n     * IF list doesn't exist:\n       * Create new empty list\n       * Add topic to the list\n     * ELSE:\n       * Check if topic already exists in list\n       * IF topic exists:\n         * Remove existing topic instance\n       * IF list size would exceed maximum items after adding:\n         * Remove oldest topic from list\n       * Add new topic to list\n       * Sort list according to topic type priority\n   - Update topic-forum relationship map:\n     * Retrieve current relationship map from cache\n     * IF map doesn't exist:\n       * Create new relationship map\n     * Add or update mapping between topic ID and forum ID\n     * Store updated map back to cache\n   - Update recent topics list if applicable:\n     * IF topic is new or recently updated:\n       * Add to recent topics cache with proper ordering\n\n5. Response Generation:\n   - Return success indicator:\n     * Confirm topic was successfully added to cache\n     * Provide updated cache status information\n   - Handle any exceptions:\n     * Log cache operation failures\n     * Return appropriate error information",
+  "databaseEntities": [
+    "Topic",
+    "Forum"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "Topic ID must be greater than zero",
+    "Forum ID must be valid and greater than zero",
+    "Topic cache must be enabled in system configuration",
+    "Cache engine must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "postTime": "date",
+      "lastPostTime": "date",
+      "type": "number",
+      "status": "number",
+      "totalReplies": "number",
+      "totalViews": "number",
+      "userId": "number"
+    }
+  }
+}

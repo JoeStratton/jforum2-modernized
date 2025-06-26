@@ -1,0 +1,85 @@
+{
+  "featureName": "AddExtension",
+  "description": "Adds a new file extension with its associated group and permissions.",
+  "inputValues": [
+    "extension-string-AttachmentExtension",
+    "extensionGroupId-number-AttachmentExtensionGroup",
+    "comment-string-AttachmentExtension",
+    "uploadIcon-string-AttachmentExtension",
+    "isAllow-boolean-AttachmentExtension"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a) extension: The file extension to be added (string, mandatory)\n     b) extensionGroupId: The ID of the extension group to associate with (number, mandatory)\n     c) comment: Description or comment about the extension (string, optional)\n     d) uploadIcon: Icon to display for this extension type (string, optional)\n     e) isAllow: Permission flag to allow/disallow this extension (boolean, mandatory, default: false)\n\n2. Data Validation\n   - Validate extension input:\n     a) IF extension is empty or null THEN\n        - Generate error message: \"Extension name cannot be empty\"\n     b) IF extension does not start with a period THEN\n        - Add a period at the beginning\n     c) Convert extension to lowercase for consistency\n   - Validate extensionGroupId:\n     a) IF extensionGroupId is not provided or invalid THEN\n        - Generate error message: \"A valid extension group must be selected\"\n     b) Verify the extension group exists in the system\n        - IF extension group not found THEN\n           - Generate error message: \"The selected extension group does not exist\"\n   - Validate comment:\n     a) IF comment exceeds maximum length THEN\n        - Truncate or generate error based on system configuration\n   - Validate uploadIcon:\n     a) IF uploadIcon is provided THEN\n        - Verify the icon file exists in the system\n        - IF icon file not found THEN\n           - Use default icon or generate warning\n\n3. Business Rule Processing\n   - Check for extension uniqueness:\n     a) Verify if the extension already exists in the system\n        - IF extension already exists THEN\n           - Generate error message: \"This extension is already registered\"\n   - Check extension group compatibility:\n     a) Verify if the extension is compatible with the selected group\n        - IF incompatible THEN\n           - Generate warning message but allow to proceed\n   - Check system permissions:\n     a) Verify if the current user has permission to add extensions\n        - IF user lacks permission THEN\n           - Generate error message: \"Insufficient permissions to add extensions\"\n\n4. Core Operation Execution\n   - Create new extension record:\n     a) Prepare extension data object with all validated inputs\n     b) Set extension name (converted to lowercase)\n     c) Associate with specified extension group ID\n     d) Set comment/description\n     e) Set upload icon path\n     f) Set permission flag (allow/disallow)\n   - Save extension to database:\n     a) Insert new record in extension storage\n     b) IF insertion fails THEN\n        - Log detailed error information\n        - Generate error message: \"Failed to add extension\"\n        - Roll back any partial changes\n   - Update related security settings:\n     a) Update extension security mappings based on allow flag\n     b) IF security update fails THEN\n        - Log warning but continue process\n\n5. Response Generation\n   - On success:\n     a) Generate success message: \"Extension [extension] has been successfully added\"\n     b) Return the newly created extension details\n     c) Provide link or option to manage extensions\n   - On failure:\n     a) Return appropriate error message from validation or execution steps\n     b) Provide guidance on how to resolve the issue\n     c) Maintain any valid input data for correction attempts",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension name must not be empty",
+    "Extension must be converted to lowercase",
+    "Extension group ID must be valid and exist in the system",
+    "Extension must be unique in the system",
+    "User must have permission to add extensions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtension": {
+      "type": "object",
+      "properties": {
+        "extension": {
+          "type": "string",
+          "description": "The file extension (e.g., .jpg, .pdf)"
+        },
+        "extensionGroupId": {
+          "type": "number",
+          "description": "ID of the extension group this extension belongs to"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Description or comment about this extension"
+        },
+        "uploadIcon": {
+          "type": "string",
+          "description": "Path to the icon representing this extension type"
+        },
+        "isAllow": {
+          "type": "boolean",
+          "description": "Flag indicating if this extension is allowed"
+        }
+      },
+      "required": [
+        "extension",
+        "extensionGroupId",
+        "isAllow"
+      ]
+    },
+    "AttachmentExtensionGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the extension group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the extension group"
+        },
+        "allow": {
+          "type": "boolean",
+          "description": "Flag indicating if this group is allowed"
+        },
+        "uploadIcon": {
+          "type": "string",
+          "description": "Default icon for this extension group"
+        },
+        "downloadMode": {
+          "type": "number",
+          "description": "Mode for downloading files of this extension group"
+        }
+      },
+      "required": [
+        "name",
+        "allow"
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "featureName": "ValidateLostPasswordHash",
+    "description": "Validates a lost password hash against a user's email address"
+  },
+  {
+    "featureName": "WriteLostPasswordHash",
+    "description": "Stores or updates a lost password hash for a user's email address"
+  },
+  {
+    "featureName": "GetUsernameByEmail",
+    "description": "Retrieves a username associated with a specific email address"
+  },
+  {
+    "featureName": "FindUsersByName",
+    "description": "Searches for users by name with option for exact or partial matching"
+  },
+  {
+    "featureName": "ValidateActivationKeyHash",
+    "description": "Validates an activation key hash for a specific user ID"
+  },
+  {
+    "featureName": "WriteUserActive",
+    "description": "Activates a user account by user ID"
+  },
+  {
+    "featureName": "UpdateUsername",
+    "description": "Updates a user's username by user ID"
+  },
+  {
+    "featureName": "HasUsernameChanged",
+    "description": "Checks if a username has been changed for a specific user ID"
+  },
+  {
+    "featureName": "LoadKarma",
+    "description": "Loads karma status for a list of users"
+  },
+  {
+    "featureName": "SaveUserAuthHash",
+    "description": "Saves authentication hash for a specific user ID"
+  },
+  {
+    "featureName": "GetUserAuthHash",
+    "description": "Retrieves authentication hash for a specific user ID"
+  },
+  {
+    "featureName": "FindUserByEmail",
+    "description": "Finds a user by their email address"
+  }
+]

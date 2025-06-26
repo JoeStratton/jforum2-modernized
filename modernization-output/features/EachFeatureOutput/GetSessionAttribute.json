@@ -1,0 +1,35 @@
+{
+  "featureName": "GetSessionAttribute",
+  "description": "Retrieves a stored attribute from the session context by name.",
+  "inputValues": [
+    "name-string-SessionAttribute"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the attribute name (name-string-SessionAttribute) from the user request\n   - Verify the session context exists and is accessible\n   - Note: The attribute name is mandatory and must be provided\n\n2. Data Validation:\n   - Validate the attribute name:\n     a. Check if attribute name is provided\n     b. Verify attribute name is not empty or null\n     c. Ensure attribute name is a valid string\n   - IF validation fails, THEN:\n     a. Generate appropriate error message\n     b. Return error response to caller\n\n3. Business Rule Processing:\n   - Verify session context is valid and active:\n     a. Check if session exists\n     b. Verify session has not expired\n     c. Ensure session ID is valid\n   - IF session is invalid, THEN:\n     a. Generate session invalid error\n     b. Return appropriate error response\n\n4. Core Operation Execution:\n   - Locate the requested attribute in the session storage:\n     a. Access the session data container\n     b. Search for the attribute using the provided name as key\n     c. Retrieve the attribute value if found\n   - IF attribute is found, THEN:\n     a. Prepare attribute value for return\n   - ELSE:\n     a. Set return value to null or appropriate default value\n\n5. Response Generation:\n   - Format the response with the retrieved attribute:\n     a. Include the attribute value if found\n     b. Include appropriate status indicator\n     c. Include session context information if relevant\n   - Return the formatted response to the caller",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Attribute name must not be empty or null",
+    "Session must be valid and active",
+    "Session ID must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionAttribute": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the session attribute to retrieve"
+        },
+        "value": {
+          "type": "object",
+          "description": "The value of the retrieved attribute (can be any type)"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

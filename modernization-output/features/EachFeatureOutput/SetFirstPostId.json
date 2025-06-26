@@ -1,0 +1,22 @@
+{
+  "featureName": "SetFirstPostId",
+  "description": "Updates a topic with the ID of its first post.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicId (mandatory): Unique identifier for the topic to be updated\n     b. postId (mandatory): Identifier of the first post to be associated with the topic\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if a topic with the provided topicId exists in the system\n     b. IF topic does not exist, THEN generate error message \"Topic not found\"\n   - Verify post existence:\n     a. Check if a post with the provided postId exists in the system\n     b. IF post does not exist, THEN generate error message \"Post not found\"\n   - Verify post-topic relationship:\n     a. Check if the post belongs to the specified topic\n     b. IF post does not belong to the topic, THEN generate error message \"Post does not belong to the specified topic\"\n\n4. Core Operation Execution:\n   - Update topic record:\n     a. Locate the topic record using topicId\n     b. Set the first_post_id field to the provided postId\n     c. Save the updated topic record\n     d. IF update operation fails, THEN:\n        i. Log the failure details\n        ii. Prepare error response with appropriate message\n        iii. Abort the operation\n\n5. Response Generation:\n   - For successful update:\n     a. Prepare success response indicating the topic was updated successfully\n     b. Include the updated topic identifier in the response\n   - For failed update:\n     a. Include detailed error information in the response\n     b. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Topic must exist in the system",
+    "Post must exist in the system",
+    "Post must belong to the specified topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

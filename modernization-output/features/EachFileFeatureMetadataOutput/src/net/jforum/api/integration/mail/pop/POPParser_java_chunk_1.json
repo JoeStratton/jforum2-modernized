@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ParsePOPMessages",
+    "description": "Parses email messages from a POP connector and stores them in a retrievable list"
+  },
+  {
+    "featureName": "GetParsedMessages",
+    "description": "Retrieves the list of parsed POP email messages"
+  }
+]

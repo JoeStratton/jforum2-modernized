@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "LoadUserPermissions",
+    "description": "Loads security roles and permissions for a user from the database"
+  },
+  {
+    "featureName": "CheckUserAccess",
+    "description": "Verifies if a user has access to a specific role or permission"
+  },
+  {
+    "featureName": "ManageSecurityCache",
+    "description": "Manages caching of user security permissions with add, remove and clean operations"
+  },
+  {
+    "featureName": "GetUserPermissionControl",
+    "description": "Retrieves permission control schema for a specific user"
+  }
+]

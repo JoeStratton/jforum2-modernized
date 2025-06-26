@@ -1,0 +1,62 @@
+{
+  "featureName": "GetFileContentAsString",
+  "description": "Converts file contents to a string using specified or default character encoding.",
+  "inputValues": [
+    "file-object-FileItem",
+    "charset-string-CharacterEncoding"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect file object (mandatory)\n   - Collect charset encoding (optional)\n   - System will use default charset if none provided\n\n2. Data Validation:\n   - Validate file object:\n     a. Check if file object is not null\n     b. Verify file is accessible and readable\n     c. Return error if file cannot be accessed\n   - Validate charset (if provided):\n     a. Check if the charset name is valid\n     b. Verify system supports the requested encoding\n     c. Return error if charset is invalid or unsupported\n\n3. Business Rule Processing:\n   - Determine appropriate charset:\n     a. IF charset parameter is provided THEN\n        i. Use the provided charset\n     b. ELSE\n        i. Check if file has embedded charset information\n        ii. IF embedded charset exists THEN use embedded charset\n        iii. ELSE use default charset (ISO-8859-1)\n   - Verify file size is within acceptable limits:\n     a. Check if file size exceeds maximum allowed size\n     b. Return error if file is too large\n\n4. Core Operation Execution:\n   - Retrieve file contents:\n     a. IF file is stored in memory THEN\n        i. Access cached content directly\n     b. ELSE\n        i. Read file content from disk storage\n        ii. Cache content in memory if appropriate\n   - Convert binary content to string:\n     a. Apply the determined charset encoding to binary data\n     b. Handle any conversion errors\n     c. IF conversion fails THEN\n        i. Attempt fallback to default encoding\n        ii. Log encoding failure\n\n5. Response Generation:\n   - For successful conversion:\n     a. Return the file content as string\n     b. Include information about the charset used\n   - For failed conversion:\n     a. Return appropriate error message\n     b. Include details about the failure reason\n     c. Provide suggestions for resolution",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File object must not be null",
+    "File must be accessible and readable",
+    "Charset must be supported by the system if specified",
+    "File size must be within acceptable limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the file"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "size": {
+          "type": "number",
+          "description": "The size of the file in bytes"
+        },
+        "content": {
+          "type": "binary",
+          "description": "The binary content of the file"
+        },
+        "storeLocation": {
+          "type": "string",
+          "description": "The location where the file is stored on disk"
+        },
+        "inMemory": {
+          "type": "boolean",
+          "description": "Whether the file is stored in memory or on disk"
+        }
+      }
+    },
+    "CharacterEncoding": {
+      "type": "string",
+      "description": "Character encoding name (e.g., 'UTF-8', 'ISO-8859-1')"
+    }
+  }
+}

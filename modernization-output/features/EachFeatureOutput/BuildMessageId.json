@@ -1,0 +1,47 @@
+{
+  "featureName": "BuildMessageId",
+  "description": "Creates a unique message identifier for forum posts with post, topic, and forum information.",
+  "inputValues": [
+    "postId-number-Post",
+    "topicId-number-Topic",
+    "forumId-number-Forum",
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. postId (number, mandatory): The unique identifier of the post\n     b. topicId (number, mandatory): The unique identifier of the topic\n     c. forumId (number, mandatory): The unique identifier of the forum\n     d. topic (object, optional): Complete Topic object containing firstPostId, id, and forumId\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided and is a positive integer\n     b. IF postId is missing or invalid, THEN generate appropriate error message\n   - Validate topicId:\n     a. Check if topicId is provided and is a positive integer\n     b. IF topicId is missing or invalid, THEN generate appropriate error message\n   - Validate forumId:\n     a. Check if forumId is provided and is a positive integer\n     b. IF forumId is missing or invalid, THEN generate appropriate error message\n   - IF topic object is provided:\n     a. Verify topic contains firstPostId property\n     b. Verify topic contains id property\n     c. Verify topic contains forumId property\n     d. IF any required topic properties are missing, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Determine the message identifier type:\n     a. IF all individual parameters (postId, topicId, forumId) are provided, THEN prepare to build standard message ID\n     b. IF topic object is provided, THEN prepare to build in-reply-to message ID\n     c. IF parsing an existing message ID, THEN prepare to extract topic ID\n   - Generate system values:\n     a. Create timestamp using current system time\n     b. Generate random number for uniqueness\n\n4. Core Operation Execution:\n   - For standard message ID creation:\n     a. Combine postId, topicId, forumId, timestamp, and random number in specific format\n     b. Format as \"<postId.topicId.forumId.timestamp+randomNumber@jforum>\"\n   - For in-reply-to message ID creation:\n     a. Extract firstPostId, id, and forumId from topic object\n     b. Format as \"<firstPostId.id.forumId.timestamp+randomNumber@jforum>\"\n   - For message ID parsing:\n     a. Apply pattern matching to extract components from message ID string\n     b. Extract topicId component from the matched pattern\n     c. Convert extracted topicId to integer value\n     d. IF conversion fails, THEN set topicId to default value\n\n5. Response Generation:\n   - For message ID creation:\n     a. Return the fully formatted message ID string\n     b. Ensure angle brackets are properly included\n   - For message ID parsing:\n     a. Return the extracted topicId value\n     b. Include status information about the parsing operation",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Topic ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Topic object must contain firstPostId, id, and forumId properties when used for in-reply-to headers"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "ID of the first post in the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum containing this topic"
+        }
+      },
+      "required": [
+        "id",
+        "firstPostId",
+        "forumId"
+      ]
+    }
+  }
+}

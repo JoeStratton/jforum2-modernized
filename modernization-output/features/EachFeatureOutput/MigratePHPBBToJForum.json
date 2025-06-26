@@ -1,0 +1,40 @@
+{
+  "featureName": "MigratePHPBBToJForum",
+  "description": "Migrates data from PHPBB forum system to JForum database with automatic connection management.",
+  "inputValues": [
+    "baseDirectory-string-Configuration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the base directory path as a string input\n   - This input is mandatory and must be provided by the user\n   - No default values are provided\n\n2. Data Validation:\n   - Validate base directory input:\n     a. Check if the base directory path is provided\n     b. IF base directory path is not provided THEN\n        i. Display usage instructions to the user\n        ii. Terminate the migration process\n     c. Check if the base directory exists and is accessible\n     d. IF base directory is not accessible THEN\n        i. Display error message indicating the directory cannot be accessed\n        ii. Terminate the migration process\n\n3. Business Rule Processing:\n   - Initialize the migration environment:\n     a. Set up configuration based on the provided base directory\n     b. Verify database connection parameters are available\n     c. Check if source PHPBB database is accessible\n     d. Check if target JForum database is accessible\n     e. IF any connection verification fails THEN\n        i. Display specific error message about connection issue\n        ii. Terminate the migration process\n\n4. Core Operation Execution:\n   - Establish database connections:\n     a. Open primary connection to databases with auto-commit enabled\n     b. Open secondary connection to databases with auto-commit enabled\n     c. IF connections cannot be established THEN\n        i. Display error message about connection failure\n        ii. Terminate the migration process\n   - Record start time for performance measurement\n   - Execute migration process:\n     a. Migrate user accounts from PHPBB to JForum\n     b. Migrate user groups and permissions\n     c. Migrate categories and forums structure\n     d. Migrate topics and their metadata\n     e. Migrate posts and their content\n     f. Migrate private messages\n     g. Migrate attachments if applicable\n     h. Migrate additional data (bookmarks, karma, etc.)\n     i. FOR each migration step:\n        i. Read data from source PHPBB tables\n        ii. Transform data to match JForum structure\n        iii. Write transformed data to JForum tables\n        iv. Log progress of current step\n     j. IF any migration step fails THEN\n        i. Log specific error information\n        ii. Continue with next migration step\n   - Record end time and calculate total migration duration\n\n5. Response Generation:\n   - Generate migration summary:\n     a. Display completion message to user\n     b. Show total migration time in seconds\n     c. List any warnings or non-critical errors encountered\n   - Clean up resources:\n     a. Close all database connections\n     b. Release any temporary resources used during migration\n   - IF migration completed successfully THEN\n     a. Display success message with next steps for JForum setup\n   - ELSE\n     a. Display partial completion message with troubleshooting guidance",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Base directory path must not be empty",
+    "Base directory must exist and be accessible",
+    "Configuration files must be present in the base directory",
+    "Database connection parameters must be valid",
+    "Source PHPBB database must be accessible",
+    "Target JForum database must be accessible",
+    "User must have appropriate database permissions for reading and writing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

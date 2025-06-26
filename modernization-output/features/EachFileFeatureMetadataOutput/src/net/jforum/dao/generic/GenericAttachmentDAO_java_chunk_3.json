@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "RemoveExtensions",
+    "description": "Removes file extensions from the system based on provided IDs"
+  },
+  {
+    "featureName": "SelectExtensions",
+    "description": "Retrieves a list of all attachment extensions configured in the system"
+  },
+  {
+    "featureName": "UpdateExtension",
+    "description": "Updates an existing attachment extension's properties and settings"
+  },
+  {
+    "featureName": "SelectExtensionByName",
+    "description": "Retrieves extension information by its name"
+  },
+  {
+    "featureName": "AddAttachment",
+    "description": "Creates a new attachment record associated with a post or private message"
+  },
+  {
+    "featureName": "RemoveAttachment",
+    "description": "Deletes an attachment and updates the associated post"
+  },
+  {
+    "featureName": "UpdateAttachment",
+    "description": "Updates attachment information including comments and download count"
+  },
+  {
+    "featureName": "SelectAttachmentsByPostId",
+    "description": "Retrieves all attachments associated with a specific post"
+  },
+  {
+    "featureName": "SelectAttachmentById",
+    "description": "Retrieves a specific attachment by its ID"
+  },
+  {
+    "featureName": "CheckPhysicalDownloadMode",
+    "description": "Determines if an extension group uses physical download mode"
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "featureName": "SelectAllByTopicByLimit",
+  "description": "Retrieves paginated posts from a specific topic with limit and offset parameters.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "start-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     1.1. topicId (number): Unique identifier of the topic from which to retrieve posts\n     1.2. start (number): Starting position for pagination (offset)\n     1.3. count (number): Maximum number of posts to retrieve (limit)\n\n2. Data Validation:\n   2.1. Validate topicId:\n      - Ensure topicId is provided\n      - Verify topicId is a positive integer\n      - Check if topicId exists in the system\n      - IF topicId is invalid or not found, THEN return appropriate error message\n   \n   2.2. Validate pagination parameters:\n      - Ensure start is a non-negative integer\n      - Ensure count is a positive integer\n      - IF start is negative, THEN set start to 0\n      - IF count is less than 1, THEN set count to a default value (e.g., 10)\n\n3. Business Rule Processing:\n   3.1. Check cache availability:\n      - Check if posts for the requested topic are available in cache\n      - IF posts are in cache, THEN retrieve from cache\n      - IF posts are not in cache, THEN prepare for database retrieval\n   \n   3.2. Check cache size constraints:\n      - Verify if adding a new topic to cache would exceed maximum cache size\n      - IF cache is full, THEN prepare to remove oldest entries\n\n4. Core Operation Execution:\n   4.1. Retrieve posts (when not in cache):\n      - Fetch all posts belonging to the specified topic from the database\n      - Process each post to prepare it for display\n      - Store the processed posts in the cache for future requests\n      - Manage cache size by removing oldest entries if necessary\n   \n   4.2. Apply pagination:\n      - Calculate the end index based on start and count parameters\n      - IF end index exceeds collection size, THEN adjust to collection size\n      - Extract the subset of posts based on start and end indices\n   \n   4.3. Handle special cases:\n      - IF no posts are found for the topic, THEN return empty collection\n      - Ensure thread safety when updating the cache\n\n5. Response Generation:\n   5.1. Prepare success response:\n      - Return the paginated list of posts\n      - Ensure posts are properly ordered (typically chronologically)\n      - Include all necessary post details (content, author, timestamp, etc.)\n   \n   5.2. Handle error scenarios:\n      - IF any errors occurred during processing, THEN include error details in response\n      - Provide appropriate error messages for different failure scenarios",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Start position (offset) must be a non-negative integer",
+    "Count (limit) must be a positive integer",
+    "User must have permission to view the requested topic",
+    "Topic must be active and not deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "content": {
+          "type": "string",
+          "description": "Text content of the post"
+        },
+        "authorId": {
+          "type": "number",
+          "description": "User ID of the post author"
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Username of the post author"
+        },
+        "postDate": {
+          "type": "date",
+          "description": "Date and time when the post was created"
+        },
+        "editDate": {
+          "type": "date",
+          "description": "Date and time when the post was last edited"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic this post belongs to"
+        }
+      }
+    }
+  }
+}

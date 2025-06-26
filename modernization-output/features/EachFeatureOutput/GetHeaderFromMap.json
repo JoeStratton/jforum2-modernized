@@ -1,0 +1,41 @@
+{
+  "featureName": "GetHeaderFromMap",
+  "description": "Retrieves HTTP header value from a map using case-insensitive lookup.",
+  "inputValues": [
+    "headers-object-HeaderMap",
+    "name-string-HeaderName"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. headers (mandatory): Map containing HTTP request headers\n     b. name (mandatory): String representing the header name to retrieve\n\n2. Data Validation:\n   - Validate headers input:\n     a. IF headers is null THEN\n        i. Return null or appropriate error indicator\n     b. IF headers is not a valid map structure THEN\n        i. Return null or appropriate error indicator\n   - Validate name input:\n     a. IF name is null or empty THEN\n        i. Return null or appropriate error indicator\n     b. IF name contains invalid characters THEN\n        i. Return null or appropriate error indicator\n\n3. Business Rule Processing:\n   - Process header name for case-insensitive lookup:\n     a. Convert the provided header name to lowercase\n     b. Prepare for map lookup operation\n\n4. Core Operation Execution:\n   - Perform case-insensitive header lookup:\n     a. Use the lowercase header name as the key for map lookup\n     b. Retrieve the corresponding value from the headers map\n     c. IF multiple header values exist with the same name THEN\n        i. Combine values into a comma-separated list\n\n5. Response Generation:\n   - Return the retrieved header value:\n     a. IF header was found THEN\n        i. Return the string value of the header\n     b. IF header was not found THEN\n        i. Return null or empty string based on system requirements\n     c. IF multiple values were found and combined THEN\n        i. Return the comma-separated list of values",
+  "databaseEntities": [],
+  "validationRules": [
+    "Headers map must not be null",
+    "Header name must not be null or empty",
+    "Header name must contain valid characters"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HeaderMap": {
+      "type": "object",
+      "properties": {
+        "headerKeys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Collection of HTTP header names"
+        },
+        "headerValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Collection of HTTP header values"
+        }
+      }
+    },
+    "HeaderName": {
+      "type": "string",
+      "description": "Name of the HTTP header to retrieve"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "featureName": "EditRanking",
+  "description": "Displays and processes the form for editing an existing user ranking in the system.",
+  "inputValues": [
+    "rank_id-number-Ranking",
+    "rank_title-string-Ranking",
+    "rank_special-boolean-Ranking",
+    "rank_min-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve the ranking ID from the request\n   - Prepare the form for editing with the following fields:\n     a. Ranking title (mandatory string)\n     b. Special ranking flag (boolean)\n     c. Minimum posts threshold (number, required only if not a special ranking)\n   - System retrieves existing ranking data based on the provided ID\n\n2. Data Validation:\n   - Validate ranking ID:\n     a. Check if ID exists in the system\n     b. Return error if ranking not found\n   - Validate ranking title:\n     a. Ensure title is not empty\n     b. Ensure title length is within acceptable limits\n   - Validate minimum posts threshold:\n     a. IF special ranking flag is FALSE, THEN\n        i. Ensure minimum posts value is provided\n        ii. Ensure minimum posts value is a positive integer\n     b. IF special ranking flag is TRUE, THEN\n        i. Minimum posts field is ignored\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify current user has administrative rights to edit rankings\n     b. Return error if permission check fails\n   - Validate ranking relationships:\n     a. Check if ranking is currently in use\n     b. Determine impact of changes on existing users\n   - IF changing from non-special to special ranking, THEN\n     a. Verify this change won't disrupt user ranking assignments\n   - IF changing minimum post threshold, THEN\n     a. Check for conflicts with other ranking thresholds\n     b. Ensure new threshold maintains proper ordering with other rankings\n\n4. Core Operation Execution:\n   - Create ranking object with updated information:\n     a. Set ranking ID from input\n     b. Set ranking title from input\n     c. Set special flag from input\n     d. IF not a special ranking, THEN set minimum posts threshold\n   - Update ranking record in the database\n   - Refresh ranking cache/repository to reflect changes\n   - Log the ranking modification action\n\n5. Response Generation:\n   - IF update successful, THEN\n     a. Display success message\n     b. Redirect to ranking list view\n     c. Show updated ranking in the list\n   - IF any errors occurred, THEN\n     a. Display appropriate error messages\n     b. Retain entered values in the form\n     c. Allow user to correct and resubmit",
+  "databaseEntities": [
+    "Ranking"
+  ],
+  "validationRules": [
+    "Ranking ID must exist in the system",
+    "Ranking title must not be empty",
+    "If ranking is not special, minimum posts threshold must be provided",
+    "Minimum posts threshold must be a positive integer",
+    "User must have administrative permissions to edit rankings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "special": "boolean",
+      "min": "number"
+    }
+  }
+}

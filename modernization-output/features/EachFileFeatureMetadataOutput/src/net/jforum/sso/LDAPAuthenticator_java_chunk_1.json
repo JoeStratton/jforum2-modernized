@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ValidateLDAPLogin",
+    "description": "Authenticates users against LDAP server using provided credentials"
+  },
+  {
+    "featureName": "RegisterLDAPUser",
+    "description": "Registers new users in the system when authenticated via LDAP but not existing locally"
+  }
+]

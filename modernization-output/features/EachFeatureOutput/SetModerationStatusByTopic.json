@@ -1,0 +1,21 @@
+{
+  "featureName": "SetModerationStatusByTopic",
+  "description": "Updates moderation status for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "status-boolean-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (number, mandatory) - Unique identifier of the topic to update\n   - Collect status (boolean, mandatory) - New moderation status to set (true for moderated, false for unmoderated)\n   - System will use current user context for authorization\n\n2. Data Validation:\n   - Validate topicId:\n     a. Verify topicId is not null or empty\n     b. Verify topicId is a positive integer\n     c. Verify topicId exists in the system\n     d. IF validation fails, THEN return appropriate error message\n   - Validate status:\n     a. Verify status is a valid boolean value\n     b. IF validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Verify user permissions:\n     a. Check if current user has moderation privileges for this topic\n     b. IF user lacks required permissions, THEN return access denied error\n   - Check topic state:\n     a. Verify topic is in a state that allows moderation status changes\n     b. IF topic is locked or deleted, THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Update topic moderation status:\n     a. Locate topic record using topicId\n     b. Set moderation status field to provided status value (convert boolean to appropriate database value)\n     c. Save updated topic record\n     d. IF update fails, THEN log error details and return system error message\n     e. Record moderation action in system logs with user information, timestamp, and action details\n\n5. Response Generation:\n   - On success:\n     a. Generate success response with confirmation message\n     b. Include updated topic information in response\n     c. Include timestamp of the operation\n   - On failure:\n     a. Generate error response with specific error details\n     b. Include guidance for resolving the issue if applicable\n     c. Provide support reference if needed",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic ID must reference an existing topic",
+    "Status must be a valid boolean value",
+    "User must have moderation privileges for the topic",
+    "Topic must not be in a locked or deleted state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

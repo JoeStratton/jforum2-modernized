@@ -1,0 +1,60 @@
+{
+  "featureName": "SendPrivateMessage",
+  "description": "Sends a new private message between users in the system.",
+  "inputValues": [
+    "fromUserId-number-User",
+    "toUserId-number-User",
+    "subject-string-PrivateMessage",
+    "messageText-string-PrivateMessage",
+    "bbCodeEnabled-boolean-PrivateMessage",
+    "htmlEnabled-boolean-PrivateMessage",
+    "smiliesEnabled-boolean-PrivateMessage",
+    "signatureEnabled-boolean-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect sender user ID (fromUserId, mandatory)\n   - Collect recipient user ID (toUserId, mandatory)\n   - Collect message subject (subject, mandatory)\n   - Collect message text content (messageText, mandatory)\n   - Collect formatting preferences (optional):\n     a. bbCodeEnabled (optional, defaults to true)\n     b. htmlEnabled (optional, defaults to false)\n     c. smiliesEnabled (optional, defaults to true)\n     d. signatureEnabled (optional, defaults to true)\n\n2. Data Validation:\n   - Validate sender ID:\n     a. Check if sender ID is provided\n     b. Verify sender exists in the system\n     c. Confirm sender has permission to send messages\n     d. If validation fails, return error message \"Invalid sender\"\n   - Validate recipient ID:\n     a. Check if recipient ID is provided\n     b. Verify recipient exists in the system\n     c. Confirm recipient can receive messages\n     d. If validation fails, return error message \"Invalid recipient\"\n   - Validate message subject:\n     a. Check if subject is provided\n     b. Verify subject is not empty\n     c. Ensure subject length is within allowed limits (1-100 characters)\n     d. If validation fails, return error message \"Invalid subject\"\n   - Validate message text:\n     a. Check if message text is provided\n     b. Verify message text is not empty\n     c. Ensure message text length is within allowed limits\n     d. If validation fails, return error message \"Invalid message content\"\n\n3. Business Rule Processing:\n   - Check user relationship rules:\n     a. Verify if recipient has blocked the sender\n     b. IF recipient has blocked sender THEN\n        i. Return error message \"Cannot send message to this user\"\n     c. ELSE continue processing\n   - Check message quota:\n     a. Verify if recipient's inbox has available space\n     b. IF inbox is full THEN\n        i. Return error message \"Recipient's inbox is full\"\n     c. ELSE continue processing\n   - Check message rate limits:\n     a. Verify if sender has exceeded message sending limits\n     b. IF rate limit exceeded THEN\n        i. Return error message \"Message sending limit reached\"\n     c. ELSE continue processing\n\n4. Core Operation Execution:\n   - Create two copies of the message:\n     a. First copy for sender's sent box:\n        i. Set message type to SENT\n        ii. Set sender ID (fromUserId)\n        iii. Set recipient ID (toUserId)\n        iv. Set message subject\n        v. Set current timestamp\n        vi. Set formatting flags (bbCode, HTML, smilies, signature)\n        vii. Generate and store message ID\n        viii. Store message text linked to message ID\n     b. Second copy for recipient's inbox:\n        i. Set message type to NEW (unread)\n        ii. Set sender ID (fromUserId)\n        iii. Set recipient ID (toUserId)\n        iv. Set message subject\n        v. Set current timestamp\n        vi. Set formatting flags (bbCode, HTML, smilies, signature)\n        vii. Generate and store message ID\n        viii. Store message text linked to message ID\n   - IF any storage operation fails THEN\n     a. Rollback all changes\n     b. Return error message \"Failed to send message\"\n\n5. Response Generation:\n   - IF message successfully sent THEN\n     a. Generate success response with message IDs\n     b. Include timestamp of message sending\n     c. Return confirmation \"Message successfully sent\"\n   - ELSE\n     a. Generate error response\n     b. Include specific error details\n     c. Return appropriate error message",
+  "databaseEntities": [
+    "User",
+    "PrivateMessage",
+    "PrivateMessageText"
+  ],
+  "validationRules": [
+    "Sender must be a valid user in the system",
+    "Recipient must be a valid user in the system",
+    "Message subject must not be empty",
+    "Message subject must not exceed maximum length",
+    "Message text must not be empty",
+    "Message text must not exceed maximum length",
+    "Sender must have permission to send messages",
+    "Recipient must be able to receive messages",
+    "Sender must not exceed message sending rate limits",
+    "Recipient's inbox must not be full"
+  ],
+  "dbSeedingOperations": [
+    "Ensure message types are defined (NEW, SENT)",
+    "Ensure default formatting preferences are defined"
+  ],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "messageQuota": "number",
+      "canSendMessages": "boolean"
+    },
+    "PrivateMessage": {
+      "id": "number",
+      "type": "number",
+      "subject": "string",
+      "fromUserId": "number",
+      "toUserId": "number",
+      "date": "date",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean"
+    },
+    "PrivateMessageText": {
+      "messageId": "number",
+      "text": "string"
+    }
+  }
+}

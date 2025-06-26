@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "InsertBanlistEntry",
+    "description": "Creates a new entry in the banlist system"
+  },
+  {
+    "featureName": "DeleteBanlistEntry",
+    "description": "Removes an entry from the banlist by its ID"
+  },
+  {
+    "featureName": "GetAllBanlistEntries",
+    "description": "Retrieves all entries from the banlist"
+  }
+]

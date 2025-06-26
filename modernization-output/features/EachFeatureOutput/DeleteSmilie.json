@@ -1,0 +1,25 @@
+{
+  "featureName": "DeleteSmilie",
+  "description": "Removes a smilie emoticon from the forum system by its ID.",
+  "inputValues": [
+    "id-number-Smilie"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following input:\n     - id (number, mandatory): The unique identifier of the smilie to be deleted\n\n2. Data Validation:\n   - Validate the smilie ID:\n     - Check if the ID is provided\n       IF ID is not provided THEN\n         Return an error message indicating that the smilie ID is required\n     - Verify that the ID is a positive integer\n       IF ID is not a positive integer THEN\n         Return an error message indicating that the ID must be a valid positive number\n\n3. Business Rule Processing:\n   - Verify the smilie exists in the system:\n     - Check if a smilie with the provided ID exists in the database\n       IF smilie does not exist THEN\n         Return an error message indicating that the smilie with the given ID was not found\n   - Check if the smilie is in use:\n     - Determine if the smilie is currently referenced in any forum posts\n       IF smilie is referenced in posts THEN\n         Decide whether to proceed with deletion (may affect post display)\n\n4. Core Operation Execution:\n   - Delete the smilie record:\n     - Remove the smilie entry from the system database\n     - If the smilie has an associated image file:\n       - Determine if the image file should be retained or deleted\n       - If deletion is required, remove the image file from storage\n   - Update any cached smilie data:\n     - Clear any system cache that might contain the deleted smilie\n     - Ensure the smilie list is refreshed for all active users\n\n5. Response Generation:\n   - For successful deletion:\n     - Generate a success message indicating the smilie was successfully removed\n     - Include the ID of the deleted smilie in the response\n   - For failed deletion:\n     - Generate an appropriate error message explaining the reason for failure\n     - Include suggestions for resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie ID must be provided",
+    "Smilie ID must be a positive integer",
+    "Smilie must exist in the system before deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "id": "number",
+      "code": "string",
+      "url": "string",
+      "diskName": "string"
+    }
+  }
+}

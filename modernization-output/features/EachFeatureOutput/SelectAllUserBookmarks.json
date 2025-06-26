@@ -1,0 +1,31 @@
+{
+  "featureName": "SelectAllUserBookmarks",
+  "description": "Retrieves all bookmarks belonging to a specific user regardless of type.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect userId (mandatory, number) to identify the user whose bookmarks will be retrieved\n\n2. Data Validation\n   - Validate userId:\n     a. Verify userId is not null\n     b. Verify userId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing\n   - Verify user exists in the system\n     a. IF user does not exist, THEN return error indicating invalid user\n   - Verify user has permission to access bookmarks\n     a. IF user lacks permission, THEN return access denied error\n\n4. Core Operation Execution\n   - Retrieve all bookmarks associated with the specified userId\n     a. Search for bookmarks where the owner is the specified user\n     b. Include all bookmark types (forum bookmarks, topic bookmarks, user bookmarks)\n     c. For each bookmark found:\n        i. Extract bookmark details (id, title, description, relation type, relation id, etc.)\n        ii. Add to collection of results\n     d. IF no bookmarks are found, THEN return empty collection\n     e. IF error occurs during retrieval, THEN handle exception and return appropriate error\n\n5. Response Generation\n   - Format the bookmark collection for response\n     a. For each bookmark in the collection:\n       i. Include bookmark ID\n       ii. Include bookmark title\n       iii. Include bookmark description\n       iv. Include relation type (forum, topic, or user)\n       v. Include relation ID\n       vi. Include visibility status (public or private)\n   - Return the formatted collection of bookmarks\n   - IF operation was successful but no bookmarks found, THEN return empty collection with success status\n   - IF operation failed, THEN return error details with failure status",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User must have permission to access bookmarks"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    }
+  }
+}

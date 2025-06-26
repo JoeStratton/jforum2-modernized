@@ -1,0 +1,52 @@
+{
+  "featureName": "CreateUnwatchForumLink",
+  "description": "Generates unsubscribe links allowing users to stop watching specific forums.",
+  "inputValues": [
+    "forum-object-Forum",
+    "forumLink-string-String"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. forum (mandatory): Forum object containing forum information\n     b. forumLink (mandatory): Base URL string for the forum system\n     c. userId (system-generated): Identifier for the user who will receive the unwatch link\n\n2. Data Validation:\n   - Validate forum input:\n     a. Check if forum object is not null\n     b. Verify forum ID exists and is a valid positive integer\n     c. IF forum is invalid THEN generate error message \"Invalid forum information provided\"\n   - Validate forumLink input:\n     a. Check if forumLink is not null or empty\n     b. Verify forumLink is a valid URL format\n     c. IF forumLink is invalid THEN generate error message \"Invalid forum base URL provided\"\n   - Validate user authorization:\n     a. Verify the user is currently watching the specified forum\n     b. IF user is not watching the forum THEN generate warning \"User is not currently watching this forum\"\n\n3. Business Rule Processing:\n   - Check system configuration:\n     a. Verify that forum watching functionality is enabled in system settings\n     b. IF watching is disabled THEN generate error message \"Forum watching functionality is currently disabled\"\n   - Check user permissions:\n     a. Verify user has permission to unwatch forums\n     b. IF user lacks permission THEN generate error message \"User does not have permission to unwatch forums\"\n   - Check forum status:\n     a. Verify forum is active and available for watching/unwatching\n     b. IF forum is inactive THEN generate error message \"Cannot unwatch an inactive forum\"\n\n4. Core Operation Execution:\n   - Generate the unwatch link:\n     a. Construct the base path using the provided forumLink\n     b. Append the unwatching endpoint path\n     c. Add the forum ID as a parameter\n     d. Add any required system extensions (e.g., .page, .html)\n     e. Add any required security tokens or user identifiers\n     f. Format the final URL according to system standards\n   - Validate the generated link:\n     a. Verify the link format is correct\n     b. Ensure all required parameters are included\n     c. IF link validation fails THEN regenerate with default parameters\n   - Store link information:\n     a. Associate the generated link with the user and forum in temporary storage\n     b. Set appropriate expiration for the link if required\n\n5. Response Generation:\n   - On success:\n     a. Return the complete unwatch link URL\n     b. Include any additional context information needed for display\n     c. Provide confirmation message \"Unwatch link successfully generated\"\n   - On failure:\n     a. Return appropriate error code and message\n     b. Include troubleshooting information if available\n     c. Suggest alternative actions for the user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Forum ID must be a valid positive integer",
+    "Forum link base URL must not be empty",
+    "Forum link must be a valid URL format",
+    "User must be currently watching the forum",
+    "Forum watching functionality must be enabled in system",
+    "User must have permission to unwatch forums",
+    "Forum must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the forum is currently active"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "featureName": "LoadSqlQueries",
+  "description": "Loads SQL query definitions from external files for database operations.",
+  "inputValues": [
+    "queryFile-string-FilePath"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - queryFile (string, mandatory): Complete file path to the SQL queries file\n     - No default values are provided\n     - No system-generated fields are required\n\n2. Data Validation\n   - Validate the queryFile input:\n     - Check if queryFile is not null or empty\n       IF queryFile is null or empty THEN\n         Generate error message: \"Query file path cannot be empty\"\n     - Check if the file exists at the specified path\n       IF file does not exist THEN\n         Generate error message: \"SQL query file not found at the specified location\"\n     - Check if the file is readable\n       IF file is not readable THEN\n         Generate error message: \"SQL query file cannot be accessed or read\"\n     - Check if the file has the correct format (properties file format)\n       IF file format is invalid THEN\n         Generate error message: \"Invalid SQL query file format\"\n\n3. Business Rule Processing\n   - Check system state for query loading:\n     - Verify if the system is in a state where SQL queries can be loaded\n       IF system is not in proper initialization state THEN\n         Generate error message: \"System not ready to load SQL queries\"\n     - Check if queries storage is available and ready\n       IF queries storage is not available THEN\n         Generate error message: \"Query storage mechanism not available\"\n   - Check for potential conflicts:\n     - Determine if loading new queries would overwrite existing critical queries\n       IF critical queries would be overwritten without explicit permission THEN\n         Generate warning: \"Loading this file will overwrite existing queries\"\n\n4. Core Operation Execution\n   - Initialize file input stream:\n     - Create a file input stream for the query file\n     - Set the stream to null initially for proper resource management\n   - Load queries from file:\n     - Open the file input stream to the specified query file\n     - Load the SQL query definitions from the file into the queries storage\n     - Each query should be stored with its name as the key and SQL statement as the value\n   - Handle exceptions during loading:\n     - IF any I/O errors occur during file reading THEN\n       - Close any open resources\n       - Log the error details\n       - Generate error message: \"Failed to load SQL queries from file\"\n   - Resource cleanup:\n     - Ensure the file input stream is properly closed regardless of success or failure\n     - Release any locks or resources associated with the file\n\n5. Response Generation\n   - Success response:\n     - Indicate successful loading of SQL queries\n     - Include the number of SQL queries loaded\n     - Provide confirmation message: \"SQL queries successfully loaded from file\"\n   - Error response:\n     - Include detailed error information if the operation failed\n     - Provide guidance on resolving common issues\n     - Include system state information relevant to troubleshooting\n   - Additional information:\n     - List any queries that were updated or overwritten\n     - Provide information on how to access the loaded queries",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Query file path must not be empty",
+    "SQL query file must exist at the specified location",
+    "SQL query file must be readable",
+    "SQL query file must be in valid properties format",
+    "System must be in proper initialization state to load queries",
+    "Query storage mechanism must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

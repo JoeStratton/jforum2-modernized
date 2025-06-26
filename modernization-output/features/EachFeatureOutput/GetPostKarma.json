@@ -1,0 +1,50 @@
+{
+  "featureName": "GetPostKarma",
+  "description": "Retrieves the karma status of a specific post.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (mandatory, number) from the request\n   - System will use this identifier to locate the specific post\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. IF postId is missing or invalid THEN\n        - Generate appropriate error message\n        - Terminate process and return validation error\n\n3. Business Rule Processing:\n   - Check post existence:\n     a. Verify the post with the given postId exists in the system\n     b. IF post does not exist THEN\n        - Generate \"Post not found\" error message\n        - Terminate process and return error\n   - Check karma feature availability:\n     a. Verify the karma feature is enabled in the system\n     b. IF karma feature is disabled THEN\n        - Generate appropriate notification\n        - Terminate process and return notification\n\n4. Core Operation Execution:\n   - Retrieve karma data:\n     a. Fetch all karma votes associated with the specified post\n     b. Calculate total karma points for the post\n     c. Count positive votes\n     d. Count negative votes\n     e. Determine karma rating (positive/negative/neutral)\n   - Compile karma status:\n     a. Create karma status object containing:\n        - Total karma points\n        - Vote count (positive and negative)\n        - Average rating\n        - Rating trend (increasing/decreasing/stable)\n\n5. Response Generation:\n   - Success response:\n     a. Return karma status object with all calculated metrics\n     b. Include timestamp of when the karma was last updated\n   - Error response:\n     a. Return appropriate error code and message if any issues occurred\n     b. Include guidance on how to resolve the error if applicable",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Post must exist in the system",
+    "Karma feature must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "totalPoints": {
+          "type": "number",
+          "description": "Sum of all karma points for the post"
+        },
+        "positiveVotes": {
+          "type": "number",
+          "description": "Count of positive votes"
+        },
+        "negativeVotes": {
+          "type": "number",
+          "description": "Count of negative votes"
+        },
+        "totalVotes": {
+          "type": "number",
+          "description": "Total number of votes cast"
+        },
+        "averageRating": {
+          "type": "number",
+          "description": "Average karma rating"
+        },
+        "lastUpdated": {
+          "type": "date",
+          "description": "Timestamp of last karma update"
+        }
+      }
+    }
+  }
+}

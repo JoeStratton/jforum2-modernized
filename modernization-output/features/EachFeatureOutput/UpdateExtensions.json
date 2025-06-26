@@ -1,0 +1,40 @@
+{
+  "featureName": "UpdateExtensions",
+  "description": "Updates or deletes existing file extension entries in the system.",
+  "inputValues": [
+    "extensionId-number-AttachmentExtension",
+    "extension-string-AttachmentExtension",
+    "allow-boolean-AttachmentExtension",
+    "comment-string-AttachmentExtension",
+    "uploadIcon-string-AttachmentExtension",
+    "extensionGroupId-number-AttachmentExtension",
+    "deleteIds-object-DeleteSelection"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - Total number of extension records to process\n       - For each extension record:\n           - Extension ID (system-generated, mandatory)\n           - Extension name (mandatory)\n           - Allow flag (optional, defaults to false)\n           - Comment (optional)\n           - Upload icon path (optional)\n           - Extension group ID (mandatory)\n       - List of extension IDs to delete (optional)\n\n2. Data Validation:\n   2.1. Validate total records count:\n       - IF total records count is less than 0 THEN\n           - Generate error message: \"Invalid record count\"\n       - END IF\n   2.2. For each extension record:\n       - IF extension name is empty THEN\n           - Generate error message: \"Extension name cannot be empty\"\n       - END IF\n       - IF extension name starts with a period (.) THEN\n           - Remove the leading period\n       - END IF\n       - IF extension group ID is not valid THEN\n           - Generate error message: \"Invalid extension group selected\"\n       - END IF\n   2.3. For delete selection:\n       - Verify each ID in delete list exists in the system\n       - IF any ID does not exist THEN\n           - Generate warning: \"One or more selected extensions do not exist\"\n       - END IF\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify extension management is enabled in system\n       - IF not enabled THEN\n           - Generate error message: \"Extension management is disabled\"\n           - Abort operation\n       - END IF\n   3.2. Check for duplicate extensions:\n       - For each extension being updated:\n           - IF extension name already exists for another ID THEN\n               - Generate error message: \"Extension already exists\"\n           - END IF\n   3.3. Check extension group validity:\n       - For each extension record:\n           - Verify the extension group ID exists\n           - IF extension group does not exist THEN\n               - Generate error message: \"Selected extension group does not exist\"\n           - END IF\n\n4. Core Operation Execution:\n   4.1. Process deletion requests:\n       - IF delete list is not empty THEN\n           - Remove all extensions with IDs in the delete list\n           - Log deletion activity\n       - END IF\n   4.2. Process update requests:\n       - For each extension record not in delete list:\n           - Create extension object with provided values\n           - Update extension record in storage\n           - Log update activity\n       - END IF\n   4.3. Handle transaction integrity:\n       - IF any operation fails THEN\n           - Rollback all changes\n           - Generate error message: \"Failed to update extensions\"\n       - END IF\n\n5. Response Generation:\n   5.1. For successful operation:\n       - Generate success message: \"Extensions updated successfully\"\n       - Prepare updated list of all extensions\n       - Include list of extension groups for reference\n   5.2. For failed operation:\n       - Return appropriate error messages\n       - Maintain user input values for correction\n       - Provide guidance on resolving issues",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension name must not be empty",
+    "Extension group ID must be valid",
+    "Extension name must be unique in the system",
+    "Extension group must exist in the system",
+    "If extension name starts with a period, it will be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DeleteSelection": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Array of extension IDs to be deleted"
+        }
+      }
+    }
+  }
+}

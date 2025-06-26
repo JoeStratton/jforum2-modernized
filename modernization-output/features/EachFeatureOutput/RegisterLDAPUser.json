@@ -1,0 +1,41 @@
+{
+  "featureName": "RegisterLDAPUser",
+  "description": "Registers new users in the system when authenticated via LDAP but not existing locally.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "ldapAttributes-object-LDAPAttributes"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect user credentials\n      1.1.1. Obtain username (mandatory)\n      1.1.2. Obtain password (mandatory)\n   1.2. Prepare LDAP connection parameters\n      1.2.1. Set LDAP server connection details from system configuration\n      1.2.2. Set authentication method from system configuration\n      1.2.3. Set security protocol if configured\n\n2. Data Validation\n   2.1. Validate username\n      2.1.1. Verify username is not empty\n      2.1.2. Check username format according to system requirements\n   2.2. Validate password\n      2.2.1. Verify password is not empty\n      2.2.2. Check password meets minimum complexity requirements\n\n3. Business Rule Processing\n   3.1. Authenticate against LDAP server\n      3.1.1. Construct user principal using configured prefix and suffix\n      3.1.2. Attempt connection to LDAP server with provided credentials\n      3.1.3. IF authentication fails, THEN\n         3.1.3.1. Return authentication failure\n      3.1.4. IF authentication succeeds, THEN\n         3.1.4.1. Proceed to user verification\n   3.2. Check if user exists in local system\n      3.2.1. Query local database for username\n      3.2.2. IF user exists locally, THEN\n         3.2.2.1. Skip registration process\n      3.2.3. IF user does not exist locally, THEN\n         3.2.3.1. Proceed to user registration\n\n4. Core Operation Execution\n   4.1. Retrieve user attributes from LDAP\n      4.1.1. Construct lookup principal using configured prefix and suffix\n      4.1.2. Retrieve email attribute from LDAP directory\n      4.1.3. IF email attribute is not found, THEN\n         4.1.3.1. Use default \"noemail\" value\n   4.2. Register new user in local system\n      4.2.1. Create new user record with username\n      4.2.2. Set user email from LDAP attributes\n      4.2.3. Set authentication type as \"ldap\"\n      4.2.4. Set default user role and permissions\n      4.2.5. Set account status as active\n      4.2.6. Save user to database\n      4.2.7. IF saving fails, THEN\n         4.2.7.1. Log error details\n         4.2.7.2. Return registration failure\n\n5. Response Generation\n   5.1. Generate success response\n      5.1.1. Include user information in response\n      5.1.2. Set authentication status as successful\n      5.1.3. Include registration status (new or existing user)\n   5.2. Handle error responses\n      5.2.1. For authentication failures, return appropriate error message\n      5.2.2. For registration failures, return appropriate error message\n      5.2.3. For system errors, return general error message with support information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Password must not be empty",
+    "LDAP authentication must succeed before user registration",
+    "User must not already exist in the local system before registration",
+    "Email must be retrieved from LDAP or set to default value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "LDAPAttributes": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User's email address retrieved from LDAP"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "User's full name from LDAP directory"
+        },
+        "additionalAttributes": {
+          "type": "object",
+          "description": "Any additional attributes retrieved from LDAP"
+        }
+      }
+    }
+  }
+}

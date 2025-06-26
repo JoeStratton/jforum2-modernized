@@ -1,0 +1,61 @@
+{
+  "featureName": "ExtractForumIdFromPost",
+  "description": "Retrieves the forum ID from a post object in search results.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the post object (mandatory)\n   - The post object must contain forum ID information\n\n2. Data Validation:\n   - Validate that the post object is not null\n     * IF post object is null THEN return error message indicating invalid input\n   - Validate that the post object is of the correct type\n     * IF post object is not of type Post THEN return error message indicating type mismatch\n   - Validate that the post object contains forum ID information\n     * IF forum ID is missing THEN return error message indicating incomplete post data\n\n3. Business Rule Processing:\n   - Check if the user has permission to access the forum ID\n     * IF user does not have permission THEN return appropriate error message\n   - Verify that the forum associated with the ID exists in the system\n     * IF forum does not exist THEN return error indicating invalid forum reference\n\n4. Core Operation Execution:\n   - Extract the forum ID from the post object\n   - Format the forum ID as an integer value\n   - Prepare the forum ID for return\n\n5. Response Generation:\n   - Return the extracted forum ID\n   - IF extraction was successful THEN return the forum ID value\n   - IF any errors occurred during extraction THEN return appropriate error message\n   - Include context information about which post the forum ID belongs to",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post object must be of the correct type",
+    "Post object must contain a valid forum ID",
+    "Forum ID must reference an existing forum",
+    "User must have permission to access the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum containing this post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic containing this post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject of the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "postDate": {
+          "type": "date",
+          "description": "Date when the post was created"
+        }
+      },
+      "required": [
+        "id",
+        "forumId",
+        "topicId",
+        "userId"
+      ]
+    }
+  }
+}

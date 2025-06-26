@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "HandleMySQLWorkarounds",
+    "description": "Detects MySQL version and applies appropriate configuration fixes for database compatibility"
+  },
+  {
+    "featureName": "FixMySQLEncoding",
+    "description": "Adjusts MySQL encoding settings for proper character handling in newer MySQL versions"
+  },
+  {
+    "featureName": "ConfigureDAOImplementation",
+    "description": "Updates data access driver configuration based on detected MySQL version"
+  },
+  {
+    "featureName": "UpdateSQLQueries",
+    "description": "Loads and updates SQL query definitions appropriate for the detected MySQL version"
+  }
+]

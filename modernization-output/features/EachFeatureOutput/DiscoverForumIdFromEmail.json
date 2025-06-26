@@ -1,0 +1,42 @@
+{
+  "featureName": "DiscoverForumIdFromEmail",
+  "description": "Maps email addresses to corresponding forum IDs for message routing.",
+  "inputValues": [
+    "listEmail-string-Forum",
+    "sender-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect listEmail (string): The forum's email address to search for (mandatory)\n   - Collect sender (string): The email address of the message sender (mandatory)\n\n2. Data Validation:\n   - Validate listEmail:\n     2.1. Check if listEmail is not null or empty\n     2.2. Verify listEmail follows valid email format\n     2.3. If validation fails, generate appropriate error message\n   - Validate sender:\n     2.4. Check if sender is not null or empty\n     2.5. Verify sender follows valid email format\n     2.6. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check system configuration:\n     3.1. Verify email-to-forum mapping feature is enabled\n     3.2. IF email-to-forum mapping is disabled, THEN return error message\n   - Verify sender authorization:\n     3.3. Check if sender email exists in the user database\n     3.4. IF sender not found, THEN log warning and return error message\n     3.5. Check if sender has permission to post to forums\n     3.6. IF sender lacks permission, THEN return error message\n\n4. Core Operation Execution:\n   - Forum ID discovery:\n     4.1. Search forum database for records matching the listEmail\n     4.2. IF matching forum found:\n        4.2.1. Retrieve forum ID associated with listEmail\n        4.2.2. Verify forum is active and accepting posts\n        4.2.3. IF forum is inactive, THEN return error message\n     4.3. IF no matching forum found:\n        4.3.1. Log the failed mapping attempt\n        4.3.2. Return default forum ID if configured, otherwise return error\n   - User verification:\n     4.4. Retrieve user information based on sender email\n     4.5. Verify user has permission to post in the identified forum\n     4.6. IF user lacks permission, THEN return error message\n\n5. Response Generation:\n   - Success response:\n     5.1. Return the discovered forum ID\n     5.2. Include forum name and category information\n     5.3. Include posting guidelines if available\n   - Error response:\n     5.4. Return appropriate error code\n     5.5. Include descriptive error message\n     5.6. Provide troubleshooting information when applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "List email must be a valid email format",
+    "List email must exist in the forum database",
+    "Sender email must be a valid email format",
+    "Sender email must belong to a registered user",
+    "User must have permission to post to the identified forum",
+    "Forum must be active and accepting posts"
+  ],
+  "dbSeedingOperations": [
+    "Ensure forums have email addresses configured",
+    "Ensure user permissions are properly set up"
+  ],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "email": "string",
+      "isActive": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "email": "string",
+      "username": "string",
+      "permissions": "object"
+    }
+  }
+}

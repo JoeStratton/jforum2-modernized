@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "TestSummaryScheduler",
+    "description": "Tests the summary scheduler functionality and its frequency"
+  },
+  {
+    "featureName": "TestLoadRecipients",
+    "description": "Tests loading of summary email recipients from the system"
+  },
+  {
+    "featureName": "TestSendMails",
+    "description": "Tests sending summary emails to recipients"
+  },
+  {
+    "featureName": "TestListPosts",
+    "description": "Tests retrieving posts from a specific date range"
+  }
+]

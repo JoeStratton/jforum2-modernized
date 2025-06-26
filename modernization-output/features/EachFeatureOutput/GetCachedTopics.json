@@ -1,0 +1,16 @@
+{
+  "featureName": "GetCachedTopics",
+  "description": "Retrieves a collection of all cached topics from the system cache.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will use internal cache references\n\n2. Data Validation:\n   - Verify cache engine is properly initialized\n   - IF cache engine is not initialized THEN\n     - Return empty collection\n   - END IF\n\n3. Business Rule Processing:\n   - Check cache availability\n   - IF cache is unavailable THEN\n     - Return empty collection\n   - END IF\n   - Determine if topics map exists in cache\n   - IF topics map does not exist in cache THEN\n     - Return empty collection\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve topics map from cache using the defined cache key\n   - Extract all topic identifiers (keys) from the map\n   - Create a collection to hold the topic identifiers\n   - FOR EACH topic identifier in the map\n     - Add the identifier to the collection\n   - END FOR\n   - IF no topics are found THEN\n     - Return empty collection\n   - END IF\n\n5. Response Generation:\n   - Return the collection of topic identifiers\n   - IF collection is empty THEN\n     - Return an empty collection object rather than null\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Cache engine must be properly initialized",
+    "Return empty collection instead of null when no topics are found"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

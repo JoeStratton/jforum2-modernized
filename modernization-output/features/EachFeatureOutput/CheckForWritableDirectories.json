@@ -1,0 +1,19 @@
+{
+  "featureName": "CheckForWritableDirectories",
+  "description": "Validates write permissions for WebInf and Lucene index directories.",
+  "inputValues": [
+    "webInfDirectory-string-Directory",
+    "luceneIndexDirectory-string-Directory"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. webInfDirectory (mandatory): Path to the WebInf directory\n     b. luceneIndexDirectory (mandatory): Path to the Lucene index directory\n     c. configDirectory (system-generated): Path to the configuration directory\n\n2. Data Validation\n   - Validate directory paths:\n     a. Check if webInfDirectory path is not empty\n        - IF empty THEN generate error message \"WebInf directory path cannot be empty\"\n     b. Check if luceneIndexDirectory path is not empty\n        - IF empty THEN generate error message \"Lucene index directory path cannot be empty\"\n\n3. Business Rule Processing\n   - Verify system state requirements:\n     a. Check if the system has access to the file system\n        - IF no access THEN generate error message \"System cannot access file system\"\n     b. Check if the current user has sufficient permissions to perform file operations\n        - IF insufficient permissions THEN generate error message \"Insufficient user permissions for file operations\"\n\n4. Core Operation Execution\n   - Check WebInf directory write permissions:\n     a. Locate the modulesMapping.properties file in the WebInf directory\n        - IF file not found THEN generate error message \"modulesMapping.properties file not found in WebInf directory\"\n     b. Attempt to verify write permissions on the file\n        - IF not writable THEN set canWriteToWebInf flag to FALSE\n        - ELSE set canWriteToWebInf flag to TRUE\n   - Check Lucene index directory write permissions:\n     a. Check if the Lucene index directory exists\n        - IF directory does not exist THEN\n          i. Attempt to create the directory\n          ii. IF directory creation fails THEN set canWriteToLuceneIndex flag to FALSE\n          iii. ELSE set canWriteToLuceneIndex flag to TRUE\n        - ELSE\n          i. Attempt to verify write permissions on the directory\n          ii. IF not writable THEN set canWriteToLuceneIndex flag to FALSE\n          iii. ELSE set canWriteToLuceneIndex flag to TRUE\n   - Evaluate overall directory write permissions:\n     a. IF canWriteToWebInf is FALSE OR canWriteToLuceneIndex is FALSE THEN\n        i. Set writePermissionsValid flag to FALSE\n        ii. IF canWriteToWebInf is FALSE THEN prepare WebInf error message\n        iii. ELSE IF canWriteToLuceneIndex is FALSE THEN prepare Lucene index error message\n     b. ELSE set writePermissionsValid flag to TRUE\n\n5. Response Generation\n   - Generate appropriate response based on validation results:\n     a. IF writePermissionsValid is TRUE THEN\n        i. Return success response with message \"All required directories have write permissions\"\n     b. ELSE\n        i. Return error response with specific error message about which directory lacks write permissions\n        ii. Include suggestion to check file system permissions\n        iii. Provide option to retry the operation after fixing permissions",
+  "databaseEntities": [],
+  "validationRules": [
+    "WebInf directory must have write permissions",
+    "Lucene index directory must have write permissions or be creatable",
+    "modulesMapping.properties file must exist in WebInf directory",
+    "System must have access to the file system",
+    "User must have sufficient permissions to perform file operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

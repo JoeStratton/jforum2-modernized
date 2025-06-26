@@ -1,0 +1,48 @@
+{
+  "featureName": "HandleSessionDestruction",
+  "description": "Manages user session termination by storing session data and removing the session.",
+  "inputValues": [
+    "sessionId-string-Session"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve sessionId (string, mandatory) from the terminating session\n   - System will automatically trigger this process when a session is being destroyed\n\n2. Data Validation:\n   - Validate sessionId existence\n     - IF sessionId is null or empty THEN\n       - Log warning message about invalid session\n       - Exit process without further action\n     - END IF\n   - Verify session is valid and can be processed\n     - IF session cannot be retrieved using sessionId THEN\n       - Log warning about non-existent session\n       - Exit process without further action\n     - END IF\n\n3. Business Rule Processing:\n   - Check if session contains user-related data\n     - IF session contains no user data THEN\n       - Skip data storage step\n       - Proceed directly to session removal\n     - END IF\n   - Determine if session data needs persistence\n     - IF user was authenticated THEN\n       - Mark session for data storage\n     - ELSE\n       - Skip data storage step\n     - END IF\n\n4. Core Operation Execution:\n   - Store session data\n     - Attempt to persist relevant session information\n     - IF storage operation fails THEN\n       - Log warning with error details\n       - Continue to session removal despite failure\n     - END IF\n   - Remove session\n     - Remove session from active sessions registry\n     - Release all resources associated with the session\n     - Update user online status if applicable\n\n5. Response Generation:\n   - No direct response to end user as this is a system process\n   - System logging\n     - Log successful session termination\n     - Include session duration in log if available\n     - Record any errors encountered during process",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Session ID must not be null or empty",
+    "Session must exist in the system before processing",
+    "Session data must be properly stored before removal if user was authenticated"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Session": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the user session"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user associated with this session"
+        },
+        "creationTime": {
+          "type": "date",
+          "description": "When the session was created"
+        },
+        "lastAccessTime": {
+          "type": "date",
+          "description": "When the session was last accessed"
+        },
+        "isAuthenticated": {
+          "type": "boolean",
+          "description": "Whether the session belongs to an authenticated user"
+        }
+      },
+      "required": [
+        "sessionId"
+      ]
+    }
+  }
+}

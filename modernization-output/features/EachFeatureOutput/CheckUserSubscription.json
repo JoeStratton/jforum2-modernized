@@ -1,0 +1,24 @@
+{
+  "featureName": "CheckUserSubscription",
+  "description": "Checks if a user is subscribed to a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number): The unique identifier of the topic to check subscription status\n   - Collect userId (mandatory, number): The unique identifier of the user to check subscription status\n\n2. Data Validation:\n   - Validate topicId:\n      a. Verify topicId is provided and not null\n      b. Verify topicId is a positive integer\n      c. If validation fails, generate error message: \"Invalid topic identifier provided\"\n   - Validate userId:\n      a. Verify userId is provided and not null\n      b. Verify userId is a positive integer\n      c. If validation fails, generate error message: \"Invalid user identifier provided\"\n\n3. Business Rule Processing:\n   - Verify topic existence:\n      a. Check if the topic with the provided topicId exists in the system\n      b. If topic does not exist, generate error message: \"Topic not found\"\n   - Verify user existence:\n      a. Check if the user with the provided userId exists in the system\n      b. If user does not exist, generate error message: \"User not found\"\n   - Verify system state:\n      a. Ensure the subscription tracking system is operational\n      b. If system is not operational, generate error message: \"Subscription system unavailable\"\n\n4. Core Operation Execution:\n   - Check subscription status:\n      a. Query the subscription records for the specified topic and user\n      b. Determine if a subscription record exists for the given topicId and userId combination\n      c. If record exists, set subscriptionStatus to true\n      d. If record does not exist, set subscriptionStatus to false\n   - Record access information:\n      a. Log the subscription check operation for auditing purposes\n      b. Include timestamp, user information, and result of the check\n\n5. Response Generation:\n   - Success response:\n      a. Return the subscription status (true/false)\n      b. Include topic information (title, creation date)\n      c. Include subscription details if subscribed (subscription date)\n   - Error response:\n      a. Return appropriate error message based on the validation or processing failure\n      b. Include guidance on how to resolve the issue\n      c. Provide support contact information if needed",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users",
+    "jforum_topics_watch"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must not be the anonymous user",
+    "User must not be the topic poster"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "MigratePHPBBToJForum",
+    "description": "Migrates data from PHPBB to JForum database with automatic connection management"
+  }
+]

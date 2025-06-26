@@ -1,0 +1,62 @@
+{
+  "featureName": "GetUserKarma",
+  "description": "Retrieves the karma status of a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) to identify the user whose karma status is being requested\n   - System will use current session information for access control validation\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF userId is invalid or missing THEN\n        - Generate appropriate error message\n        - Terminate process\n     d. END IF\n   - Verify user exists in the system:\n     a. Check if userId corresponds to an existing user record\n     b. IF user does not exist THEN\n        - Generate user not found error message\n        - Terminate process\n     c. END IF\n\n3. Business Rule Processing:\n   - Check access permissions:\n     a. Verify if the requesting user has permission to view karma information\n     b. IF permission check fails THEN\n        - Generate permission denied error message\n        - Terminate process\n     c. END IF\n   - Check karma feature availability:\n     a. Verify if karma functionality is enabled in the system\n     b. IF karma feature is disabled THEN\n        - Generate feature unavailable message\n        - Terminate process\n     c. END IF\n\n4. Core Operation Execution:\n   - Retrieve user karma information:\n     a. Gather all karma records associated with the specified userId\n     b. Calculate total karma points received by the user\n     c. Determine karma rating level based on points\n     d. Compile karma statistics including:\n        - Total positive karma points\n        - Total negative karma points\n        - Net karma score\n        - Karma rating level\n        - Votes received\n        - Votes given by the user\n     e. IF no karma records exist for user THEN\n        - Set default karma values for new users (zero points, zero votes)\n     f. END IF\n     g. Calculate average karma points (total points divided by votes received)\n     h. IF votes received is zero THEN\n        - Set karma points to zero to prevent division by zero\n     i. END IF\n\n5. Response Generation:\n   - Format karma status response:\n     a. Include all karma statistics in the response:\n        - Karma points (rounded to nearest integer)\n        - Total points\n        - Votes received\n        - Votes given\n     b. Include user identification information\n     c. Include timestamp of when karma was last updated\n   - Return success response with karma status information\n   - IF any errors occurred during processing THEN\n     a. Generate appropriate error response with details\n     b. Include support information if needed\n   - END IF",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Requesting user must have permission to view karma information",
+    "Karma feature must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "ID of the user"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Total karma points"
+        },
+        "karmaPoints": {
+          "type": "number",
+          "description": "Calculated karma points (rounded average)"
+        },
+        "votesReceived": {
+          "type": "number",
+          "description": "Total number of votes received"
+        },
+        "votesGiven": {
+          "type": "number",
+          "description": "Total number of votes given by the user"
+        },
+        "karmaLevel": {
+          "type": "string",
+          "description": "Karma level based on points"
+        },
+        "positivePoints": {
+          "type": "number",
+          "description": "Total positive karma points received"
+        },
+        "negativePoints": {
+          "type": "number",
+          "description": "Total negative karma points received"
+        },
+        "lastUpdated": {
+          "type": "date",
+          "description": "When the karma was last updated"
+        }
+      }
+    }
+  }
+}

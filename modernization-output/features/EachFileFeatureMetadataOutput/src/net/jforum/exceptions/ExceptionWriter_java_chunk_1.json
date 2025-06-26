@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "HandleExceptionData",
+    "description": "Processes exceptions by logging details, formatting error messages, and rendering exception template"
+  },
+  {
+    "featureName": "ExtractCurrentUrl",
+    "description": "Retrieves and formats the current request URL for inclusion in error reports"
+  }
+]

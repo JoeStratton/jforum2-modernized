@@ -1,0 +1,25 @@
+{
+  "featureName": "DeleteTopicsByForum",
+  "description": "Deletes all topics belonging to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forumId (mandatory) to identify the forum whose topics will be deleted\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. Generate error message if validation fails: \"Invalid forum identifier provided\"\n   - Verify forum existence:\n     a. Check if a forum with the provided forumId exists in the system\n     b. Generate error message if validation fails: \"Forum not found\"\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify if the current user has administrative privileges to delete topics\n     b. If user lacks permissions, generate error: \"Insufficient permissions to delete forum topics\"\n   - Check forum state:\n     a. Verify if the forum is in a state that allows topic deletion\n     b. If forum is locked or in special state, generate error: \"Cannot delete topics from this forum due to its current state\"\n\n4. Core Operation Execution:\n   - Retrieve all topics associated with the forum:\n     a. Get a list of all topic IDs belonging to the specified forum\n     b. If no topics exist, skip to response generation with appropriate message\n   - For each topic in the forum:\n     a. Remove all topic subscriptions and watches\n     b. Identify all posts associated with the topic\n     c. Delete all post content and metadata\n     d. Remove any polls associated with the topic\n     e. Delete any topic bookmarks\n     f. Remove topic voting/rating data if applicable\n     g. Delete the topic record itself\n   - Update forum statistics:\n     a. Decrement total topics count for the forum\n     b. Update last post information for the forum\n     c. Update any cached forum data\n   - System cleanup:\n     a. Remove any orphaned data related to the deleted topics\n     b. Update search indexes to remove deleted content\n\n5. Response Generation:\n   - Success response:\n     a. Indicate successful deletion of topics\n     b. Include count of topics deleted\n     c. Provide forum information with updated statistics\n   - Error response:\n     a. Include specific error message explaining the failure\n     b. Provide guidance on resolving the issue\n     c. Include any system error codes for troubleshooting",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_bookmarks",
+    "jforum_privmsgs",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have administrative privileges to delete topics",
+    "Forum must be in a state that allows topic deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

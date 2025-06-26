@@ -1,0 +1,41 @@
+{
+  "featureName": "GetAllBanlistEntries",
+  "description": "Retrieves all entries from the banlist for administrative review and management.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will use current user's authentication context for access control\n\n2. Data Validation:\n   - Validate user permissions\n     - IF user does not have administrative privileges THEN\n       - Generate permission denied error\n       - Terminate operation\n     - END IF\n\n3. Business Rule Processing:\n   - Check system state\n     - IF system is in maintenance mode THEN\n       - Generate system unavailable error\n       - Terminate operation\n     - END IF\n   - Verify banlist functionality is enabled\n     - IF banlist feature is disabled in system configuration THEN\n       - Generate feature unavailable error\n       - Terminate operation\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve all banlist entries from storage\n     - Prepare empty collection for banlist entries\n     - Retrieve all records from banlist storage\n     - FOR each banlist record found DO\n       - Create banlist entry object with the following data:\n         - Entry ID\n         - User ID (if ban is associated with a user)\n         - Email address (if email ban)\n         - IP address (if IP ban)\n       - Add entry to collection\n     - END FOR\n   - Sort banlist entries\n     - Sort entries by ID (ascending order)\n     - Apply any secondary sorting criteria if configured\n\n5. Response Generation:\n   - Prepare success response\n     - Include total count of banlist entries\n     - Include complete collection of banlist entries\n     - Include pagination metadata if applicable\n   - IF no entries found THEN\n     - Return empty collection with appropriate indicator\n   - ELSE\n     - Return populated collection of banlist entries\n   - END IF",
+  "databaseEntities": [
+    "Banlist"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to view banlist",
+    "System must not be in maintenance mode",
+    "Banlist functionality must be enabled in system configuration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the banlist entry"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user associated with this ban (if applicable)"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address that is banned (if email ban type)"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP address that is banned (if IP ban type)"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

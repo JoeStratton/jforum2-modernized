@@ -1,0 +1,39 @@
+{
+  "featureName": "ManageSecurityCache",
+  "description": "Manages caching of user security permissions with add, remove and clean operations.",
+  "inputValues": [
+    "userId-number-User",
+    "permissionControl-object-PermissionControl",
+    "roleName-string-Role",
+    "roleValue-string-Role",
+    "forceReload-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Numeric identifier for the user\n   - Collect permissionControl (optional): Object containing user permissions\n   - Collect roleName (optional): String identifier for the permission role\n   - Collect roleValue (optional): String value associated with the role\n   - Collect forceReload (optional): Boolean flag to force cache refresh\n\n2. Data Validation:\n   - Validate userId:\n     * Ensure userId is a positive integer\n     * Verify userId exists in the system\n     * Return error if validation fails\n   - Validate roleName (when provided):\n     * Ensure roleName is not empty\n     * Verify roleName exists in the system\n     * Return error if validation fails\n   - Validate permissionControl (when provided):\n     * Ensure permissionControl contains valid role definitions\n     * Return error if validation fails\n\n3. Business Rule Processing:\n   - Check cache availability:\n     * Verify cache system is operational\n     * Ensure cache has been properly initialized\n     * Return error if cache system is unavailable\n   - Determine operation type based on inputs:\n     * Load operation: When userId is provided without permissionControl\n     * Add operation: When both userId and permissionControl are provided\n     * Remove operation: When only userId is provided with remove flag\n     * Clean operation: When no specific userId is provided with clean flag\n     * Access check operation: When userId and roleName are provided\n\n4. Core Operation Execution:\n   - FOR Load Operation:\n     * Check if user permissions exist in cache\n     * IF permissions not in cache OR forceReload is true THEN\n       - Retrieve user data from database\n       - Load user's group associations\n       - Create new PermissionControl object\n       - Load roles for user based on their groups\n       - Store PermissionControl in cache with userId as key\n     * Return cached PermissionControl object\n   - FOR Add Operation:\n     * Store provided permissionControl in cache with userId as key\n     * Return confirmation of successful addition\n   - FOR Remove Operation:\n     * Remove cached permissions for specified userId\n     * Return confirmation of successful removal\n   - FOR Clean Operation:\n     * Remove all entries from the security cache\n     * Return confirmation of successful cache clearing\n   - FOR Access Check Operation:\n     * Retrieve PermissionControl for specified userId\n     * IF PermissionControl not found THEN\n       - Load permissions for user\n     * Check if user has access to specified role\n     * IF roleValue is provided THEN\n       - Check if user has access to role with specific value\n     * ELSE\n       - Check if user has access to role regardless of value\n     * Return boolean result of access check\n\n5. Response Generation:\n   - FOR Load Operation:\n     * Return PermissionControl object with user's permissions\n     * Include status indicating if permissions were freshly loaded or from cache\n   - FOR Add Operation:\n     * Return success confirmation message\n   - FOR Remove Operation:\n     * Return success confirmation message\n   - FOR Clean Operation:\n     * Return success confirmation message\n   - FOR Access Check Operation:\n     * Return boolean indicating whether access is granted or denied\n     * Include details about the checked permission if verbose mode is enabled\n   - FOR Any Error Condition:\n     * Return appropriate error message\n     * Include error details and suggested resolution steps",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must exist in the system",
+    "Role name must not be empty when performing access checks",
+    "Cache engine must be initialized before operations",
+    "Permission Control object must contain valid role definitions when adding to cache"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PermissionControl": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "object",
+          "description": "Collection of roles and their associated permissions"
+        }
+      },
+      "required": [
+        "roles"
+      ]
+    }
+  }
+}

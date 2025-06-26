@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "ListRankings",
+    "description": "Retrieves and displays all user rankings in the system"
+  },
+  {
+    "featureName": "InsertRanking",
+    "description": "Displays the form for creating a new user ranking"
+  },
+  {
+    "featureName": "EditRanking",
+    "description": "Displays the form for editing an existing user ranking"
+  },
+  {
+    "featureName": "SaveRankingChanges",
+    "description": "Updates an existing ranking with new title, special status, and minimum post requirements"
+  },
+  {
+    "featureName": "DeleteRankings",
+    "description": "Removes selected user rankings from the system"
+  },
+  {
+    "featureName": "CreateNewRanking",
+    "description": "Creates a new user ranking with title, special status, and minimum post requirements"
+  }
+]

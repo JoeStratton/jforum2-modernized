@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: tests/core/net/jforum/api/integration/mail/pop/POPConnectorMock.java\n\n Original Content: /*\n * Created on 30/08/2006 22:09:25\n */\npackage net.jforum.api.integration.mail.pop;\n\nimport javax.mail.Message;\n\n/**\n * @author Rafael Steil\n * @version $Id: POPConnectorMock.java,v 1.2 2006/09/04 01:00:07 rafaelsteil Exp $\n */\npublic class POPConnectorMock extends POPConnector\n{\n\tprivate Message[] messages;\n\t\n\tvoid setMessages(Message[] messages)\n\t{\n\t\tthis.messages = messages;\n\t}\n\t\n\tpublic Message[] listMessages()\n\t{\n\t\treturn this.messages;\n\t}\n\t\n\tpublic void openConnection() {}\n\tpublic void closeConnection() {}\n}",
+  "metadata": {
+    "fileId": "POPConnectorMock_java_chunk_1",
+    "fileName": "POPConnectorMock.java",
+    "filePath": "tests/core/net/jforum/api/integration/mail/pop/POPConnectorMock.java"
+  }
+}

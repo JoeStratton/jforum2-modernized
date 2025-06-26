@@ -1,0 +1,40 @@
+{
+  "featureName": "LoadUserPermissions",
+  "description": "Loads security roles and permissions for a user from the database.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) to identify the user\n   - Determine if force reload is required (boolean, optional, default: false)\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check cache availability:\n     a. IF cache is available AND force reload is false:\n        i. Check if user permissions already exist in cache\n        ii. IF permissions exist in cache, skip database retrieval\n     b. ELSE proceed with database retrieval\n\n4. Core Operation Execution:\n   - Retrieve user information:\n     a. Query user data using userId\n     b. IF user not found:\n        i. Log error event\n        ii. Prepare user not found error\n     c. ELSE continue processing\n   - Load user's security roles:\n     a. Retrieve all groups the user belongs to\n     b. For EACH user group:\n        i. Load associated roles and permissions\n        ii. Combine permissions from multiple groups\n     c. Create permission control object with loaded roles\n   - Cache the permissions:\n     a. Store permission control object in cache using userId as key\n     b. Set appropriate cache expiration policy\n\n5. Response Generation:\n   - Return permission control object containing:\n     a. All roles associated with the user\n     b. Access control information for each role\n     c. Role-value pairs for granular permissions\n   - IF any errors occurred during processing:\n     a. Generate appropriate error response\n     b. Include error details and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User must belong to at least one group"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one default group exists in the system",
+    "Ensure default permissions are assigned to the default group"
+  ],
+  "schema": {
+    "PermissionControl": {
+      "roles": {
+        "type": "object",
+        "description": "Collection of roles and their associated permissions"
+      },
+      "methods": {
+        "canAccess": {
+          "parameters": [
+            "roleName",
+            "roleValue"
+          ],
+          "returns": "boolean",
+          "description": "Checks if the user has access to a specific role with optional value"
+        }
+      }
+    }
+  }
+}

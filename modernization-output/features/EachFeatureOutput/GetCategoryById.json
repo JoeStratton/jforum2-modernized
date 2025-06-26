@@ -1,0 +1,25 @@
+{
+  "featureName": "GetCategoryById",
+  "description": "Retrieves a specific forum category by its ID.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a) categoryId (number, mandatory): The unique identifier of the category to retrieve\n\n2. Data Validation:\n   - Validate the categoryId input:\n     a) Check if categoryId is provided\n        IF categoryId is missing or null THEN\n          Return error message: \"Category ID is required\"\n     b) Check if categoryId is a valid number\n        IF categoryId is not a valid number THEN\n          Return error message: \"Category ID must be a valid number\"\n     c) Check if categoryId is a positive integer\n        IF categoryId is not a positive integer THEN\n          Return error message: \"Category ID must be a positive integer\"\n\n3. Business Rule Processing:\n   - Verify the existence of the requested category:\n     a) Check if a category with the provided ID exists in the system\n        IF category does not exist THEN\n          Return error message: \"Category not found with the provided ID\"\n\n4. Core Operation Execution:\n   - Retrieve the category information:\n     a) Fetch the category record matching the provided categoryId\n     b) Include all relevant category attributes (name, description, display order, etc.)\n     c) IF category retrieval fails due to system error THEN\n          Log the error details\n          Return error message: \"Unable to retrieve category information\"\n\n5. Response Generation:\n   - Prepare the category data response:\n     a) Format the category information for presentation\n     b) Include all category attributes in the response\n     c) Return the complete category information to the requester\n     d) IF successful THEN\n          Return success message with category data\n     e) ELSE\n          Return appropriate error message",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category ID must be provided",
+    "Category ID must be a valid positive integer",
+    "Category with the provided ID must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "displayOrder": "number"
+    }
+  }
+}

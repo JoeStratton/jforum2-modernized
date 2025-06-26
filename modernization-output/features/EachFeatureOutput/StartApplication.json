@@ -1,0 +1,69 @@
+{
+  "featureName": "StartApplication",
+  "description": "Initializes the application by loading configurations and starting required services.",
+  "inputValues": [
+    "applicationPath-string-System",
+    "configurationSettings-object-ConfigurationSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - applicationPath (string, mandatory): The root path of the application\n   - configurationSettings (object, mandatory): Configuration parameters for the application\n     - developmentMode (boolean, optional): Flag indicating if the application should run in development mode, defaults to false\n     - templatePaths (array, optional): List of paths for template loading\n     - configurationFiles (array, mandatory): List of configuration files to load\n\n2. Data Validation:\n   - Validate applicationPath:\n     - Check if applicationPath is not empty\n     - Verify the path exists and is accessible\n     - IF path does not exist or is not accessible THEN\n       - Generate error message: \"Invalid application path provided\"\n       - Terminate startup process\n   - Validate configurationSettings:\n     - Check if required configuration files are specified\n     - Verify all specified file paths exist\n     - IF any required configuration file is missing THEN\n       - Generate error message: \"Missing required configuration file(s)\"\n       - Terminate startup process\n\n3. Business Rule Processing:\n   - Initialize logging system:\n     - Load logging configuration from specified path\n     - Configure logging levels based on development mode\n     - IF logging initialization fails THEN\n       - Generate error message: \"Failed to initialize logging system\"\n       - Terminate startup process\n   - Load system configuration:\n     - Load default configuration values\n     - Load database query definitions\n     - Load driver-specific query definitions\n     - Load additional configuration files if specified\n     - IF configuration loading fails THEN\n       - Generate error message: \"Failed to load system configuration\"\n       - Terminate startup process\n   - Verify system requirements:\n     - Check for required directories and create if missing\n     - Verify write permissions on necessary directories\n     - IF system requirements not met THEN\n       - Generate error message: \"System requirements not met\"\n       - Log specific missing requirements\n       - Terminate startup process\n\n4. Core Operation Execution:\n   - Initialize template engine:\n     - Configure template update delay based on development mode\n     - Set up default template loader with application template path\n     - IF additional template paths specified THEN\n       - Set up multi-template loader with all specified paths\n     - ELSE\n       - Use only default template loader\n     - IF template engine initialization fails THEN\n       - Generate error message: \"Failed to initialize template engine\"\n       - Terminate startup process\n   - Load modules and components:\n     - Initialize module repository\n     - Load URL patterns for routing\n     - Load internationalization resources\n     - Load template mappings\n     - Load text formatting handlers\n     - IF any component fails to load THEN\n       - Generate error message: \"Failed to load required component: [component name]\"\n       - Terminate startup process\n   - Initialize services:\n     - Create authentication service\n     - Load data access implementation\n     - Configure change listeners\n     - Start search indexing service\n     - Start scheduled jobs\n     - Start caching engine\n     - IF any service fails to start THEN\n       - Generate error message: \"Failed to start required service: [service name]\"\n       - Attempt to shut down any started services\n       - Terminate startup process\n\n5. Response Generation:\n   - Create application context:\n     - Store initialized components in application context\n     - Set application state to \"running\"\n   - Generate startup summary:\n     - Record application startup time\n     - Log successful initialization message\n     - Include information about running mode (development/production)\n     - List initialized services and components\n   - IF any warnings occurred during startup THEN\n     - Log warning messages with appropriate severity\n     - Include recommendations for resolving warnings\n   - Return startup status:\n     - Success indicator\n     - Startup timestamp\n     - Application version information\n     - Environment information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Application path must exist and be accessible",
+    "Required configuration files must be specified and exist",
+    "Template directories must exist and be accessible",
+    "System must have appropriate permissions to write to required directories",
+    "Required services must initialize successfully",
+    "Configuration values must contain all required parameters"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ConfigurationSettings": {
+      "type": "object",
+      "properties": {
+        "developmentMode": {
+          "type": "boolean",
+          "description": "Flag indicating if the application should run in development mode"
+        },
+        "templatePaths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Path to template directory"
+          },
+          "description": "List of paths for template loading"
+        },
+        "configurationFiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Path to configuration file"
+          },
+          "description": "List of configuration files to load"
+        }
+      },
+      "required": [
+        "configurationFiles"
+      ]
+    }
+  }
+}

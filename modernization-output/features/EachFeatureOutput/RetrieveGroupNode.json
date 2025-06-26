@@ -1,0 +1,26 @@
+{
+  "featureName": "RetrieveGroupNode",
+  "description": "Retrieves a specific node from the group hierarchy by position.",
+  "inputValues": [
+    "position-number-GroupNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the position number to identify which node to retrieve from the group hierarchy\n   - Position must be a non-negative integer value\n   - The group hierarchy structure must already exist in the system\n\n2. Data Validation:\n   - Validate that the position parameter is provided\n   - Validate that the position is a valid number\n   - Validate that the position is non-negative\n   - IF position is not provided THEN\n     - Generate error message: \"Position parameter is required\"\n   - IF position is not a valid number THEN\n     - Generate error message: \"Position must be a valid number\"\n   - IF position is negative THEN\n     - Generate error message: \"Position cannot be negative\"\n\n3. Business Rule Processing:\n   - Verify that the group hierarchy structure exists\n   - Verify that the requested position exists within the hierarchy\n   - IF group hierarchy structure does not exist THEN\n     - Generate error message: \"Group hierarchy not initialized\"\n   - IF position is greater than or equal to the size of the node collection THEN\n     - Generate error message: \"Position out of bounds. Maximum allowed position is [size-1]\"\n\n4. Core Operation Execution:\n   - Access the group hierarchy structure\n   - Locate the node at the specified position in the collection\n   - Retrieve the complete node information including:\n     - Node ID\n     - Node name\n     - Any child nodes (if present)\n   - Prepare the node data for return\n\n5. Response Generation:\n   - IF operation is successful THEN\n     - Return the retrieved GroupNode with all its properties\n     - Include node ID, name, and number of child nodes\n   - IF operation fails THEN\n     - Return appropriate error message based on the failure reason\n     - Include guidance on valid position ranges if applicable",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Position parameter must be provided",
+    "Position must be a valid number",
+    "Position must be non-negative",
+    "Position must be less than the size of the node collection",
+    "Group hierarchy structure must exist"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupNode": {
+      "id": "number",
+      "name": "string",
+      "childNodes": "array"
+    }
+  }
+}

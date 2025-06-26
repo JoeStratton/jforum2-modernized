@@ -1,0 +1,318 @@
+{
+  "feature_name": "Moderation and Administration Features",
+  "description": "The Moderation and Administration Features provide tools for managing forum content, users, and system settings to maintain community standards and forum functionality.",
+  "business_logic": {
+    "moderation_capabilities": {
+      "description": "Tools for moderators to manage forum content",
+      "content_moderation": [
+        "Approve or reject posts in moderated forums",
+        "Edit user posts to remove inappropriate content",
+        "Delete individual posts that violate forum rules",
+        "Lock topics to prevent further replies",
+        "Move topics between forums",
+        "Split topics (move selected posts to new topic)",
+        "Merge topics"
+      ],
+      "user_moderation": [
+        "Issue warnings to users",
+        "Ban users temporarily or permanently",
+        "View user posting history",
+        "Reset user karma"
+      ],
+      "moderation_log": [
+        "All moderation actions are logged",
+        "Logs include moderator, action type, affected content, timestamp",
+        "Logs viewable by administrators and optionally other moderators"
+      ]
+    },
+    "administration_capabilities": {
+      "description": "Tools for administrators to manage the forum system",
+      "user_management": [
+        "Create, edit, and delete user accounts",
+        "Manage user groups and permissions",
+        "Assign users to groups",
+        "Configure registration settings"
+      ],
+      "forum_structure": [
+        "Create, edit, and delete categories",
+        "Create, edit, and delete forums",
+        "Set forum permissions",
+        "Assign moderators to forums"
+      ],
+      "system_configuration": [
+        "General settings (forum name, description, etc.)",
+        "Security settings (password policies, login attempts)",
+        "Appearance settings (themes, logos)",
+        "Email settings (notification templates, SMTP configuration)",
+        "Cache management"
+      ],
+      "content_management": [
+        "Manage BBCode tags",
+        "Manage smilies/emoticons",
+        "Configure word censoring",
+        "Manage attachment settings"
+      ],
+      "system_maintenance": [
+        "Database backup and restoration",
+        "Cache rebuilding",
+        "Statistics and reports",
+        "System logs"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "moderation": {
+      "queue": {
+        "path": "/api/moderation/queue",
+        "method": "GET",
+        "query_params": {
+          "forum_id": "integer",
+          "page": "integer",
+          "size": "integer"
+        },
+        "responses": {
+          "200": "Paginated list of posts awaiting moderation"
+        }
+      },
+      "approve_post": {
+        "path": "/api/moderation/posts/{postId}/approve",
+        "method": "POST",
+        "responses": {
+          "200": "Post approved",
+          "403": "Not authorized",
+          "404": "Post not found"
+        }
+      },
+      "reject_post": {
+        "path": "/api/moderation/posts/{postId}/reject",
+        "method": "POST",
+        "request_body": {
+          "reason": "string"
+        },
+        "responses": {
+          "200": "Post rejected",
+          "403": "Not authorized",
+          "404": "Post not found"
+        }
+      },
+      "move_topic": {
+        "path": "/api/moderation/topics/{topicId}/move",
+        "method": "POST",
+        "request_body": {
+          "destination_forum_id": "integer"
+        }
+      },
+      "split_topic": {
+        "path": "/api/moderation/topics/split",
+        "method": "POST",
+        "request_body": {
+          "post_ids": "array",
+          "new_topic_title": "string",
+          "forum_id": "integer"
+        }
+      },
+      "merge_topics": {
+        "path": "/api/moderation/topics/merge",
+        "method": "POST",
+        "request_body": {
+          "topic_ids": "array",
+          "destination_topic_id": "integer"
+        }
+      },
+      "log": {
+        "path": "/api/moderation/log",
+        "method": "GET",
+        "query_params": {
+          "user_id": "integer",
+          "forum_id": "integer",
+          "action_type": "string",
+          "page": "integer",
+          "size": "integer"
+        }
+      }
+    },
+    "admin": {
+      "users": {
+        "list": {
+          "path": "/api/admin/users",
+          "method": "GET",
+          "query_params": {
+            "query": "string",
+            "group_id": "integer",
+            "page": "integer",
+            "size": "integer"
+          }
+        },
+        "create": {
+          "path": "/api/admin/users",
+          "method": "POST",
+          "request_body": {
+            "username": "string",
+            "email": "string",
+            "password": "string",
+            "group_ids": "array"
+          }
+        },
+        "get": {
+          "path": "/api/admin/users/{userId}",
+          "method": "GET"
+        },
+        "update": {
+          "path": "/api/admin/users/{userId}",
+          "method": "PUT",
+          "request_body": {
+            "email": "string",
+            "group_ids": "array",
+            "active": "boolean"
+          }
+        },
+        "delete": {
+          "path": "/api/admin/users/{userId}",
+          "method": "DELETE"
+        },
+        "ban": {
+          "path": "/api/admin/users/{userId}/ban",
+          "method": "POST",
+          "request_body": {
+            "expiration": "timestamp",
+            "reason": "string"
+          }
+        }
+      },
+      "groups": {
+        "list": {
+          "path": "/api/admin/groups",
+          "method": "GET"
+        },
+        "create": {
+          "path": "/api/admin/groups",
+          "method": "POST",
+          "request_body": {
+            "name": "string",
+            "description": "string",
+            "parent_id": "integer"
+          }
+        },
+        "update": {
+          "path": "/api/admin/groups/{groupId}",
+          "method": "PUT",
+          "request_body": {
+            "name": "string",
+            "description": "string",
+            "parent_id": "integer"
+          }
+        },
+        "delete": {
+          "path": "/api/admin/groups/{groupId}",
+          "method": "DELETE"
+        },
+        "permissions": {
+          "path": "/api/admin/groups/{groupId}/permissions",
+          "method": "PUT",
+          "request_body": {
+            "permissions": "object"
+          }
+        }
+      },
+      "config": {
+        "get": {
+          "path": "/api/admin/config",
+          "method": "GET"
+        },
+        "update": {
+          "path": "/api/admin/config",
+          "method": "PUT",
+          "request_body": {
+            "config_values": "object"
+          }
+        }
+      },
+      "cache": {
+        "clear": {
+          "path": "/api/admin/cache/clear",
+          "method": "POST",
+          "request_body": {
+            "cache_name": "string"
+          }
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "moderation_log": {
+      "fields": [
+        {"name": "log_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "log_time", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "log_type", "type": "SMALLINT", "constraints": "NOT NULL"},
+        {"name": "log_description", "type": "TEXT", "constraints": "NOT NULL"},
+        {"name": "post_id", "type": "INTEGER"},
+        {"name": "topic_id", "type": "INTEGER"},
+        {"name": "forum_id", "type": "INTEGER"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_modlog_user ON moderation_log(user_id)",
+        "CREATE INDEX idx_modlog_time ON moderation_log(log_time)"
+      ]
+    },
+    "banlist": {
+      "fields": [
+        {"name": "ban_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "user_id", "type": "INTEGER"},
+        {"name": "ban_ip", "type": "VARCHAR(45)"},
+        {"name": "ban_email", "type": "VARCHAR(255)"},
+        {"name": "ban_start", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "ban_end", "type": "TIMESTAMP"},
+        {"name": "ban_reason", "type": "TEXT"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ]
+    },
+    "forum_moderators": {
+      "fields": [
+        {"name": "forum_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "PRIMARY KEY (forum_id, user_id)",
+        "FOREIGN KEY (forum_id) REFERENCES forums(forum_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ]
+    },
+    "config": {
+      "fields": [
+        {"name": "config_name", "type": "VARCHAR(255)", "constraints": "PRIMARY KEY"},
+        {"name": "config_value", "type": "TEXT", "constraints": "NOT NULL"}
+      ]
+    }
+  },
+  "security_considerations": {
+    "permission_management": [
+      "Granular permission system for different administrative functions",
+      "Strict validation of all administrative actions",
+      "Audit logging of all administrative changes"
+    ],
+    "moderation_security": [
+      "Verify moderator permissions for each forum",
+      "Log all moderation actions for accountability",
+      "Prevent moderators from moderating their own content"
+    ],
+    "admin_security": [
+      "Strong authentication for admin accounts",
+      "IP restriction options for admin access",
+      "Session timeout controls",
+      "CSRF protection for all administrative actions"
+    ]
+  },
+  "integration_points": {
+    "user_management": "Administrators manage user accounts and permissions",
+    "forum_structure": "Administrators configure categories and forums",
+    "post_system": "Moderators manage user posts and topics",
+    "notification_system": "Notifications for moderation actions",
+    "logging_system": "All administrative and moderation actions are logged"
+  }
+}

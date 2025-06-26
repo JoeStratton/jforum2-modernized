@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/dao/ApiDAO.java\n\n Original Content: /*\n * Created on 04/09/2006 22:04:17\n */\npackage net.jforum.dao;\n\n/**\n * @author Rafael Steil\n * @version $Id: ApiDAO.java,v 1.2 2006/10/10 00:49:04 rafaelsteil Exp $\n */\npublic interface ApiDAO\n{\n\t/**\n\t * Check if the given API authentication information is valid.\n\t * @param apiKey the api key\n\t * @return <code>true</code> if the information is correct\n\t */\n\tpublic boolean isValid(String apiKey);\n}",
+  "metadata": {
+    "fileId": "ApiDAO_java_chunk_1",
+    "fileName": "ApiDAO.java",
+    "filePath": "src/net/jforum/dao/ApiDAO.java"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "featureName": "GetPrivateMessageById",
+  "description": "Retrieves a specific private message by its ID.",
+  "inputValues": [
+    "messageId-number-PrivateMessage",
+    "currentUser-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the private message ID (messageId) from the request\n   - Obtain the current user information (currentUser) from the session\n   - Both inputs are mandatory for this operation\n\n2. Data Validation:\n   - Validate message ID:\n     a. Verify the message ID is provided\n     b. Confirm the message ID is a positive integer\n     c. Return appropriate error if validation fails\n   - Validate user authentication:\n     a. Verify the current user is authenticated\n     b. Confirm the user object contains valid identification\n     c. Return authentication error if user validation fails\n\n3. Business Rule Processing:\n   - Verify access permissions:\n     a. Check if the requested message belongs to the current user's inbox or sent items\n     b. IF message does not belong to current user THEN\n        i. Generate unauthorized access error\n        ii. Log access attempt for security monitoring\n        iii. Return permission denied response\n     c. ELSE continue processing\n   - Check message existence:\n     a. Verify the message with the provided ID exists in the system\n     b. IF message not found THEN\n        i. Generate not found error\n        ii. Return appropriate error response\n     c. ELSE continue processing\n\n4. Core Operation Execution:\n   - Retrieve the private message:\n     a. Fetch the complete message details including:\n        i. Message header information (sender, recipient, date, subject)\n        ii. Message content/body\n        iii. Message status (read/unread/sent)\n        iv. Message formatting options (BBCode, HTML, smilies, signature)\n        v. Timestamps and creation date\n     b. Load associated user information:\n        i. Fetch sender (fromUser) details\n        ii. Fetch recipient (toUser) details\n     c. IF message is currently marked as new/unread AND user is the recipient THEN\n        i. Update message status to read\n        ii. Record the time when message was read\n     d. Format date according to system preferences\n     e. IF retrieval fails due to system error THEN\n        i. Log the failure with error details\n        ii. Generate appropriate system error\n        iii. Return error response\n\n5. Response Generation:\n   - Format successful response:\n     a. Include complete message details:\n        i. Message ID\n        ii. Sender information (username, ID)\n        iii. Recipient information (username, ID)\n        iv. Subject line\n        v. Message body/content\n        vi. Timestamp information (sent date, formatted date)\n        vii. Current status (new, read, sent)\n        viii. Formatting flags (BBCode, HTML, smilies, signature)\n     b. Include navigation references:\n        i. Links to reply functionality\n        ii. Links to delete functionality\n        iii. Links to return to message list\n   - Return the formatted message to the user interface for display",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Message ID must be a positive integer",
+    "User must be authenticated to access private messages",
+    "User must be either the sender or recipient of the requested message",
+    "The requested message must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "authenticated": {
+          "type": "boolean",
+          "description": "Flag indicating if user is currently authenticated"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "authenticated"
+      ]
+    },
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the private message"
+        },
+        "fromUser": {
+          "type": "object",
+          "description": "User who sent the message",
+          "$ref": "#/User"
+        },
+        "toUser": {
+          "type": "object",
+          "description": "User who received the message",
+          "$ref": "#/User"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line of the message"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the message"
+        },
+        "type": {
+          "type": "number",
+          "description": "Status flag for the message (new/read/sent)"
+        },
+        "postDate": {
+          "type": "date",
+          "description": "Date and time when the message was sent"
+        },
+        "formatedDate": {
+          "type": "string",
+          "description": "Formatted date string according to system preferences"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Indicates if BBCode is enabled for this message"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Indicates if HTML is enabled for this message"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Indicates if smilies are enabled for this message"
+        },
+        "signatureEnabled": {
+          "type": "boolean",
+          "description": "Indicates if signature is enabled for this message"
+        }
+      },
+      "required": [
+        "id",
+        "fromUser",
+        "toUser",
+        "subject",
+        "text",
+        "type",
+        "postDate"
+      ]
+    }
+  }
+}

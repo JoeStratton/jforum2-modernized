@@ -1,0 +1,35 @@
+{
+  "featureName": "SelectHotPostsForRSS",
+  "description": "Retrieves popular posts across forums formatted for RSS feeds.",
+  "inputValues": [
+    "limit-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - limit (number, mandatory): Maximum number of posts to retrieve\n\n2. Data Validation\n   - Validate limit parameter:\n     - IF limit is null or undefined THEN\n       - Set default limit to system-defined value\n     - IF limit is not a positive integer THEN\n       - Return error message indicating limit must be a positive integer\n     - IF limit exceeds maximum allowed value THEN\n       - Cap limit to maximum allowed value\n\n3. Business Rule Processing\n   - Check system state:\n     - IF system is in maintenance mode THEN\n       - Return appropriate error message\n     - IF RSS feed functionality is disabled THEN\n       - Return appropriate error message\n   - Verify user permissions:\n     - IF current user does not have permission to view RSS feeds THEN\n       - Return access denied message\n   - Determine accessible forums:\n     - Get list of forums the current user has permission to view\n     - IF no accessible forums exist THEN\n       - Return empty result set\n\n4. Core Operation Execution\n   - Query database for hot posts:\n     - Select posts based on popularity criteria (such as view count, reply count)\n     - Filter posts to only include those from accessible forums\n     - Order posts by popularity metrics in descending order\n     - Limit results to specified limit parameter\n   - For each post retrieved:\n     - Extract post details (ID, subject, content, topic ID, forum ID)\n     - Extract author information (user ID, username)\n     - Extract timestamp information\n     - Format post content for RSS compatibility\n     - Create post object with all required information\n     - Add post object to result collection\n   - IF no posts match criteria THEN\n     - Return empty result collection\n\n5. Response Generation\n   - Prepare RSS-compatible response:\n     - Format collection of post objects for RSS feed\n     - Include metadata such as feed title, description, and generation timestamp\n     - Return formatted collection of posts\n   - IF any errors occurred during processing THEN\n     - Log error details\n     - Return appropriate error message",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Limit parameter must be a positive integer",
+    "User must have permission to access the forums containing the posts",
+    "Only posts from publicly accessible forums should be included",
+    "Posts must be ordered by popularity metrics",
+    "Result set must not exceed the specified limit"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "postUsername": "string",
+      "time": "date"
+    }
+  }
+}

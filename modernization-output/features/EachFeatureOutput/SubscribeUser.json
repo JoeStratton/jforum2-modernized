@@ -1,0 +1,25 @@
+{
+  "featureName": "SubscribeUser",
+  "description": "Subscribes a user to a topic for receiving notifications about new posts and activities.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId (mandatory): Identifier of the topic to subscribe to\n     b. userId (mandatory): Identifier of the user who wants to subscribe\n\n2. Data Validation\n   - Validate topic identifier:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate user identifier:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing\n   - Check system state requirements:\n     a. Verify the topic exists in the system\n        i. IF topic does not exist, THEN return error message\n     b. Verify the user exists in the system\n        i. IF user does not exist, THEN return error message\n     c. Check if user is already subscribed to this topic\n        i. IF user is already subscribed, THEN return notification message\n        ii. ELSE continue with subscription process\n   - Verify user permissions:\n     a. Check if user has permission to subscribe to topics\n        i. IF user is anonymous, THEN return error message\n        ii. IF user lacks permission, THEN return error message\n\n4. Core Operation Execution\n   - Process the subscription:\n     a. Create a new subscription record linking the user to the topic\n     b. Set the subscription status to active\n     c. Set the initial read status for the subscription\n     d. IF any operation fails:\n        i. Rollback any partial changes\n        ii. Generate appropriate error message\n\n5. Response Generation\n   - For successful subscription:\n     a. Generate success message confirming the subscription\n     b. Include topic title in confirmation message\n     c. Provide information about how notifications will be delivered\n     d. Include instructions on how to unsubscribe if needed\n   - For failed subscription:\n     a. Return specific error message based on the failure reason\n     b. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users",
+    "jforum_topics_watch"
+  ],
+  "validationRules": [
+    "Topic ID must be a valid positive integer",
+    "User ID must be a valid positive integer",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must not be anonymous",
+    "User must not already be subscribed to the topic",
+    "User must have permission to subscribe to topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

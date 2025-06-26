@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "GetTotalMessages",
+    "description": "Retrieves the total number of messages in the forum board from cache or database"
+  },
+  {
+    "featureName": "IncrementTotalMessages",
+    "description": "Increases the total message count in the forum by one"
+  },
+  {
+    "featureName": "GetMostUsersEverOnline",
+    "description": "Retrieves statistics about the highest number of users ever online simultaneously"
+  },
+  {
+    "featureName": "UpdateMostUsersEverOnline",
+    "description": "Updates the record for highest number of concurrent online users"
+  },
+  {
+    "featureName": "GetListAllowedForums",
+    "description": "Generates a comma-separated list of accessible forum IDs for the current user"
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "featureName": "CheckBannerDisplayEligibility",
+  "description": "Determines if a banner should be displayed based on user rights and banner filter settings.",
+  "inputValues": [
+    "bannerId-number-Banner",
+    "userRights-object-UserRights",
+    "bannerFilterSettings-object-BannerFilterSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. bannerId (mandatory): Unique identifier for the banner to check\n     b. userRights (mandatory): Object containing user permission settings\n     c. bannerFilterSettings (mandatory): Object containing filter criteria for banner display\n\n2. Data Validation:\n   a. Validate bannerId:\n      - Check if bannerId is a positive integer\n      - Verify bannerId exists in the system\n      - IF bannerId is invalid or not found THEN\n        - Return error indicating invalid banner identifier\n   b. Validate userRights:\n      - Ensure userRights object contains required permission attributes\n      - Verify userRights contains valid permission values\n      - IF userRights object is malformed THEN\n        - Return error indicating invalid user rights format\n   c. Validate bannerFilterSettings:\n      - Ensure bannerFilterSettings contains required filter attributes\n      - Verify filter values are within acceptable ranges\n      - IF bannerFilterSettings object is malformed THEN\n        - Return error indicating invalid filter settings\n\n3. Business Rule Processing:\n   a. Check banner active status:\n      - Retrieve banner details using bannerId\n      - Verify if banner is currently active\n      - IF banner is not active THEN\n        - Return false (banner should not be displayed)\n   b. Check placement compatibility:\n      - Verify if the banner's placement is appropriate for the current context\n      - IF placement is incompatible THEN\n        - Return false (banner should not be displayed)\n   c. Check user permission rules:\n      - Compare user rights with banner visibility requirements\n      - Determine if user has sufficient permissions to view the banner\n      - IF user lacks required permissions THEN\n        - Return false (banner should not be displayed)\n   d. Apply banner filter settings:\n      - Check if banner matches all filter criteria (e.g., category, date range, user group)\n      - IF banner does not match filter criteria THEN\n        - Return false (banner should not be displayed)\n\n4. Core Operation Execution:\n   a. Determine final display eligibility:\n      - Combine results from all previous checks\n      - Apply any additional business rules specific to banner types\n      - Make final determination on banner display eligibility\n   b. Update banner statistics if needed:\n      - If tracking is enabled, record that eligibility was checked\n      - Update any relevant counters or logs\n\n5. Response Generation:\n   a. Generate response with eligibility result:\n      - Return boolean result indicating if banner should be displayed\n      - Include any relevant context information if needed\n   b. Include any additional display instructions:\n      - If eligible for display, include any special display parameters\n      - If not eligible, include reason code for logging purposes",
+  "databaseEntities": [
+    "Banner",
+    "User",
+    "Group"
+  ],
+  "validationRules": [
+    "Banner ID must be a positive integer",
+    "Banner must exist in the system",
+    "Banner must be active to be displayed",
+    "User must have appropriate permissions to view the banner",
+    "Banner must match all specified filter criteria",
+    "Banner placement must be compatible with the current context"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserRights": {
+      "type": "object",
+      "properties": {
+        "userGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Groups the user belongs to"
+        },
+        "permissions": {
+          "type": "object",
+          "description": "User permission settings"
+        },
+        "accessLevel": {
+          "type": "string",
+          "description": "User's access level in the system"
+        }
+      },
+      "required": [
+        "userGroups",
+        "permissions",
+        "accessLevel"
+      ]
+    },
+    "BannerFilterSettings": {
+      "type": "object",
+      "properties": {
+        "placement": {
+          "type": "number",
+          "description": "Position identifier where the banner should be displayed"
+        },
+        "categoryFilters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Categories where the banner can be displayed"
+        },
+        "dateRangeStart": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for banner display period"
+        },
+        "dateRangeEnd": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for banner display period"
+        },
+        "weightThreshold": {
+          "type": "number",
+          "description": "Minimum weight threshold for banner display"
+        }
+      },
+      "required": [
+        "placement"
+      ]
+    }
+  }
+}

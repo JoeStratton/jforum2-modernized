@@ -1,0 +1,52 @@
+{
+  "featureName": "FilterSearchResults",
+  "description": "Filters search results based on forum access permissions and enriches with forum data.",
+  "inputValues": [
+    "searchResults-object-SearchResultList",
+    "forumRepository-object-ForumRepository"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search results list containing items with forum references\n   - Each result item must contain a forum identifier\n   - System will use the forum repository to access forum data\n\n2. Data Validation:\n   - Validate that the search results list is not null\n   - Verify each search result item contains a valid forum identifier\n   - IF any result item has an invalid forum identifier THEN mark for exclusion\n   - Ensure the forum repository is accessible and operational\n\n3. Business Rule Processing:\n   - Create an empty filtered results list to store valid results\n   - Create a forum cache map to avoid redundant forum lookups\n   - FOR each search result item in the input list:\n     a. Extract the forum identifier from the current result item\n     b. Check if the forum has already been processed in this session\n        - IF forum not in cache:\n          i. Retrieve forum information using the forum identifier\n          ii. Determine if the forum is valid and accessible\n          iii. Store forum status and information in the cache\n     c. Check forum access permissions\n        - IF forum is valid and accessible:\n          i. Enrich the search result with complete forum information\n          ii. Add the enriched result to the filtered results list\n        - ELSE:\n          i. Skip the current result item (exclude from output)\n\n4. Core Operation Execution:\n   - Process all search result items according to the business rules\n   - Maintain the original order of results where possible\n   - Ensure forum data is properly attached to each valid result\n   - Remove any results that reference invalid or inaccessible forums\n\n5. Response Generation:\n   - Return the filtered and enriched search results list\n   - Ensure the response maintains the expected structure\n   - Include only results that passed the forum validation checks\n   - Preserve any metadata about the search operation",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Search results must not be null",
+    "Each search result must contain a valid forum identifier",
+    "Forums must exist in the system to be included in results",
+    "User must have access permission to the forum to see its content in search results"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchResultList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "forumId": {
+            "type": "integer",
+            "description": "Identifier of the forum containing the search result"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content matching the search criteria"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional information about the search result"
+          }
+        }
+      }
+    },
+    "ForumRepository": {
+      "type": "object",
+      "properties": {
+        "forums": {
+          "type": "object",
+          "description": "Collection of forums indexed by forum identifier"
+        }
+      }
+    }
+  }
+}

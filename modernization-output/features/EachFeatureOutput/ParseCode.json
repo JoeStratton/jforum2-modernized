@@ -1,0 +1,75 @@
+{
+  "featureName": "ParseCode",
+  "description": "Parses code blocks with syntax highlighting and proper formatting.",
+  "inputValues": [
+    "post-object-Post",
+    "bbCodeEnabled-boolean-Post",
+    "smiliesEnabled-boolean-Post",
+    "htmlEnabled-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Post object containing text content\n   - Determine if BBCode is enabled for the post\n   - Determine if smilies are enabled for the post\n   - Determine if HTML is enabled for the post\n\n2. Data Validation:\n   - Check if post text is null\n     - IF post text is null, THEN return post without processing\n   - Validate that post object contains all required properties\n     - Ensure text content is available for processing\n     - Verify formatting flags (BBCode, smilies, HTML) are properly set\n\n3. Business Rule Processing:\n   - Process HTML safety measures\n     - IF HTML is not enabled, THEN convert < and > characters to &lt; and &gt;\n     - Replace newline characters with HTML break tags\n     - Apply safe HTML processing to prevent security issues\n   - Identify code blocks in the content\n     - Search for [code] or [code=language] tags in the text\n     - Determine if special code block processing is needed\n\n4. Core Operation Execution:\n   - Process text content based on formatting rules\n     - IF no code blocks are found, THEN:\n       - Process the entire text with standard formatting rules\n       - Apply BBCode formatting if enabled\n       - Process smilies if enabled\n     - IF code blocks are found and BBCode is enabled, THEN:\n       - Split content into code and non-code segments\n       - For each non-code segment:\n         - Apply standard text formatting rules\n         - Process BBCode tags (except code tags)\n         - Process smilies if enabled\n       - For each code segment:\n         - Identify the programming language if specified\n         - Convert newlines to proper format\n         - Escape HTML characters\n         - Apply syntax highlighting formatting\n         - Preserve indentation and spacing\n       - Reassemble the content in the correct order\n     - Apply any always-required BBCode processing\n     - Set a flag indicating code blocks were found\n\n5. Response Generation:\n   - Return the processed post with formatted text\n   - Include information about whether code blocks were processed\n   - Ensure all formatting is properly applied and preserved\n   - Maintain the integrity of code blocks with syntax highlighting",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Post text must be properly checked for null before processing",
+    "HTML special characters must be escaped when HTML is not enabled",
+    "Code blocks must be properly identified with [code] or [code=language] tags",
+    "Code content must preserve proper formatting and indentation",
+    "BBCode tags must be processed according to their defined patterns",
+    "Smilies must be replaced with their corresponding images when enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The content of the post including any formatting codes"
+        },
+        "subject": {
+          "type": "string",
+          "description": "The title or subject of the post"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if BBCode formatting is enabled for this post"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if HTML is allowed in this post"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if smilies should be processed in this post"
+        },
+        "signatureEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if user signature should be attached to this post"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "ID of the user who created the post"
+        },
+        "userIp": {
+          "type": "string",
+          "description": "IP address of the user who created the post"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the post was created"
+        },
+        "canEdit": {
+          "type": "boolean",
+          "description": "Flag indicating if the current user can edit this post"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    }
+  }
+}

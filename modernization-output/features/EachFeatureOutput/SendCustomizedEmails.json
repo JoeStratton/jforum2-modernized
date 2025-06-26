@@ -1,0 +1,60 @@
+{
+  "featureName": "SendCustomizedEmails",
+  "description": "Sends customized email messages to multiple users with template-based content.",
+  "inputValues": [
+    "users-object-User",
+    "subject-string-EmailSubject",
+    "messageTemplate-string-TemplateFile",
+    "templateParams-object-TemplateParameters",
+    "messageId-string-EmailMessageId",
+    "inReplyTo-string-ReplyReference"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. users (mandatory): List of User objects who will receive emails\n     b. subject (mandatory): Email subject line\n     c. messageTemplate (mandatory): Path to the email template file\n     d. templateParams (mandatory): Parameters to populate the email template\n     e. messageId (optional): Unique identifier for the email message\n     f. inReplyTo (optional): Reference to previous message if this is a reply\n\n2. Data Validation:\n   - Validate users list:\n     a. IF users list is empty THEN\n        i. Return error: \"No recipients specified\"\n     b. FOR EACH user in users list:\n        i. Validate email address format\n        ii. IF email address is invalid THEN\n            1. Log warning: \"Invalid email address for user\"\n            2. Remove user from recipients list\n   - Validate subject:\n     a. IF subject is empty THEN\n        i. Return error: \"Email subject cannot be empty\"\n   - Validate message template:\n     a. IF template file does not exist THEN\n        i. Return error: \"Email template not found\"\n     b. IF template file cannot be read THEN\n        i. Return error: \"Cannot read email template\"\n\n3. Business Rule Processing:\n   - Check email system configuration:\n     a. Retrieve SMTP server settings from system configuration\n     b. Verify authentication requirements\n     c. IF authentication required THEN\n        i. Verify username and password are provided\n        ii. IF credentials missing THEN\n            1. Return error: \"SMTP authentication credentials required\"\n   - Determine message format (HTML or plain text):\n     a. Read message format preference from system configuration\n     b. Set appropriate content type for email messages\n   - Check customization requirements:\n     a. Analyze users list to determine if customization is needed\n     b. FOR EACH user in users list:\n        i. Check if user has text notification preference\n        ii. IF any user requires text notification THEN\n            1. Set needCustomization flag to true\n            2. BREAK loop\n\n4. Core Operation Execution:\n   - Initialize email session:\n     a. Create mail session with appropriate properties\n     b. Set sender address from system configuration\n   - Prepare message template:\n     a. Load template file with appropriate character encoding\n     b. Add forum name to template parameters\n   - IF customization not needed THEN\n     a. Process template once to generate generic message\n     b. Set message content for all recipients\n   - Prepare for message dispatch:\n     a. Set message sent date to current time\n     b. Set message subject with appropriate character encoding\n     c. IF messageId is provided THEN\n        i. Create identifiable message with specified ID\n     d. IF inReplyTo is provided THEN\n        i. Add In-Reply-To header to message\n   - Send messages to recipients:\n     a. IF authentication required THEN\n        i. Connect to SMTP server with credentials\n        ii. FOR EACH user in users list:\n            1. IF customization needed THEN\n               a. Add user to template parameters\n               b. Process template for specific user\n               c. Set message content for this user\n            2. Create recipient address from user's email\n            3. Set recipient in message\n            4. Send message to recipient\n            5. IF send delay configured THEN\n               a. Pause for specified delay period\n        iii. Close SMTP connection\n     b. ELSE\n        i. FOR EACH user in users list:\n           1. IF customization needed THEN\n              a. Add user to template parameters\n              b. Process template for specific user\n              c. Set message content for this user\n           2. Create recipient address from user's email\n           3. Set recipient in message\n           4. Send message to recipient\n           5. IF send delay configured THEN\n              a. Pause for specified delay period\n\n5. Response Generation:\n   - Track email sending results:\n     a. Count successful deliveries\n     b. Collect any delivery failures\n   - Generate success response:\n     a. Return success status\n     b. Include count of messages sent\n     c. Include list of any failed deliveries\n   - IF any errors occurred during processing THEN\n     a. Return error status\n     b. Include detailed error information\n     c. Include any partial success information",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Users list must not be empty",
+    "Each user must have a valid email address",
+    "Email subject must not be empty",
+    "Email template file must exist and be readable",
+    "SMTP server settings must be properly configured",
+    "Authentication credentials must be provided if SMTP authentication is required"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user"
+        },
+        "notifyText": {
+          "type": "function",
+          "description": "Function that returns whether the user prefers text notifications"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "TemplateParameters": {
+      "type": "object",
+      "properties": {
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "user": {
+          "type": "object",
+          "description": "User object for customization"
+        }
+      }
+    }
+  }
+}

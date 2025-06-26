@@ -1,0 +1,43 @@
+{
+  "featureName": "CheckUserAccess",
+  "description": "Verifies if a user has access to a specific role or permission.",
+  "inputValues": [
+    "userId-number-User",
+    "roleName-string-Role",
+    "roleValue-string-Role"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - userId (number, mandatory): The identifier of the user to check permissions for\n     - roleName (string, mandatory): The name of the role/permission to verify\n     - roleValue (string, optional): The specific value related to the role to check\n\n2. Data Validation:\n   - Validate userId:\n     - Ensure userId is a positive integer\n     - Verify userId exists in the system\n     - If invalid, generate appropriate error message\n   - Validate roleName:\n     - Ensure roleName is not empty\n     - Verify roleName is a recognized permission in the system\n     - If invalid, generate appropriate error message\n   - Validate roleValue (if provided):\n     - Ensure roleValue is appropriate for the specified roleName\n     - If invalid, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify the permission system is properly initialized\n     - Ensure the security repository is accessible\n   - Check user state:\n     - Verify if the user is active in the system\n     - If user is disabled or banned, deny access automatically\n   - Handle special cases:\n     - IF user is an administrator or has super-user status\n       THEN grant access automatically\n     - IF checking anonymous access\n       THEN apply special anonymous permission rules\n\n4. Core Operation Execution:\n   - Retrieve user's permission control:\n     - Check if user's permissions are already cached\n     - IF not cached or cache is expired\n       THEN load permissions from the database\n       - Retrieve user's group memberships\n       - Load all roles associated with these groups\n       - Create permission control object with these roles\n       - Store in cache for future use\n     - ELSE use cached permission control\n   - Evaluate access:\n     - IF roleValue is provided\n       THEN check if user has access to the specific role with the given value\n     - ELSE check if user has access to the role in general\n   - Record access attempt (optional, for audit purposes)\n\n5. Response Generation:\n   - Generate success response:\n     - Return boolean result (true if access granted, false if denied)\n     - Include reason for access decision if debugging is enabled\n   - Generate error response (if applicable):\n     - Provide clear error message for any failures during the process\n     - Include guidance for resolving permission issues\n     - Log security exceptions for administrative review",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_roles",
+    "jforum_role_values"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Role name must not be empty",
+    "Role name must be a valid system permission",
+    "Role value must be appropriate for the specified role"
+  ],
+  "dbSeedingOperations": [
+    "Ensure basic roles are defined in the system",
+    "Ensure administrator group has all permissions"
+  ],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "isActive": "boolean"
+    },
+    "Role": {
+      "name": "string",
+      "value": "string"
+    },
+    "PermissionControl": {
+      "roles": "object",
+      "userId": "number"
+    }
+  }
+}

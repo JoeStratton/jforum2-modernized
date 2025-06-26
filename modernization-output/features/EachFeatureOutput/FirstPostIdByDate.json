@@ -1,0 +1,18 @@
+{
+  "featureName": "FirstPostIdByDate",
+  "description": "Finds the first post ID created on or after a specified date.",
+  "inputValues": [
+    "date-date-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the target date (date) from the user\n   - Verify the date is properly formatted\n   - Verify the date is not null\n\n2. Data Validation:\n   - Validate that the provided date is a valid date format\n   - IF date is in the future THEN\n     - Generate an error message indicating that future dates are not valid\n     - Return an appropriate error response\n   - IF date is null THEN\n     - Generate an error message indicating that date is required\n     - Return an appropriate error response\n\n3. Business Rule Processing:\n   - Verify that the post repository is accessible\n   - Check if the system has any posts in the database\n   - IF no posts exist in the system THEN\n     - Return a response indicating no posts are available\n\n4. Core Operation Execution:\n   - Query the post repository for all posts\n   - Sort the posts by their creation date in ascending order\n   - Iterate through the sorted posts\n   - FOR each post in the sorted collection:\n     - Compare the post's creation date with the target date\n     - IF post creation date is greater than or equal to the target date THEN\n       - Store the post ID as the result\n       - Exit the iteration loop\n   - IF no matching post is found THEN\n     - Set the result to indicate no matching post (e.g., -1 or appropriate indicator)\n\n5. Response Generation:\n   - IF a matching post ID was found THEN\n     - Return the post ID as the operation result\n   - ELSE\n     - Return an indicator that no post exists on or after the specified date\n   - Include appropriate status information in the response",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Date must be a valid date format",
+    "Date must not be in the future",
+    "Date must not be null"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

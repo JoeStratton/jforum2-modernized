@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "ListBanners",
+    "description": "Retrieves and displays all banners in the system"
+  },
+  {
+    "featureName": "InsertBanner",
+    "description": "Displays form for creating a new banner"
+  },
+  {
+    "featureName": "SaveNewBanner",
+    "description": "Creates and saves a new banner with specified attributes"
+  },
+  {
+    "featureName": "EditBanner",
+    "description": "Displays form for editing an existing banner"
+  },
+  {
+    "featureName": "UpdateBanner",
+    "description": "Updates an existing banner with modified attributes"
+  },
+  {
+    "featureName": "DeleteBanner",
+    "description": "Removes a banner if it's not in use"
+  }
+]

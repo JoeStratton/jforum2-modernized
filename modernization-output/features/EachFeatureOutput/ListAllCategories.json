@@ -1,0 +1,56 @@
+{
+  "featureName": "ListAllCategories",
+  "description": "Retrieves all forum categories from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all categories without filtering parameters\n\n2. Data Validation:\n   - No input validation required as there are no user inputs\n   - System will verify database connection is available\n   - IF database connection is unavailable THEN\n     - Generate appropriate error response\n     - End process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has permission to view categories\n   - IF user does not have required permissions THEN\n     - Generate access denied response\n     - End process\n   - END IF\n   - Determine if categories should be returned with associated forums\n   - Determine if empty categories (with no forums) should be included\n   - Determine sorting order for categories (typically by display order field)\n\n4. Core Operation Execution:\n   - Retrieve all category records from the database\n   - Sort categories according to their display order\n   - FOR each category retrieved DO\n     - Populate category data structure with:\n       - Category ID\n       - Category name\n       - Category description\n       - Display order\n       - Any other category attributes\n     - IF including associated forums THEN\n       - Retrieve forums belonging to this category\n       - Add forum information to category structure\n     - END IF\n     - Add complete category to results collection\n   - END FOR\n   - IF no categories found THEN\n     - Set empty collection as result\n   - END IF\n\n5. Response Generation:\n   - Format the collection of categories into appropriate response structure\n   - Include total count of categories retrieved\n   - Return the formatted category collection\n   - IF error occurred during retrieval THEN\n     - Generate error response with appropriate message\n     - Include troubleshooting information if applicable\n   - END IF",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must have permission to view categories",
+    "Database connection must be available",
+    "Categories must be sorted by display order"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the category"
+        },
+        "displayOrder": {
+          "type": "integer",
+          "description": "Order in which the category should be displayed"
+        },
+        "forums": {
+          "type": "array",
+          "description": "List of forums belonging to this category",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Forum identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Forum name"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

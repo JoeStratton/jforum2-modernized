@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SelectTopicsByForumWithPagination",
+    "description": "Retrieves forum topics with pagination support for a specific forum"
+  },
+  {
+    "featureName": "SelectTopicsByUserWithPagination",
+    "description": "Retrieves topics created by a specific user with pagination support"
+  }
+]

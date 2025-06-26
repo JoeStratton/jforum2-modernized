@@ -1,0 +1,33 @@
+{
+  "featureName": "ListUsersWithKarma",
+  "description": "Retrieves all users with their karma status.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - startFrom (number): The index position to start fetching users from (optional, defaults to 0)\n     - count (number): The maximum number of users to retrieve (optional, defaults to all users)\n\n2. Data Validation:\n   - Validate startFrom parameter:\n     - IF startFrom is provided THEN\n       - Ensure startFrom is a non-negative integer\n       - IF startFrom is negative THEN\n         - Set error message: \"Starting index cannot be negative\"\n         - Return error response\n     - ELSE\n       - Set startFrom to default value 0\n   - Validate count parameter:\n     - IF count is provided THEN\n       - Ensure count is a positive integer\n       - IF count is not positive THEN\n         - Set error message: \"Count must be a positive integer\"\n         - Return error response\n     - ELSE\n       - Set count to retrieve all available users\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     - Verify current user has permission to view user list with karma\n     - IF user lacks required permissions THEN\n       - Set error message: \"Insufficient permissions to view user karma data\"\n       - Return error response\n   - Check system state:\n     - Verify the karma feature is enabled in the system\n     - IF karma feature is disabled THEN\n       - Set error message: \"Karma feature is currently disabled\"\n       - Return error response\n\n4. Core Operation Execution:\n   - Retrieve users with karma information:\n     - Query the user database starting from the specified index\n     - Limit results to the specified count if provided\n     - For each user retrieved:\n       - Fetch associated karma status information\n       - Calculate total karma points\n       - Determine karma level based on points\n       - Attach karma information to user data\n     - Sort users according to system default sorting preference\n     - IF no users are found THEN\n       - Set appropriate message: \"No users found\"\n       - Return empty result set with message\n\n5. Response Generation:\n   - Prepare success response:\n     - Include total count of all users with karma in the system\n     - Include the retrieved user list with:\n       - User basic information (id, username, registration date)\n       - Karma status information for each user\n       - Karma level classification\n     - Include pagination information:\n       - Current page/offset\n       - Total pages available\n       - Count per page\n   - Return formatted response to the requester",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Starting index must be a non-negative integer",
+    "Count must be a positive integer if provided",
+    "User must have permission to view karma data",
+    "Karma feature must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "karmaStatus": {
+        "totalPoints": "number",
+        "karmaLevel": "string",
+        "receivedVotes": "number"
+      }
+    }
+  }
+}

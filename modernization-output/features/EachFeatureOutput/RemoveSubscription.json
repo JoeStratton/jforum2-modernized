@@ -1,0 +1,22 @@
+{
+  "featureName": "RemoveSubscription",
+  "description": "Removes a user's subscription from a topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId (number): Identifier of the topic to unsubscribe from\n     b. userId (number): Identifier of the user who wants to unsubscribe\n   - Both inputs are mandatory and must be provided by the system\n\n2. Data Validation\n   - Validate topicId:\n     a. Check if topicId is a positive integer\n     b. Check if topicId exists in the system\n     c. IF topicId is invalid or not found, THEN return an error message indicating invalid topic\n   - Validate userId:\n     a. Check if userId is a positive integer\n     b. Check if userId exists in the system\n     c. IF userId is invalid or not found, THEN return an error message indicating invalid user\n\n3. Business Rule Processing\n   - Check if the user is currently subscribed to the topic:\n     a. Verify if a subscription record exists for the given userId and topicId\n     b. IF no subscription exists, THEN return a message indicating the user is not subscribed to this topic\n   - Check user permissions:\n     a. Verify if the user has permission to manage their subscriptions\n     b. IF user lacks permission, THEN return an access denied error message\n\n4. Core Operation Execution\n   - Remove the subscription record:\n     a. Locate the subscription record matching the topicId and userId\n     b. Delete the subscription record from the system\n     c. IF deletion fails, THEN log the error and return a system error message\n     d. Update any related notification settings or cached information about topic subscriptions\n\n5. Response Generation\n   - Generate success response:\n     a. Create a confirmation message indicating successful unsubscription\n     b. Include the topic title in the confirmation message\n     c. Provide information about how to resubscribe if needed\n   - IF any errors occurred during the process:\n     a. Generate appropriate error message based on the specific error\n     b. Include guidance on how to resolve the issue or contact support",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must be currently subscribed to the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

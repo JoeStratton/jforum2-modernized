@@ -1,0 +1,30 @@
+{
+  "featureName": "ResolveContextPath",
+  "description": "Retrieves the application context path with support for proxied environments.",
+  "inputValues": [
+    "request-object-HttpServletRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HttpServletRequest object\n   - Identify if a proxied context path configuration exists in system settings\n\n2. Data Validation:\n   - Verify that the request object is not null\n   - Check if the system configuration for proxied context path is accessible\n   - Validate that context path information can be retrieved from the request\n\n3. Business Rule Processing:\n   - Determine if the application is running behind a proxy\n   - Check if a custom proxied context path has been configured in the system\n   - Establish the priority between standard context path and proxied context path\n\n4. Core Operation Execution:\n   - Retrieve the standard context path from the request\n   - Check if a proxied context path is configured in system settings\n   - IF proxied context path exists and is not empty:\n     - Use the proxied context path as the effective context path\n   - ELSE:\n     - Use the standard context path as the effective context path\n\n5. Response Generation:\n   - Return the resolved context path string\n   - Ensure the path is properly formatted for use in URL construction\n   - Handle any unexpected conditions by providing appropriate fallback values",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request object must not be null",
+    "Context path must be a valid string",
+    "Proxied context path configuration must be properly formatted if present"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpServletRequest": {
+      "type": "object",
+      "properties": {
+        "contextPath": {
+          "type": "string",
+          "description": "The context path of the application"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Request headers"
+        }
+      }
+    }
+  }
+}

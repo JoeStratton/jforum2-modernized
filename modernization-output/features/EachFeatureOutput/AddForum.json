@@ -1,0 +1,50 @@
+{
+  "featureName": "AddForum",
+  "description": "Adds a new forum to the cache repository.",
+  "inputValues": [
+    "forum-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Forum object with the following required attributes:\n     * id (number): Unique identifier for the forum\n     * categoryId (number): ID of the category this forum belongs to\n     * name (string): Name of the forum\n     * description (string): Description of the forum\n     * order (number): Display order of the forum within its category\n   - System will use the following system-generated fields:\n     * totalTopics (number): Initialized to 0\n     * totalPosts (number): Initialized to 0\n     * lastPostInfo (object): Initialized to null\n\n2. Data Validation:\n   - Validate Forum object structure:\n     * Verify forum id is a positive integer\n     * Verify categoryId is a positive integer\n     * Verify name is not empty\n     * Verify order is a non-negative integer\n   - IF any validation fails THEN:\n     * Generate appropriate error message\n     * Abort the operation\n\n3. Business Rule Processing:\n   - Verify the category exists in the cache:\n     * Retrieve category by ID from cache\n     * IF category not found THEN:\n       * Generate error message: \"Category not found\"\n       * Abort the operation\n   - Verify forum ID is unique:\n     * Check if forum ID already exists in the relation map\n     * IF forum ID exists THEN:\n       * Generate error message: \"Forum with this ID already exists\"\n       * Abort the operation\n   - Verify category is accessible:\n     * Check if the category is accessible to the current user\n     * IF category is not accessible THEN:\n       * Generate error message: \"Category is not accessible\"\n       * Abort the operation\n\n4. Core Operation Execution:\n   - Retrieve the category object from cache using categoryId\n   - Add the forum to the category:\n     * Update the category's forum collection to include the new forum\n     * Update the category in the cache\n   - Update the relation map:\n     * Add mapping between forum ID and category ID\n     * Update the relation map in the cache\n   - Update the categories set in the cache:\n     * Retrieve the current categories set\n     * Update the cache with the modified set\n   - Initialize forum statistics:\n     * Set totalTopics to 0\n     * Set totalPosts to 0\n     * Set lastPostInfo to null\n\n5. Response Generation:\n   - IF operation successful THEN:\n     * Return success status\n     * Include the added forum details\n     * Include the updated category information\n   - IF operation fails at any point THEN:\n     * Return error status\n     * Include specific error message\n     * Include guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Category ID must be a positive integer",
+    "Forum name must not be empty",
+    "Forum order must be a non-negative integer",
+    "Category must exist in the system",
+    "Forum ID must be unique"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostInfo": {
+        "type": "object",
+        "properties": {
+          "postId": "number",
+          "postDate": "string",
+          "postTimeMillis": "number",
+          "topicId": "number",
+          "topicReplies": "number",
+          "userId": "number",
+          "username": "string"
+        }
+      }
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    }
+  }
+}

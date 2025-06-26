@@ -1,0 +1,41 @@
+{
+  "featureName": "AddForumBookmark",
+  "description": "Creates a bookmark for a specific forum with title and description.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "isPublic-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - forumId (number, mandatory): The identifier of the forum to bookmark\n       - title (string, optional): Custom title for the bookmark, defaults to forum name\n       - description (string, optional): Custom description for the bookmark, defaults to forum description\n       - isPublic (boolean, optional): Flag indicating if bookmark is visible to other users, defaults to false\n\n2. Data Validation:\n   2.1. Validate forumId:\n       - Check if forumId is provided\n       - Verify forumId is a positive integer\n       - IF forumId is invalid THEN display error message \"Invalid forum identifier\"\n   2.2. Validate title:\n       - IF title is provided THEN check if length is within acceptable range (1-100 characters)\n       - IF title exceeds maximum length THEN truncate or display error message\n   2.3. Validate description:\n       - IF description is provided THEN check if length is within acceptable range (0-255 characters)\n       - IF description exceeds maximum length THEN truncate or display error message\n\n3. Business Rule Processing:\n   3.1. Verify user authentication:\n       - Check if user is logged in\n       - IF user is anonymous/not logged in THEN display error message \"Anonymous users cannot create bookmarks\"\n   3.2. Verify forum exists:\n       - Retrieve forum information using forumId\n       - IF forum does not exist THEN display error message \"Forum not found\"\n   3.3. Check bookmark feature availability:\n       - Verify bookmark feature is enabled in system settings\n       - IF feature is disabled THEN display error message \"Bookmark feature is currently disabled\"\n   3.4. Check for duplicate bookmark:\n       - Search for existing bookmark with same forumId and userId\n       - IF bookmark already exists THEN prepare for update instead of creation\n\n4. Core Operation Execution:\n   4.1. Prepare bookmark data:\n       - IF title is not provided THEN use forum name as default title\n       - IF description is not provided THEN use forum description as default description\n       - Set current user as bookmark owner\n       - Set bookmark type as FORUM type\n       - Set public visibility flag based on isPublic input\n   4.2. Create or update bookmark record:\n       - IF existing bookmark was found THEN update existing record\n       - ELSE create new bookmark record\n   4.3. Process bookmark creation:\n       - Store bookmark data in database\n       - Associate bookmark with current user\n       - IF any database error occurs THEN display appropriate error message\n\n5. Response Generation:\n   5.1. Generate success response:\n       - Display confirmation message \"Forum bookmark successfully created\"\n       - Provide option to view all bookmarks\n       - Provide option to return to forum\n   5.2. Handle error responses:\n       - Display specific error message based on failure reason\n       - Provide option to retry or cancel operation",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must be logged in to create bookmarks",
+    "Forum must exist in the system",
+    "Bookmark feature must be enabled in system settings",
+    "Title length must be between 1 and 100 characters if provided",
+    "Description length must not exceed 255 characters if provided",
+    "Forum ID must be a positive integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "forumId": "number",
+      "title": "string",
+      "description": "string",
+      "isPublic": "boolean",
+      "creationDate": "date"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    }
+  }
+}

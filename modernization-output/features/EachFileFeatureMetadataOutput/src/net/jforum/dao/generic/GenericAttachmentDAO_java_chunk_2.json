@@ -1,0 +1,66 @@
+[
+  {
+    "featureName": "AddQuotaLimit",
+    "description": "Adds a new quota limit for attachments with description, size and type"
+  },
+  {
+    "featureName": "UpdateQuotaLimit",
+    "description": "Updates an existing quota limit with new description, size and type"
+  },
+  {
+    "featureName": "CleanGroupQuota",
+    "description": "Removes all group quota associations from the database"
+  },
+  {
+    "featureName": "SetGroupQuota",
+    "description": "Associates a specific quota limit with a user group"
+  },
+  {
+    "featureName": "RemoveQuotaLimit",
+    "description": "Deletes one or more quota limits from the system"
+  },
+  {
+    "featureName": "SelectQuotaLimit",
+    "description": "Retrieves all quota limits configured in the system"
+  },
+  {
+    "featureName": "SelectQuotaLimitByGroup",
+    "description": "Retrieves the quota limit associated with a specific group"
+  },
+  {
+    "featureName": "SelectGroupsQuotaLimits",
+    "description": "Retrieves all group-to-quota-limit mappings in the system"
+  },
+  {
+    "featureName": "AddExtensionGroup",
+    "description": "Creates a new attachment extension group with permissions and display settings"
+  },
+  {
+    "featureName": "RemoveExtensionGroups",
+    "description": "Deletes one or more attachment extension groups from the system"
+  },
+  {
+    "featureName": "SelectExtensionGroups",
+    "description": "Retrieves all attachment extension groups configured in the system"
+  },
+  {
+    "featureName": "ExtensionsForSecurity",
+    "description": "Retrieves file extensions with their security permissions for attachment validation"
+  },
+  {
+    "featureName": "UpdateExtensionGroup",
+    "description": "Updates an existing attachment extension group with new settings"
+  },
+  {
+    "featureName": "AddExtension",
+    "description": "Adds a new file extension with its associated group and permissions"
+  },
+  {
+    "featureName": "RemoveExtensions",
+    "description": "Deletes one or more file extensions from the system"
+  },
+  {
+    "featureName": "SelectExtensions",
+    "description": "Retrieves all file extensions configured in the system"
+  }
+]

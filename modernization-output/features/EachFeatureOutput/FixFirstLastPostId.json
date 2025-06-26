@@ -1,0 +1,20 @@
+{
+  "featureName": "FixFirstLastPostId",
+  "description": "Updates the first and last post IDs for a topic to maintain proper reference integrity.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topic ID (topicId) from the system\n   - Verify the topic ID is a positive integer\n   - Ensure the topic ID corresponds to an existing topic\n\n2. Data Validation\n   - Validate that the topic ID is not null\n   - Verify that the topic ID is a positive integer\n   - Check if the topic exists in the system\n     - IF topic does not exist THEN\n       - Generate an error message indicating invalid topic ID\n       - Terminate the process\n     - END IF\n\n3. Business Rule Processing\n   - Verify that the topic has associated posts\n     - IF topic has no posts THEN\n       - Log a warning about attempting to fix references for a topic without posts\n       - Terminate the process\n     - END IF\n   - Check system permissions for modifying topic data\n     - IF current user lacks permission THEN\n       - Generate an access denied error\n       - Terminate the process\n     - END IF\n\n4. Core Operation Execution\n   - Retrieve the first post ID for the topic\n     - Query the posts associated with the topic\n     - Identify the post with the earliest creation timestamp\n     - Store this post ID as the first post ID\n   - Retrieve the last post ID for the topic\n     - Query the posts associated with the topic\n     - Identify the post with the latest creation timestamp\n     - Store this post ID as the last post ID\n   - Update the topic record with the correct first and last post IDs\n     - IF update fails THEN\n       - Log the error details\n       - Rollback any changes\n       - Generate an error message about the failure\n     - END IF\n\n5. Response Generation\n   - IF operation completes successfully THEN\n     - Generate a success response indicating the topic references were updated\n     - Include the topic ID in the response\n     - Include the new first and last post IDs in the response\n   - ELSE\n     - Generate an error response with appropriate error details\n     - Include troubleshooting information if available\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic must have at least one associated post",
+    "User must have permission to modify topic data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

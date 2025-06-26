@@ -1,0 +1,51 @@
+{
+  "featureName": "DeleteTopics",
+  "description": "Batch deletes multiple topics and their associated content.",
+  "inputValues": [
+    "topicIds-object-TopicList",
+    "fromModeration-boolean-ModeratorAction"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect list of topic IDs to be deleted (topicIds)\n   - Determine if deletion is initiated from moderation panel (fromModeration)\n   - Validate user has appropriate permissions to delete topics\n\n2. Data Validation:\n   - Verify all topic IDs exist in the system\n     a. Check each topic ID against the database\n     b. IF any topic ID is invalid, THEN generate appropriate error message\n   - Verify user has permission to delete the specified topics\n     a. Check if user is forum moderator or administrator\n     b. IF user lacks permission, THEN return authorization error\n   - Validate topics are eligible for deletion\n     a. Check if topics are locked or in special state\n     b. IF topics cannot be deleted, THEN return appropriate error\n\n3. Business Rule Processing:\n   - Check system state for deletion constraints\n     a. Verify system is not in maintenance mode\n     b. Ensure no concurrent operations are affecting the topics\n   - Determine impact of deletion\n     a. Calculate number of posts to be removed\n     b. Identify related content (polls, attachments) to be removed\n     c. Determine forum statistics to update\n\n4. Core Operation Execution:\n   - For EACH topic in the list:\n     a. Remove all topic subscriptions/watches\n        i. Identify users watching the topic\n        ii. Remove subscription records\n     b. Delete all associated posts\n        i. Retrieve all post IDs for the topic\n        ii. Delete post content and metadata\n        iii. Remove any attachments linked to posts\n     c. Remove any polls associated with the topic\n        i. Delete poll options\n        ii. Delete poll votes\n        iii. Delete poll main record\n     d. Delete the topic record itself\n     e. IF not from moderation panel:\n        i. Update forum statistics\n        ii. Decrement total topic count for the forum\n   - Update search indexes to remove deleted content\n   - Commit all changes as a single transaction\n     a. IF any operation fails, THEN rollback all changes\n     b. Log deletion details for audit purposes\n\n5. Response Generation:\n   - IF deletion successful:\n     a. Generate success response with summary of deleted items\n     b. Include count of topics and posts removed\n     c. Provide confirmation message\n   - IF deletion fails:\n     a. Generate detailed error response\n     b. Include specific failure points\n     c. Provide recovery suggestions\n   - Return appropriate status code and message",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_attachments",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have permission to delete topics",
+    "All topic IDs must exist in the system",
+    "Topics must not be locked for deletion",
+    "System must not be in maintenance mode during deletion",
+    "Forum statistics must be updated after topic deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TopicList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the topic"
+          },
+          "forumId": {
+            "type": "integer",
+            "description": "ID of the forum containing the topic"
+          }
+        },
+        "required": [
+          "id",
+          "forumId"
+        ]
+      }
+    },
+    "ModeratorAction": {
+      "type": "boolean",
+      "description": "Flag indicating if the deletion is performed from the moderation panel"
+    }
+  }
+}

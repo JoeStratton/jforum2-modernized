@@ -1,0 +1,43 @@
+{
+  "featureName": "SelectAttachmentsByPostId",
+  "description": "Retrieves all attachments associated with a specific post.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (number, mandatory) to identify the post whose attachments need to be retrieved\n   - System will use this postId to query the database\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify post existence:\n     a. Check if a post with the given postId exists in the system\n     b. If post doesn't exist, prepare error response indicating invalid post\n   - Verify user permissions:\n     a. Check if the current user has permission to view the post's attachments\n     b. If permission is denied, prepare access denied error response\n\n4. Core Operation Execution:\n   - Retrieve attachments:\n     a. Query the database for all attachments linked to the specified postId\n     b. For each attachment found:\n        i. Retrieve basic attachment information (ID, post ID, private message ID)\n        ii. Retrieve detailed attachment information (filename, size, type, etc.)\n        iii. Retrieve extension information for the attachment\n        iv. Combine all information into a complete attachment record\n     c. If no attachments are found, prepare an empty result list\n     d. If database error occurs during retrieval, prepare appropriate error response\n\n5. Response Generation:\n   - Success scenario:\n     a. Return the list of attachment objects with all their details\n     b. Include metadata such as total count of attachments found\n   - Error scenarios:\n     a. Return appropriate error message for invalid postId\n     b. Return appropriate error message for non-existent post\n     c. Return appropriate error message for permission issues\n     d. Return appropriate error message for database errors",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Post must exist in the system",
+    "User must have permission to view the post's attachments"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "privmsgsId": "number",
+      "userId": "number",
+      "info": {
+        "physicalFilename": "string",
+        "realFilename": "string",
+        "comment": "string",
+        "mimetype": "string",
+        "filesize": "number",
+        "uploadTime": "date",
+        "downloadCount": "number",
+        "extension": {
+          "id": "number",
+          "extension": "string",
+          "comment": "string",
+          "uploadIcon": "string",
+          "allow": "boolean",
+          "extensionGroupId": "number"
+        }
+      }
+    }
+  }
+}

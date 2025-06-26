@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GetMostRatedUserByPeriod",
+    "description": "Retrieves users with highest karma ratings within a specified time period with custom ordering"
+  }
+]

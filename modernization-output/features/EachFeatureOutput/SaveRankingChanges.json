@@ -1,0 +1,29 @@
+{
+  "featureName": "SaveRankingChanges",
+  "description": "Updates an existing ranking with new title, special status, and minimum post requirements.",
+  "inputValues": [
+    "rankId-number-Ranking",
+    "title-string-Ranking",
+    "isSpecial-boolean-Ranking",
+    "minimumPosts-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. rankId (mandatory): Unique identifier for the ranking to be updated\n     b. title (mandatory): New title for the ranking\n     c. isSpecial (mandatory): Boolean flag indicating if this is a special ranking\n     d. minimumPosts (optional): Minimum number of posts required for this ranking\n\n2. Data Validation:\n   a. Validate rankId:\n      - IF rankId is empty or not a positive integer THEN\n        - Generate error message: \"Ranking ID must be a valid positive number\"\n      - VERIFY ranking with rankId exists in the system\n        - IF not found THEN\n          - Generate error message: \"Ranking with specified ID does not exist\"\n   \n   b. Validate title:\n      - IF title is empty THEN\n        - Generate error message: \"Ranking title cannot be empty\"\n      - IF title length exceeds maximum allowed characters THEN\n        - Generate error message: \"Ranking title exceeds maximum allowed length\"\n   \n   c. Validate minimumPosts:\n      - IF isSpecial is FALSE THEN\n        - IF minimumPosts is empty or negative THEN\n          - Generate error message: \"Minimum posts must be a non-negative number for non-special rankings\"\n\n3. Business Rule Processing:\n   a. Check system state:\n      - VERIFY ranking system is available and operational\n        - IF system is in maintenance mode THEN\n          - Generate error message: \"Ranking system is currently unavailable for updates\"\n   \n   b. Check user permissions:\n      - VERIFY current user has administrative privileges to modify rankings\n        - IF user lacks required permissions THEN\n          - Generate error message: \"Insufficient permissions to modify rankings\"\n   \n   c. Apply business rules:\n      - IF isSpecial is TRUE THEN\n        - Set minimumPosts to NULL as special rankings don't require post counts\n      - IF isSpecial is FALSE and minimumPosts is provided THEN\n        - VERIFY minimumPosts does not conflict with existing rankings\n          - IF another non-special ranking has the same minimumPosts value THEN\n            - Generate warning: \"Another ranking already uses this minimum post value\"\n\n4. Core Operation Execution:\n   a. Retrieve existing ranking record using rankId\n   \n   b. Update ranking attributes:\n      - Set title to new value\n      - Set isSpecial flag to new value\n      - IF isSpecial is FALSE THEN\n        - Set minimumPosts to new value\n      - ELSE\n        - Set minimumPosts to NULL\n   \n   c. Save updated ranking to database:\n      - Perform database update operation\n      - IF database error occurs THEN\n        - Log error details\n        - Rollback changes\n        - Generate error message: \"Failed to save ranking changes due to database error\"\n   \n   d. Refresh ranking cache:\n      - Update system cache with new ranking information\n      - IF cache refresh fails THEN\n        - Log warning\n        - Continue process as database update was successful\n\n5. Response Generation:\n   a. For successful update:\n      - Generate success message: \"Ranking '{title}' has been successfully updated\"\n      - Include updated ranking details in response\n      - Provide link to ranking list\n   \n   b. For failed update:\n      - Include specific error message from validation or processing steps\n      - Preserve user input values for correction\n      - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_ranks"
+  ],
+  "validationRules": [
+    "Ranking ID must be a valid positive number",
+    "Ranking title cannot be empty",
+    "Minimum posts must be a non-negative number for non-special rankings",
+    "User must have administrative privileges to modify rankings"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "special": "boolean",
+      "min": "number"
+    }
+  }
+}

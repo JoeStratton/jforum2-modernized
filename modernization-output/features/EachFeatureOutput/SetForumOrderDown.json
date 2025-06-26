@@ -1,0 +1,67 @@
+{
+  "featureName": "SetForumOrderDown",
+  "description": "Moves a forum down in the display order relative to another forum.",
+  "inputValues": [
+    "currentForum-object-Forum",
+    "relatedForum-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the current forum object with the following properties:\n     * forum ID (mandatory)\n     * current order position (mandatory)\n     * name (mandatory)\n     * description (optional)\n     * category ID (mandatory)\n   - Collect the related forum object (the forum below the current one) with the following properties:\n     * forum ID (mandatory)\n     * current order position (mandatory)\n     * name (mandatory)\n     * description (optional)\n     * category ID (mandatory)\n\n2. Data Validation:\n   - Validate current forum:\n     * Verify forum ID is a positive integer\n     * Verify forum exists in the system\n     * Verify forum order is a positive integer\n   - Validate related forum:\n     * Verify forum ID is a positive integer\n     * Verify forum exists in the system\n     * Verify forum order is a positive integer\n   - Validate relationship:\n     * Verify current forum and related forum are different entities\n     * Verify both forums belong to the same category\n     * Verify the related forum has a higher order number than the current forum\n\n3. Business Rule Processing:\n   - Check if the current forum is already at the bottom of the list\n     * IF current forum has the highest order value in its category THEN\n       - Return error message indicating forum cannot be moved down further\n     * END IF\n   - Check if the related forum is the next forum in order sequence\n     * IF related forum order is not exactly current forum order + 1 THEN\n       - Identify the correct related forum with the next higher order value\n     * END IF\n   - Verify system state allows for reordering\n     * Check if any other forum operations are in progress\n     * Ensure category structure is not being modified simultaneously\n\n4. Core Operation Execution:\n   - Swap the order values between current forum and related forum:\n     * Store the related forum's order value in a temporary variable\n     * Set related forum's order to current forum's order value\n     * Set current forum's order to the temporary variable (related forum's original order)\n   - Update the current forum record with new order value\n     * Save changes to the current forum\n   - Update the related forum record with new order value\n     * Save changes to the related forum\n   - IF any update operation fails THEN\n     * Rollback all changes\n     * Log the error details\n     * Return error message indicating order change failed\n   - END IF\n   - Refresh the current forum data from the system\n\n5. Response Generation:\n   - Prepare success response:\n     * Include updated current forum with new order value\n     * Include status message indicating successful reordering\n     * Include new position information\n   - IF any errors occurred during processing THEN\n     * Generate error response with specific details about what went wrong\n     * Include suggestions for resolving the issue\n   - END IF",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Current forum must exist in the system",
+    "Related forum must exist in the system",
+    "Current forum and related forum must be different entities",
+    "Both forums must belong to the same category",
+    "Current forum must not already be at the bottom of the list",
+    "Related forum must have a higher order number than the current forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the forum"
+        },
+        "categoryId": {
+          "type": "integer",
+          "description": "ID of the category this forum belongs to"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order position of the forum within its category"
+        },
+        "totalTopics": {
+          "type": "integer",
+          "description": "Total number of topics in the forum"
+        },
+        "lastPostId": {
+          "type": "integer",
+          "description": "ID of the last post made in this forum"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the forum is moderated"
+        }
+      },
+      "required": [
+        "id",
+        "categoryId",
+        "name",
+        "order"
+      ]
+    }
+  }
+}

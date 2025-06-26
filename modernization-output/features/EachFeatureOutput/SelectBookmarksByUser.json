@@ -1,0 +1,38 @@
+{
+  "featureName": "SelectBookmarksByUser",
+  "description": "Retrieves all bookmarks for a specific user filtered by relation type.",
+  "inputValues": [
+    "userId-number-User",
+    "relationType-number-BookmarkType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, number): The unique identifier of the user whose bookmarks are being retrieved\n   - Collect relationType (mandatory, number): The type of bookmark relationship to filter by\n     - Valid values are defined in BookmarkType (FORUM, TOPIC, USER)\n\n2. Data Validation:\n   - Validate userId:\n     - IF userId is not provided or not a positive integer THEN\n       - Return error message \"Valid user ID is required\"\n   - Validate relationType:\n     - IF relationType is not provided THEN\n       - Return error message \"Bookmark relation type is required\"\n     - IF relationType is not a valid BookmarkType value THEN\n       - Return error message \"Invalid bookmark relation type\"\n\n3. Business Rule Processing:\n   - Check user existence:\n     - IF user with userId does not exist in the system THEN\n       - Return error message \"User not found\"\n   - Check bookmark type validity:\n     - IF relationType is not one of the defined bookmark types THEN\n       - Return error message \"The specified bookmark type is not supported\"\n\n4. Core Operation Execution:\n   - Determine bookmark retrieval strategy based on relationType:\n     - IF relationType is FORUM THEN\n       - Retrieve forum bookmarks for the specified user\n       - For each bookmark:\n         - If title is empty, use forum_name as title\n         - If description is empty, use forum_desc as description\n     - ELSE IF relationType is TOPIC THEN\n       - Retrieve topic bookmarks for the specified user\n       - For each bookmark:\n         - If title is empty, use topic_title as title\n     - ELSE IF relationType is USER THEN\n       - Retrieve user bookmarks for the specified user\n       - For each bookmark:\n         - If title is empty, use username as title\n     - ELSE\n       - Return error message \"Invalid bookmark type\"\n   - For each bookmark retrieved:\n     - Populate bookmark object with data from database\n     - Add bookmark to result list\n\n5. Response Generation:\n   - IF operation is successful THEN\n     - Return list of bookmarks with the following information for each:\n       - Bookmark ID\n       - Title\n       - Description\n       - Relation ID (the ID of the bookmarked entity)\n       - Relation Type\n       - Public visibility flag\n       - User ID (owner of the bookmark)\n   - IF operation fails THEN\n     - Return appropriate error message based on failure reason",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Relation type must be a valid bookmark type (FORUM, TOPIC, or USER)",
+    "User must exist in the system",
+    "Bookmark relation type must be supported by the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "publicVisible": "boolean",
+      "title": "string",
+      "description": "string"
+    },
+    "BookmarkType": {
+      "FORUM": "number",
+      "TOPIC": "number",
+      "USER": "number"
+    }
+  }
+}

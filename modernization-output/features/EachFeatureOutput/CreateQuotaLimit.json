@@ -1,0 +1,31 @@
+{
+  "featureName": "CreateQuotaLimit",
+  "description": "Creates a new quota limit for file attachments.",
+  "inputValues": [
+    "description-string-QuotaLimit",
+    "size-number-QuotaLimit",
+    "type-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. Description (string): A descriptive name for the quota limit\n     b. Maximum File Size (number): The maximum allowed file size in bytes\n     c. Type (number): The type identifier for the quota limit\n   - All fields are mandatory\n   - No default values are provided\n\n2. Data Validation:\n   - Validate Description:\n     a. Check if description is not empty\n     b. Check if description is within acceptable length (1-255 characters)\n     c. Generate error message if validation fails\n   - Validate Maximum File Size:\n     a. Verify the value is a positive number\n     b. Verify the value is within acceptable range (greater than 0)\n     c. Generate error message if validation fails\n   - Validate Type:\n     a. Verify the type value is a valid integer\n     b. Verify the type value matches one of the predefined quota types\n     c. Generate error message if validation fails\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the system allows creation of new quota limits\n     b. Check if the user has appropriate permissions to create quota limits\n   - Verify resource constraints:\n     a. Check if the maximum number of quota limits has not been reached\n     b. IF maximum limit reached, THEN generate appropriate error message\n   - Check for duplicate quota descriptions:\n     a. Verify no existing quota limit has the same description\n     b. IF duplicate found, THEN generate appropriate error message\n\n4. Core Operation Execution:\n   - Create new Quota Limit record:\n     a. Generate a new unique identifier for the quota limit\n     b. Prepare the quota limit data with validated inputs\n     c. Store the quota limit record in the database\n     d. IF storage operation fails, THEN:\n        i. Log the failure details\n        ii. Revert any partial changes\n        iii. Generate appropriate error message\n\n5. Response Generation:\n   - On Success:\n     a. Generate success message indicating quota limit was created\n     b. Include the identifier of the newly created quota limit\n     c. Prepare the list of all quota limits for display\n     d. Include group information for quota assignment\n   - On Failure:\n     a. Generate detailed error message explaining the failure reason\n     b. Provide guidance on how to correct the issue\n     c. Preserve user input for correction",
+  "databaseEntities": [
+    "QuotaLimit",
+    "AttachmentExtension",
+    "AttachmentExtensionGroup"
+  ],
+  "validationRules": [
+    "Quota description must not be empty",
+    "Maximum file size must be a positive number",
+    "Type must be a valid quota type identifier",
+    "User must have administrative permissions to create quota limits",
+    "Quota description must be unique"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

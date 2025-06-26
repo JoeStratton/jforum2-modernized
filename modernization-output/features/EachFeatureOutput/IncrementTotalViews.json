@@ -1,0 +1,18 @@
+{
+  "featureName": "IncrementTotalViews",
+  "description": "Increases the view counter for a topic when a user views it.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topicId (number) of the topic being viewed\n   - This field is mandatory and system-provided\n   - No default value is available\n\n2. Data Validation\n   - Validate topicId\n     - Ensure topicId is a positive integer\n     - Verify topicId exists in the system\n     - IF topicId is invalid or not found THEN\n       - Generate appropriate error message\n       - Terminate the process\n\n3. Business Rule Processing\n   - Check system state\n     - Verify the database connection is available\n     - Ensure the topic is in an active state (not deleted)\n     - IF database connection is unavailable THEN\n       - Generate connection error message\n       - Terminate the process\n     - IF topic is in deleted state THEN\n       - Skip view increment\n       - Terminate the process\n\n4. Core Operation Execution\n   - Update the topic view counter\n     - Locate the topic record using the provided topicId\n     - Increment the total_views field by 1\n     - Commit the change to the database\n     - IF update operation fails THEN\n       - Log the error details\n       - Attempt to rollback the operation\n       - Generate appropriate error message\n\n5. Response Generation\n   - Generate success response\n     - Indicate the view count was successfully incremented\n     - No specific return data is required\n   - IF any errors occurred during processing THEN\n     - Return appropriate error message\n     - Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic ID must reference an existing topic",
+    "Topic must be in active state (not deleted)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

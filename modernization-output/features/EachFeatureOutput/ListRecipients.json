@@ -1,0 +1,19 @@
+{
+  "featureName": "ListRecipients",
+  "description": "Retrieves a list of recipients from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current session context for authorization\n\n2. Data Validation:\n   - Validate user authorization\n     - IF user is not authorized to view recipients list THEN\n       - Generate authorization error\n       - Terminate process\n     - END IF\n\n3. Business Rule Processing:\n   - Check system configuration for recipient visibility settings\n     - IF recipient visibility is restricted THEN\n       - Apply visibility filters based on user permissions\n     - END IF\n   - Determine sorting order for recipients list\n     - Default sort order is alphabetical by recipient name\n   - Check for any active filters that should be applied\n     - IF filters exist THEN\n       - Prepare filter criteria for database query\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve recipients list from database\n     - Query user email addresses from the system\n     - Filter out empty or invalid email addresses\n     - Apply any filters determined in previous step\n     - Apply sorting order determined in previous step\n     - Limit results based on system pagination settings if applicable\n   - Process recipient data for display\n     - Format recipient information according to display requirements\n     - Remove sensitive information based on privacy settings\n     - Group recipients by category if grouping is enabled\n\n5. Response Generation:\n   - Prepare recipients list for presentation\n     - Format data according to view requirements\n     - Include pagination metadata if applicable\n   - IF no recipients found THEN\n     - Generate appropriate empty list message\n   - ELSE\n     - Return formatted list of recipients\n   - END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have permission to view recipients list",
+    "System must be configured to allow recipient listing",
+    "Recipients must be active users in the system",
+    "Email addresses must not be empty or invalid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

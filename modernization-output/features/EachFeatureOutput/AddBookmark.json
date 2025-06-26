@@ -1,0 +1,46 @@
+{
+  "featureName": "AddBookmark",
+  "description": "Creates a new bookmark for a user with specified relation and visibility settings.",
+  "inputValues": [
+    "userId-number-User",
+    "relationId-number-Relation",
+    "relationType-number-BookmarkType",
+    "isPublicVisible-boolean-Bookmark",
+    "title-string-Bookmark",
+    "description-string-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - userId: Identifier of the user creating the bookmark (mandatory)\n       - relationId: Identifier of the item being bookmarked (mandatory)\n       - relationType: Type of bookmark (mandatory) - must be one of the valid bookmark types (forum, topic, or user)\n       - isPublicVisible: Boolean flag indicating if bookmark is visible to other users (mandatory, default: false)\n       - title: Custom title for the bookmark (optional)\n       - description: Custom description for the bookmark (optional)\n\n2. Data Validation:\n   2.1. Validate userId:\n       - IF userId is empty or not a positive integer THEN\n           - Return error: \"Valid user ID is required\"\n   2.2. Validate relationId:\n       - IF relationId is empty or not a positive integer THEN\n           - Return error: \"Valid relation ID is required\"\n   2.3. Validate relationType:\n       - IF relationType is not one of the valid bookmark types (forum, topic, or user) THEN\n           - Return error: \"Invalid bookmark type specified\"\n   2.4. Validate title and description:\n       - IF title exceeds maximum allowed length THEN\n           - Return error: \"Title exceeds maximum allowed length\"\n       - IF description exceeds maximum allowed length THEN\n           - Return error: \"Description exceeds maximum allowed length\"\n\n3. Business Rule Processing:\n   3.1. Check if user exists:\n       - IF user with userId does not exist THEN\n           - Return error: \"User not found\"\n   3.2. Check if relation exists based on relationType:\n       - IF relationType is forum THEN\n           - Verify forum with relationId exists\n           - IF forum does not exist THEN\n               - Return error: \"Forum not found\"\n       - ELSE IF relationType is topic THEN\n           - Verify topic with relationId exists\n           - IF topic does not exist THEN\n               - Return error: \"Topic not found\"\n       - ELSE IF relationType is user THEN\n           - Verify user with relationId exists\n           - IF user does not exist THEN\n               - Return error: \"Referenced user not found\"\n   3.3. Check for duplicate bookmarks:\n       - IF bookmark already exists for this user with same relationId and relationType THEN\n           - Return error: \"Bookmark already exists\"\n\n4. Core Operation Execution:\n   4.1. Create new bookmark record:\n       - Generate new bookmark entry with provided information\n       - Set default values for any missing optional fields:\n           - IF title is empty AND relationType is forum THEN\n               - Use forum name as title\n           - ELSE IF title is empty AND relationType is topic THEN\n               - Use topic title as title\n           - ELSE IF title is empty AND relationType is user THEN\n               - Use username as title\n   4.2. Store bookmark in the system:\n       - Save bookmark record with all provided and default values\n       - IF save operation fails THEN\n           - Rollback any changes\n           - Return error: \"Failed to create bookmark\"\n\n5. Response Generation:\n   5.1. Prepare success response:\n       - Include bookmark ID of newly created bookmark\n       - Include confirmation message: \"Bookmark created successfully\"\n   5.2. Return success response to user",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Relation ID must be a valid positive integer",
+    "Relation type must be one of the valid bookmark types (forum, topic, or user)",
+    "Title must not exceed maximum allowed length",
+    "Description must not exceed maximum allowed length",
+    "User must exist in the system",
+    "Referenced relation (forum, topic, or user) must exist in the system",
+    "Duplicate bookmarks for the same user, relation ID, and relation type are not allowed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "isPublicVisible": "boolean",
+      "title": "string",
+      "description": "string"
+    },
+    "BookmarkType": {
+      "FORUM": "number",
+      "TOPIC": "number",
+      "USER": "number"
+    }
+  }
+}

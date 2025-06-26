@@ -1,0 +1,56 @@
+{
+  "featureName": "DoInstall",
+  "description": "Executes the forum installation process including database setup and configuration.",
+  "inputValues": [
+    "language-string-System",
+    "database-string-System",
+    "dbHost-string-System",
+    "dbUser-string-System",
+    "dbName-string-System",
+    "dbPort-string-System",
+    "dbPassword-string-System",
+    "dbEncoding-string-System",
+    "usePool-string-System",
+    "forumLink-string-System",
+    "siteLink-string-System",
+    "dbdatasource-string-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve installation configuration parameters from the session:\n     - language: The language setting for the forum\n     - database: The database type (e.g., postgresql, oracle)\n     - dbHost: Database server hostname\n     - dbUser: Database username\n     - dbName: Database name\n     - dbPort: Database port number\n     - dbPassword: Database password\n     - dbEncoding: Database character encoding\n     - usePool: Whether to use connection pooling\n     - forumLink: URL to the forum\n     - siteLink: URL to the main site\n     - dbdatasource: Database datasource name if applicable\n\n2. Data Validation:\n   - Check for writable directory permissions:\n     - Verify that configuration directories are writable\n     - IF directories are not writable, THEN\n       - Set error message about insufficient permissions\n       - Abort installation process\n       - Return error status\n   - Validate database connection parameters:\n     - Ensure all required database fields are provided\n     - Verify database type is supported\n     - Check that database credentials are valid\n\n3. Business Rule Processing:\n   - Remove any existing user configuration:\n     - Delete previous installation configuration files if they exist\n     - Prepare system for fresh installation\n   - Configure database connection:\n     - IF database configuration hasn't been completed, THEN\n       - Establish database connection using provided parameters\n       - IF connection fails, THEN\n         - Set error message about database connection failure\n         - Abort installation process\n         - Return error status\n     - Mark database configuration as completed\n\n4. Core Operation Execution:\n   - Create database tables:\n     - IF tables creation hasn't been completed, THEN\n       - For database types like PostgreSQL or Oracle:\n         - Drop existing tables if present\n       - Parse database structure file based on selected database type\n       - Execute table creation SQL statements\n       - IF any statement fails, THEN\n         - Roll back transaction\n         - Set error message about table creation failure\n         - Abort installation process\n         - Return error status\n     - Mark table creation as completed\n   - Import initial data:\n     - IF data import hasn't been completed, THEN\n       - Parse database data dump file\n       - Execute data insertion SQL statements\n       - IF any statement fails, THEN\n         - Roll back transaction\n         - Set error message about data import failure\n         - Abort installation process\n         - Return error status\n     - Mark data import as completed\n   - Update administrator password:\n     - Set secure password for administrator account\n     - IF password update fails, THEN\n       - Roll back transaction\n       - Set error message about admin password update failure\n       - Abort installation process\n       - Return error status\n   - Store support project message\n   - Configure system settings:\n     - Generate and set user hash sequence\n     - Set forum and site links\n     - Set default language\n     - Mark system as installed\n     - Save installation configuration\n   - Fix modules mapping:\n     - Remove installation module from active modules\n     - Update modules configuration file\n\n5. Response Generation:\n   - IF installation completed successfully, THEN\n     - Redirect to installation finished page\n     - Display success message with link to forum\n     - Provide instructions for next steps\n   - ELSE\n     - Display appropriate error message\n     - Provide troubleshooting information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Configuration directory must be writable",
+    "Database connection parameters must be valid",
+    "Database type must be supported",
+    "Database connection must be established successfully",
+    "All required database tables must be created successfully",
+    "Initial data must be imported successfully",
+    "Administrator password must be updated successfully"
+  ],
+  "dbSeedingOperations": [
+    "Import initial forum data from database dump file",
+    "Create default administrator account",
+    "Create default forum categories and groups",
+    "Create default system settings"
+  ],
+  "schema": {}
+}

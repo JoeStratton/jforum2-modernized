@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "GetBBCollection",
+    "description": "Retrieves the BBCode collection from cache for forum text formatting"
+  },
+  {
+    "featureName": "SetBBCollection",
+    "description": "Stores the BBCode handler collection in cache for forum text formatting"
+  },
+  {
+    "featureName": "FindBBCodeByName",
+    "description": "Locates a specific BBCode tag by its name from the cached collection"
+  }
+]

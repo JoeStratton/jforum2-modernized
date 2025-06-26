@@ -1,0 +1,35 @@
+{
+  "featureName": "ProcessSubgroups",
+  "description": "Recursively processes group hierarchies by finding and attaching child groups to their parents.",
+  "inputValues": [
+    "rootGroups-object-GroupNodeList",
+    "groupId-number-GroupNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the list of root groups (rootGroups) with parent ID of 0\n   - For each operation on a specific group, collect the group ID (groupId)\n   - System will use these inputs to build the complete hierarchical structure\n\n2. Data Validation:\n   - Validate that rootGroups is a properly structured list\n     * IF rootGroups is null or empty THEN return empty result list\n     * ENSURE each group node contains at minimum an ID and name\n   - Validate groupId when processing a specific group\n     * ENSURE groupId is a positive integer\n     * VERIFY the group exists in the system\n\n3. Business Rule Processing:\n   - Verify access permissions to group hierarchy\n     * CHECK if current user has permission to view group structure\n     * IF permission denied THEN return appropriate error message\n   - Check system state for group processing\n     * ENSURE group system is initialized and available\n     * VERIFY no concurrent group structure modifications are in progress\n\n4. Core Operation Execution:\n   - Initialize empty result list to store processed group hierarchy\n   - FOR each root group in the rootGroups list:\n     * Create a new group node object with root group data\n     * Process child groups recursively:\n       > Retrieve all direct child groups where parent ID matches current group ID\n       > FOR each child group found:\n         # Process any children of this child group recursively\n         # Attach the fully processed child group to its parent\n     * Add the complete root group with all descendants to result list\n   - Handle circular references:\n     * WHILE processing child groups, maintain a list of already processed group IDs\n     * IF a group ID is encountered that's already in the processed list THEN\n       > Skip processing to prevent infinite recursion\n       > Log warning about circular reference\n\n5. Response Generation:\n   - Return the complete hierarchical structure of groups\n   - For each group node in the result, include:\n     * Group identification information (ID, name)\n     * List of all child groups (if any)\n     * Depth level in the hierarchy\n   - IF any errors occurred during processing:\n     * Return appropriate error information\n     * Include details about which part of the hierarchy failed to process",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Group IDs must be positive integers",
+    "Root groups must have parent ID of 0",
+    "Child groups must have a valid parent ID that exists in the system",
+    "Group hierarchy must not contain circular references",
+    "Each group must have a unique ID",
+    "Each group must have a non-empty name"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupNode": {
+      "id": "number",
+      "name": "string",
+      "parentId": "number",
+      "childNodes": "array<GroupNode>"
+    },
+    "GroupNodeList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/GroupNode"
+      }
+    }
+  }
+}

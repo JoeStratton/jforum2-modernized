@@ -1,0 +1,37 @@
+{
+  "featureName": "SelectLatestForumPostsForRSS",
+  "description": "Retrieves latest posts from a specific forum formatted for RSS feeds.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "limit-number-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): numeric identifier of the forum to retrieve posts from\n   - Collect limit (mandatory): maximum number of posts to retrieve\n   - System will use current user's access permissions (system-generated)\n\n2. Data Validation:\n   - Validate forumId:\n      * Must be a positive integer\n      * Must correspond to an existing forum in the system\n      * Error message if forum doesn't exist: \"The specified forum does not exist\"\n   - Validate limit:\n      * Must be a positive integer\n      * Must not exceed system-defined maximum (e.g., 50)\n      * Error message if limit exceeds maximum: \"Requested number of posts exceeds the allowed maximum\"\n   - Validate user permissions:\n      * Verify current user has read access to the specified forum\n      * Error message if access denied: \"You do not have permission to view this forum\"\n\n3. Business Rule Processing:\n   - Check forum status:\n      * IF forum is active THEN continue\n      * ELSE return error: \"The requested forum is not active\"\n   - Check content availability:\n      * IF forum contains posts THEN continue\n      * ELSE return empty result set with notification: \"No posts available in this forum\"\n\n4. Core Operation Execution:\n   - Retrieve posts from the specified forum:\n      * Select posts ordered by post time (newest first)\n      * Limit results to the specified number\n      * Include only posts from topics that are not private or deleted\n   - For each post retrieved:\n      * Extract post ID, subject, text content, topic ID, forum ID\n      * Extract author information (user ID, username)\n      * Format post date/time appropriately for RSS\n      * Build complete post object with all required RSS fields\n   - If any database error occurs during retrieval:\n      * Log the error details\n      * Return system error: \"Unable to retrieve forum posts at this time\"\n\n5. Response Generation:\n   - Compile list of post objects:\n      * Each post contains: ID, subject, content, topic ID, forum ID, author details, and timestamp\n   - Format response for RSS consumption:\n      * Include all required RSS metadata\n      * Format post content according to RSS specifications\n   - Return the formatted list of posts:\n      * If posts were found, return the complete list with success status\n      * If no posts match criteria, return empty list with appropriate notification",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum ID must reference an existing forum",
+    "Limit must be a positive integer",
+    "Limit must not exceed system maximum",
+    "User must have read access to the specified forum",
+    "Forum must be active to retrieve posts"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "username": "string",
+      "postTime": "date"
+    }
+  }
+}

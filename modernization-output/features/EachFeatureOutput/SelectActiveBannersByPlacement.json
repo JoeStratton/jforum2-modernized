@@ -1,0 +1,42 @@
+{
+  "featureName": "SelectActiveBannersByPlacement",
+  "description": "Retrieves active banners filtered by placement position.",
+  "inputValues": [
+    "placement-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect placement identifier (number) from the user request\n   - Placement is a mandatory field representing the position where banners should appear\n\n2. Data Validation:\n   - Validate placement input:\n     a. Verify placement is provided and not null\n     b. Ensure placement is a valid numeric value\n     c. Verify placement value is within the system's defined range\n   - IF validation fails, THEN:\n     a. Generate appropriate error message\n     b. Return error response to caller\n\n3. Business Rule Processing:\n   - Check system state for banner functionality:\n     a. Verify banner subsystem is active\n     b. Ensure user has proper permissions to view banners\n   - Verify placement exists in the system:\n     a. Check if the requested placement position is defined\n     b. Ensure the placement is currently active\n   - IF any business rule fails, THEN:\n     a. Log the validation failure\n     b. Return appropriate error response\n\n4. Core Operation Execution:\n   - Retrieve banners from data store:\n     a. Query for banners matching the specified placement\n     b. Filter results to include only active banners\n     c. Apply additional filters based on current date/time to ensure banner is within its active period\n     d. Sort banners according to priority/weight if applicable\n   - Process retrieved banners:\n     a. Format banner data for presentation\n     b. Update impression counters for retrieved banners if tracking is enabled\n   - IF no active banners found for placement, THEN:\n     a. Return empty result set\n     b. Log the absence of active banners for the placement\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include list of active banners for the specified placement\n     b. Include metadata about the banners (count, placement information)\n   - Return formatted response to caller",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Placement must be a valid numeric value",
+    "Placement must be within the system's defined range",
+    "Banner must be active to be included in results",
+    "Banner must have matching placement value",
+    "Banner must be within its active display period"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one active banner exists for testing",
+    "Create banners with different placement values",
+    "Create both active and inactive banners to verify filtering"
+  ],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "url": "string",
+      "placement": "number",
+      "isActive": "boolean",
+      "startDate": "date",
+      "endDate": "date",
+      "clicks": "number",
+      "views": "number",
+      "weight": "number",
+      "comment": "string",
+      "type": "number",
+      "width": "number",
+      "height": "number"
+    }
+  }
+}

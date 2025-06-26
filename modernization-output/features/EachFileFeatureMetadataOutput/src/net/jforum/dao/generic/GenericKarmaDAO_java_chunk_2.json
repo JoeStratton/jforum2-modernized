@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "AddKarma",
+    "description": "Adds karma points to a post and updates the user's karma score"
+  },
+  {
+    "featureName": "GetUserKarma",
+    "description": "Retrieves the karma status for a specific user"
+  },
+  {
+    "featureName": "UpdateUserKarma",
+    "description": "Recalculates and updates a user's karma points based on received votes"
+  },
+  {
+    "featureName": "UpdateKarma",
+    "description": "Updates the points for an existing karma record"
+  },
+  {
+    "featureName": "GetPostKarma",
+    "description": "Retrieves the karma status for a specific forum post"
+  },
+  {
+    "featureName": "CheckUserCanAddKarma",
+    "description": "Verifies if a user is eligible to add karma to a specific post"
+  },
+  {
+    "featureName": "GetUserVotes",
+    "description": "Retrieves a map of post IDs and points that a user has voted on in a topic"
+  },
+  {
+    "featureName": "GetUserTotalKarma",
+    "description": "Retrieves comprehensive karma statistics for a user including points and votes"
+  },
+  {
+    "featureName": "GetMostRatedUserByPeriod",
+    "description": "Retrieves users with highest karma ratings within a specified time period"
+  }
+]

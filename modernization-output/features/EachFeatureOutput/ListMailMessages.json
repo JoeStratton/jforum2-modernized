@@ -1,0 +1,52 @@
+{
+  "featureName": "ListMailMessages",
+  "description": "Retrieves all available messages from the POP3 server inbox.",
+  "inputValues": [
+    "mailIntegration-object-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect MailIntegration object containing:\n     a. POP3 server host address (mandatory)\n     b. POP3 server port number (mandatory)\n     c. Username for authentication (mandatory)\n     d. Password for authentication (mandatory)\n     e. SSL connection flag (mandatory)\n\n2. Data Validation:\n   - Validate MailIntegration object:\n     a. Verify POP3 host is not empty\n     b. Verify port number is valid (positive integer)\n     c. Verify username is not empty\n     d. Verify password is not empty\n     e. Verify SSL flag is properly set (boolean value)\n   - IF any validation fails, THEN:\n     a. Generate appropriate error message\n     b. Terminate the operation\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the mail integration feature is enabled in system settings\n     b. Verify network connectivity is available\n   - Check resource availability:\n     a. Verify the system has permission to access network resources\n     b. Verify the system can establish external connections\n   - IF any checks fail, THEN:\n     a. Log the specific failure reason\n     b. Generate appropriate error message\n     c. Terminate the operation\n\n4. Core Operation Execution:\n   - Establish connection to mail server:\n     a. Create mail session\n     b. Determine protocol based on SSL setting (POP3 or POP3S)\n     c. Connect to server using provided credentials\n     d. Open INBOX folder in read-write mode\n     e. IF connection fails, THEN:\n        i. Log connection failure details\n        ii. Generate connection error message\n        iii. Terminate the operation\n   - Retrieve messages:\n     a. Request all messages from the INBOX folder\n     b. Store messages in memory for processing\n     c. IF message retrieval fails, THEN:\n        i. Log retrieval failure details\n        ii. Close any open connections\n        iii. Generate retrieval error message\n        iv. Terminate the operation\n\n5. Response Generation:\n   - Success response:\n     a. Return the complete list of retrieved messages\n     b. Include message count in the response\n     c. Include message metadata (sender, subject, date) for each message\n   - Error response:\n     a. Include specific error code\n     b. Include descriptive error message\n     c. Include troubleshooting suggestions when applicable",
+  "databaseEntities": [],
+  "validationRules": [
+    "MailIntegration object must not be null",
+    "POP3 host must be a valid server address",
+    "POP3 port must be a valid port number",
+    "Username must not be empty",
+    "Password must not be empty",
+    "SSL flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "type": "object",
+      "properties": {
+        "popHost": {
+          "type": "string",
+          "description": "POP3 server hostname"
+        },
+        "popPort": {
+          "type": "number",
+          "description": "POP3 server port number"
+        },
+        "popUsername": {
+          "type": "string",
+          "description": "Username for POP3 authentication"
+        },
+        "popPassword": {
+          "type": "string",
+          "description": "Password for POP3 authentication"
+        },
+        "isSSL": {
+          "type": "boolean",
+          "description": "Flag indicating whether to use SSL connection"
+        }
+      },
+      "required": [
+        "popHost",
+        "popPort",
+        "popUsername",
+        "popPassword",
+        "isSSL"
+      ]
+    }
+  }
+}

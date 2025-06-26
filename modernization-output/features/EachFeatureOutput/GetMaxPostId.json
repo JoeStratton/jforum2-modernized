@@ -1,0 +1,20 @@
+{
+  "featureName": "GetMaxPostId",
+  "description": "Retrieves the maximum post ID in a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topicId (number) from the user request\n   - The topicId is mandatory and must be a positive integer\n\n2. Data Validation\n   - Validate that topicId is provided\n     - IF topicId is missing or null THEN\n       - Generate an error message: \"Topic ID is required\"\n       - Return error response\n     - END IF\n   - Validate that topicId is a positive integer\n     - IF topicId is not a positive integer THEN\n       - Generate an error message: \"Topic ID must be a positive integer\"\n       - Return error response\n     - END IF\n   - Validate that the topic exists in the system\n     - IF topic with topicId does not exist THEN\n       - Generate an error message: \"Topic not found\"\n       - Return error response\n     - END IF\n\n3. Business Rule Processing\n   - Check if the user has permission to view the topic\n     - IF user does not have view permission for the topic THEN\n       - Generate an error message: \"You do not have permission to view this topic\"\n       - Return error response\n     - END IF\n   - Check if the topic has any posts\n     - IF topic has no posts THEN\n       - Set maxPostId to -1 (default value for topics with no posts)\n       - Skip to Response Generation step\n     - END IF\n\n4. Core Operation Execution\n   - Query the database to find the maximum post ID in the specified topic\n     - Search through all posts associated with the given topicId\n     - Find the highest post_id value among all posts in the topic\n     - IF an error occurs during the database operation THEN\n       - Log the error details\n       - Generate an error message: \"Unable to retrieve maximum post ID\"\n       - Return error response\n     - END IF\n     - Store the retrieved maximum post ID value as 'id'\n     - IF no posts are found THEN\n       - Set id to -1\n     - END IF\n\n5. Response Generation\n   - Prepare the success response\n     - Include the maximum post ID value\n     - IF no posts were found (id = -1) THEN\n       - Include a message indicating the topic has no posts\n     - END IF\n   - Return the response with the maximum post ID",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be provided",
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to view the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

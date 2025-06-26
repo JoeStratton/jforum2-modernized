@@ -1,0 +1,43 @@
+{
+  "featureName": "ViewTopicCacheDetails",
+  "description": "Displays detailed information about cached forum topics.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (number) - The identifier of the forum to view cached topics for\n   - System will determine if topic caching is enabled\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is a valid number\n     b. Verify forumId exists in the system\n     c. Return appropriate error message if validation fails\n   - Validate system configuration:\n     a. Check if topic caching is enabled in system settings\n     b. IF topic caching is disabled, THEN\n        i. Redirect user to the main cache information page\n        ii. Display notification that topic caching is not enabled\n        iii. End process\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify current user has administrative access to view cache details\n     b. IF user lacks proper permissions, THEN\n        i. Display access denied message\n        ii. Log unauthorized access attempt\n        iii. End process\n   - Verify forum existence:\n     a. Check if the specified forum exists in the system\n     b. IF forum does not exist, THEN\n        i. Display error message indicating invalid forum\n        ii. End process\n\n4. Core Operation Execution:\n   - Retrieve category information:\n     a. Get all categories from the forum repository\n     b. Organize forums by their respective categories\n   - Retrieve topic cache information:\n     a. Get list of all cached topics for the specified forum\n     b. For each cached topic:\n        i. Retrieve topic metadata (title, creation date, last update)\n        ii. Calculate memory usage of cached topic\n        iii. Determine cache age (how long it has been in cache)\n        iv. Record number of times accessed from cache\n   - Prepare display data:\n     a. Organize topics by categories and forums\n     b. Sort topics by relevant criteria (e.g., most recently accessed)\n     c. Calculate summary statistics (total topics cached, memory usage)\n\n5. Response Generation:\n   - Success response:\n     a. Display forum hierarchy (categories and forums)\n     b. Show list of cached topics with their details\n     c. Provide cache statistics summary\n     d. Include options to clear specific topic caches\n     e. Provide navigation back to main cache management page\n   - Error response:\n     a. Display appropriate error message based on failure point\n     b. Provide troubleshooting information if applicable\n     c. Include navigation options to return to previous screens",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic caching must be enabled in system settings to view topic cache details",
+    "User must have administrative permissions to access cache information",
+    "Forum ID must be a valid numeric identifier",
+    "Forum ID must reference an existing forum in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "lastPostDate": "date",
+      "cacheAge": "number",
+      "accessCount": "number",
+      "memoryUsage": "number"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number"
+    }
+  }
+}

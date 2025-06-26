@@ -1,0 +1,19 @@
+{
+  "featureName": "RemoveAllTopicSubscriptions",
+  "description": "Removes all subscriptions for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topic ID (topicId) from the user input\n   - Validate that topicId is a mandatory field\n\n2. Data Validation:\n   - Validate that topicId is a positive integer\n   - Verify that topicId is not null or empty\n   - Check if the provided topicId exists in the system\n   - IF topicId is invalid or does not exist THEN\n     - Generate appropriate error message\n     - Terminate the operation\n\n3. Business Rule Processing:\n   - Check if the topic exists in the database\n   - Verify if the user has appropriate permissions to remove subscriptions\n   - IF topic does not exist THEN\n     - Generate a \"Topic not found\" error message\n     - Terminate the operation\n   - IF user does not have appropriate permissions THEN\n     - Generate a \"Permission denied\" error message\n     - Terminate the operation\n\n4. Core Operation Execution:\n   - Retrieve all subscription records associated with the specified topicId\n   - IF no subscriptions exist for the topic THEN\n     - Skip deletion process\n     - Proceed to response generation with appropriate message\n   - ELSE\n     - Begin transaction for data consistency\n     - Delete all subscription records for the specified topic\n     - Commit the transaction\n     - IF any error occurs during deletion THEN\n       - Rollback the transaction\n       - Log the error details\n       - Generate appropriate error message\n\n5. Response Generation:\n   - IF operation is successful THEN\n     - Generate success response indicating all subscriptions were removed\n     - Include the topic ID in the response\n     - Include the count of subscriptions that were removed (if available)\n   - ELSE\n     - Generate error response with appropriate error message\n     - Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have appropriate permissions to remove subscriptions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,34 @@
+{
+  "featureName": "SelectAllBanners",
+  "description": "Retrieves all banners from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No input parameters are required for this operation\n   - System will retrieve all banner records regardless of their status\n\n2. Data Validation:\n   - Verify database connection is available\n   - IF database connection is unavailable THEN\n     - Generate appropriate error message\n     - Terminate operation\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view banners\n   - IF user lacks required permissions THEN\n     - Generate access denied message\n     - Log unauthorized access attempt\n     - Terminate operation\n   - END IF\n   - Check system state allows banner retrieval\n   - IF system is in maintenance mode THEN\n     - Generate system unavailable message\n     - Terminate operation\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve all banner records from the database\n   - Include all banner attributes (id, name, description, placement, active status, etc.)\n   - Sort banners according to system default ordering (e.g., by placement, then by name)\n   - IF no banners exist in the database THEN\n     - Return empty collection\n   - ELSE\n     - Prepare banner collection for response\n   - END IF\n   - IF error occurs during retrieval THEN\n     - Log error details\n     - Generate appropriate error message\n     - Terminate operation\n   - END IF\n\n5. Response Generation:\n   - Format banner collection for presentation\n   - Include all relevant banner information in the response\n   - Return complete banner collection to the requester\n   - Log successful retrieval operation",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "User must have permission to view banners",
+    "Database connection must be available",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "url": "string",
+      "placement": "number",
+      "active": "boolean",
+      "clicks": "number",
+      "views": "number",
+      "weight": "number",
+      "comment": "string",
+      "type": "number",
+      "width": "number",
+      "height": "number",
+      "dateCreated": "date",
+      "dateExpires": "date"
+    }
+  }
+}

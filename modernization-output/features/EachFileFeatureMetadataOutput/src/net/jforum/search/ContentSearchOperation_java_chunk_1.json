@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "PerformContentSearch",
+    "description": "Executes a search operation based on provided keywords and returns matching posts"
+  },
+  {
+    "featureName": "PrepareSearchResultsForDisplay",
+    "description": "Processes search results to prepare posts for display in the user interface"
+  },
+  {
+    "featureName": "ExtractForumIdFromPost",
+    "description": "Retrieves the forum ID from a post object in search results"
+  }
+]

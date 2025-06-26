@@ -1,0 +1,45 @@
+{
+  "featureName": "HandleFileUploadErrors",
+  "description": "Provides exception handling for errors encountered during file upload processing.",
+  "inputValues": [
+    "errorMessage-string-FileUpload"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect error message (optional)\n   - System will generate default error context if no message is provided\n\n2. Data Validation:\n   - Validate error message if provided\n     * IF error message is provided THEN\n       - Check that message is not excessively long (within system limits)\n       - Ensure message contains only valid characters\n     * ELSE\n       - Proceed with default error context\n\n3. Business Rule Processing:\n   - Determine error severity level\n     * Analyze error context to categorize severity (critical, warning, informational)\n     * Check if error is recoverable or non-recoverable\n   - Determine appropriate error handling strategy\n     * IF error is critical THEN\n       - Prepare for immediate operation termination\n     * ELSE IF error is warning THEN\n       - Prepare for potential retry or alternative processing\n     * ELSE\n       - Prepare for notification only\n\n4. Core Operation Execution:\n   - Create error context object\n     * Include timestamp of error occurrence\n     * Include error message (custom or default)\n     * Include error type classification\n   - Log error details\n     * Record error context to appropriate logging system\n     * Include relevant session information\n   - Prepare recovery options\n     * IF error is recoverable THEN\n       - Set up retry mechanisms\n       - Prepare alternative processing paths\n     * ELSE\n       - Prepare for graceful termination\n\n5. Response Generation:\n   - Format user-friendly error message\n     * Translate technical details to user-appropriate language\n     * Include guidance on next steps if applicable\n   - Provide error reference code\n     * Generate unique identifier for this error instance\n     * Include in response for support reference\n   - Include recovery options in response\n     * IF retry is possible THEN\n       - Include retry instructions\n     * IF alternative actions are available THEN\n       - Include alternative action instructions\n     * ELSE\n       - Include contact support information",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Error message must not exceed system-defined character limit",
+    "Error context must include timestamp of occurrence",
+    "Critical errors must trigger immediate operation termination",
+    "All errors must be logged with appropriate context information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ErrorContext": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Detailed error message"
+        },
+        "timestamp": {
+          "type": "date",
+          "description": "When the error occurred"
+        },
+        "severity": {
+          "type": "string",
+          "description": "Error severity level (critical, warning, info)"
+        },
+        "referenceCode": {
+          "type": "string",
+          "description": "Unique identifier for this error instance"
+        },
+        "isRecoverable": {
+          "type": "boolean",
+          "description": "Whether the error allows for recovery"
+        }
+      }
+    }
+  }
+}

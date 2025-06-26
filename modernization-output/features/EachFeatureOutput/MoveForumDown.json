@@ -1,0 +1,33 @@
+{
+  "featureName": "MoveForumDown",
+  "description": "Moves a forum down in the display order within its category.",
+  "inputValues": [
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the forum_id of the forum to be moved down\n   - The forum_id is mandatory and must be a valid integer\n\n2. Data Validation\n   - Validate that the forum_id exists in the system\n   - Verify that the forum is not already at the bottom position of its category\n   - IF forum_id is invalid or not found THEN\n     - Return an error message indicating the forum does not exist\n   - IF forum is already at the bottom position THEN\n     - No action needed, return to the forum list without changes\n\n3. Business Rule Processing\n   - Retrieve the current forum object using the forum_id\n   - Retrieve the category that contains this forum\n   - Get the list of all forums in this category\n   - Determine the current position (index) of the forum in the category\n   - Verify that there is a forum after the current forum in the list\n   - IF current forum is the last forum in the category THEN\n     - No action needed, return to the forum list without changes\n\n4. Core Operation Execution\n   - Identify the forum that comes immediately after the current forum in the display order\n   - Swap the display order positions of the current forum and the forum below it\n   - Update the display order values in the database for both forums\n   - Update the category's internal forum order\n   - Refresh the category data in the system repository\n\n5. Response Generation\n   - Redirect to the forum list view\n   - Display the updated list of forums with the new ordering\n   - The moved forum should now appear one position lower in its category",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid integer",
+    "Forum must exist in the system",
+    "Forum must not be the last forum in its category"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "displayOrder": "number",
+      "moderated": "boolean"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "forums": "array"
+    }
+  }
+}

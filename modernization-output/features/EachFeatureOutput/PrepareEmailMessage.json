@@ -1,0 +1,58 @@
+{
+  "featureName": "PrepareEmailMessage",
+  "description": "Creates email messages with subject, template-based content and proper headers.",
+  "inputValues": [
+    "subject-string-EmailMessage",
+    "messageFile-string-EmailTemplate",
+    "messageId-string-EmailMessage",
+    "inReplyTo-string-EmailMessage",
+    "users-object-UserList",
+    "templateParams-object-TemplateParameters"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. subject: String containing the email subject line\n     b. messageFile: String path to the email template file\n     c. templateParams: Object containing parameters to be used in the template\n   - Collect the following optional inputs:\n     a. messageId: String identifier for the email (optional)\n     b. inReplyTo: String reference to a previous email (optional)\n     c. users: List of user objects who will receive the email\n   - System will use the following configuration values:\n     a. Forum name\n     b. Mail sender address\n     c. Mail character set\n     d. Message format (HTML or text)\n\n2. Data Validation:\n   - Validate subject:\n     a. Check that subject is not empty\n     b. Ensure subject is properly encoded\n   - Validate messageFile:\n     a. Verify that the template file exists\n     b. Ensure the template file is accessible\n   - Validate templateParams:\n     a. Ensure required template parameters are present\n     b. Verify parameter types match expected template variables\n   - Validate users list (if provided):\n     a. Verify each user has a valid email address\n     b. Check that the users list is not empty\n\n3. Business Rule Processing:\n   - Determine message format:\n     a. IF configured format is HTML, prepare HTML message\n     b. ELSE prepare plain text message\n   - Check for customization requirements:\n     a. Examine all users in the recipient list\n     b. IF any user requires text customization, set needCustomization flag to true\n     c. ELSE set needCustomization flag to false\n   - Prepare email headers:\n     a. Set sent date to current time\n     b. Set sender address from system configuration\n     c. IF messageId is provided, use it for the email\n     d. IF inReplyTo is provided, add it as a header\n\n4. Core Operation Execution:\n   - Create email message object:\n     a. IF messageId is provided, create identifiable message with the ID\n     b. ELSE create standard message\n   - Load email template:\n     a. Get template encoding from system configuration\n     b. IF template encoding is specified, load template with encoding\n     c. ELSE load template with default encoding\n   - Add forum name to template parameters\n   - Process template content:\n     a. IF customization is not needed, process template once for all recipients\n     b. ELSE defer template processing until sending time\n   - Set message content:\n     a. IF format is HTML, replace newlines with HTML breaks\n     b. Set appropriate content type and character set\n     c. Apply the processed template content to the message\n\n5. Response Generation:\n   - Return prepared message object with:\n     a. Complete message headers\n     b. Processed template content (if not customized)\n     c. Template and parameters (if customization needed)\n     d. List of recipients\n   - Include success indicator\n   - Provide any warning messages about potential delivery issues",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Email subject must not be empty",
+    "Message template file must exist and be accessible",
+    "Template parameters must contain all required variables",
+    "Each recipient must have a valid email address",
+    "Message format must be either HTML or text"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address of the recipient"
+          },
+          "notifyText": {
+            "type": "boolean",
+            "description": "Flag indicating if user requires customized text"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      }
+    },
+    "TemplateParameters": {
+      "type": "object",
+      "properties": {
+        "forumName": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "user": {
+          "type": "object",
+          "description": "User object for customization"
+        }
+      }
+    }
+  }
+}

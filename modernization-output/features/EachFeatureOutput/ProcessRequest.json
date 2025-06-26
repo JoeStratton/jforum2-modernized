@@ -1,0 +1,60 @@
+{
+  "featureName": "ProcessRequest",
+  "description": "Processes HTTP requests by invoking the appropriate action method based on request parameters.",
+  "inputValues": [
+    "request-object-RequestContext",
+    "response-object-ResponseContext",
+    "context-object-SimpleHash"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the request object containing user action and parameters\n   - Collect the response object for sending output back to the user\n   - Collect the context object containing data for template rendering\n   - System identifies the requested action from the request parameters\n\n2. Data Validation:\n   - Validate that the request object is properly initialized\n     * Check if request contains a valid action parameter\n     * Verify that action parameter follows naming conventions\n   - Validate that the response object is properly initialized\n     * Ensure response can be written to\n   - Validate that the context object is properly initialized\n     * Verify context can store template variables\n   - IF any validation fails, THEN prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if the action should be ignored based on system state\n     * IF ignoreAction flag is set to true, THEN skip action method invocation\n   - Determine if the user has permission to execute the requested action\n     * Verify user authentication status if required\n     * Check user authorization for the specific action\n   - Verify that the system is in a valid state to process the request\n     * Check if the system is in maintenance mode\n     * Verify that required services are available\n\n4. Core Operation Execution:\n   - IF not ignoring action, THEN:\n     * Attempt to find a method matching the requested action name\n     * IF method exists, THEN:\n       - Invoke the method with no parameters\n       - Capture any results or state changes\n     * IF method does not exist, THEN:\n       - Fall back to the default list() method\n       - Log that a fallback occurred\n   - Check if a redirect has been set during processing\n     * IF redirect exists, THEN set template to empty\n   - Check if a custom template has been specified\n     * IF custom template attribute exists in request, THEN use it\n   - Check if custom content flag is set\n     * IF custom content is enabled, THEN skip template processing\n\n5. Response Generation:\n   - IF no template name is set after processing, THEN:\n     * Generate an error indicating missing template configuration\n   - IF template name is set, THEN:\n     * Load the template from the configured template directory\n     * Apply the context data to the template\n     * Generate the final rendered output\n   - Return the processed template for rendering\n   - IF any errors occurred during processing:\n     * Generate appropriate error messages\n     * Set error status in response\n     * Provide troubleshooting information when applicable",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request object must not be null",
+    "Response object must not be null",
+    "Context object must not be null",
+    "Action name must be a valid method name",
+    "Template name must be defined before rendering"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "The name of the action to be executed"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Collection of request parameters"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of request attributes"
+        }
+      }
+    },
+    "ResponseContext": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the response"
+        },
+        "status": {
+          "type": "number",
+          "description": "The HTTP status code"
+        }
+      }
+    },
+    "SimpleHash": {
+      "type": "object",
+      "properties": {
+        "variables": {
+          "type": "object",
+          "description": "Collection of template variables"
+        }
+      }
+    }
+  }
+}

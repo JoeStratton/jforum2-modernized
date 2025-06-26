@@ -1,0 +1,16 @@
+{
+  "featureName": "CountTotalModerationLogs",
+  "description": "Calculates the total number of moderation log records in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use existing database connection for query execution\n\n2. Data Validation:\n   - Verify system has proper access to the moderation log records\n   - Ensure database connection is active and valid\n   - IF connection is not available or invalid THEN\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view moderation logs\n   - IF user lacks required permissions THEN\n     - Generate access denied message\n     - Log unauthorized access attempt\n     - Exit process\n   - END IF\n   - Check if moderation log table exists in the system\n   - IF table does not exist THEN\n     - Generate appropriate error message\n     - Log system configuration issue\n     - Exit process\n   - END IF\n\n4. Core Operation Execution:\n   - Prepare query to count all records in the moderation log table\n   - Execute count query against the database\n   - Handle any exceptions during query execution:\n     - IF database error occurs THEN\n       - Capture error details\n       - Generate appropriate error message\n       - Log the exception\n       - Exit process with error status\n     - END IF\n   - Retrieve the count result from the query\n   - Store the total count value for response generation\n\n5. Response Generation:\n   - Format the total count value for display\n   - IF count retrieval was successful THEN\n     - Return success status with total count value\n     - Include timestamp of when count was performed\n   - ELSE\n     - Return error status with appropriate message\n     - Include error details for troubleshooting\n   - END IF",
+  "databaseEntities": [
+    "jforum_moderation_log"
+  ],
+  "validationRules": [
+    "User must have permission to access moderation log data",
+    "Database connection must be active and valid",
+    "Moderation log table must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

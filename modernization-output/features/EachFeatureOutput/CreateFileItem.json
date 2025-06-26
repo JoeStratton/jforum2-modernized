@@ -1,0 +1,46 @@
+{
+  "featureName": "CreateFileItem",
+  "description": "Creates disk or memory-based file items for handling uploaded files based on configurable size threshold.",
+  "inputValues": [
+    "fieldName-string-FileItem",
+    "contentType-string-FileItem",
+    "isFormField-boolean-FileItem",
+    "fileName-string-FileItem",
+    "sizeThreshold-number-FileItemFactory",
+    "repository-object-Repository"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. fieldName (string, mandatory): The name of the form field\n     b. contentType (string, mandatory): The content type of the form field\n     c. isFormField (boolean, mandatory): Indicates if this is a plain form field\n     d. fileName (string, mandatory): The name of the uploaded file as supplied by the client\n     e. sizeThreshold (number, optional): The threshold in bytes above which files are stored on disk\n     f. repository (object, optional): The directory where temporary files will be stored\n\n2. Data Validation:\n   - Validate fieldName:\n     a. IF fieldName is null or empty THEN\n        i. Generate error message: \"Field name cannot be empty\"\n     b. ENDIF\n   - Validate contentType:\n     a. IF contentType is null THEN\n        i. Set contentType to default value \"application/octet-stream\"\n     b. ENDIF\n   - Validate sizeThreshold:\n     a. IF sizeThreshold is not provided THEN\n        i. Use default size threshold (10240 bytes)\n     b. ELSE IF sizeThreshold is less than 0 THEN\n        i. Generate error message: \"Size threshold cannot be negative\"\n     c. ENDIF\n   - Validate repository:\n     a. IF repository is not provided THEN\n        i. Use system default temporary directory\n     b. ELSE\n        i. Verify repository directory exists\n        ii. IF repository does not exist THEN\n            1. Attempt to create the directory\n            2. IF directory creation fails THEN\n               a. Generate error message: \"Unable to create repository directory\"\n            3. ENDIF\n        iii. ENDIF\n        iv. Verify repository is writable\n        v. IF repository is not writable THEN\n           1. Generate error message: \"Repository directory is not writable\"\n        vi. ENDIF\n     c. ENDIF\n\n3. Business Rule Processing:\n   - Check system resources:\n     a. Verify sufficient disk space is available in repository location\n     b. IF disk space is insufficient THEN\n        i. Generate error message: \"Insufficient disk space in repository location\"\n     c. ENDIF\n   - Check file handling permissions:\n     a. Verify system has permission to create temporary files\n     b. IF permission is denied THEN\n        i. Generate error message: \"System lacks permission to create temporary files\"\n     c. ENDIF\n\n4. Core Operation Execution:\n   - Create file item based on parameters and configuration:\n     a. Initialize a new file item with the provided parameters\n     b. Configure the file item with the size threshold\n     c. Associate the file item with the repository location\n     d. Set up the file item's behavior based on isFormField flag:\n        i. IF isFormField is true THEN\n           1. Configure item to store form field data\n        ii. ELSE\n           1. Configure item to handle file upload data\n        iii. ENDIF\n     e. Prepare the file item for content storage:\n        i. Set up initial memory buffer for content\n        ii. Configure disk storage mechanism for overflow\n        iii. Initialize tracking for content size\n     f. IF any operation fails during creation THEN\n        i. Clean up any partially created resources\n        ii. Generate error message: \"Failed to create file item\"\n     g. ENDIF\n\n5. Response Generation:\n   - On successful creation:\n     a. Return the created file item object with:\n        i. All configured properties (fieldName, contentType, isFormField, fileName)\n        ii. Storage mechanism ready (memory or disk based on threshold)\n        iii. Repository location set (if disk-based storage will be used)\n   - On failure:\n     a. Return error details including:\n        i. Error code\n        ii. Error message describing the failure\n        iii. Suggested resolution steps if applicable",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Field name must not be empty",
+    "Size threshold must be a non-negative number",
+    "Repository directory must exist and be writable if specified",
+    "System must have sufficient disk space in repository location",
+    "System must have permission to create temporary files"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Repository": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to the directory where files will be stored"
+        },
+        "exists": {
+          "type": "boolean",
+          "description": "Indicates if the directory exists"
+        },
+        "writable": {
+          "type": "boolean",
+          "description": "Indicates if the directory is writable"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    }
+  }
+}

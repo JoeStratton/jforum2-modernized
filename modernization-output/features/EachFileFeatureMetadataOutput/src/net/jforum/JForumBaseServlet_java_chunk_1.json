@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "StartApplication",
+    "description": "Initializes the JForum application by loading configurations and starting required services"
+  },
+  {
+    "featureName": "InitializeServlet",
+    "description": "Sets up the JForum servlet environment including template engine configuration and module loading"
+  },
+  {
+    "featureName": "LoadConfigurationComponents",
+    "description": "Loads URL patterns, internationalization resources, templates and BBCode handlers"
+  }
+]

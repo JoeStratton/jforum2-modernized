@@ -1,0 +1,52 @@
+{
+  "featureName": "GetUserById",
+  "description": "Retrieves a specific user by their ID.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the userId (number, mandatory)\n   - No default values\n   - No optional fields\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify if the current user has permission to view user details\n     b. If permission check fails, generate appropriate error message\n   - Check if the requested user exists:\n     a. Verify if a user with the provided userId exists in the system\n     b. If user doesn't exist, prepare appropriate not-found message\n\n4. Core Operation Execution:\n   - Retrieve user data:\n     a. Fetch the user record matching the provided userId\n     b. Include all standard user information fields (username, email, etc.)\n     c. Include user status information (active/inactive)\n     d. Retrieve user's group memberships\n     e. Calculate and include private message count\n     f. If retrieval fails due to system error, prepare error response\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Format user data into appropriate response structure\n     b. Include all relevant user information including:\n        - Basic profile (username, email, registration date)\n        - Preferences (theme, language, notification settings)\n        - Social information (website, biography, interests)\n        - System data (post count, karma, rank)\n        - Group memberships\n        - Private message count\n   - For failed retrieval:\n     a. Generate appropriate error response with reason\n     b. Include guidance for resolution if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User with the specified ID must exist in the system",
+    "Requesting user must have permission to view user details"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "active": "boolean",
+      "posts": "number",
+      "deleted": "boolean",
+      "ranking": "number",
+      "avatar": "string",
+      "signature": "string",
+      "website": "string",
+      "biography": "string",
+      "interests": "string",
+      "from": "string",
+      "icq": "string",
+      "aim": "string",
+      "yim": "string",
+      "msnm": "string",
+      "gender": "string",
+      "themeId": "number",
+      "lastVisit": "date",
+      "karma": "number",
+      "language": "string",
+      "notificationPreferences": "object",
+      "groups": "object"
+    },
+    "Group": {
+      "id": "number",
+      "name": "string"
+    }
+  }
+}

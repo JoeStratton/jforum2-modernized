@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "ListForums",
+    "description": "Displays all forums organized by categories for administration"
+  },
+  {
+    "featureName": "InsertForumForm",
+    "description": "Prepares the form for creating a new forum with category and group options"
+  },
+  {
+    "featureName": "EditForumForm",
+    "description": "Prepares the form for editing an existing forum's details"
+  },
+  {
+    "featureName": "SaveForumChanges",
+    "description": "Updates an existing forum with new details and handles moderation status changes"
+  },
+  {
+    "featureName": "MoveForumUp",
+    "description": "Moves a forum up in the display order within its category"
+  },
+  {
+    "featureName": "MoveForumDown",
+    "description": "Moves a forum down in the display order within its category"
+  },
+  {
+    "featureName": "DeleteForums",
+    "description": "Removes selected forums and their associated topics"
+  },
+  {
+    "featureName": "CreateNewForum",
+    "description": "Creates a new forum with specified details and security permissions"
+  },
+  {
+    "featureName": "ManageMailIntegration",
+    "description": "Configures email integration settings for forums"
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "featureName": "ExtractTopicRelationships",
+  "description": "Identifies reply relationships between emails to maintain conversation threads.",
+  "inputValues": [
+    "message-object-POPMessage",
+    "sender-string-User",
+    "inReplyTo-string-MessageHeader",
+    "subject-string-MessageSubject",
+    "listEmail-string-ForumEmail"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect incoming email message (message-object-POPMessage)\n     - Message content (body text)\n     - Message subject line\n     - Sender email address\n     - Message headers including In-Reply-To\n     - List/forum email address (recipient)\n   - System will determine if this is a new conversation or reply to existing thread\n\n2. Data Validation:\n   - Validate sender email address\n     - Must be properly formatted email address\n     - Must belong to a registered user in the system\n     - Error: If sender not found, log warning and skip processing\n   - Validate message content\n     - Must not be empty\n     - Must comply with forum posting rules\n   - Validate subject line\n     - Must not be empty\n     - Remove any unnecessary prefixes (Re:, Fwd:, etc.) for processing\n   - Validate recipient forum email\n     - Must match a configured forum email address\n     - Error: If no matching forum found, reject message\n\n3. Business Rule Processing:\n   - Determine message relationship\n     - IF In-Reply-To header exists THEN\n       - Extract message identifier from header\n       - Parse identifier to determine original topic ID\n       - Verify topic exists in the system\n       - IF topic found THEN\n         - Mark message as reply to existing topic\n       - ELSE\n         - Mark as new topic (relationship not established)\n     - ELSE\n       - Mark as new topic\n   - Check user permissions\n     - Verify user has permission to post in the target forum\n     - Verify user has permission to reply if message is a reply\n   - Apply user preferences\n     - Check if BBCode is enabled for user\n     - Check if HTML is enabled for user\n     - Check if smilies are enabled for user\n\n4. Core Operation Execution:\n   - Prepare message parameters\n     - Set forum ID based on recipient email address\n     - Set topic type (normal)\n     - Set message subject and body\n     - IF message is a reply THEN\n       - Associate with existing topic ID\n     - ELSE\n       - Create as new topic\n     - Apply user formatting preferences\n   - Create session context for processing\n     - Generate unique session ID\n     - Set user session attributes\n   - Execute message posting operation\n     - Insert message into appropriate topic\n     - Update topic last post information\n     - Update forum statistics\n   - Clean up session resources\n     - Remove temporary session\n\n5. Response Generation:\n   - Log successful message processing\n     - Record topic ID and post ID\n     - Record processing time\n   - Handle any processing errors\n     - Log detailed error information\n     - Skip to next message if batch processing\n   - Generate system notification if configured\n     - Notify moderators of new post if required\n     - Send confirmation to sender if enabled",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Sender email must belong to a registered user",
+    "Message content must not be empty",
+    "Subject line must not be empty",
+    "Recipient forum email must match a configured forum",
+    "User must have permission to post in the target forum",
+    "If replying, the original topic must exist"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "POPMessage": {
+      "type": "object",
+      "properties": {
+        "sender": {
+          "type": "string",
+          "description": "Email address of the sender"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line of the email"
+        },
+        "message": {
+          "type": "string",
+          "description": "Body content of the email"
+        },
+        "inReplyTo": {
+          "type": "string",
+          "description": "Message ID this email is replying to"
+        },
+        "listEmail": {
+          "type": "string",
+          "description": "Email address of the forum this message was sent to"
+        }
+      },
+      "required": [
+        "sender",
+        "subject",
+        "message",
+        "listEmail"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ProcessMailIntegration",
+    "description": "Processes emails from POP servers and integrates them into the forum system"
+  }
+]

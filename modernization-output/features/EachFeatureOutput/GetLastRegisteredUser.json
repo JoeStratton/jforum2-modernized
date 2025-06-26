@@ -1,0 +1,39 @@
+{
+  "featureName": "GetLastRegisteredUser",
+  "description": "Retrieves information about the most recently registered user.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal state to determine the most recently registered user\n\n2. Data Validation:\n   - Verify system access permissions\n      - IF user does not have appropriate permissions THEN\n         - Generate permission denied error\n         - Exit process\n      - END IF\n\n3. Business Rule Processing:\n   - Check system state\n      - IF system is in maintenance mode THEN\n         - Generate system unavailable error\n         - Exit process\n      - END IF\n   - Verify cache availability\n      - IF cache system is unavailable THEN\n         - Generate cache access error\n         - Exit process\n      - END IF\n\n4. Core Operation Execution:\n   - Access system cache for last registered user information\n      - Retrieve user object from cache storage\n      - IF user information is not in cache THEN\n         - Query user database for most recently registered user\n         - Sort users by registration date in descending order\n         - Limit results to single most recent entry\n         - Store result in cache for future requests\n      - END IF\n      - Extract user information including:\n         - User ID\n         - Username\n         - Registration date\n         - Other relevant user profile information\n      - IF no users exist in system THEN\n         - Set empty result indicator\n      - END IF\n\n5. Response Generation:\n   - Format user information for display\n      - IF user found THEN\n         - Prepare success response with user details\n            - Include user ID\n            - Include username\n            - Include registration timestamp\n            - Include any other relevant user information\n      - ELSE\n         - Prepare response indicating no users are registered\n      - END IF\n   - Return formatted response to caller",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "System must have at least one registered user to return valid data",
+    "User requesting this information must have appropriate permissions",
+    "System must be in operational state, not maintenance mode",
+    "Cache system must be operational to retrieve user information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name in the system"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered in the system"
+        }
+      },
+      "required": [
+        "id",
+        "username"
+      ]
+    }
+  }
+}

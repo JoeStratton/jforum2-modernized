@@ -1,0 +1,73 @@
+{
+  "featureName": "WriteUploadedFileToLocation",
+  "description": "Writes an uploaded file item to a specified disk location.",
+  "inputValues": [
+    "fileItem-object-FileItem",
+    "destinationFile-object-File"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the uploaded file item (mandatory)\n   - Collect the destination file location (mandatory)\n   - Determine if the file content is stored in memory or on disk (system-generated)\n\n2. Data Validation:\n   - Validate that the file item is not null\n     * IF file item is null THEN return error \"File item cannot be null\"\n   - Validate that the destination file location is not null\n     * IF destination file is null THEN return error \"Destination file cannot be null\"\n   - Validate that the destination directory exists and is writable\n     * IF destination directory does not exist THEN create directory or return error \"Destination directory does not exist\"\n     * IF destination directory is not writable THEN return error \"Destination directory is not writable\"\n   - Validate that there is sufficient disk space at the destination\n     * IF insufficient disk space THEN return error \"Insufficient disk space at destination\"\n\n3. Business Rule Processing:\n   - Check if the file content is stored in memory\n     * IF file content is in memory THEN prepare for direct write operation\n     * IF file content is on disk THEN prepare for file move or copy operation\n   - Check if the destination file already exists\n     * IF destination file exists THEN determine whether to overwrite based on system settings\n     * IF overwrite not allowed and file exists THEN return error \"Destination file already exists\"\n\n4. Core Operation Execution:\n   - IF file content is in memory:\n     * Create a file output stream to the destination file\n     * Write the file content from memory to the destination file\n     * Close the file output stream\n   - ELSE IF file content is on disk:\n     * Attempt to rename the temporary file to the destination file\n     * IF rename operation fails:\n       * Create input stream from temporary file\n       * Create output stream to destination file\n       * Copy data in chunks from input to output stream\n       * Close both streams\n   - Handle any exceptions during file operations\n     * IF exception occurs THEN clean up resources and return appropriate error\n\n5. Response Generation:\n   - IF operation successful:\n     * Return success status\n     * Include information about the written file (name, size, location)\n   - IF operation failed:\n     * Return failure status\n     * Include specific error message and reason for failure\n     * Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File item must not be null",
+    "Destination file location must not be null",
+    "Destination directory must exist or be creatable",
+    "Destination directory must be writable",
+    "Sufficient disk space must be available at destination",
+    "If destination file exists, system must determine whether to overwrite"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "Name of the form field"
+        },
+        "formField": {
+          "type": "boolean",
+          "description": "Whether this item represents a simple form field"
+        },
+        "content": {
+          "type": "binary",
+          "description": "The content of the file"
+        },
+        "name": {
+          "type": "string",
+          "description": "Original name of the file"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "storeLocation": {
+          "type": "string",
+          "description": "Temporary location where file is stored"
+        },
+        "inMemory": {
+          "type": "boolean",
+          "description": "Whether the file is stored in memory"
+        }
+      }
+    },
+    "File": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to the file"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the file"
+        },
+        "exists": {
+          "type": "boolean",
+          "description": "Whether the file exists"
+        }
+      }
+    }
+  }
+}

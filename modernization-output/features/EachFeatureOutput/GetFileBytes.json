@@ -1,0 +1,59 @@
+{
+  "featureName": "GetFileBytes",
+  "description": "Retrieves the complete contents of the file as a byte array.",
+  "inputValues": [
+    "fileItem-object-DiskFileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the DiskFileItem object that contains the file data\n   - No additional inputs required as the file information is encapsulated in the DiskFileItem\n\n2. Data Validation:\n   - Verify the DiskFileItem object is not null\n     * IF DiskFileItem is null THEN\n       - Return error indicating invalid file item\n   - Check if the file content is accessible\n     * IF file cannot be accessed THEN\n       - Return error indicating file access issue\n\n3. Business Rule Processing:\n   - Determine the storage location of the file content\n     * IF file content is stored in memory THEN\n       - Prepare to retrieve from memory cache\n     * ELSE\n       - Prepare to read from disk storage\n   - Verify file size is within acceptable limits\n     * IF file size exceeds system limits THEN\n       - Return error indicating file size constraint violation\n\n4. Core Operation Execution:\n   - Check if file content is already cached in memory\n     * IF content is cached in memory THEN\n       - Return the cached byte array directly\n     * ELSE IF content is in memory but not cached THEN\n       - Retrieve data from memory storage\n       - Cache the retrieved data for future use\n       - Return the byte array\n     * ELSE (content is stored on disk)\n       - Create a byte array sized to the file length\n       - Open a file input stream to the disk file\n       - Read the complete file content into the byte array\n       - Close the file input stream\n       - Return the populated byte array\n   - Handle any exceptions during file reading\n     * IF an error occurs during file reading THEN\n       - Ensure all resources are properly closed\n       - Return null or appropriate error indication\n\n5. Response Generation:\n   - Return the byte array containing the complete file contents\n   - IF operation was successful THEN\n     * Return the byte array with file content\n   - ELSE\n     * Return appropriate error information\n     * Include details about the nature of the failure (access error, file not found, etc.)",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File item must not be null",
+    "File must be accessible for reading",
+    "File size must be within system limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DiskFileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field as provided by the browser"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type passed by the browser, or null if not defined"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether or not this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "integer",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored, if stored on disk"
+        },
+        "cachedContent": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Cached contents of the file as byte array"
+        },
+        "dfos": {
+          "type": "object",
+          "description": "Output stream for this item"
+        }
+      }
+    }
+  }
+}

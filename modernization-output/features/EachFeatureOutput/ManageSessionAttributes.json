@@ -1,0 +1,62 @@
+{
+  "featureName": "ManageSessionAttributes",
+  "description": "Adds, retrieves, and removes attributes from the user's session.",
+  "inputValues": [
+    "name-string-SessionAttribute",
+    "value-object-AttributeValue",
+    "operation-string-OperationType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. name (string, mandatory): The attribute name to identify the session attribute\n     b. value (object, mandatory for setAttribute operation): The attribute value to store\n     c. operation (string, mandatory): The operation to perform (setAttribute, getAttribute, removeAttribute, getAttributeNames, getId, invalidate)\n\n2. Data Validation:\n   - Validate the attribute name:\n     a. IF name is null or empty THEN\n        - Return error: \"Attribute name cannot be empty\"\n     b. IF name contains invalid characters THEN\n        - Return error: \"Attribute name contains invalid characters\"\n   - Validate the operation type:\n     a. IF operation is not one of (setAttribute, getAttribute, removeAttribute, getAttributeNames, getId, invalidate) THEN\n        - Return error: \"Invalid operation type specified\"\n   - Validate the attribute value for setAttribute operation:\n     a. IF operation is setAttribute AND value is null THEN\n        - Return warning: \"Setting null value for attribute\"\n\n3. Business Rule Processing:\n   - Verify session availability:\n     a. IF current user session is not available THEN\n        - Return error: \"No active session found\"\n   - Check session capacity:\n     a. IF operation is setAttribute AND session attribute count exceeds maximum limit THEN\n        - Return error: \"Session attribute limit exceeded\"\n   - Verify attribute access permissions:\n     a. IF attribute name starts with reserved prefix THEN\n        - Verify user has administrative privileges\n        - IF user lacks administrative privileges THEN\n           - Return error: \"Insufficient permissions to modify system attributes\"\n   - Verify session state for operations:\n     a. IF session has been invalidated THEN\n        - Return error: \"Cannot perform operations on an invalidated session\"\n\n4. Core Operation Execution:\n   - Process the requested operation:\n     a. IF operation is setAttribute THEN\n        - Store the attribute name and value in the current session\n        - Record the attribute modification in the session history\n     b. IF operation is getAttribute THEN\n        - Retrieve the attribute value from the current session using the provided name\n        - IF attribute does not exist THEN\n           - Return null or appropriate default value\n     c. IF operation is removeAttribute THEN\n        - Remove the attribute from the current session\n        - Record the attribute removal in the session history\n     d. IF operation is getAttributeNames THEN\n        - Retrieve the enumeration of all attribute names in the current session\n     e. IF operation is getId THEN\n        - Retrieve the unique identifier for the current session\n     f. IF operation is invalidate THEN\n        - Invalidate the current session, removing all attributes\n        - Record the session invalidation event\n   - Update session timestamp:\n     a. Update the last accessed timestamp for the session\n\n5. Response Generation:\n   - Generate appropriate response based on operation:\n     a. IF operation was setAttribute THEN\n        - Return success confirmation: \"Attribute [name] has been set successfully\"\n     b. IF operation was getAttribute THEN\n        - Return the retrieved attribute value or null if not found\n     c. IF operation was removeAttribute THEN\n        - Return success confirmation: \"Attribute [name] has been removed successfully\"\n     d. IF operation was getAttributeNames THEN\n        - Return enumeration of all attribute names in the session\n     e. IF operation was getId THEN\n        - Return the unique session identifier\n     f. IF operation was invalidate THEN\n        - Return confirmation: \"Session has been invalidated successfully\"\n   - Include operation metadata:\n     a. Include timestamp of operation\n     b. Include session identifier (masked for security)\n     c. Include remaining session lifetime",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Attribute name must not be empty",
+    "Operation type must be one of: setAttribute, getAttribute, removeAttribute, getAttributeNames, getId, invalidate",
+    "User must have an active session",
+    "User must have appropriate permissions for system attributes",
+    "Session must not exceed maximum attribute count",
+    "Session must not be invalidated for attribute operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttributeValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "object",
+            "null"
+          ],
+          "description": "The actual value of the attribute"
+        },
+        "expirationTime": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional expiration time for the attribute"
+        },
+        "isTransient": {
+          "type": "boolean",
+          "description": "Flag indicating if the attribute should persist across sessions"
+        }
+      }
+    },
+    "OperationType": {
+      "type": "string",
+      "enum": [
+        "setAttribute",
+        "getAttribute",
+        "removeAttribute",
+        "getAttributeNames",
+        "getId",
+        "invalidate"
+      ],
+      "description": "The type of operation to perform on the session"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "featureName": "GetUserVotes",
+  "description": "Retrieves votes made by a user on posts within a topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory): Numeric identifier of the topic\n   - Collect userId (mandatory): Numeric identifier of the user\n   - System will use these inputs to retrieve user's voting history\n\n2. Data Validation:\n   - Validate topicId:\n      * Verify topicId is a positive integer\n      * Verify topicId exists in the system\n      * IF topicId is invalid or not found, THEN return appropriate error message\n   - Validate userId:\n      * Verify userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid or not found, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Verify user has permission to view voting information:\n      * Check if user has required access level to view votes\n      * IF user lacks permission, THEN return access denied error\n   - Verify topic status:\n      * Check if topic is active and not deleted\n      * IF topic is inactive or deleted, THEN return appropriate error message\n\n4. Core Operation Execution:\n   - Retrieve all posts associated with the specified topic\n   - For each post in the topic:\n      * Check if the specified user has cast a vote on the post\n      * IF vote exists, THEN record the post identifier and the rating value\n   - Compile a mapping of post identifiers to their corresponding vote ratings\n   - IF no votes are found, THEN prepare an empty result set\n\n5. Response Generation:\n   - Format the voting data as a collection of post-to-rating mappings\n   - Include metadata such as:\n      * Total number of votes cast by the user in the topic\n      * Timestamp of the most recent vote (if applicable)\n   - Return the compiled voting information to the requester\n   - IF any errors occurred during processing, THEN return appropriate error details",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must have permission to view voting information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "VoteMapping": {
+      "type": "object",
+      "properties": {
+        "postId": {
+          "type": "integer",
+          "description": "Identifier of the post that received a vote"
+        },
+        "points": {
+          "type": "integer",
+          "description": "Number of karma points assigned to the post"
+        }
+      }
+    }
+  }
+}

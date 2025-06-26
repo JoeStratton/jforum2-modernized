@@ -1,0 +1,61 @@
+{
+  "featureName": "CreateNewForum",
+  "description": "Creates a new forum with specified details and security permissions.",
+  "inputValues": [
+    "forumName-string-Forum",
+    "description-string-Forum",
+    "categoryId-number-Category",
+    "isModerated-boolean-Forum",
+    "securityGroups-object-SecurityGroups"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. Forum name (mandatory string)\n     b. Forum description (mandatory string)\n     c. Category ID (mandatory number)\n     d. Moderation status (boolean flag)\n     e. Security group permissions (object containing group access settings)\n   - System will generate a unique forum ID automatically\n\n2. Data Validation:\n   - Validate forum name:\n     a. Check if forum name is not empty\n     b. Check if forum name length is within acceptable limits\n     c. IF validation fails, THEN display appropriate error message\n   - Validate forum description:\n     a. Check if description is not empty\n     b. Check if description length is within acceptable limits\n     c. IF validation fails, THEN display appropriate error message\n   - Validate category ID:\n     a. Check if category ID is provided\n     b. Check if category exists in the system\n     c. IF validation fails, THEN display error message about invalid category\n   - Validate security groups:\n     a. Check if at least one security group is selected for forum access\n     b. IF no security groups are selected, THEN use default security settings\n\n3. Business Rule Processing:\n   - Check if the user has administrative privileges to create forums\n     a. IF user lacks required permissions, THEN display access denied message\n   - Verify that the selected category is active\n     a. IF category is inactive, THEN display error message\n   - Determine the display order for the new forum\n     a. Count existing forums in the selected category\n     b. Set the new forum's display order to appear at the end of the category's forum list\n\n4. Core Operation Execution:\n   - Create new forum record with the following attributes:\n     a. Forum name\n     b. Forum description\n     c. Category ID\n     d. Moderation status\n     e. Display order\n   - Process security permissions:\n     a. Set forum access permissions for selected groups\n     b. Set anonymous posting permissions for selected groups\n     c. Set read-only permissions for selected groups\n     d. Set HTML usage permissions for selected groups\n     e. Set reply-only permissions for all groups\n   - Update forum repository:\n     a. Add the new forum to the system's forum repository\n     b. Update security repository with new forum permissions\n     c. Clear security caches to ensure new permissions take effect\n\n5. Response Generation:\n   - IF forum creation is successful:\n     a. Generate success message indicating forum was created\n     b. Provide forum ID for reference\n     c. Display updated list of forums\n   - IF forum creation fails:\n     a. Generate error message with failure reason\n     b. Preserve user inputs for correction\n     c. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Forum name must not be empty",
+    "Forum description must not be empty",
+    "Selected category must exist in the system",
+    "At least one security group must have access to the forum",
+    "User must have administrative privileges to create forums"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SecurityGroups": {
+      "type": "object",
+      "properties": {
+        "accessGroups": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Group IDs with access permission"
+          }
+        },
+        "anonymousPostGroups": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Group IDs with anonymous posting permission"
+          }
+        },
+        "readOnlyGroups": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Group IDs with read-only permission"
+          }
+        },
+        "htmlGroups": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Group IDs with HTML usage permission"
+          }
+        }
+      }
+    }
+  }
+}

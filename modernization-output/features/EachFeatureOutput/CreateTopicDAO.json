@@ -1,0 +1,38 @@
+{
+  "featureName": "CreateTopicDAO",
+  "description": "Creates and returns a database-specific implementation of the Topic Data Access Object.",
+  "inputValues": [
+    "databaseType-string-Database"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect databaseType (string, mandatory) - The type of database for which to create the DAO\n   - No optional fields\n   - No default values\n\n2. Data Validation:\n   - Validate databaseType:\n     a. Check if databaseType is not empty\n        IF databaseType is empty THEN\n          Return error message \"Database type must be specified\"\n     b. Check if databaseType is supported\n        IF databaseType is not in supported database types THEN\n          Return error message \"Unsupported database type\"\n\n3. Business Rule Processing:\n   - Check if DAO implementation exists for the specified database type\n     a. Verify that a TopicDAO implementation exists for the specified database type\n        IF implementation does not exist THEN\n          Return error message \"No TopicDAO implementation available for the specified database type\"\n     b. Verify that the implementation is properly configured\n        IF implementation is not properly configured THEN\n          Return error message \"TopicDAO implementation is not properly configured\"\n\n4. Core Operation Execution:\n   - Create the appropriate TopicDAO instance\n     a. Determine the correct implementation class based on databaseType\n     b. Instantiate the TopicDAO implementation\n        IF instantiation fails THEN\n          Return error message \"Failed to create TopicDAO instance\"\n     c. Initialize the TopicDAO with necessary dependencies\n        IF initialization fails THEN\n          Return error message \"Failed to initialize TopicDAO instance\"\n\n5. Response Generation:\n   - Return the created TopicDAO instance\n     a. Ensure the instance is properly initialized and ready for use\n     b. Include any configuration information that might be relevant\n     c. In case of errors, provide detailed error information including:\n        - Error type\n        - Error message\n        - Possible resolution steps",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Database type must be supported by the system",
+    "TopicDAO implementation must exist for the specified database type",
+    "TopicDAO implementation must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Database": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of database (e.g., HSQLDB, MySQL, PostgreSQL)"
+        },
+        "configuration": {
+          "type": "object",
+          "description": "Database-specific configuration parameters"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "featureName": "RemoveExtensions",
+  "description": "Deletes one or more file extensions from the system.",
+  "inputValues": [
+    "extensionIds-string-Extension"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - extensionIds: A comma-separated list of extension IDs to be removed (mandatory)\n\n2. Data Validation\n   - Validate the extensionIds input:\n     - Check if extensionIds is not empty\n       IF extensionIds is empty THEN\n         Return error message: \"No extension IDs provided for removal\"\n     - Parse the comma-separated string into an array of IDs\n     - For each ID in the array:\n       - Verify it contains only numeric characters\n       - IF any ID is non-numeric THEN\n         Return error message: \"Invalid extension ID format. All IDs must be numeric\"\n\n3. Business Rule Processing\n   - Check if the extensions exist in the system:\n     - For each extension ID:\n       - Verify the extension exists in the database\n       - IF any extension does not exist THEN\n         Return error message: \"One or more extensions do not exist\"\n   - Check if any extensions are currently in use:\n     - For each extension ID:\n       - Verify the extension is not associated with any attachments\n       - IF any extension is in use THEN\n         Return error message: \"Cannot remove extensions that are currently in use\"\n\n4. Core Operation Execution\n   - Begin removal process:\n     - Start a transaction to ensure data integrity\n     - For each extension ID in the array:\n       - Remove the extension from the system\n       - Log the removal operation with extension details\n     - Commit the transaction if all removals are successful\n     - IF any removal operation fails THEN\n       - Roll back the transaction\n       - Log the failure details\n       - Return error message: \"Failed to remove one or more extensions\"\n\n5. Response Generation\n   - On successful removal:\n     - Generate success response with count of removed extensions\n     - Include list of removed extension IDs\n     - Return success message: \"Successfully removed [count] extensions\"\n   - On failure:\n     - Include detailed error information\n     - Suggest troubleshooting steps\n     - Provide contact information for support if needed",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Extension IDs must not be empty",
+    "Extension IDs must be numeric",
+    "Extensions must exist in the system before removal",
+    "Extensions in use by attachments cannot be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Extension": {
+      "id": "number",
+      "extension": "string",
+      "extensionGroupId": "number",
+      "comment": "string",
+      "uploadIcon": "string",
+      "allow": "boolean"
+    }
+  }
+}

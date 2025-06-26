@@ -1,0 +1,26 @@
+{
+  "featureName": "GetSizeInBytes",
+  "description": "Calculates the quota limit size in bytes based on KB or MB configuration.",
+  "inputValues": [
+    "size-number-QuotaLimit",
+    "type-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect quota limit information:\n     - size: The numerical size value (mandatory)\n     - type: The unit type identifier (mandatory)\n       - Type can be KB (1) or MB (2)\n\n2. Data Validation:\n   - Validate size input:\n     - Ensure size is a positive number\n     - Verify size is within acceptable range for the system\n     - If invalid, generate appropriate error message\n   - Validate type input:\n     - Verify type is either KB (1) or MB (2)\n     - If invalid type provided, generate error message\n\n3. Business Rule Processing:\n   - Determine conversion factor based on type:\n     - IF type equals KB (1) THEN\n       - Set conversion factor to 1024 (bytes per KB)\n     - ELSE IF type equals MB (2) THEN\n       - Set conversion factor to 1,048,576 (bytes per MB)\n     - ELSE\n       - Handle invalid type error\n\n4. Core Operation Execution:\n   - Calculate bytes value:\n     - Multiply size by the determined conversion factor\n     - Store result as bytes value\n   - Handle potential numeric overflow:\n     - IF calculated value exceeds system limits THEN\n       - Handle overflow condition\n       - Generate appropriate warning\n\n5. Response Generation:\n   - Return calculated size in bytes\n   - Include original size and unit type in response for reference\n   - If any errors occurred during calculation:\n     - Return error details\n     - Provide guidance on valid input ranges",
+  "databaseEntities": [
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Size must be a positive number",
+    "Type must be either KB (1) or MB (2)",
+    "Calculated byte size must not exceed system numeric limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

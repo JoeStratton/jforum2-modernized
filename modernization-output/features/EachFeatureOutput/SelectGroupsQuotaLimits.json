@@ -1,0 +1,36 @@
+{
+  "featureName": "SelectGroupsQuotaLimits",
+  "description": "Retrieves all group-to-quota-limit mappings in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection\n   - No user inputs required for this feature\n   - System will use existing database connection\n\n2. Data Validation\n   - Verify database connection is available\n   - IF database connection is not available THEN\n     - Generate appropriate error message\n     - Terminate process\n   - END IF\n\n3. Business Rule Processing\n   - Verify user has appropriate permissions to view quota limits\n   - IF user lacks required permissions THEN\n     - Generate access denied message\n     - Log access attempt\n     - Terminate process\n   - END IF\n   - Prepare to retrieve group-to-quota-limit mappings\n\n4. Core Operation Execution\n   - Initialize empty collection to store group-quota mappings\n   - Execute query to retrieve all group-to-quota-limit mappings\n   - FOR each record in the query results\n     - Extract group identifier\n     - Extract quota limit identifier\n     - Create mapping between group and quota limit\n     - Add mapping to collection\n   - END FOR\n   - IF no mappings are found THEN\n     - Return empty collection\n   - END IF\n\n5. Response Generation\n   - Format the group-to-quota-limit mappings for presentation\n   - Return the complete collection of mappings\n   - IF any errors occurred during processing THEN\n     - Generate appropriate error message\n     - Include error details for troubleshooting\n   - END IF",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "User must have permission to view quota limits",
+    "Database connection must be available",
+    "Group IDs must be valid existing groups",
+    "Quota limit IDs must be valid existing quota limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupQuotaMapping": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "integer",
+          "description": "Identifier for the group"
+        },
+        "quotaLimitId": {
+          "type": "integer",
+          "description": "Identifier for the quota limit applied to the group"
+        }
+      },
+      "required": [
+        "groupId",
+        "quotaLimitId"
+      ]
+    }
+  }
+}

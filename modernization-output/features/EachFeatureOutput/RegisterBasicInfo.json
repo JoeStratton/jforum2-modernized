@@ -1,0 +1,36 @@
+{
+  "featureName": "RegisterBasicInfo",
+  "description": "Sets up basic session information for first-time forum visitors.",
+  "inputValues": [
+    "sessionId-string-UserSession",
+    "ip-string-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect session identifier (sessionId) from the system\n   - Collect IP address (ip) from the visitor's connection\n   - System will generate the following values:\n     * startTime: Current system timestamp\n     * lastVisit: Current system timestamp\n     * userId: Anonymous user identifier from system configuration\n\n2. Data Validation:\n   - Validate session identifier:\n     * VERIFY sessionId is not null\n     * VERIFY sessionId is a valid string format\n     * IF sessionId is invalid THEN generate error message \"Invalid session identifier\"\n   - Validate IP address:\n     * VERIFY IP address is in valid format\n     * IF IP address is invalid THEN generate error message \"Invalid IP address format\"\n\n3. Business Rule Processing:\n   - VERIFY system configuration is properly loaded\n     * CHECK that anonymous user ID is available from system configuration\n     * IF configuration is not available THEN generate error \"System configuration not available\"\n   - VERIFY session tracking is enabled\n     * IF session tracking is disabled THEN log warning but continue process\n\n4. Core Operation Execution:\n   - Create or update user session with basic information:\n     * SET session start time to current timestamp\n     * SET last visit time to current timestamp\n     * SET user ID to anonymous user ID from system configuration\n     * SET session ID to provided session identifier\n     * SET IP address to provided IP address\n     * SET default language based on system configuration\n   - Register session in the system:\n     * ADD session to active sessions collection\n     * UPDATE session timestamp\n\n5. Response Generation:\n   - Success response:\n     * RETURN initialized user session object with basic information\n     * INCLUDE session identifier for future reference\n     * INCLUDE timestamp of session creation\n   - Error response:\n     * INCLUDE specific validation or processing error message\n     * INCLUDE guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Session identifier must be valid",
+    "IP address must be in valid format",
+    "System configuration must be available",
+    "Anonymous user ID must be defined in system configuration"
+  ],
+  "dbSeedingOperations": [
+    "Ensure anonymous user exists in jforum_users table"
+  ],
+  "schema": {
+    "UserSession": {
+      "sessionId": "string",
+      "userId": "number",
+      "username": "string",
+      "startTime": "date",
+      "lastVisit": "date",
+      "sessionTime": "number",
+      "ip": "string",
+      "lang": "string",
+      "autoLogin": "boolean",
+      "privateMessages": "number"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "featureName": "GetGroupRoles",
+  "description": "Retrieves role collections for a specific group from the cache.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - groupId (mandatory): A unique identifier for the group\n   - System will use the cache engine that was previously configured\n\n2. Data Validation:\n   - Validate groupId:\n     - Ensure groupId is provided\n     - Verify groupId is a positive integer\n     - IF groupId is invalid or missing THEN\n       - Generate appropriate error message\n       - Terminate process and return error\n\n3. Business Rule Processing:\n   - Check cache availability:\n     - Verify the cache engine is properly initialized\n     - IF cache engine is not available THEN\n       - Log system error\n       - Prepare fallback mechanism or error response\n   - Determine cache retrieval approach:\n     - IF single groupId is provided THEN\n       - Prepare to retrieve roles for single group\n     - IF multiple groupIds are provided THEN\n       - Prepare to retrieve merged roles for multiple groups\n\n4. Core Operation Execution:\n   - Retrieve roles from cache:\n     - Convert groupId to appropriate cache key format\n     - Query the cache using the FQN (fully qualified name) and the group identifier\n     - IF roles are found in cache THEN\n       - Retrieve the RoleCollection object\n     - ELSE\n       - Return null to indicate no roles found\n   - Handle any exceptions during retrieval:\n     - IF exception occurs during cache access THEN\n       - Log the error details\n       - Return appropriate error response\n\n5. Response Generation:\n   - Format the response:\n     - IF roles were successfully retrieved THEN\n       - Return the RoleCollection object containing all roles for the requested group(s)\n     - ELSE\n       - Return null to indicate no roles were found\n       - Include appropriate status information\n   - Provide context for response:\n     - Include information about the group(s) queried\n     - Include timestamp of when the data was retrieved",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Cache engine must be properly initialized before retrieval",
+    "Role collection may be null if no roles exist for the specified group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RoleCollection": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

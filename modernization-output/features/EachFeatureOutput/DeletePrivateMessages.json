@@ -1,0 +1,58 @@
+{
+  "featureName": "DeletePrivateMessages",
+  "description": "Deletes a collection of private messages for a specific user.",
+  "inputValues": [
+    "privateMessages-object-PrivateMessage[]",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. privateMessages (array of PrivateMessage objects, mandatory)\n     b. userId (number, mandatory) - The identifier of the user performing the deletion\n\n2. Data Validation:\n   - Validate privateMessages array:\n     a. Check if privateMessages is not null or empty\n     b. IF privateMessages is null or empty THEN\n        i. Generate error message: \"No messages selected for deletion\"\n        ii. Terminate process\n     c. FOR EACH message in privateMessages:\n        i. Verify message has a valid identifier\n        ii. IF message identifier is invalid THEN\n            1. Generate error message: \"Invalid message identifier found\"\n            2. Terminate process\n   - Validate userId:\n     a. Check if userId is a positive integer\n     b. IF userId is invalid THEN\n        i. Generate error message: \"Invalid user identifier\"\n        ii. Terminate process\n\n3. Business Rule Processing:\n   - Verify ownership of messages:\n     a. FOR EACH message in privateMessages:\n        i. Check if the message belongs to the specified user\n        ii. IF message does not belong to user THEN\n            1. Generate error message: \"User does not have permission to delete one or more selected messages\"\n            2. Terminate process\n   - Check system state:\n     a. Verify the messaging system is operational\n     b. IF system is in maintenance mode THEN\n        i. Generate error message: \"Message system currently unavailable\"\n        ii. Terminate process\n\n4. Core Operation Execution:\n   - Process message deletion:\n     a. Begin transaction\n     b. FOR EACH message in privateMessages:\n        i. Mark message as deleted for the current user\n        ii. IF message is marked as deleted by both sender and recipient THEN\n            1. Permanently remove message from storage\n            2. Remove associated message text content\n     c. Update message counts for user's inbox/sent folders\n     d. IF any deletion operation fails THEN\n        i. Rollback all changes\n        ii. Generate error message: \"Failed to delete one or more messages\"\n        iii. Terminate process\n     e. Commit transaction\n\n5. Response Generation:\n   - Generate success response:\n     a. Create confirmation of deletion\n     b. Include count of successfully deleted messages\n     c. Update user interface to reflect deleted messages\n   - IF partial success (some messages couldn't be deleted) THEN\n     a. Include information about which messages were successfully deleted\n     b. Include reason why other messages couldn't be deleted",
+  "databaseEntities": [
+    "User",
+    "PrivateMessage"
+  ],
+  "validationRules": [
+    "Private messages array must not be empty",
+    "User ID must be a positive integer",
+    "User must be the owner of all messages being deleted",
+    "Each private message must have a valid identifier"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the private message"
+        },
+        "fromUser": {
+          "type": "number",
+          "description": "User ID of the sender"
+        },
+        "toUser": {
+          "type": "number",
+          "description": "User ID of the recipient"
+        },
+        "type": {
+          "type": "number",
+          "description": "Message status/type indicator"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the private message"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line of the private message"
+        },
+        "date": {
+          "type": "date",
+          "description": "Date when the message was sent"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

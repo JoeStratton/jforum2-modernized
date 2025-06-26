@@ -1,0 +1,77 @@
+{
+  "featureName": "InsertAttachmentsToPost",
+  "description": "Saves uploaded attachments and associates them with forum posts.",
+  "inputValues": [
+    "postId-number-Post",
+    "forumId-number-Forum",
+    "files-object-FileUpload",
+    "comments-object-AttachmentComment"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - Post ID (mandatory): Identifier of the post to attach files to\n       - Forum ID (mandatory): Identifier of the forum where the post exists\n       - Files (mandatory): One or more files to be attached\n       - Comments (optional): Description for each uploaded file\n   1.2. Determine the total number of files being uploaded\n       - IF total number of files is less than 1, THEN exit the process\n       - IF total number of files exceeds system maximum allowed per post, THEN limit to system maximum\n\n2. Data Validation:\n   2.1. Validate user permissions\n       - Check if attachments are enabled for the specified forum\n       - Check if user has permission to add attachments\n       - IF user does not have required permissions, THEN exit the process\n   2.2. Validate each file\n       - Check for null characters in filenames\n       - IF filename contains null characters, THEN reject the file and log security warning\n   2.3. Validate file extensions\n       - Extract file extension for each file\n       - Check if extension is in the allowed extensions list\n       - IF extension is not allowed, THEN throw bad extension error\n   2.4. Validate comments\n       - Check comment length for each file\n       - IF any comment exceeds 254 characters, THEN throw comment too long error\n   2.5. Validate total upload size\n       - Calculate total size of all files being uploaded\n       - Retrieve user's quota limit based on their group membership\n       - IF total size exceeds user's quota limit, THEN throw size too big error\n\n3. Business Rule Processing:\n   3.1. Process file information\n       - FOR each valid file:\n           - Create attachment record with user ID\n           - Create attachment info with file size, comment, and mimetype\n           - Extract filename without path\n           - Record upload timestamp\n           - Determine file extension information\n           - Generate unique storage filename\n   3.2. Check quota limits\n       - Determine user's quota limit based on group membership\n       - IF quota limit exists AND total upload size exceeds quota, THEN throw quota exceeded error\n\n4. Core Operation Execution:\n   4.1. Mark post as having attachments\n       - Update post record to indicate it has attachments\n   4.2. Save each attachment\n       - FOR each file to save:\n           - Associate attachment with post ID\n           - Determine storage path\n           - Save attachment record to database\n           - Save uploaded file to storage location\n   4.3. Process image thumbnails\n       - FOR each attachment that is an image (jpg, jpeg, gif, png):\n           - IF thumbnail creation is enabled, THEN:\n               - Create thumbnail of the image\n               - Save thumbnail with original filename plus '_thumb' suffix\n\n5. Response Generation:\n   5.1. Generate success response\n       - Return confirmation that attachments were successfully added to the post\n       - Include number of attachments processed\n   5.2. Generate error response (if applicable)\n       - Return specific error message based on validation failure\n       - Include guidance on resolving the issue (file size limits, allowed extensions, etc.)",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "User must have permission to add attachments to the forum",
+    "File extensions must be in the allowed list",
+    "Filenames must not contain null characters",
+    "Attachment comments must not exceed 254 characters",
+    "Total upload size must not exceed user's quota limit",
+    "Number of attachments must not exceed system maximum per post"
+  ],
+  "dbSeedingOperations": [
+    "Ensure extension groups are defined with allowed file extensions",
+    "Ensure quota limits are defined for user groups"
+  ],
+  "schema": {
+    "FileUpload": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Original filename of the uploaded file"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the uploaded file"
+        },
+        "content": {
+          "type": "object",
+          "description": "Binary content of the uploaded file"
+        }
+      },
+      "required": [
+        "name",
+        "size",
+        "contentType",
+        "content"
+      ]
+    },
+    "AttachmentComment": {
+      "type": "object",
+      "properties": {
+        "fileIndex": {
+          "type": "number",
+          "description": "Index of the file this comment belongs to"
+        },
+        "text": {
+          "type": "string",
+          "description": "Comment text for the attachment"
+        }
+      },
+      "required": [
+        "fileIndex",
+        "text"
+      ]
+    }
+  }
+}

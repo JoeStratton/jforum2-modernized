@@ -1,0 +1,46 @@
+{
+  "featureName": "SelectAllTopicsByForum",
+  "description": "Retrieves all topics belonging to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forumId (mandatory) - numeric identifier of the forum\n\n2. Data Validation\n   - Validate forumId\n     - Check if forumId is provided\n     - Verify forumId is a positive integer\n     - Verify the forum exists in the system\n   - IF validation fails THEN\n     - Generate appropriate error message\n     - Terminate process\n\n3. Business Rule Processing\n   - Check user permissions\n     - Verify current user has access rights to view the specified forum\n     - IF user lacks permission THEN\n       - Generate access denied message\n       - Terminate process\n   - Check forum status\n     - Verify forum is active and not archived\n     - IF forum is inactive THEN\n       - Generate appropriate notification\n       - Terminate process\n\n4. Core Operation Execution\n   - Retrieve all topics associated with the forum\n     - Query topics database using forumId as filter\n     - Sort topics according to system default sorting (typically by last activity date)\n     - Include relevant topic metadata:\n       - Topic title\n       - Creation date\n       - Author information\n       - Reply count\n       - View count\n       - Last post information\n   - Process topic status indicators\n     - Mark topics as read/unread based on user's last visit\n     - Identify sticky/announcement topics\n     - Identify locked topics\n     - Identify topics with polls\n\n5. Response Generation\n   - Format topic list for display\n     - Group topics by type (announcements, sticky, normal)\n     - Include pagination information if applicable\n   - IF no topics found THEN\n     - Generate appropriate empty state message\n   - IF operation successful THEN\n     - Return formatted topic list\n   - ELSE\n     - Generate error message with support information\n     - Log the error details",
+  "databaseEntities": [
+    "Forum",
+    "Topic",
+    "User"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to view the forum",
+    "Forum must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "postedBy": "object",
+      "creationDate": "date",
+      "lastPostId": "number",
+      "lastPostDate": "date",
+      "totalReplies": "number",
+      "totalViews": "number",
+      "isSticky": "boolean",
+      "isLocked": "boolean",
+      "hasPoll": "boolean"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostId": "number",
+      "isActive": "boolean"
+    }
+  }
+}

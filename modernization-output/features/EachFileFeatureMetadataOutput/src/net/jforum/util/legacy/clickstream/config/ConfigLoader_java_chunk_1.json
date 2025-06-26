@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "LoadClickstreamConfig",
+    "description": "Loads and parses clickstream configuration from XML file to identify bot hosts and agents"
+  }
+]

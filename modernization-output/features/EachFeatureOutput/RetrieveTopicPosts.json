@@ -1,0 +1,119 @@
+{
+  "featureName": "RetrieveTopicPosts",
+  "description": "Retrieves and prepares posts for a topic with pagination and edit permissions.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "start-number-Pagination",
+    "count-number-Pagination",
+    "userId-number-User",
+    "canEdit-boolean-Permission"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicId (mandatory): Unique identifier for the topic\n     b. start (mandatory): Starting position for pagination\n     c. count (mandatory): Number of posts to retrieve\n     d. userId (mandatory): Current user's identifier\n     e. canEdit (mandatory): Flag indicating if user has general edit permission\n\n2. Data Validation:\n   - Validate topicId:\n     a. Ensure topicId is a positive integer\n     b. Verify topic exists in the system\n     c. IF topic does not exist, THEN return error message\n   - Validate pagination parameters:\n     a. Ensure start is a non-negative integer\n     b. Ensure count is a positive integer\n     c. IF parameters are invalid, THEN use default values\n   - Validate userId:\n     a. Ensure userId is a valid user in the system\n     b. IF userId is invalid, THEN use anonymous user ID\n\n3. Business Rule Processing:\n   - Determine caching strategy:\n     a. Check if post caching is enabled in system configuration\n     b. IF caching is enabled, THEN prepare to retrieve posts from cache\n     c. ELSE prepare to retrieve posts directly from data storage\n   - Determine anonymous user identifier:\n     a. Retrieve anonymous user ID from system configuration\n     b. Store for later permission comparisons\n\n4. Core Operation Execution:\n   - Retrieve posts:\n     a. IF post caching is enabled:\n        i. Retrieve posts from post repository with pagination\n        ii. Set needPrepare flag to false\n     b. ELSE:\n        i. Retrieve posts directly from data access object with pagination\n        ii. Set needPrepare flag to true\n   - Process each post:\n     a. FOR EACH post in retrieved posts:\n        i. IF needPrepare is true, THEN use post as is\n        ii. ELSE create a new post object from the cached post\n        iii. Determine edit permission for this specific post:\n           - IF user has general edit permission OR\n           - (post creator is not anonymous AND post creator matches current user)\n           - THEN grant edit permission for this post\n        iv. IF needPrepare is true, THEN prepare post for display:\n           - Process HTML content based on post settings\n           - Process BBCode if enabled\n           - Process smilies if enabled\n           - Format code blocks if present\n        v. Add processed post to result list\n\n5. Response Generation:\n   - Return the processed post list containing:\n     a. Post content properly formatted for display\n     b. Edit permissions for each post\n     c. All post metadata (author, timestamp, etc.)\n   - IF an error occurred during processing:\n     a. Return appropriate error message\n     b. Include details about the nature of the error",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a valid positive integer",
+    "Topic must exist in the system",
+    "Pagination start parameter must be a non-negative integer",
+    "Pagination count parameter must be a positive integer",
+    "User ID must correspond to a valid user in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "time": {
+          "type": "date"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean"
+        },
+        "htmlEnabled": {
+          "type": "boolean"
+        },
+        "smiliesEnabled": {
+          "type": "boolean"
+        },
+        "signatureEnabled": {
+          "type": "boolean"
+        },
+        "userIp": {
+          "type": "string"
+        },
+        "canEdit": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "lastPostId": {
+          "type": "number"
+        },
+        "postCount": {
+          "type": "number"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "number"
+        },
+        "count": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "canEdit": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

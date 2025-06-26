@@ -1,0 +1,27 @@
+{
+  "featureName": "EditForumForm",
+  "description": "Prepares the form for editing an existing forum's details.",
+  "inputValues": [
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forum_id (mandatory) from the request\n   - System will retrieve the following information:\n     - List of all categories\n     - Current forum details\n\n2. Data Validation:\n   - Validate forum_id:\n     - Must be a valid integer\n     - Must correspond to an existing forum in the system\n     - IF forum_id is invalid or not found THEN\n       - Display error message\n       - Redirect to forum list page\n     - END IF\n\n3. Business Rule Processing:\n   - Retrieve forum data from the database:\n     - Fetch forum details using the provided forum_id\n     - Fetch all available categories for selection\n   - Prepare form data:\n     - Set form action to 'editSave'\n     - Pre-populate form fields with current forum values\n\n4. Core Operation Execution:\n   - Construct the edit form with the following fields:\n     - Forum name (pre-populated with current value)\n     - Forum description (pre-populated with current value)\n     - Category selection dropdown (with current category selected)\n     - Moderation status checkbox (checked if forum is currently moderated)\n   - Prepare context data for the form template:\n     - Add forum object containing current forum details\n     - Add categories list for dropdown selection\n     - Set action parameter to 'editSave'\n\n5. Response Generation:\n   - Display the forum edit form with pre-populated values\n   - Provide options to:\n     - Save changes\n     - Cancel and return to forum list\n   - Include validation feedback mechanisms for form submission",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must correspond to an existing forum",
+    "Forum name must not be empty",
+    "Forum must belong to a valid category"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "moderated": "boolean"
+    }
+  }
+}

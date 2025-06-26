@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "EncryptStringWithMD5",
+    "description": "Encrypts a string using MD5 hashing algorithm and returns the hexadecimal representation"
+  }
+]

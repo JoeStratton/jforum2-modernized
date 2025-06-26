@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/dao/MailIntegrationDAO.java\n\n Original Content: /*\n * Created on 21/08/2006 21:17:12\n */\npackage net.jforum.dao;\n\nimport java.util.List;\n\nimport net.jforum.entities.MailIntegration;\n\n/**\n * @author Rafael Steil\n * @version $Id: MailIntegrationDAO.java,v 1.1 2006/08/22 02:05:24 rafaelsteil Exp $\n */\npublic interface MailIntegrationDAO\n{\n\t/**\n\t * Adds a new mail integration\n\t * @param integration the information to add\n\t */\n\tpublic void add(MailIntegration integration);\n\t\n\t/**\n\t * Updates an existing mail integration data\n\t * @param integration\n\t */\n\tpublic void update(MailIntegration integration);\n\t\n\t/**\n\t * Deletes a mail integration by its forumId\n\t * @param forumId the forumId of the underlying mailintegration \n\t * to be deleted\n\t */\n\tpublic void delete(int forumId);\n\t\n\t/**\n\t * Search for a mail integration instance\n\t * @param forumId the forumId of the desired object. \n\t * @return the requested information, or null if not found\n\t */\n\tpublic MailIntegration find(int forumId);\n\t\n\t/**\n\t * Returns all MailIntegration objects currently registered\n\t * @return a list with all data found. Each entry is a MailIntegration instance\n\t */\n\tpublic List findAll();\n}",
+  "metadata": {
+    "fileId": "MailIntegrationDAO_java_chunk_1",
+    "fileName": "MailIntegrationDAO.java",
+    "filePath": "src/net/jforum/dao/MailIntegrationDAO.java"
+  }
+}

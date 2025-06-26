@@ -1,0 +1,48 @@
+{
+  "featureName": "ManageGroupQuotas",
+  "description": "Associates quota limits with user groups to control attachment usage.",
+  "inputValues": [
+    "groupId-number-Group",
+    "quotaId-number-QuotaLimit",
+    "groups-object-GroupList"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following inputs:\n       - groupId: Identifier of the group to set quota for (mandatory for single group operations)\n       - quotaId: Identifier of the quota limit to apply (mandatory for single group operations)\n       - groups: List of groups with associated quota limits (mandatory for batch operations)\n   1.2. Determine operation type:\n       - IF single group operation THEN use groupId and quotaId\n       - IF batch operation THEN use groups list\n\n2. Data Validation\n   2.1. Validate groupId (for single operations):\n       - IF groupId is not provided THEN display error message \"Group identifier is required\"\n       - IF groupId is not a positive integer THEN display error message \"Invalid group identifier\"\n       - IF groupId does not exist in the system THEN display error message \"Group not found\"\n   2.2. Validate quotaId (for single operations):\n       - IF quotaId is not provided THEN display error message \"Quota limit identifier is required\"\n       - IF quotaId is not a positive integer THEN display error message \"Invalid quota limit identifier\"\n       - IF quotaId does not exist in the system THEN display error message \"Quota limit not found\"\n   2.3. Validate groups list (for batch operations):\n       - IF groups list is empty THEN display error message \"No groups provided\"\n       - FOR EACH group in groups list:\n           - Verify group identifier exists\n           - Verify associated quota limit identifier exists\n           - IF any validation fails THEN collect errors for all invalid entries\n\n3. Business Rule Processing\n   3.1. Check system state:\n       - Verify quota limit system is enabled\n       - IF quota system is disabled THEN display warning message \"Quota system is currently disabled\"\n   3.2. Check group eligibility:\n       - Verify group is allowed to have quota limits\n       - IF group is not eligible for quotas THEN display error message \"Selected group cannot have quota limits\"\n   3.3. Check quota limit compatibility:\n       - Verify quota limit is compatible with group type\n       - IF incompatible THEN display error message \"Selected quota limit is not compatible with this group type\"\n\n4. Core Operation Execution\n   4.1. For single group operation:\n       - Remove any existing quota associations for the specified group\n       - Create new association between group and quota limit\n       - Record the change in system logs\n   4.2. For batch operation:\n       - IF clean existing associations option is selected THEN remove all existing group quota associations\n       - FOR EACH valid group-quota pair:\n           - Remove any existing quota association for the current group\n           - Create new association between current group and its quota limit\n           - Record the change in system logs\n   4.3. Handle special cases:\n       - IF quotaId is zero or null THEN remove quota limit from group (use default system quota)\n       - Update cached quota information if caching is used\n\n5. Response Generation\n   5.1. For successful operations:\n       - Generate success message \"Quota limits successfully associated with groups\"\n       - Include summary of changes (groups affected, quota limits applied)\n       - Provide navigation options to quota management interface\n   5.2. For partially successful batch operations:\n       - Generate partial success message \"Some quota limits were successfully associated\"\n       - Include details of successful and failed associations\n       - Provide error details for failed associations\n   5.3. For failed operations:\n       - Generate appropriate error message based on failure reason\n       - Provide guidance on how to resolve the issue\n       - Maintain form data for correction",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Group identifier must be a positive integer",
+    "Group must exist in the system",
+    "Quota limit identifier must be a positive integer",
+    "Quota limit must exist in the system",
+    "Each group can have only one quota limit assigned",
+    "Special groups may have specific quota requirements"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default quota limits exist in the system",
+    "Ensure system groups are properly configured"
+  ],
+  "schema": {
+    "GroupList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "number",
+            "description": "Unique identifier of the group"
+          },
+          "quotaId": {
+            "type": "number",
+            "description": "Identifier of the quota limit to apply to this group"
+          }
+        },
+        "required": [
+          "groupId",
+          "quotaId"
+        ]
+      }
+    }
+  }
+}

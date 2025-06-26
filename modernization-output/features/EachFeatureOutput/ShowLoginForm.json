@@ -1,0 +1,18 @@
+{
+  "featureName": "ShowLoginForm",
+  "description": "Displays the login form with optional return path handling.",
+  "inputValues": [
+    "returnPath-string-Navigation"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. returnPath (string, optional): The URL to redirect after successful login\n\n2. Data Validation:\n   - Validate authentication type:\n     a. IF authentication type is SSO THEN\n        i. Display registration disabled message\n        ii. Exit the process\n     b. ELSE continue with normal login form display\n\n3. Business Rule Processing:\n   - Process return path information:\n     a. IF returnPath parameter is provided THEN\n        i. Store returnPath value for use after login\n     b. ELSE IF system is configured to use referrer information THEN\n        i. Retrieve HTTP referrer header\n        ii. IF referrer exists THEN\n           1. Store referrer as returnPath for use after login\n\n4. Core Operation Execution:\n   - Prepare login form display:\n     a. Set page title to localized \"Login\" text\n     b. Set template to display login form\n     c. Include any stored returnPath in the form context\n\n5. Response Generation:\n   - Generate login form response:\n     a. Display login form with:\n        i. Username field\n        ii. Password field\n        iii. \"Remember me\" option if auto-login is enabled\n        iv. Hidden returnPath field if applicable\n        v. Submit button\n     b. Include any system messages or notifications",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Authentication type must not be SSO to display login form",
+    "Return path must be preserved if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

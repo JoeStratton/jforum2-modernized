@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SelectAllUsersByGroup",
+    "description": "Retrieves a paginated list of users belonging to a specific group"
+  }
+]

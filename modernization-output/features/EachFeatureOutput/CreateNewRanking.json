@@ -1,0 +1,28 @@
+{
+  "featureName": "CreateNewRanking",
+  "description": "Creates a new user ranking with title, special status, and minimum post requirements.",
+  "inputValues": [
+    "title-string-Ranking",
+    "isSpecial-boolean-Ranking",
+    "minimumPosts-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - title (string): The name of the ranking to be displayed to users\n       - isSpecial (boolean): Flag indicating if this is a special ranking not tied to post count\n       - minimumPosts (number): The minimum number of posts required to achieve this ranking\n   1.2. Note that minimumPosts is only required when isSpecial is false\n\n2. Data Validation:\n   2.1. Validate title input:\n       - Check if title is not empty or null\n       - Check if title length is within acceptable limits (e.g., 1-50 characters)\n       - IF validation fails, THEN display appropriate error message\n   2.2. Validate isSpecial input:\n       - Ensure isSpecial is a valid boolean value (true or false)\n       - IF validation fails, THEN display appropriate error message\n   2.3. Validate minimumPosts input:\n       - IF isSpecial is false, THEN:\n           - Check if minimumPosts is provided\n           - Verify minimumPosts is a positive integer\n           - Ensure minimumPosts does not conflict with existing ranking thresholds\n       - IF validation fails, THEN display appropriate error message\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify the ranking system is active and operational\n       - Ensure the user has proper permissions to create rankings\n   3.2. Check for duplicate rankings:\n       - IF a ranking with the same title already exists, THEN display error message\n   3.3. Check for ranking threshold conflicts:\n       - IF isSpecial is false, THEN:\n           - Check if the minimumPosts value overlaps with existing non-special rankings\n           - IF overlap exists, THEN display warning or error message\n\n4. Core Operation Execution:\n   4.1. Create new ranking record:\n       - Generate a new ranking object with the provided title\n       - Set the special status flag based on isSpecial input\n       - IF isSpecial is false, THEN set the minimum posts threshold\n   4.2. Save the ranking to the system:\n       - Store the new ranking in the database\n       - Update the ranking repository/cache to include the new ranking\n   4.3. Handle potential failures:\n       - IF database operation fails, THEN:\n           - Log the error details\n           - Roll back any partial changes\n           - Prepare appropriate error message\n\n5. Response Generation:\n   5.1. For successful creation:\n       - Generate success message indicating the ranking was created\n       - Prepare to display the updated list of all rankings\n   5.2. For failed creation:\n       - Generate appropriate error message explaining the failure reason\n       - Preserve user input for correction\n   5.3. Return to the ranking management interface:\n       - Display either the success message with updated ranking list\n       - OR display the error message with form for correction",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Ranking title must not be empty",
+    "Special rankings do not require minimum post count",
+    "Non-special rankings must have a positive minimum post count",
+    "Minimum post count must not conflict with existing ranking thresholds"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "special": "boolean",
+      "min": "number"
+    }
+  }
+}

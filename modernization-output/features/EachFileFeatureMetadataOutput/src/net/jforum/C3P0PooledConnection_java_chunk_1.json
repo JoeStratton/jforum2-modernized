@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "InitializeConnectionPool",
+    "description": "Initializes a C3P0 database connection pool with configurable parameters"
+  },
+  {
+    "featureName": "GetDatabaseConnection",
+    "description": "Provides database connections from the connection pool"
+  },
+  {
+    "featureName": "ReleaseConnection",
+    "description": "Returns database connections to the pool after use"
+  },
+  {
+    "featureName": "ReleaseAllConnections",
+    "description": "Destroys the connection pool and releases all database connections"
+  },
+  {
+    "featureName": "ConfigurePoolParameters",
+    "description": "Applies custom configuration parameters to the connection pool"
+  }
+]

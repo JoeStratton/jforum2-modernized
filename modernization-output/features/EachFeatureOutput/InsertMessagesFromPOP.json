@@ -1,0 +1,68 @@
+{
+  "featureName": "InsertMessagesFromPOP",
+  "description": "Processes email messages from POP server and posts them to forum topics.",
+  "inputValues": [
+    "popMessages-object-POPMessageCollection",
+    "senderEmail-string-User",
+    "listEmail-string-Forum",
+    "subject-string-Message",
+    "messageBody-string-Message",
+    "inReplyTo-string-Message"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect POP message collection containing multiple email messages\n   - For each message, extract:\n     - Sender email address (mandatory)\n     - List/destination email address (mandatory)\n     - Subject line (mandatory)\n     - Message body content (mandatory)\n     - In-Reply-To header (optional)\n     - Message identifiers (system-generated)\n\n2. Data Validation:\n   - Validate sender email format\n     - Must be a properly formatted email address\n     - Error message if format is invalid: \"Invalid sender email format\"\n   - Validate list email format\n     - Must be a properly formatted email address\n     - Error message if format is invalid: \"Invalid list email format\"\n   - Validate subject line\n     - Must not be empty\n     - Error message if empty: \"Subject line cannot be empty\"\n   - Validate message body\n     - Must not be empty\n     - Error message if empty: \"Message body cannot be empty\"\n\n3. Business Rule Processing:\n   - For each message in the collection:\n     - Check if sender email exists in the system\n       - IF sender email not found in user database\n         - Log warning message\n         - Skip processing this message\n         - Continue to next message\n     - Check if list email is associated with a forum\n       - IF list email not associated with any forum\n         - Log error message\n         - Skip processing this message\n         - Continue to next message\n     - Determine if message is a reply to existing topic\n       - IF In-Reply-To header exists\n         - Extract topic ID from message identifier\n       - ELSE\n         - Mark as new topic\n\n4. Core Operation Execution:\n   - For each valid message:\n     - Create system session for the sender user\n       - Generate unique session ID\n       - Set user permissions and preferences\n     - Prepare message data\n       - Set forum ID based on list email\n       - Set topic type as normal\n       - Set message subject and body\n       - Apply user formatting preferences (BBCode, HTML, smilies)\n     - Post message to forum\n       - IF message is a reply (has topic ID)\n         - Add as reply to existing topic\n       - ELSE\n         - Create as new topic\n     - Clean up session data after posting\n\n5. Response Generation:\n   - For successful message processing:\n     - Log successful posting information\n     - Include forum ID and topic ID in log\n   - For failed message processing:\n     - Log detailed error information\n     - Include reason for failure\n   - Generate final processing summary\n     - Total messages received\n     - Number of messages successfully processed\n     - Number of messages failed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Sender email must exist in the user database",
+    "List email must be associated with a forum",
+    "Subject line must not be empty",
+    "Message body must not be empty",
+    "User must have permission to post in the target forum"
+  ],
+  "dbSeedingOperations": [
+    "Forums must have email addresses configured for receiving messages",
+    "Users must have email addresses that match their forum accounts"
+  ],
+  "schema": {
+    "POPMessageCollection": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Email address of the sender"
+          },
+          "listEmail": {
+            "type": "string",
+            "description": "Email address of the forum/list"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line of the message"
+          },
+          "message": {
+            "type": "string",
+            "description": "Body content of the message"
+          },
+          "inReplyTo": {
+            "type": "string",
+            "description": "Message identifier this message is replying to"
+          }
+        },
+        "required": [
+          "sender",
+          "listEmail",
+          "subject",
+          "message"
+        ]
+      }
+    }
+  }
+}

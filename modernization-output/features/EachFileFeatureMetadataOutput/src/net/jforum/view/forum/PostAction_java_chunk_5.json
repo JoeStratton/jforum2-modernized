@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "InsertSave",
+    "description": "Creates new posts or topics with validation, attachments, polls, and notification handling"
+  },
+  {
+    "featureName": "WaitingModeration",
+    "description": "Displays a waiting for moderation message after posting content requiring approval"
+  },
+  {
+    "featureName": "NotModeratedYet",
+    "description": "Shows notification that content has not been moderated yet"
+  },
+  {
+    "featureName": "EnsurePollMinimumOptions",
+    "description": "Validates that polls have at least two options before allowing submission"
+  }
+]

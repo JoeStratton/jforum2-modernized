@@ -1,0 +1,23 @@
+{
+  "featureName": "DeletePostAttachments",
+  "description": "Removes all attachments associated with a forum post.",
+  "inputValues": [
+    "postId-number-Post",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. postId (mandatory): The unique identifier of the post containing attachments\n     1.2. forumId (mandatory): The identifier of the forum where the post exists\n     1.3. System will use current user session information\n\n2. Data Validation\n   2.1. Validate Post Existence\n       - Verify the post with the provided postId exists in the system\n       - IF post does not exist, THEN\n         - Generate an error message indicating invalid post\n         - Terminate the operation\n   2.2. Validate Forum Existence\n       - Verify the forum with the provided forumId exists in the system\n       - IF forum does not exist, THEN\n         - Generate an error message indicating invalid forum\n         - Terminate the operation\n   2.3. Validate User Permissions\n       - Check if the current user has permission to delete attachments in this forum\n       - IF user lacks necessary permissions, THEN\n         - Generate an access denied error message\n         - Terminate the operation\n\n3. Business Rule Processing\n   3.1. Check Attachment Existence\n       - Retrieve all attachments associated with the specified post\n       - IF no attachments exist, THEN\n         - Log that no attachments were found for deletion\n         - Skip to Response Generation with appropriate message\n   3.2. Verify Post Ownership or Moderation Rights\n       - Check if current user is either the post owner or has moderation rights\n       - IF user is neither post owner nor moderator, THEN\n         - Generate an unauthorized access error\n         - Terminate the operation\n\n4. Core Operation Execution\n   4.1. Prepare Attachment List for Deletion\n       - Create a list of all attachment IDs associated with the post\n       - For each attachment in the post:\n         - Add the attachment ID to the deletion list\n   4.2. Delete Physical Files\n       - For each attachment in the deletion list:\n         4.2.1. Retrieve the attachment details including physical filename\n         4.2.2. Construct the full file path using the system's attachment storage directory\n         4.2.3. Delete the physical file from the storage location\n         4.2.4. Check if a thumbnail exists for the attachment\n         4.2.5. IF thumbnail exists, THEN delete the thumbnail file\n   4.3. Remove Database Records\n       - For each attachment in the deletion list:\n         4.3.1. Remove the attachment record from the database\n         4.3.2. Log the successful deletion of the attachment\n   4.4. Update Post Status\n       - Update the post record to indicate it no longer has attachments\n       - Set the 'hasAttachments' flag to false\n\n5. Response Generation\n   5.1. Success Response\n       - Generate a success message indicating all attachments were successfully deleted\n       - Include the count of attachments that were removed\n       - Return success status to the caller\n   5.2. Error Response\n       - IF any errors occurred during the deletion process, THEN\n         - Generate appropriate error messages detailing what failed\n         - Include information about any attachments that could not be deleted\n         - Return error status to the caller",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_attachments",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must have permission to delete attachments in the specified forum",
+    "Post must exist in the system",
+    "Forum must exist in the system",
+    "User must be either the post owner or have moderation rights",
+    "Attachments must belong to the specified post"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

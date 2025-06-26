@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "StartSummaryJob",
+    "description": "Schedules and starts the periodic summary job that sends forum summaries to users"
+  }
+]

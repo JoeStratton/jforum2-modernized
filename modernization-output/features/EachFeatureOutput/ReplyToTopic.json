@@ -1,0 +1,64 @@
+{
+  "featureName": "ReplyToTopic",
+  "description": "Allows users to reply to an existing topic with permission validation.",
+  "inputValues": [
+    "topic_id-number-Topic",
+    "post_content-string-Post",
+    "user_id-number-User",
+    "notify-boolean-Notification",
+    "attachments-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topic_id (mandatory): The identifier of the topic being replied to\n   - Collect post_content (mandatory): The content of the reply\n   - Collect user_id (system-generated): The identifier of the current user\n   - Collect notify (optional): Boolean flag indicating if user wants notifications for future replies\n   - Collect attachments (optional): Any files to be attached to the reply\n\n2. Data Validation:\n   - Validate topic_id:\n      * Verify topic_id is a positive integer\n      * Verify topic exists in the system\n      * IF topic does not exist THEN\n         - Display \"Topic not found\" message\n         - Terminate process\n   - Validate post_content:\n      * Verify post_content is not empty\n      * Verify post_content meets minimum length requirements\n      * Verify post_content does not exceed maximum length\n      * IF content validation fails THEN\n         - Display appropriate error message\n         - Allow user to correct the content\n   - Validate attachments (if provided):\n      * Verify each attachment meets size restrictions\n      * Verify total attachments do not exceed quota limit\n      * Verify file types are permitted\n      * IF attachment validation fails THEN\n         - Display specific error about attachment issues\n         - Allow user to modify attachments\n\n3. Business Rule Processing:\n   - Check user permissions:\n      * Verify user has access to the forum containing the topic\n      * Verify user has permission to reply to topics\n      * IF user lacks necessary permissions THEN\n         - Display \"Insufficient permissions\" message\n         - Terminate process\n   - Check topic status:\n      * Verify topic is not locked\n      * IF topic is locked AND user is not a moderator THEN\n         - Display \"Topic is locked\" message\n         - Terminate process\n   - Check forum status:\n      * Verify forum is not read-only\n      * IF forum is read-only THEN\n         - Display \"Forum is read-only\" message\n         - Terminate process\n   - Check user status:\n      * Verify user is not banned or restricted\n      * IF user is banned THEN\n         - Display appropriate message\n         - Terminate process\n\n4. Core Operation Execution:\n   - Prepare post data:\n      * Generate post timestamp\n      * Format post content according to system rules\n      * Process any special formatting or BBCode\n      * Handle HTML content if permitted for user\n   - Create new post record:\n      * Store post content in database\n      * Link post to the topic\n      * Set user as post author\n      * Update post count for user\n   - Process attachments (if any):\n      * Store attachment files\n      * Create attachment records linked to post\n      * Update user's attachment quota usage\n   - Update topic data:\n      * Update last post information\n      * Update reply count\n      * Update last poster information\n   - Update forum data:\n      * Update last post information\n      * Update post count\n   - Process notification settings:\n      * IF notify is true THEN\n         - Add user to topic notification list\n      * ELSE IF user previously subscribed THEN\n         - Remove user from topic notification list\n   - Send notifications:\n      * Identify users subscribed to topic\n      * Generate notification messages\n      * Queue notifications for delivery\n\n5. Response Generation:\n   - On success:\n      * Display confirmation message\n      * Redirect user to the topic view showing the new reply\n      * Position view to show the newly added post\n   - On failure:\n      * Display detailed error message\n      * Preserve user's post content for correction\n      * Provide guidance on resolving the issue\n   - Include support information:\n      * If system error occurs, provide reference code\n      * Include contact information for support if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Topic must exist in the system",
+    "User must have permission to access the forum",
+    "User must have permission to reply to topics",
+    "Topic must not be locked (unless user is a moderator)",
+    "Forum must not be in read-only mode",
+    "Post content must not be empty",
+    "Post content must meet minimum length requirements",
+    "Post content must not exceed maximum length",
+    "Attachments must meet size restrictions",
+    "Attachments must be of permitted file types",
+    "Total attachments must not exceed quota limit"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "file_name": {
+          "type": "string",
+          "description": "Original name of the uploaded file"
+        },
+        "file_content": {
+          "type": "string",
+          "format": "binary",
+          "description": "Binary content of the file"
+        },
+        "file_size": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "content_type": {
+          "type": "string",
+          "description": "MIME type of the file"
+        }
+      },
+      "required": [
+        "file_name",
+        "file_content",
+        "file_size",
+        "content_type"
+      ]
+    }
+  }
+}

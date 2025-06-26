@@ -1,0 +1,90 @@
+{
+  "featureName": "GenerateTopicPostsRSS",
+  "description": "Creates RSS feed for topic posts with formatted content, author information, and publication dates.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "forumId-number-Forum",
+    "title-string-Topic",
+    "description-string-Topic",
+    "posts-object-PostList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicId (mandatory): Numeric identifier for the topic\n     b. forumId (mandatory): Numeric identifier for the forum containing the topic\n     c. title (mandatory): String representing the RSS feed title\n     d. description (mandatory): String describing the RSS feed content\n     e. posts (mandatory): List of post objects containing post data\n   - System will generate:\n     a. forumLink: Base URL for the forum\n     b. currentTimestamp: Current system time for RSS feed generation\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is a positive integer\n     b. IF topicId is invalid THEN generate error message \"Invalid topic identifier\"\n     c. Check if topic exists in the system\n     d. IF topic does not exist THEN generate error message \"Topic not found\"\n   - Validate forumId:\n     a. Check if forumId is a positive integer\n     b. IF forumId is invalid THEN generate error message \"Invalid forum identifier\"\n     c. Check if forum exists in the system\n     d. IF forum does not exist THEN generate error message \"Forum not found\"\n   - Validate title:\n     a. Check if title is not empty\n     b. IF title is empty THEN generate error message \"RSS feed title cannot be empty\"\n   - Validate description:\n     a. Check if description is not empty\n     b. IF description is empty THEN generate error message \"RSS feed description cannot be empty\"\n   - Validate posts:\n     a. Check if posts collection is not null\n     b. Check if posts collection is not empty\n     c. IF posts collection is null or empty THEN generate error message \"No posts available for RSS generation\"\n\n3. Business Rule Processing:\n   - Verify user has access to the topic:\n     a. Check if the topic is in a restricted forum\n     b. IF topic is restricted AND user is not authenticated THEN request authentication\n     c. IF user does not have permission to view the topic THEN deny access\n   - Verify system encoding settings are available:\n     a. IF encoding settings are missing THEN use default encoding\n   - Verify forum link can be generated:\n     a. IF forum link generation fails THEN use default base URL\n   - Verify post processing capabilities:\n     a. Check if post formatting tools are available\n     b. IF formatting tools are unavailable THEN use plain text mode\n   - Update topic view count:\n     a. Increment the total views counter for the topic\n\n4. Core Operation Execution:\n   - Initialize RSS feed structure:\n     a. Create new RSS feed with provided title and description\n     b. Set encoding from system settings\n     c. Set feed link using forum base URL and topic identifier\n     d. Set publication date to current timestamp\n   - Process each post in the collection:\n     a. FOR EACH post in posts collection:\n        i. Disable BBCode formatting for the post\n        ii. Disable HTML formatting for the post\n        iii. Create new RSS item\n        iv. Set author to post username\n        v. Set content type to HTML\n        vi. Format post text for display\n        vii. Set formatted text as item description\n        viii. Format post timestamp as publication date\n        ix. Set post subject as item title\n        x. Generate and set link to the specific post\n        xi. Add item to RSS feed\n   - Finalize RSS feed:\n     a. Set all processed items in the feed structure\n     b. Prepare feed for output\n     c. Set content type to XML\n\n5. Response Generation:\n   - Success response:\n     a. Return complete RSS feed document with all items\n     b. Include proper XML formatting and headers\n     c. Set appropriate content type (text/xml)\n   - Error response:\n     a. IF any validation or processing errors occurred THEN return error message\n     b. Include specific error details and suggestions for resolution\n     c. IF authentication is required THEN prompt for basic authentication",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Topic must exist in the system",
+    "Forum must exist in the system",
+    "User must have permission to access the topic",
+    "RSS feed title must not be empty",
+    "RSS feed description must not be empty",
+    "Posts collection must not be empty",
+    "Each post must have a valid username",
+    "Each post must have a subject",
+    "Each post must have content text",
+    "Each post must have a valid timestamp"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PostList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the post"
+          },
+          "topicId": {
+            "type": "number",
+            "description": "Identifier of the topic this post belongs to"
+          },
+          "forumId": {
+            "type": "number",
+            "description": "Identifier of the forum this post belongs to"
+          },
+          "postUsername": {
+            "type": "string",
+            "description": "Username of the post author"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line of the post"
+          },
+          "text": {
+            "type": "string",
+            "description": "Content text of the post"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the post was created"
+          },
+          "bbCodeEnabled": {
+            "type": "boolean",
+            "description": "Flag indicating if BBCode is enabled for this post"
+          },
+          "htmlEnabled": {
+            "type": "boolean",
+            "description": "Flag indicating if HTML is enabled for this post"
+          }
+        },
+        "required": [
+          "id",
+          "topicId",
+          "forumId",
+          "postUsername",
+          "subject",
+          "text",
+          "time"
+        ]
+      }
+    }
+  }
+}

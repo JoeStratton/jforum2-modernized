@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "GetFileItemFactory",
+    "description": "Retrieves the factory class used for creating file items"
+  },
+  {
+    "featureName": "SetFileItemFactory",
+    "description": "Sets the factory class to use when creating file items"
+  }
+]

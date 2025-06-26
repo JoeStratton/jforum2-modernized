@@ -1,0 +1,19 @@
+{
+  "featureName": "RemoveTopicSubscriptions",
+  "description": "Removes all user subscriptions for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topicId (mandatory)\n   - System will identify the topic to remove subscriptions from\n\n2. Data Validation:\n   - Validate that topicId is provided\n     - IF topicId is missing or invalid THEN\n       - Generate an error message indicating that a valid topic ID is required\n       - Halt the operation\n     - END IF\n   - Verify that the topic exists in the system\n     - IF topic does not exist THEN\n       - Generate an error message indicating that the specified topic cannot be found\n       - Halt the operation\n     - END IF\n\n3. Business Rule Processing:\n   - Check if the topic has any subscriptions\n     - IF no subscriptions exist for this topic THEN\n       - Skip deletion process\n       - Generate a notification that no subscriptions were found\n     - END IF\n   - Verify user permissions\n     - IF current user is not authorized to manage topic subscriptions THEN\n       - Generate an access denied error message\n       - Halt the operation\n     - END IF\n\n4. Core Operation Execution:\n   - Begin subscription removal process\n     - Locate all subscription records associated with the specified topic\n     - Remove all subscription entries for the topic\n     - Update any related notification settings\n     - IF any errors occur during deletion THEN\n       - Rollback any partial changes\n       - Generate an error message describing the failure\n       - Halt the operation\n     - END IF\n\n5. Response Generation:\n   - IF operation completes successfully THEN\n     - Generate a success message indicating all subscriptions were removed\n     - Include the number of subscriptions that were removed\n     - Provide confirmation that users will no longer receive notifications for this topic\n   - ELSE\n     - Generate an appropriate error message\n     - Include troubleshooting information if available\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to manage topic subscriptions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

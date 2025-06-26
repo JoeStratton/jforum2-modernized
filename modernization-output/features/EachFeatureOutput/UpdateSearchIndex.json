@@ -1,0 +1,69 @@
+{
+  "featureName": "UpdateSearchIndex",
+  "description": "Updates the search index for a modified forum post.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the modified Post object with the following attributes:\n     - Post ID (system-generated identifier)\n     - Post content (mandatory text content)\n     - Post title (mandatory text content)\n     - Author information (mandatory user reference)\n     - Topic reference (mandatory topic identifier)\n     - Forum reference (mandatory forum identifier)\n     - Timestamp of modification (system-generated)\n\n2. Data Validation:\n   - Validate Post object:\n     - Verify Post object is not null\n     - Verify Post ID exists and is valid\n     - Verify Post content is not empty\n     - Verify Post has valid references to Topic and Forum\n     - IF any validation fails, THEN:\n       - Generate appropriate error message\n       - Terminate the update process\n       - Log validation failure\n\n3. Business Rule Processing:\n   - Check if search indexing is enabled in system configuration:\n     - Retrieve system configuration for search indexing status\n     - IF search indexing is disabled, THEN:\n       - Log that indexing is skipped due to system configuration\n       - Exit the process gracefully without error\n       - Return success with no action taken\n     - ELSE continue with the update process\n   - Verify search manager is properly initialized:\n     - Check if search manager instance exists\n     - IF search manager is not initialized, THEN:\n       - Log error about missing search manager\n       - Attempt to initialize search manager\n       - IF initialization fails, THEN terminate with error\n\n4. Core Operation Execution:\n   - Prepare post data for indexing:\n     - Extract searchable content from post (title, body text)\n     - Format metadata (author, dates, topic/forum references)\n   - Remove existing index entries for this post:\n     - Locate existing index entries using Post ID\n     - Delete all found entries to prevent duplication\n   - Create new index entries:\n     - Generate index entries for the post content\n     - Associate metadata with index entries\n     - Optimize index if necessary based on system rules\n   - Handle any exceptions during indexing:\n     - IF index update fails, THEN:\n       - Log detailed error information\n       - Attempt rollback of partial updates if possible\n       - Mark post for reindexing in background process\n\n5. Response Generation:\n   - For successful update:\n     - Log successful index update with post identifier\n     - Return success status\n   - For failed update:\n     - Return error status with failure reason\n     - Include suggestions for manual reindexing if appropriate\n     - Provide reference to logs for detailed error information",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post ID must be a valid identifier",
+    "Post content must not be empty",
+    "Post must have valid references to Topic and Forum",
+    "Search indexing must be enabled in system configuration",
+    "Search manager must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "content": {
+          "type": "string",
+          "description": "Text content of the post"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the post"
+        },
+        "authorId": {
+          "type": "number",
+          "description": "User ID of the post author"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic this post belongs to"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this post belongs to"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the post was created"
+        },
+        "modificationDate": {
+          "type": "date",
+          "description": "Date when the post was last modified"
+        }
+      },
+      "required": [
+        "id",
+        "content",
+        "authorId",
+        "topicId",
+        "forumId"
+      ]
+    }
+  }
+}

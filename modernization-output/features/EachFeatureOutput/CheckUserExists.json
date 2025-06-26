@@ -1,0 +1,41 @@
+{
+  "featureName": "CheckUserExists",
+  "description": "Verifies if a user exists in the database by username.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the username (string, mandatory) from the requester\n   - No default values are provided\n   - No system-generated fields are required\n\n2. Data Validation:\n   - Validate username:\n     a. Check if username is provided\n     b. Check if username is not empty or null\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the user database is accessible\n     b. Verify that the user lookup functionality is available\n   - No additional dependencies or constraints to verify\n\n4. Core Operation Execution:\n   - Search for the user:\n     a. Query the user database using the provided username\n     b. Retrieve the complete user record if found\n     c. Set the existence flag based on search results (true if found, false if not found)\n   - Store the user information:\n     a. If user is found, maintain reference to the complete user record\n     b. If user is not found, maintain reference to null user record\n   - No modifications to the database are performed\n\n5. Response Generation:\n   - Success response:\n     a. Return boolean result indicating whether the user exists\n     b. Make the complete user record available if the user was found\n   - Error response:\n     a. Return appropriate error message if the database could not be accessed\n     b. Return appropriate error message if the username validation failed",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Username must not be empty or null",
+    "User database must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "active": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "username"
+      ]
+    }
+  }
+}

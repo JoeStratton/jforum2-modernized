@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "CheckUserForumSubscription",
+    "description": "Verifies if a user is subscribed to a specific forum"
+  },
+  {
+    "featureName": "RemoveForumSubscription",
+    "description": "Removes a user's subscription from a specific forum"
+  },
+  {
+    "featureName": "RemoveAllForumSubscriptions",
+    "description": "Removes all user subscriptions from a specific forum"
+  },
+  {
+    "featureName": "DiscoverForumIdByEmail",
+    "description": "Retrieves a forum's ID based on its associated email address"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "featureName": "GetSessionContext",
+  "description": "Retrieves or creates a session context for the current web request.",
+  "inputValues": [
+    "request-object-HttpRequest",
+    "create-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect HttpRequest object from the system\n   - Determine if a new session should be created (boolean create parameter)\n   - System will provide current session if it exists\n\n2. Data Validation:\n   - Validate that the request object is valid and properly initialized\n   - Check if the request contains valid session information\n   - IF request is invalid or corrupted THEN\n     - Generate appropriate error message\n     - Return error response\n   - END IF\n\n3. Business Rule Processing:\n   - Check if an existing session is available\n   - IF session exists THEN\n     - Verify session validity (not expired)\n     - Check session permissions and access rights\n   - ELSE\n     - Check if create parameter is set to true\n     - IF create is false THEN\n       - Return null or empty session context\n     - END IF\n   - END IF\n   - Verify system resources are available for session management\n\n4. Core Operation Execution:\n   - IF existing session is found and valid THEN\n     - Retrieve session data from storage\n     - Initialize session context with existing data\n   - ELSE IF create parameter is true THEN\n     - Generate new session identifier\n     - Create new empty session container\n     - Initialize session with default values\n     - Store new session in the system\n   - END IF\n   - Wrap session data in appropriate context object\n   - Associate context with current request\n   - Update session access timestamp\n\n5. Response Generation:\n   - Prepare session context object for return\n   - Include session identifier in response\n   - IF session was newly created THEN\n     - Include creation status in response\n   - ELSE\n     - Include session validity information\n   - END IF\n   - Return complete session context to caller",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Request object must be valid and initialized",
+    "Session must not be expired if it exists",
+    "User must have valid permissions to access the session",
+    "System must have sufficient resources to manage sessions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpRequest": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "type": "object",
+          "description": "The session associated with this request"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Request parameters"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Request attributes"
+        }
+      }
+    },
+    "SessionContext": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "creationTime": {
+          "type": "number",
+          "description": "Timestamp when the session was created"
+        },
+        "lastAccessedTime": {
+          "type": "number",
+          "description": "Timestamp when the session was last accessed"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Session attributes"
+        }
+      }
+    }
+  }
+}

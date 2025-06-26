@@ -1,0 +1,26 @@
+{
+  "featureName": "RemoveUserSession",
+  "description": "Removes a user session from the system and updates relevant counters.",
+  "inputValues": [
+    "sessionId-string-Session"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the sessionId (string) of the session to be removed\n   - System will use this sessionId to identify the session to remove\n\n2. Data Validation:\n   - Validate that sessionId is not null or empty\n     - IF sessionId is null or empty THEN\n       - Return an error message indicating that a valid session ID is required\n     - END IF\n   - Verify that the cache system is available\n     - IF cache system is not available THEN\n       - Log a warning message about null cache instance\n       - Return an error indicating the system is temporarily unavailable\n     - END IF\n\n3. Business Rule Processing:\n   - Check if the session exists in the system\n     - Retrieve the user session information using the provided sessionId\n     - IF session does not exist THEN\n       - Log that no session was found for the given sessionId\n       - Return a message indicating the session was not found\n     - END IF\n   - Determine the user type (logged in or anonymous) associated with the session\n     - Retrieve the userId from the session\n     - Compare userId with the system's anonymous user ID value\n\n4. Core Operation Execution:\n   - Acquire a synchronization lock to prevent concurrent modifications\n   - Remove the session from the logged sessions collection if applicable\n     - IF session exists in logged sessions THEN\n       - Remove the session from logged sessions collection\n     - END IF\n   - Remove any user ID mappings associated with this session\n     - IF user ID mapping exists THEN\n       - Remove the mapping between user ID and session ID\n     - END IF\n   - Update the appropriate user counter\n     - IF user is a logged-in user THEN\n       - Decrease the logged users count by 1\n     - ELSE IF user is an anonymous user THEN\n       - Decrease the anonymous users count by 1\n     - END IF\n   - Remove the main session entry from the system\n   - Release the synchronization lock\n\n5. Response Generation:\n   - Generate a success response\n     - Include confirmation that the session was successfully removed\n     - Include the session ID that was removed\n     - Include the updated counts of logged and anonymous users\n   - IF any errors occurred during the process THEN\n     - Generate an error response with appropriate error details\n     - Include guidance on how to retry the operation if applicable\n   - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session ID must not be null or empty",
+    "Cache system must be available",
+    "Session must exist in the system to be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Session": {
+      "sessionId": "string",
+      "userId": "number",
+      "username": "string",
+      "lastVisit": "date",
+      "isLogged": "boolean"
+    }
+  }
+}

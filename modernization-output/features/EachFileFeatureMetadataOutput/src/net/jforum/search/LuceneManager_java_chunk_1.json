@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "InitializeSearchManager",
+    "description": "Initializes the Lucene search manager with analyzer and directory settings"
+  },
+  {
+    "featureName": "RemoveLuceneLockFile",
+    "description": "Removes index lock files to prevent access conflicts"
+  },
+  {
+    "featureName": "CreatePostIndex",
+    "description": "Creates a search index entry for a forum post"
+  },
+  {
+    "featureName": "UpdatePostIndex",
+    "description": "Updates the search index for a modified forum post"
+  },
+  {
+    "featureName": "DeletePostIndex",
+    "description": "Removes a post from the search index"
+  },
+  {
+    "featureName": "SearchPosts",
+    "description": "Performs a search against indexed forum posts using provided search arguments"
+  }
+]

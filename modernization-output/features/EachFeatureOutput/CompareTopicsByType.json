@@ -1,0 +1,39 @@
+{
+  "featureName": "CompareTopicsByType",
+  "description": "Compares topics by type and last post date for sorting purposes.",
+  "inputValues": [
+    "topic1-object-Topic",
+    "topic2-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect two Topic objects for comparison:\n     - topic1 (mandatory): The first Topic object to compare\n     - topic2 (mandatory): The second Topic object to compare\n   - Both objects must contain:\n     - type: A numeric value representing the topic type\n     - lastPostDate: A date value representing when the last post was made\n\n2. Data Validation:\n   - Validate topic1 is not null\n     - IF topic1 is null THEN return error indicating first comparison object is missing\n   - Validate topic2 is not null\n     - IF topic2 is null THEN return error indicating second comparison object is missing\n   - Validate topic1 has a valid type value\n     - IF topic1.type is undefined THEN return error indicating missing type information\n   - Validate topic2 has a valid type value\n     - IF topic2.type is undefined THEN return error indicating missing type information\n   - Validate topic1 has a valid lastPostDate\n     - IF topic1.lastPostDate is undefined THEN return error indicating missing date information\n   - Validate topic2 has a valid lastPostDate\n     - IF topic2.lastPostDate is undefined THEN return error indicating missing date information\n\n3. Business Rule Processing:\n   - Determine the comparison priority rules:\n     - Topic type has higher priority than post date\n     - Higher topic types should appear before lower topic types\n     - For same topic types, more recent posts should appear first\n\n4. Core Operation Execution:\n   - Compare the topic types between topic1 and topic2\n     - IF topic1.type < topic2.type THEN\n       - Return 1 (indicating topic1 should be placed after topic2)\n     - ELSE IF topic1.type == topic2.type THEN\n       - Compare the lastPostDate of both topics\n       - Return the result of comparing topic2.lastPostDate with topic1.lastPostDate\n         (This ensures more recent posts appear first when types are equal)\n     - ELSE\n       - Return -1 (indicating topic1 should be placed before topic2)\n\n5. Response Generation:\n   - Return the comparison result as an integer value:\n     - Return 1: Indicates topic1 should be sorted after topic2\n     - Return 0: Indicates topic1 and topic2 are equivalent for sorting purposes\n     - Return -1: Indicates topic1 should be sorted before topic2",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Both topics must not be null",
+    "Both topics must have a defined type value",
+    "Both topics must have a valid lastPostDate",
+    "Higher topic types should be sorted before lower topic types",
+    "For equal topic types, more recent posts should be sorted first"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "number",
+          "description": "Numeric value representing the topic type"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date when the last post was made in the topic"
+        }
+      },
+      "required": [
+        "type",
+        "lastPostDate"
+      ]
+    }
+  }
+}

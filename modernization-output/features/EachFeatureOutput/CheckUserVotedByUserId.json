@@ -1,0 +1,39 @@
+{
+  "featureName": "CheckUserVotedByUserId",
+  "description": "Verifies if a user has already voted on a specific poll using user ID.",
+  "inputValues": [
+    "pollId-number-Poll",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pollId (mandatory, number) - The unique identifier of the poll to check\n   - Collect userId (mandatory, number) - The unique identifier of the user to check\n   - System will use these identifiers to verify voting status\n\n2. Data Validation:\n   - Validate pollId:\n      a. Check if pollId is provided\n      b. Verify pollId is a positive integer\n      c. IF pollId is invalid or missing, THEN return error message indicating invalid poll identifier\n   - Validate userId:\n      a. Check if userId is provided\n      b. Verify userId is a positive integer\n      c. IF userId is invalid or missing, THEN return error message indicating invalid user identifier\n\n3. Business Rule Processing:\n   - Verify Poll Existence:\n      a. Check if the poll with the given pollId exists in the system\n      b. IF poll does not exist, THEN return error message indicating poll not found\n   - Verify User Existence:\n      a. Check if the user with the given userId exists in the system\n      b. IF user does not exist, THEN return error message indicating user not found\n\n4. Core Operation Execution:\n   - Check Voting Records:\n      a. Search voting records for the combination of pollId and userId\n      b. Determine if a vote record exists for this specific user on this specific poll\n      c. IF a vote record is found, THEN set hasVoted flag to true\n      d. IF no vote record is found, THEN set hasVoted flag to false\n\n5. Response Generation:\n   - Format Response:\n      a. Return the hasVoted flag (boolean) indicating whether the user has voted\n      b. Include pollId and userId in the response for reference\n   - Error Handling:\n      a. If any errors occurred during processing, return appropriate error message\n      b. Include error details and suggestions for resolution",
+  "databaseEntities": [
+    "Poll",
+    "User",
+    "Vote"
+  ],
+  "validationRules": [
+    "Poll ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Poll must exist in the system",
+    "User must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "title": "string",
+      "options": "array",
+      "topicId": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "Vote": {
+      "pollId": "number",
+      "userId": "number",
+      "optionId": "number",
+      "voteDate": "date"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "SendPrivateMessage",
+    "description": "Sends a private message between users, storing copies in both sender's sent box and recipient's inbox"
+  },
+  {
+    "featureName": "DeletePrivateMessage",
+    "description": "Deletes private messages from a user's inbox or sent items with permission validation"
+  },
+  {
+    "featureName": "GetInboxMessages",
+    "description": "Retrieves all private messages from a user's inbox with sender information"
+  },
+  {
+    "featureName": "GetSentMessages",
+    "description": "Retrieves all private messages from a user's sent items with recipient information"
+  },
+  {
+    "featureName": "GetPrivateMessageById",
+    "description": "Retrieves a specific private message by its ID with complete message details"
+  },
+  {
+    "featureName": "UpdateMessageType",
+    "description": "Updates the type of a private message (new, read, sent, etc.)"
+  }
+]

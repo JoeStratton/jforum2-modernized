@@ -1,0 +1,29 @@
+{
+  "featureName": "RemoveBookmark",
+  "description": "Deletes a bookmark by its ID from the system.",
+  "inputValues": [
+    "bookmarkId-number-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following input:\n     1.1. bookmarkId (mandatory): Unique identifier of the bookmark to be removed\n\n2. Data Validation\n   - Validate the bookmark ID:\n     2.1. Check if bookmarkId is provided\n        IF bookmarkId is missing or null THEN\n          Return error message: \"Bookmark ID is required\"\n     2.2. Check if bookmarkId is a valid number\n        IF bookmarkId is not a valid number THEN\n          Return error message: \"Invalid bookmark ID format\"\n     2.3. Check if bookmarkId is positive\n        IF bookmarkId is not positive THEN\n          Return error message: \"Bookmark ID must be a positive number\"\n\n3. Business Rule Processing\n   - Verify bookmark existence and access rights:\n     3.1. Check if the bookmark exists in the system\n        IF bookmark does not exist THEN\n          Return error message: \"Bookmark not found\"\n     3.2. Verify the current user has permission to delete this bookmark\n        IF current user is not the owner of the bookmark AND not an administrator THEN\n          Return error message: \"You do not have permission to delete this bookmark\"\n\n4. Core Operation Execution\n   - Remove the bookmark from the system:\n     4.1. Locate the bookmark record using the provided bookmarkId\n     4.2. Delete the bookmark record from the database\n        IF deletion fails THEN\n          Log the error details\n          Return error message: \"Failed to remove bookmark. Please try again later.\"\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. IF deletion is successful THEN\n          Return success message: \"Bookmark successfully removed\"\n     5.2. Include information about the deleted bookmark (ID)\n     5.3. Provide navigation options to return to bookmark list",
+  "databaseEntities": [
+    "jforum_bookmarks"
+  ],
+  "validationRules": [
+    "Bookmark ID must be provided",
+    "Bookmark ID must be a valid positive number",
+    "Bookmark must exist in the system",
+    "User must have permission to delete the bookmark"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "publicVisible": "boolean",
+      "title": "string",
+      "description": "string"
+    }
+  }
+}

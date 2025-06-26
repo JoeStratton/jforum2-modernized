@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "AddAttachment",
+    "description": "Adds a new attachment to a post"
+  },
+  {
+    "featureName": "UpdateAttachment",
+    "description": "Updates an attachment's comment information"
+  },
+  {
+    "featureName": "RemoveAttachment",
+    "description": "Removes an attachment from a post"
+  },
+  {
+    "featureName": "GetPostAttachments",
+    "description": "Retrieves all attachments associated with a specific post"
+  },
+  {
+    "featureName": "GetAttachmentById",
+    "description": "Retrieves a specific attachment by its ID"
+  },
+  {
+    "featureName": "ManageQuotaLimits",
+    "description": "Creates, updates, and removes quota limits for attachments"
+  },
+  {
+    "featureName": "ManageGroupQuotas",
+    "description": "Associates quota limits with user groups"
+  },
+  {
+    "featureName": "ManageExtensionGroups",
+    "description": "Creates, updates, and removes attachment extension groups"
+  },
+  {
+    "featureName": "ManageExtensions",
+    "description": "Creates, updates, and removes file extensions for attachments"
+  },
+  {
+    "featureName": "CheckExtensionSecurity",
+    "description": "Verifies if file extensions are allowed for upload based on security settings"
+  }
+]

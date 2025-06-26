@@ -1,0 +1,58 @@
+{
+  "featureName": "UpdateExtensionGroup",
+  "description": "Updates an existing attachment extension group with new settings.",
+  "inputValues": [
+    "extensionGroupId-number-AttachmentExtensionGroup",
+    "name-string-AttachmentExtensionGroup",
+    "allow-boolean-AttachmentExtensionGroup",
+    "uploadIcon-string-AttachmentExtensionGroup",
+    "downloadMode-number-AttachmentExtensionGroup"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. Extension group ID (number, mandatory)\n     b. Group name (string, mandatory)\n     c. Allow flag (boolean, mandatory)\n     d. Upload icon path (string, optional)\n     e. Download mode (number, mandatory)\n   - System will retrieve the current extension group data for comparison\n\n2. Data Validation\n   - Validate extension group ID\n     a. Verify the ID is a positive integer\n     b. IF ID is missing or invalid, THEN return error message \"Valid extension group ID is required\"\n   - Validate group name\n     a. Verify name is not empty\n     b. Verify name length is between 3 and 50 characters\n     c. IF name validation fails, THEN return error message \"Group name must be between 3 and 50 characters\"\n   - Validate upload icon\n     a. IF upload icon is provided, THEN verify it follows valid path format\n     b. IF upload icon validation fails, THEN return error message \"Invalid upload icon format\"\n   - Validate download mode\n     a. Verify download mode is a valid option (0, 1, or 2)\n     b. IF download mode is invalid, THEN return error message \"Invalid download mode selected\"\n\n3. Business Rule Processing\n   - Verify extension group exists\n     a. Check if the provided extension group ID exists in the system\n     b. IF extension group does not exist, THEN return error message \"Extension group not found\"\n   - Check for name conflicts\n     a. IF name has changed from original, THEN verify no other extension group has the same name\n     b. IF name conflict exists, THEN return error message \"An extension group with this name already exists\"\n   - Verify user has permission to update extension groups\n     a. Check if current user has administrator privileges\n     b. IF user lacks permission, THEN return error message \"Insufficient permissions to update extension groups\"\n\n4. Core Operation Execution\n   - Prepare extension group data for update\n     a. Create update object with all provided fields\n     b. Format boolean values appropriately (convert to 0/1 if needed)\n   - Update the extension group record\n     a. Update the extension group with new values\n     b. IF update operation fails, THEN log error details and return error message \"Failed to update extension group\"\n   - Update related extensions if necessary\n     a. IF allow status has changed, THEN update affected extensions accordingly\n     b. IF download mode has changed, THEN update related configurations\n\n5. Response Generation\n   - Generate success response\n     a. Include confirmation message \"Extension group updated successfully\"\n     b. Include updated extension group details\n     c. Include timestamp of the update\n   - IF any errors occurred during the process, THEN\n     a. Generate appropriate error response with specific error details\n     b. Include suggestions for resolving the issue\n     c. Provide reference to support resources if needed",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Extension group ID must be a positive integer",
+    "Group name must not be empty",
+    "Group name must be between 3 and 50 characters",
+    "Download mode must be a valid option (0, 1, or 2)",
+    "Extension group must exist in the system",
+    "Group name must be unique across all extension groups",
+    "User must have administrator privileges to update extension groups"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtensionGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the extension group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the extension group"
+        },
+        "allow": {
+          "type": "boolean",
+          "description": "Flag indicating if the extension group is allowed"
+        },
+        "uploadIcon": {
+          "type": "string",
+          "description": "Path to the upload icon for the extension group"
+        },
+        "downloadMode": {
+          "type": "number",
+          "description": "Mode for downloading attachments in this group"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "allow",
+        "downloadMode"
+      ]
+    }
+  }
+}

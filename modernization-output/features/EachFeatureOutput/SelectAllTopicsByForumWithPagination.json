@@ -1,0 +1,56 @@
+{
+  "featureName": "SelectAllTopicsByForumWithPagination",
+  "description": "Retrieves paginated forum topics with specified limit and offset.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): numeric identifier of the forum\n   - Collect startFrom (mandatory): numeric value indicating the starting position for pagination\n   - Collect count (mandatory): numeric value indicating the number of topics to retrieve\n   - System will use these inputs to construct a paginated query\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided and is a positive integer\n     b. Check if forumId exists in the system\n     c. IF forumId is invalid or not found, THEN return appropriate error message\n   - Validate pagination parameters:\n     a. Check if startFrom is a non-negative integer\n     b. Check if count is a positive integer\n     c. IF either parameter is invalid, THEN return appropriate error message\n   - Validate user permissions:\n     a. Check if current user has permission to view the specified forum\n     b. IF user lacks permission, THEN return access denied error\n\n3. Business Rule Processing:\n   - Check forum status:\n     a. Verify if the forum is active and not archived\n     b. IF forum is inactive or archived, THEN return appropriate status message\n   - Apply forum visibility rules:\n     a. Check if forum is visible to the current user based on user groups and permissions\n     b. IF forum is not visible, THEN return access denied error\n   - Determine sorting criteria:\n     a. Apply default sorting (typically by last post date, descending)\n     b. Consider any user preferences or system settings for topic sorting\n\n4. Core Operation Execution:\n   - Calculate pagination boundaries:\n     a. Determine the start index based on startFrom parameter\n     b. Calculate the end index by adding count to startFrom\n   - Retrieve topics:\n     a. Query the topics for the specified forum with pagination limits\n     b. Include relevant topic metadata (title, creation date, last post date, etc.)\n     c. Include topic statistics (reply count, view count)\n     d. Include information about the topic creator and last poster\n   - Apply topic filtering:\n     a. Filter out topics based on user permissions and forum rules\n     b. Handle sticky/announcement topics according to forum display rules\n\n5. Response Generation:\n   - Prepare success response:\n     a. Format the list of topics with all required attributes\n     b. Include pagination metadata (current page, total pages, total topics)\n     c. Include forum information for context\n   - Handle empty results:\n     a. IF no topics match the criteria, THEN return empty list with appropriate metadata\n     b. Include pagination information even for empty results\n   - Error handling:\n     a. IF any database or system errors occur during retrieval, THEN return appropriate error message\n     b. Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum ID must reference an existing forum",
+    "Start index must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must have permission to view the specified forum",
+    "Forum must be active and not archived"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "creationDate": "date",
+      "lastPostDate": "date",
+      "userId": "number",
+      "views": "number",
+      "replies": "number",
+      "status": "number",
+      "isSticky": "boolean",
+      "hasAttachments": "boolean",
+      "lastPosterId": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "lastPostDate": "date",
+      "totalTopics": "number",
+      "totalPosts": "number"
+    },
+    "Pagination": {
+      "startFrom": "number",
+      "count": "number",
+      "totalRecords": "number",
+      "totalPages": "number"
+    }
+  }
+}

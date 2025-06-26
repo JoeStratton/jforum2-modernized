@@ -1,0 +1,40 @@
+{
+  "featureName": "ExecuteSummaryJob",
+  "description": "Executes scheduled job to send post summaries to recipients by retrieving users and sending email digests.",
+  "inputValues": [
+    "jobContext-object-JobContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve JobContext containing execution parameters\n   - Identify system-generated timestamp for the current execution\n   - No user inputs required as this is an automated scheduled job\n\n2. Data Validation:\n   - Verify job execution context is valid\n   - Check if summary generation is enabled in system settings\n   - Validate that the current time is appropriate for sending summaries\n   - Ensure database connections are available\n   - IF any validation fails, THEN log error and terminate job execution\n\n3. Business Rule Processing:\n   - Determine summary period (daily, weekly) based on system configuration\n   - Calculate time range for posts to include in summary\n   - Check system resources availability for processing\n   - Verify email service availability\n   - IF email service is unavailable, THEN log error and terminate job\n\n4. Core Operation Execution:\n   - Retrieve list of recipients who have subscribed to summaries\n   - FOR each recipient:\n     a. Determine recipient's preferences (forums, categories subscribed to)\n     b. Retrieve relevant posts made since last summary\n     c. IF no new posts exist for recipient, THEN skip to next recipient\n     d. Format post data into digestible summary format\n     e. Generate personalized email content with summary data\n     f. Send email to recipient\n     g. IF email sending fails, THEN log error and continue to next recipient\n     h. Update recipient's last summary timestamp\n   - Record job execution statistics (recipients processed, emails sent, failures)\n   - Update system with timestamp of last successful execution\n\n5. Response Generation:\n   - Generate job execution summary report\n   - Record total recipients processed\n   - Record total emails successfully sent\n   - Record any errors or exceptions encountered\n   - Log completion status of the job\n   - IF critical errors occurred, THEN generate admin notification",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Job execution context must be valid",
+    "Summary generation must be enabled in system settings",
+    "Email service must be available",
+    "Recipients must have valid email addresses",
+    "Summary period must be properly configured",
+    "Post data must exist for the configured time period"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "JobContext": {
+      "type": "object",
+      "properties": {
+        "executionTime": {
+          "type": "date",
+          "description": "The timestamp when the job is being executed"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Additional parameters for job execution"
+        }
+      }
+    }
+  }
+}

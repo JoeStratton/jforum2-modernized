@@ -1,0 +1,27 @@
+{
+  "featureName": "ParseMessageId",
+  "description": "Extracts topic ID from message headers using regex pattern matching.",
+  "inputValues": [
+    "header-string-MessageHeader"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the message header string (mandatory)\n   - The header should be in the format '<postId.topicId.forumId.randomNumber@host>'\n   - No default values are provided\n\n2. Data Validation:\n   - Check if the header string is not null\n     - IF header is null THEN\n       - Return a MessageId object with default values\n     - END IF\n   - Validate that the header follows the expected format\n     - The format should match the pattern '<postId.topicId.forumId.randomNumber@host>'\n     - No specific error messages are generated for invalid formats\n\n3. Business Rule Processing:\n   - Prepare the regular expression pattern for extracting components\n     - Pattern should match '<(.*?)\\.(.*?)\\.(.*?)\\.(.*?)@.*>'\n     - This pattern captures four groups separated by periods\n   - Apply the pattern to the header string\n   - Check if the pattern matches the header\n     - IF pattern does not match THEN\n       - Return a MessageId object with default values\n     - END IF\n\n4. Core Operation Execution:\n   - Extract the second component (topicId) from the matched pattern\n   - Convert the extracted string to an integer\n     - IF conversion fails THEN\n       - Silently handle the exception\n       - Keep the default topicId value (0)\n     - END IF\n   - Store the extracted topicId in the MessageId object\n\n5. Response Generation:\n   - Return the MessageId object containing the extracted topicId\n   - No specific error responses are generated\n   - The caller can retrieve the topicId using the getTopicId() method",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Message header must follow the pattern '<postId.topicId.forumId.randomNumber@host>'",
+    "Topic ID must be a valid integer value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MessageId": {
+      "type": "object",
+      "properties": {
+        "topicId": {
+          "type": "integer",
+          "description": "The extracted topic ID from the message header"
+        }
+      }
+    }
+  }
+}

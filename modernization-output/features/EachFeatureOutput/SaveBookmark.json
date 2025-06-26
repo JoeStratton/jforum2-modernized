@@ -1,0 +1,39 @@
+{
+  "featureName": "SaveBookmark",
+  "description": "Saves a new bookmark with user-provided details and visibility settings.",
+  "inputValues": [
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "relationType-number-Bookmark",
+    "relationId-number-Bookmark",
+    "visible-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. title (string): The title for the bookmark\n     b. description (string): Optional description for the bookmark\n     c. relationType (number): Type of bookmark (forum, topic, or user)\n     d. relationId (number): ID of the related entity\n     e. visible (boolean): Public visibility setting\n   - System will automatically associate the bookmark with the current user\n\n2. Data Validation:\n   - Validate title:\n     a. Check if title is not empty\n     b. Sanitize title input to prevent security issues\n     c. If invalid, display appropriate error message\n   - Validate description:\n     a. Sanitize description input to prevent security issues\n   - Validate relationType:\n     a. Verify relationType is one of the valid types (forum, topic, user)\n     b. IF relationType is invalid, THEN display error message\n   - Validate relationId:\n     a. Verify the relationId exists in the system\n     b. IF relationId does not exist, THEN display error message\n   - Validate user authentication:\n     a. Verify user is logged in (not anonymous)\n     b. IF user is anonymous, THEN deny access with appropriate message\n\n3. Business Rule Processing:\n   - Check feature availability:\n     a. Verify bookmarks feature is enabled in system settings\n     b. IF feature is disabled, THEN show appropriate message\n   - Check for existing bookmark:\n     a. Query database to determine if user already has a bookmark for this relation\n     b. IF bookmark exists, THEN prepare for update instead of creation\n   - Verify access permissions:\n     a. Ensure user has permission to create bookmarks\n     b. IF user lacks permission, THEN show access denied message\n\n4. Core Operation Execution:\n   - Create bookmark object with collected data:\n     a. Set title (sanitized)\n     b. Set description (sanitized)\n     c. Set relationType\n     d. Set relationId\n     e. Set userId to current user's ID\n     f. Set public visibility flag based on input\n   - Persist bookmark to database:\n     a. IF existing bookmark found, THEN update existing record\n     b. ELSE create new bookmark record\n     c. IF database operation fails, THEN display error message\n\n5. Response Generation:\n   - On success:\n     a. Display confirmation message that bookmark was saved\n     b. Provide option to view all bookmarks\n     c. Provide option to return to the bookmarked item\n   - On failure:\n     a. Display specific error message based on failure reason\n     b. Retain user inputs for correction\n     c. Provide option to retry or cancel operation",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must be logged in to create a bookmark",
+    "Bookmark title must not be empty",
+    "Bookmark relation type must be valid (forum, topic, or user)",
+    "Related entity must exist in the system",
+    "Bookmarks feature must be enabled in system settings",
+    "User must have permission to create bookmarks"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationType": "number",
+      "relationId": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean",
+      "creationDate": "date"
+    }
+  }
+}

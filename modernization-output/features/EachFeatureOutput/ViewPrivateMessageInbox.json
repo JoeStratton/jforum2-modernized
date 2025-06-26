@@ -1,0 +1,44 @@
+{
+  "featureName": "ViewPrivateMessageInbox",
+  "description": "Displays the user's private message inbox with a list of received messages.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. userId (number, mandatory): The unique identifier of the user accessing their inbox\n     b. sessionToken (string, system-generated): Authentication token to verify user session\n\n2. Data Validation\n   - Validate user authentication\n     a. IF user is not logged in THEN\n        i. Redirect user to the login page\n        ii. END PROCESS\n     b. ELSE continue to next step\n   - Validate user existence\n     a. IF user with provided userId does not exist THEN\n        i. Display error message indicating invalid user\n        ii. END PROCESS\n     b. ELSE continue to next step\n\n3. Business Rule Processing\n   - Check user permissions\n     a. IF user does not have permission to view private messages THEN\n        i. Display access denied message\n        ii. END PROCESS\n     b. ELSE continue to next step\n   - Determine inbox view settings\n     a. Retrieve user preferences for message display (sorting, filtering)\n     b. Set default view parameters if user preferences are not available\n\n4. Core Operation Execution\n   - Retrieve private messages\n     a. Query the database for all messages where the recipient is the current user\n     b. Sort messages according to user preferences (default: newest first)\n     c. IF no messages are found THEN\n        i. Prepare empty inbox view\n     d. ELSE\n        i. Prepare message list with the following information for each message:\n           - Sender name\n           - Message subject\n           - Date/time received\n           - Message status (new, read, unread)\n           - Message preview (if applicable)\n   - Prepare inbox interface\n     a. Set page title to \"Private Messages - Inbox\"\n     b. Include navigation options for other message folders (sent items, drafts)\n     c. Include message management options (delete, mark as read/unread)\n     d. Include option to compose new message\n\n5. Response Generation\n   - Generate inbox view\n     a. Display header with inbox title and message count\n     b. Display message list with appropriate styling for different message statuses\n     c. IF inbox is empty THEN\n        i. Display \"No messages\" notification\n     d. ELSE\n        i. Display paginated list of messages\n        ii. Provide sorting and filtering options\n     e. Display action buttons for message management\n   - Handle view completion\n     a. Log successful inbox access for audit purposes\n     b. Update last activity timestamp for user session",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to view private messages",
+    "User can only view their own private messages",
+    "Message status must be one of: new, read, or unread",
+    "Session must be valid and not expired"
+  ],
+  "dbSeedingOperations": [
+    "Ensure message status types are defined in the system (NEW, READ, UNREAD)"
+  ],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "post": "object",
+      "type": "number",
+      "sentDate": "date"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    },
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "date": "date"
+    }
+  }
+}

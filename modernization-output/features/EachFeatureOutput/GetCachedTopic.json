@@ -1,0 +1,36 @@
+{
+  "featureName": "GetCachedTopic",
+  "description": "Retrieves a specific topic from the cache based on topic and forum identifiers.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "forumId-number-Forum",
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Topic object which should contain at minimum:\n     * topicId (mandatory): Unique identifier for the topic\n     * forumId (optional): Identifier for the forum containing the topic\n   - System configuration settings are automatically retrieved:\n     * TOPIC_CACHE_ENABLED: Boolean flag indicating if topic caching is enabled\n\n2. Data Validation:\n   - Validate topic input:\n     * IF topic object is null THEN\n       - Return null as there is nothing to retrieve\n     * IF topicId is not provided or invalid THEN\n       - Return null as the topic cannot be identified\n     * IF TOPIC_CACHE_ENABLED setting is false THEN\n       - Return null as caching is disabled\n\n3. Business Rule Processing:\n   - Check forum identification:\n     * IF forumId is not provided (equals 0) THEN\n       - Attempt to retrieve the forumId from the relation mapping cache\n       - IF forumId is found in relation mapping THEN\n         - Set the forumId in the topic object\n       - ELSE\n         - Return null as the forum cannot be determined\n     * IF forumId is still 0 after relation lookup THEN\n       - Return null as the forum cannot be determined\n\n4. Core Operation Execution:\n   - Retrieve the list of topics for the identified forum from cache\n   - IF the topic list is null THEN\n     - Return null as no topics are cached for this forum\n   - Search for the requested topic in the cached list:\n     * Find the index of the topic in the list based on topic ID\n     * IF topic is not found (index equals -1) THEN\n       - Return null as the topic is not in the cache\n     * ELSE\n       - Retrieve the topic from the list at the found index\n\n5. Response Generation:\n   - Return the retrieved topic object with all its cached properties\n   - IF topic was not found in cache THEN\n     - Return null to indicate cache miss",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "Topic ID must be a valid positive integer",
+    "Topic caching must be enabled in system settings",
+    "Forum ID must be determinable either from input or relation cache"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "lastPostId": "number",
+      "firstPostId": "number",
+      "type": "number",
+      "lastPostTime": "date",
+      "lastPostBy": "string",
+      "status": "number",
+      "totalViews": "number",
+      "totalReplies": "number"
+    }
+  }
+}

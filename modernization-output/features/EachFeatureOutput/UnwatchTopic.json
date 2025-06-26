@@ -1,0 +1,21 @@
+{
+  "featureName": "UnwatchTopic",
+  "description": "Removes a user's subscription from a topic.",
+  "inputValues": [
+    "topic_id-number-Topic",
+    "user_id-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - topic_id (mandatory): Unique identifier of the topic to unsubscribe from\n     - user_id (system-generated): Identifier of the current logged-in user\n\n2. Data Validation:\n   - Validate user authentication:\n     - IF user is not logged in THEN\n       - Redirect to login page\n       - Display authentication required message\n       - Exit process\n     - END IF\n   - Validate topic existence:\n     - IF topic with provided topic_id does not exist THEN\n       - Display error message indicating topic not found\n       - Exit process\n     - END IF\n   - Validate subscription existence:\n     - IF user is not currently subscribed to the topic THEN\n       - Display notification that user is not subscribed\n       - Exit process\n     - END IF\n\n3. Business Rule Processing:\n   - Check user permissions:\n     - IF user does not have permission to manage subscriptions THEN\n       - Display access denied message\n       - Exit process\n     - END IF\n   - Determine return path:\n     - Calculate the appropriate page number based on current view\n     - Format the return URL with correct topic reference\n\n4. Core Operation Execution:\n   - Remove subscription record:\n     - Delete the subscription record linking the user to the topic\n     - Update any related counters or indicators\n   - Update user notification preferences:\n     - Ensure user will no longer receive notifications for this topic\n\n5. Response Generation:\n   - Prepare success message:\n     - Include confirmation that the topic has been unwatched\n     - Include link to return to the topic\n   - Display confirmation page:\n     - Show success message with return link\n     - Update page title to reflect the unwatched status",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must be logged in to unwatch a topic",
+    "Topic must exist in the system",
+    "User must be currently subscribed to the topic",
+    "User must have permission to manage subscriptions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

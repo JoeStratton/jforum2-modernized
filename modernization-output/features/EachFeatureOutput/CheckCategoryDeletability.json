@@ -1,0 +1,27 @@
+{
+  "featureName": "CheckCategoryDeletability",
+  "description": "Verifies if a specific category can be safely deleted from the system.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the categoryId (mandatory, numeric identifier)\n   - System will use this identifier to locate the specific category\n\n2. Data Validation:\n   - Validate categoryId:\n     a. Verify categoryId is not null or empty\n     b. Verify categoryId is a positive integer\n     c. IF validation fails, THEN return error message indicating invalid category identifier\n\n3. Business Rule Processing:\n   - Check category existence:\n     a. Verify the category with the provided categoryId exists in the system\n     b. IF category does not exist, THEN return error indicating category not found\n   - Check category dependencies:\n     a. Verify if the category has any associated forums\n     b. Count the number of forums linked to this category\n     c. IF forum count is greater than zero, THEN category has dependencies\n     d. Check for any other system dependencies that would prevent deletion\n\n4. Core Operation Execution:\n   - Determine deletability status:\n     a. IF no dependencies are found, THEN set deletability status to true\n     b. IF any dependencies are found, THEN set deletability status to false\n   - Record verification result:\n     a. Document the reason for the deletability status\n     b. Log the verification attempt for audit purposes\n\n5. Response Generation:\n   - Prepare response with deletability status:\n     a. Include boolean result indicating if category can be deleted\n     b. IF category cannot be deleted, THEN include reason why deletion is not possible\n     c. Include category details in the response for reference\n   - Return the final response to the requester",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category ID must be a positive integer",
+    "Category must exist in the system",
+    "Category cannot be deleted if it has associated forums",
+    "System must verify all dependencies before allowing deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "moderated": "boolean"
+    }
+  }
+}

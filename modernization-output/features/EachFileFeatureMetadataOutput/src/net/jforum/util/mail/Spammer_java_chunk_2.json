@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "SendCustomizedEmails",
+    "description": "Sends customized email messages to multiple users with template-based content"
+  },
+  {
+    "featureName": "DispatchMessages",
+    "description": "Delivers email messages to recipients with authentication and configurable sending delay"
+  },
+  {
+    "featureName": "PrepareEmailMessage",
+    "description": "Creates email messages with subject, template-based content and proper headers"
+  },
+  {
+    "featureName": "ProcessEmailTemplate",
+    "description": "Processes email templates with user-specific parameters to generate personalized content"
+  }
+]

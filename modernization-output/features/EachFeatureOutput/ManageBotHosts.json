@@ -1,0 +1,35 @@
+{
+  "featureName": "ManageBotHosts",
+  "description": "Manages the list of bot hosts for clickstream tracking and filtering.",
+  "inputValues": [
+    "botHost-string-ClickstreamConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - botHost (string, mandatory): The host identifier to be added or managed\n     - operation (string, mandatory): The type of operation to perform (add, remove, view)\n   - System will use the existing ClickstreamConfig instance to manage the bot hosts list\n\n2. Data Validation:\n   - Validate botHost input:\n     - IF botHost is provided and operation is 'add' or 'remove'\n       - THEN verify botHost is not empty\n       - THEN verify botHost is a valid string format (no special characters except periods, hyphens)\n       - THEN verify botHost length is between 3 and 255 characters\n     - IF validation fails\n       - THEN generate appropriate error message specifying the validation issue\n   - Validate operation input:\n     - Verify operation is one of the allowed values: 'add', 'remove', or 'view'\n     - IF validation fails\n       - THEN generate error message indicating valid operation types\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify ClickstreamConfig instance is properly initialized\n     - Verify access permissions for managing bot hosts\n   - Process according to operation type:\n     - IF operation is 'add':\n       - Check if botHost already exists in the list\n       - IF botHost exists\n         - THEN generate notification that host is already in the list\n     - IF operation is 'remove':\n       - Check if botHost exists in the list\n       - IF botHost does not exist\n         - THEN generate notification that host is not in the list\n\n4. Core Operation Execution:\n   - Execute the requested operation:\n     - IF operation is 'add':\n       - Add the botHost to the bot hosts list\n       - Update the ClickstreamConfig with the new list\n     - IF operation is 'remove':\n       - Remove the botHost from the bot hosts list\n       - Update the ClickstreamConfig with the modified list\n     - IF operation is 'view':\n       - Retrieve the current list of bot hosts from ClickstreamConfig\n   - Handle any exceptions during execution:\n     - IF exception occurs\n       - THEN log the error details\n       - THEN prepare appropriate error message for user\n\n5. Response Generation:\n   - Generate appropriate response based on operation outcome:\n     - IF operation completed successfully:\n       - For 'add': Confirm botHost was added successfully\n       - For 'remove': Confirm botHost was removed successfully\n       - For 'view': Return the complete list of bot hosts\n     - Include the current count of bot hosts in the system\n     - IF operation failed:\n       - Include specific error details\n       - Provide guidance on how to correct the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "Bot host must not be empty",
+    "Bot host must be a valid string format",
+    "Bot host length must be between 3 and 255 characters",
+    "Operation must be one of: add, remove, or view"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ClickstreamConfig": {
+      "type": "object",
+      "properties": {
+        "botAgents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "botHosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

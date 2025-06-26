@@ -1,0 +1,28 @@
+{
+  "featureName": "AddCategory",
+  "description": "Adds a new category to the cache system.",
+  "inputValues": [
+    "category-object-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Category object with the following properties:\n     - id: Unique identifier for the category\n     - name: Name of the category\n     - order: Display order of the category\n     - forums: Collection of forums associated with this category\n\n2. Data Validation:\n   - Validate Category object:\n     - Ensure category id is a positive integer\n     - Verify category name is not empty\n     - Confirm order value is a non-negative integer\n     - Check that forums collection is properly initialized (can be empty)\n   - IF any validation fails, THEN:\n     - Generate appropriate error message\n     - Abort the operation\n\n3. Business Rule Processing:\n   - Check if category with same id already exists in cache:\n     - IF category with same id exists, THEN:\n       - Generate duplicate category error\n       - Abort the operation\n   - Check if category with same order already exists:\n     - IF category with same order exists, THEN:\n       - Note potential conflict for handling in next step\n\n4. Core Operation Execution:\n   - Acquire synchronization lock to prevent concurrent modifications\n   - Convert category id to string format for cache storage\n   - Add category to cache using category id as key\n   - Retrieve existing category set from cache:\n     - IF category set doesn't exist, THEN:\n       - Create new ordered category set\n   - Add new category to the set\n   - Update the category set in cache\n   - Process forum relationships:\n     - Retrieve existing relation map from cache\n     - IF relation map doesn't exist, THEN:\n       - Create new relation map\n     - FOR EACH forum in the category's forums collection:\n       - Add mapping between forum id and category id to relation map\n   - Store updated relation map in cache\n   - Release synchronization lock\n\n5. Response Generation:\n   - IF operation completes successfully, THEN:\n     - Return success indicator\n     - Include category id of newly added category\n   - IF operation fails, THEN:\n     - Return failure indicator\n     - Include specific error message and reason for failure",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category ID must be a positive integer",
+    "Category name must not be empty",
+    "Category order must be a non-negative integer",
+    "Category ID must be unique in the system",
+    "Forums collection must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "integer",
+      "name": "string",
+      "order": "integer",
+      "forums": "array"
+    }
+  }
+}

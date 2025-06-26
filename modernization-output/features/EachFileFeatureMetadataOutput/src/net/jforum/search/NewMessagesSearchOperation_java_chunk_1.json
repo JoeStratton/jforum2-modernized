@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "PerformNewMessagesSearch",
+    "description": "Searches for topics within a specified date range and returns the results"
+  },
+  {
+    "featureName": "PrepareTopicsForDisplay",
+    "description": "Processes topic search results to prepare them for display in the UI"
+  },
+  {
+    "featureName": "GetNewMessagesTemplate",
+    "description": "Returns the template key for rendering new messages search results"
+  },
+  {
+    "featureName": "ExtractForumIdFromTopic",
+    "description": "Extracts the forum ID from a Topic object for permission checking"
+  }
+]

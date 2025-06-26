@@ -1,0 +1,36 @@
+{
+  "featureName": "ListBookmarks",
+  "description": "Displays all bookmarks for a specific user.",
+  "inputValues": [
+    "user_id-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user_id (mandatory) - The identifier of the user whose bookmarks are to be displayed\n   - System will determine if the requesting user is logged in or anonymous\n\n2. Data Validation:\n   - Validate that the user_id exists in the system\n     * IF user_id does not exist THEN\n       - Display appropriate error message\n       - End process\n   - Validate user permissions\n     * IF bookmarks feature is disabled THEN\n       - Display \"feature disabled\" message\n       - End process\n     * IF user is anonymous AND trying to access non-public bookmarks THEN\n       - Display \"access denied\" message\n       - End process\n\n3. Business Rule Processing:\n   - Determine the access level for bookmarks\n     * IF requesting user is the owner of the bookmarks THEN\n       - Allow full access to all bookmarks\n     * ELSE\n       - Only allow access to public bookmarks\n   - Check if the user has permission to view bookmarks\n     * IF user lacks required permissions THEN\n       - Display appropriate error message\n       - End process\n\n4. Core Operation Execution:\n   - Retrieve all bookmarks associated with the specified user_id\n     * Include bookmark title, description, type (forum, topic, or user), and visibility status\n   - Categorize bookmarks by type (forum, topic, user)\n   - Retrieve additional information for each bookmark based on its type:\n     * For forum bookmarks: forum name and description\n     * For topic bookmarks: topic title and related information\n     * For user bookmarks: username and profile information\n   - Prepare data for display, including:\n     * Bookmark details (title, description, type)\n     * Owner information\n     * Public/private status\n     * Creation/modification dates\n\n5. Response Generation:\n   - Display the list of bookmarks organized by type\n   - Show bookmark title, description, and type\n   - IF the current user is the owner of the bookmarks THEN\n     * Display edit and delete options for each bookmark\n   - IF no bookmarks exist THEN\n     * Display appropriate \"no bookmarks\" message\n   - Include pagination if the number of bookmarks exceeds the display limit\n   - Display the username of the bookmark owner in the page title",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must exist in the system",
+    "Requesting user must have permission to view bookmarks",
+    "Anonymous users can only view public bookmarks",
+    "Bookmarks feature must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

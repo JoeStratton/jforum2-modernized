@@ -1,0 +1,53 @@
+{
+  "featureName": "SetLastRegisteredUser",
+  "description": "Updates the most recently registered user in the system.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the User object with the following attributes:\n     - userId (mandatory): Unique identifier for the user\n     - username (mandatory): Display name of the user\n     - registrationDate (mandatory): Date when the user registered\n     - Additional user profile information (optional)\n\n2. Data Validation:\n   - Validate User object:\n     - Check if User object is not null\n     - Verify userId is a valid positive integer\n     - Ensure username is not empty\n     - Confirm registrationDate is a valid date\n     - Verify username follows system naming conventions\n   - IF any validation fails THEN:\n     - Generate appropriate error message\n     - Abort the operation\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify the cache system is operational\n     - Ensure the user repository is accessible\n   - Verify user exists in the system:\n     - IF user does not exist in the database THEN:\n       - Generate error: \"Cannot set non-existent user as last registered\"\n       - Abort the operation\n   - Check user account status:\n     - IF user account is not active THEN:\n       - Generate error: \"Cannot set inactive user as last registered\"\n       - Abort the operation\n\n4. Core Operation Execution:\n   - Retrieve the current cache storage mechanism\n   - Store the user object in the cache:\n     - Use the appropriate cache key for last registered user\n     - Replace any existing last registered user information\n   - Update related statistics if necessary:\n     - IF this is a new registration THEN:\n       - Increment the total users count in the system\n   - Ensure cache consistency:\n     - Verify the user object is properly stored in cache\n     - Update any dependent cache entries if needed\n\n5. Response Generation:\n   - IF operation succeeds THEN:\n     - Return success status\n     - Include confirmation that the last registered user was updated\n   - IF operation fails THEN:\n     - Return failure status\n     - Include specific error message explaining the failure reason\n     - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User object must not be null",
+    "User ID must be a positive integer",
+    "Username must not be empty",
+    "Registration date must be a valid date",
+    "User must exist in the system",
+    "User account must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Display name of the user"
+        },
+        "registrationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time when the user registered"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the user account is active"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "registrationDate"
+      ]
+    }
+  }
+}

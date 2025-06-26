@@ -1,0 +1,38 @@
+{
+  "featureName": "SelectAllCategories",
+  "description": "Retrieves all forum categories in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all categories regardless of user context\n\n2. Data Validation:\n   - No input validation required as there are no user inputs\n   - System will verify database connection is available\n   - IF database connection is not available THEN\n     - Generate appropriate error message\n     - End process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has permission to view categories\n   - IF user does not have permission THEN\n     - Return empty list or appropriate error message\n     - End process\n   - END IF\n   - Determine if any category filtering should be applied based on user role\n   - Prepare query parameters for category retrieval\n\n4. Core Operation Execution:\n   - Initialize empty category collection\n   - Retrieve all categories from the database\n   - FOR each category record found:\n     - Create category object with the following attributes:\n       * Category ID\n       * Category title/name\n       * Display order\n       * Moderation status\n     - Add category to collection\n   - END FOR\n   - Sort categories by display order if needed\n\n5. Response Generation:\n   - IF no categories found THEN\n     - Return empty collection\n   - ELSE\n     - Return collection of categories\n   - END IF\n   - Include total count of categories retrieved\n   - Include timestamp of when categories were retrieved",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "User must have permission to view categories",
+    "Database connection must be available",
+    "Categories must be returned in display order"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Title of the category"
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order of the category"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the category is moderated"
+        }
+      }
+    }
+  }
+}

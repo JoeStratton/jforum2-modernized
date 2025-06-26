@@ -1,0 +1,32 @@
+{
+  "featureName": "DeletePostIndex",
+  "description": "Removes a post from the search index to ensure it no longer appears in search results.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. postId (number, mandatory): The unique identifier of the post to be removed from the search index\n\n2. Data Validation:\n   - Validate the post identifier:\n     a. Check if postId is provided\n        IF postId is missing or null THEN\n          Return error: \"Post ID is required\"\n     b. Verify postId is a valid number\n        IF postId is not a valid number THEN\n          Return error: \"Post ID must be a valid number\"\n     c. Verify postId is positive\n        IF postId is less than or equal to 0 THEN\n          Return error: \"Post ID must be a positive number\"\n\n3. Business Rule Processing:\n   - Verify post exists in the system:\n     a. Check if the post with the given ID exists in the database\n        IF post does not exist THEN\n          Return error: \"Post not found\"\n     b. Check if the post is already indexed\n        IF post is not in the search index THEN\n          Return notification: \"Post is not currently indexed\"\n          Exit process successfully\n   - Verify search system availability:\n     a. Check if the search index is accessible\n        IF search index is not accessible THEN\n          Return error: \"Search index is currently unavailable\"\n\n4. Core Operation Execution:\n   - Remove the post from the search index:\n     a. Acquire synchronization lock to prevent concurrent modifications\n     b. Open the search index for reading\n     c. Locate the document in the index using the post ID as the search term\n     d. Delete the document from the index\n     e. Release resources and close the index reader\n     f. IF deletion fails THEN\n          Log the error details\n          Return error: \"Failed to remove post from search index\"\n     g. Update any related caches or in-memory structures\n        IF cache update fails THEN\n          Log warning but continue process\n\n5. Response Generation:\n   - Generate success response:\n     a. Create a success message indicating the post was successfully removed from the search index\n     b. Include the post ID in the response\n     c. Return success status with confirmation message\n     d. Include timestamp of when the deletion occurred",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Post ID must be provided",
+    "Post ID must be a valid positive number",
+    "Post must exist in the database",
+    "Search index must be accessible for modification"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "forumId": "number",
+      "topicId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "time": "date"
+    }
+  }
+}

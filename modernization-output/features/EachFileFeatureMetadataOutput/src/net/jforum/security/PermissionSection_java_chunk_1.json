@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "AddPermission",
+    "description": "Adds a permission item to a permission section"
+  },
+  {
+    "featureName": "GetPermissions",
+    "description": "Retrieves the list of permission items in a section"
+  },
+  {
+    "featureName": "GetSectionId",
+    "description": "Retrieves the identifier of a permission section"
+  },
+  {
+    "featureName": "GetSectionName",
+    "description": "Retrieves the name of a permission section"
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "featureName": "UpdateUserProfile",
+  "description": "Updates a user's profile information and preferences.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User",
+    "email-string-User",
+    "password-string-User",
+    "signature-string-User",
+    "biography-string-User",
+    "website-string-User",
+    "location-string-User",
+    "occupation-string-User",
+    "interests-string-User",
+    "avatar-string-User",
+    "language-string-User",
+    "preferences-object-UserPreferences"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect user profile data:\n     1.1. Obtain userId (mandatory) to identify the user\n     1.2. Collect personal information fields (all optional):\n          - username\n          - email\n          - password\n          - signature\n          - biography\n          - website\n          - location (from field)\n          - occupation\n          - interests\n          - avatar URL\n          - language preference\n     1.3. Collect user preferences (all optional):\n          - privateMessagesEnabled\n          - viewEmailEnabled\n          - viewOnlineEnabled\n          - notifyOnMessagesEnabled\n          - attachSignatureEnabled\n          - avatarEnabled\n          - bbCodeEnabled\n          - htmlEnabled\n          - smiliesEnabled\n          - notifyPrivateMessagesEnabled\n          - notifyAlways\n          - notifyText\n          - themeId\n\n2. Data Validation\n   - Validate all provided input fields:\n     2.1. Validate userId:\n          - IF userId is not provided or invalid THEN\n            - Return error message \"Valid user ID is required\"\n     2.2. Validate username (if provided):\n          - IF username is empty THEN\n            - Return error message \"Username cannot be empty\"\n          - IF username length is less than 3 characters THEN\n            - Return error message \"Username must be at least 3 characters long\"\n          - IF username contains invalid characters THEN\n            - Return error message \"Username contains invalid characters\"\n     2.3. Validate email (if provided):\n          - IF email is not in valid format THEN\n            - Return error message \"Email address is not valid\"\n     2.4. Validate password (if provided):\n          - IF password length is less than minimum required THEN\n            - Return error message \"Password must be at least [minimum] characters long\"\n     2.5. Validate signature (if provided):\n          - IF signature exceeds maximum length THEN\n            - Return error message \"Signature exceeds maximum allowed length\"\n     2.6. Validate biography (if provided):\n          - IF biography exceeds maximum length THEN\n            - Return error message \"Biography exceeds maximum allowed length\"\n     2.7. Validate website (if provided):\n          - IF website is not a valid URL THEN\n            - Return error message \"Website URL is not valid\"\n     2.8. Validate avatar (if provided):\n          - IF avatar URL is not valid THEN\n            - Return error message \"Avatar URL is not valid\"\n\n3. Business Rule Processing\n   - Verify system constraints and business rules:\n     3.1. Check if user exists:\n          - Retrieve user record using userId\n          - IF user not found THEN\n            - Return error message \"User not found\"\n     3.2. Check if user is active:\n          - IF user is marked as deleted THEN\n            - Return error message \"Cannot update profile for inactive user\"\n     3.3. Check username uniqueness (if username is being changed):\n          - IF new username is different from current username THEN\n            - Check if username already exists for another user\n            - IF username exists THEN\n              - Return error message \"Username already taken\"\n     3.4. Check email uniqueness (if email is being changed):\n          - IF new email is different from current email THEN\n            - Check if email already exists for another user\n            - IF email exists THEN\n              - Return error message \"Email address already in use\"\n\n4. Core Operation Execution\n   - Update the user profile information:\n     4.1. Prepare user data update:\n          - Create user object with current values\n          - Update object with new values for all provided fields\n     4.2. Update personal information:\n          - Update username (if provided)\n          - Update email (if provided)\n          - Update password (if provided)\n          - Update signature (if provided)\n          - Update biography (if provided)\n          - Update website (if provided)\n          - Update location (if provided)\n          - Update occupation (if provided)\n          - Update interests (if provided)\n          - Update avatar (if provided)\n          - Update language (if provided)\n     4.3. Update user preferences:\n          - Update privateMessagesEnabled (if provided)\n          - Update viewEmailEnabled (if provided)\n          - Update viewOnlineEnabled (if provided)\n          - Update notifyOnMessagesEnabled (if provided)\n          - Update attachSignatureEnabled (if provided)\n          - Update avatarEnabled (if provided)\n          - Update bbCodeEnabled (if provided)\n          - Update htmlEnabled (if provided)\n          - Update smiliesEnabled (if provided)\n          - Update notifyPrivateMessagesEnabled (if provided)\n          - Update notifyAlways (if provided)\n          - Update notifyText (if provided)\n          - Update themeId (if provided)\n     4.4. Save updated user profile:\n          - Persist all changes to user record\n          - IF update fails THEN\n            - Revert any partial changes\n            - Return error message \"Failed to update user profile\"\n\n5. Response Generation\n   - Generate appropriate response based on operation outcome:\n     5.1. For successful update:\n          - Generate success message \"User profile updated successfully\"\n          - Include summary of updated fields\n     5.2. For failed update:\n          - Include specific error message explaining the failure\n          - Provide guidance on how to correct the issue\n     5.3. Include next steps information:\n          - Suggest reviewing updated profile\n          - Provide link to view profile page",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be valid and exist in the system",
+    "Username must be at least 3 characters long if provided",
+    "Username must be unique if changed",
+    "Email must be in valid format if provided",
+    "Email must be unique if changed",
+    "Password must meet minimum length requirements if provided",
+    "Signature must not exceed maximum allowed length",
+    "Biography must not exceed maximum allowed length",
+    "Website URL must be valid if provided",
+    "Avatar URL must be valid if provided",
+    "User must be active (not deleted) to update profile"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserPreferences": {
+      "type": "object",
+      "properties": {
+        "privateMessagesEnabled": {
+          "type": "boolean",
+          "description": "Whether user can receive private messages"
+        },
+        "viewEmailEnabled": {
+          "type": "boolean",
+          "description": "Whether user's email is visible to others"
+        },
+        "viewOnlineEnabled": {
+          "type": "boolean",
+          "description": "Whether user's online status is visible"
+        },
+        "notifyOnMessagesEnabled": {
+          "type": "boolean",
+          "description": "Whether user receives notifications on messages"
+        },
+        "attachSignatureEnabled": {
+          "type": "boolean",
+          "description": "Whether signature is attached to posts"
+        },
+        "avatarEnabled": {
+          "type": "boolean",
+          "description": "Whether avatar is displayed"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Whether BBCode is enabled in posts"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Whether HTML is enabled in posts"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Whether smilies are enabled in posts"
+        },
+        "notifyPrivateMessagesEnabled": {
+          "type": "boolean",
+          "description": "Whether user receives notifications on private messages"
+        },
+        "notifyAlways": {
+          "type": "boolean",
+          "description": "Whether user always receives notifications"
+        },
+        "notifyText": {
+          "type": "boolean",
+          "description": "Whether user receives text notifications"
+        },
+        "themeId": {
+          "type": "number",
+          "description": "User's preferred theme ID"
+        }
+      }
+    }
+  }
+}

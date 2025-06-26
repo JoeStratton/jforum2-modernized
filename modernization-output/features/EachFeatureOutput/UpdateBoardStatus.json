@@ -1,0 +1,46 @@
+{
+  "featureName": "UpdateBoardStatus",
+  "description": "Updates forum statistics and cache after new post creation.",
+  "inputValues": [
+    "topic-object-Topic",
+    "lastPostId-number-Post",
+    "firstPost-boolean-Post",
+    "topicDao-object-TopicDAO",
+    "forumDao-object-ForumDAO"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. Topic object containing topic details (required)\n     b. Last post ID as a number (required)\n     c. Boolean flag indicating if this is the first post in the topic (required)\n     d. Topic data access object for database operations (required)\n     e. Forum data access object for database operations (required)\n\n2. Data Validation:\n   - Validate Topic object:\n     a. Verify Topic object is not null\n     b. Ensure Topic ID is valid (positive integer)\n     c. Ensure Forum ID within Topic is valid (positive integer)\n   - Validate Last Post ID:\n     a. Verify Last Post ID is a positive integer\n   - Validate Data Access Objects:\n     a. Ensure Topic DAO is properly initialized\n     b. Ensure Forum DAO is properly initialized\n   - IF any validation fails, THEN:\n     a. Generate appropriate error message\n     b. Abort the operation\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the topic exists in the system\n     b. Verify the forum exists in the system\n     c. Ensure the user has appropriate permissions to update board status\n   - Verify data consistency:\n     a. Confirm the topic belongs to the specified forum\n     b. Ensure the last post ID corresponds to an actual post\n   - IF any business rule fails, THEN:\n     a. Log the error with detailed information\n     b. Generate appropriate error message\n     c. Abort the operation\n\n4. Core Operation Execution:\n   - Update Topic Information:\n     a. Set the last post ID for the topic\n     b. Update the topic in the database\n   - Update Forum Information:\n     a. Set the last post ID for the forum\n     b. IF this is the first post in the topic, THEN:\n        i. Increment the total topics count for the forum by 1\n     c. ELSE:\n        i. Increment the total replies count for the topic\n   - Update Topic Statistics:\n     a. Increment the total views count for the topic\n   - Update Cache:\n     a. Add the topic to the topic repository cache\n     b. Push the topic to the top of the recent topics list\n     c. Update the forum repository total message count\n   - IF any operation fails, THEN:\n     a. Attempt to rollback changes where possible\n     b. Log the error with detailed information\n     c. Generate appropriate error message\n\n5. Response Generation:\n   - Generate Success Response:\n     a. Confirm all updates were completed successfully\n     b. Return updated topic and forum statistics\n   - IF operation failed, THEN:\n     a. Generate detailed error response with failure reason\n     b. Include suggestions for resolving the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "Topic ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Last Post ID must be a positive integer",
+    "Topic must exist in the system",
+    "Forum must exist in the system",
+    "Topic must belong to the specified forum",
+    "Data access objects must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "lastPostId": "number",
+      "totalReplies": "number",
+      "totalViews": "number"
+    },
+    "TopicDAO": {
+      "update": "function",
+      "incrementTotalReplies": "function",
+      "incrementTotalViews": "function"
+    },
+    "ForumDAO": {
+      "setLastPost": "function",
+      "incrementTotalTopics": "function"
+    }
+  }
+}

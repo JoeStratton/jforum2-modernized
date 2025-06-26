@@ -1,0 +1,27 @@
+{
+  "featureName": "DeletePost",
+  "description": "Removes a post from the system including its text content.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. postId (number, mandatory): The unique identifier of the post to be deleted\n\n2. Data Validation\n   - Validate the provided input:\n     2.1. Check if postId is provided\n        IF postId is missing or null THEN\n           RETURN error message \"Post ID is required\"\n     2.2. Verify postId is a valid number\n        IF postId is not a valid number THEN\n           RETURN error message \"Post ID must be a valid number\"\n     2.3. Verify postId is positive\n        IF postId is not positive THEN\n           RETURN error message \"Post ID must be a positive number\"\n\n3. Business Rule Processing\n   - Verify post existence and access permissions:\n     3.1. Check if the post exists in the system\n        IF post does not exist THEN\n           RETURN error message \"Post not found\"\n     3.2. Check if the current user has permission to delete the post\n        IF user is not the post owner AND user is not a moderator AND user is not an administrator THEN\n           RETURN error message \"You do not have permission to delete this post\"\n     3.3. Check if the post is part of a locked topic\n        IF topic is locked AND user is not a moderator AND user is not an administrator THEN\n           RETURN error message \"Cannot delete post from a locked topic\"\n     3.4. Check if the topic is accessible to the current user\n        IF topic is not accessible THEN\n           RETURN error message \"You do not have access to this topic\"\n\n4. Core Operation Execution\n   - Perform the post deletion process:\n     4.1. Begin transaction to ensure data consistency\n     4.2. Remove the post content from the system\n        4.2.1. Delete the post text entry\n        4.2.2. Delete the post entry\n     4.3. Update search indexes to remove the deleted post\n     4.4. Check if the post has attachments\n        IF post has attachments THEN\n           4.4.1. Delete all associated attachments\n     4.5. Decrement the post count for the post author\n     4.6. Update karma records associated with the post\n     4.7. Check if this is the last remaining post in the topic\n        IF this is the last post in the topic THEN\n           4.7.1. Delete the entire topic\n           4.7.2. Redirect user to the forum view\n        ELSE\n           4.7.3. Update topic statistics (post count, last post ID, first post ID)\n           4.7.4. Update forum statistics (last post information)\n           4.7.5. Redirect user back to the topic view at the appropriate page\n     4.8. Create a moderation log entry recording the deletion\n        4.8.1. Store the original post text in the log\n        4.8.2. Record the user who performed the deletion\n     4.9. Update system caches\n        4.9.1. Remove post from post repository\n        4.9.2. Update topic repository with most recent topics\n        4.9.3. Update topic repository with hottest topics\n        4.9.4. Reload forum data\n     4.10. Commit transaction\n        IF any operation fails THEN\n           4.10.1. Rollback all changes\n           4.10.2. RETURN error message \"Failed to delete post due to system error\"\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. Create success response\n        5.1.1. Include confirmation message \"Post successfully deleted\"\n        5.1.2. Redirect user to appropriate location based on deletion outcome:\n           IF topic was deleted THEN\n              Redirect to forum view\n           ELSE\n              Redirect to topic view at the appropriate page\n     5.2. IF any errors occurred during the process THEN\n        5.2.1. Include detailed error information\n        5.2.2. Include guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Post ID must be provided",
+    "Post ID must be a valid positive number",
+    "Post must exist in the system",
+    "User must have permission to delete the post",
+    "Post cannot be deleted from a locked topic unless user is moderator or administrator",
+    "Topic must be accessible to the current user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

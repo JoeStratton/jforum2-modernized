@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "CompareForum",
+    "description": "Compares forums based on their order and name for sorting purposes"
+  }
+]

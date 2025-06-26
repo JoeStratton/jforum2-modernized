@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "GetPollById",
+    "description": "Retrieves a specific poll by its ID with all associated information"
+  },
+  {
+    "featureName": "DeletePoll",
+    "description": "Removes a poll from the system using its poll ID"
+  },
+  {
+    "featureName": "DeletePollByTopicId",
+    "description": "Removes a poll associated with a specific forum topic"
+  },
+  {
+    "featureName": "UpdatePoll",
+    "description": "Modifies an existing poll's information"
+  },
+  {
+    "featureName": "CreatePoll",
+    "description": "Creates a new poll in the system and returns its ID"
+  },
+  {
+    "featureName": "VoteOnPoll",
+    "description": "Records a user's vote on a specific poll option"
+  },
+  {
+    "featureName": "CheckUserVotedByUserId",
+    "description": "Verifies if a user has already voted on a specific poll using user ID"
+  },
+  {
+    "featureName": "CheckUserVotedByIpAddress",
+    "description": "Verifies if a vote has been cast from a specific IP address on a poll"
+  }
+]

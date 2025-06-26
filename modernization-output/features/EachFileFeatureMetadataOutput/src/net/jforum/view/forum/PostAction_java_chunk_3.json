@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ListUserPosts",
+    "description": "Displays posts made by a specific user with pagination and forum context"
+  },
+  {
+    "featureName": "ReviewTopicPosts",
+    "description": "Shows posts in a topic in reverse chronological order for review purposes"
+  },
+  {
+    "featureName": "ReplyToTopic",
+    "description": "Allows users to reply to an existing topic with permission validation"
+  },
+  {
+    "featureName": "CreateNewPost",
+    "description": "Enables users to create new posts or topics with attachment support"
+  },
+  {
+    "featureName": "EditPost",
+    "description": "Provides functionality to edit existing posts with permission checks"
+  }
+]

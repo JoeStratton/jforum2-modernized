@@ -1,0 +1,105 @@
+{
+  "featureName": "SelectHottestTopics",
+  "description": "Retrieves the most active/popular topics with a specified limit.",
+  "inputValues": [
+    "limit-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following input:\n     - limit (number): The maximum number of topics to retrieve\n     - System will determine if limit is provided, otherwise use default value\n\n2. Data Validation:\n   - Validate the limit parameter:\n     - IF limit is provided:\n       - Verify limit is a positive integer\n       - IF limit is negative or zero:\n         - Set limit to default system value\n       - IF limit exceeds maximum allowed value:\n         - Cap limit to system-defined maximum value\n     - IF limit is not provided:\n       - Set limit to default system value\n\n3. Business Rule Processing:\n   - Determine topic hotness criteria:\n     - System checks configuration for hotness definition parameters\n     - Apply configured weighting factors for:\n       - Number of replies\n       - View count\n       - Recency of activity\n       - User engagement metrics\n   - Apply any forum-specific filtering rules:\n     - Exclude topics from restricted forums if user lacks permission\n     - Exclude topics marked as private or hidden\n     - Apply any category-level filtering rules\n\n4. Core Operation Execution:\n   - Calculate hotness score for eligible topics:\n     - Retrieve all active topics from database\n     - Apply hotness calculation formula to each topic\n     - Sort topics by hotness score in descending order\n   - Apply the limit parameter:\n     - Select top N topics based on the validated limit value\n   - Prepare topic data for response:\n     - For each selected topic:\n       - Include topic identifier\n       - Include topic title\n       - Include topic statistics (replies, views)\n       - Include last post information\n       - Include forum association\n       - Include topic starter information\n     - For each topic, collect additional user information:\n       - Retrieve user details for topic creator\n       - Retrieve user details for last poster\n       - Format timestamps according to system date format\n\n5. Response Generation:\n   - Format the list of hottest topics:\n     - Create a structured collection of topic objects\n     - Include total count of returned topics\n     - Include timestamp of when the list was generated\n   - Handle empty results case:\n     - IF no topics match the criteria:\n       - Return empty list with appropriate metadata\n       - Include suggestion for broadening search criteria\n   - Return the final response:\n     - Ordered list of hottest topics\n     - Response metadata",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Limit must be a positive integer",
+    "Limit cannot exceed system-defined maximum value",
+    "User must have permission to view the returned topics",
+    "Only topics from public forums should be included",
+    "Topics must not be deleted or in moderation queue"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this topic belongs to"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Number of replies in the topic"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Number of times the topic was viewed"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in the topic"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date and time of the last post"
+        },
+        "starterId": {
+          "type": "number",
+          "description": "ID of the user who created the topic"
+        },
+        "hotnessScore": {
+          "type": "number",
+          "description": "Calculated score determining topic popularity"
+        },
+        "postedBy": {
+          "type": "object",
+          "description": "Information about the user who created the topic",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "User ID of the topic creator"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the topic creator"
+            }
+          }
+        },
+        "lastPostBy": {
+          "type": "object",
+          "description": "Information about the user who made the last post",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "User ID of the last poster"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the last poster"
+            }
+          }
+        },
+        "hasAttachments": {
+          "type": "boolean",
+          "description": "Indicates if the topic has file attachments"
+        },
+        "firstPostTime": {
+          "type": "string",
+          "description": "Formatted date/time when the topic was created"
+        },
+        "lastPostTime": {
+          "type": "string",
+          "description": "Formatted date/time of the last post"
+        }
+      }
+    }
+  }
+}

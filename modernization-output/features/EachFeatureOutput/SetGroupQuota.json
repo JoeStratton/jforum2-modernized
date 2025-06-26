@@ -1,0 +1,34 @@
+{
+  "featureName": "SetGroupQuota",
+  "description": "Associates a specific quota limit with a user group.",
+  "inputValues": [
+    "groupId-number-Group",
+    "quotaId-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. groupId (mandatory): Numeric identifier for the user group\n     1.2. quotaId (mandatory): Numeric identifier for the quota limit to be applied\n\n2. Data Validation\n   - Validate all input fields:\n     2.1. Validate groupId:\n         - Check if groupId is provided\n         - Verify groupId is a positive integer\n         - Verify groupId represents an existing group\n     2.2. Validate quotaId:\n         - Check if quotaId is provided\n         - Verify quotaId is a positive integer\n         - Verify quotaId represents an existing quota limit\n\n3. Business Rule Processing\n   - Check system constraints and conditions:\n     3.1. Verify system permissions:\n         - Confirm the current user has administrative rights to modify group quotas\n     3.2. Check for existing quota assignments:\n         - Determine if the group already has a quota limit assigned\n         - IF a quota is already assigned, prepare to update the existing assignment\n         - ELSE prepare to create a new assignment\n\n4. Core Operation Execution\n   - Process the quota assignment:\n     4.1. IF updating an existing assignment:\n         - Update the group's quota limit with the new quotaId\n     4.2. ELSE creating a new assignment:\n         - Create a new association between the group and quota limit\n     4.3. Record the change in the system:\n         - Update the last modified timestamp\n         - Log the quota assignment action\n     4.4. Handle operation failures:\n         - IF any database operation fails, rollback changes\n         - Generate appropriate error information\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. For successful operation:\n         - Return success status\n         - Include confirmation message\n         - Include details of the assigned quota (size limit, type)\n     5.2. For failed operation:\n         - Return error status\n         - Include specific error message\n         - Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group ID must reference an existing group",
+    "Quota ID must be a positive integer",
+    "Quota ID must reference an existing quota limit",
+    "User must have administrative permissions to set group quotas"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

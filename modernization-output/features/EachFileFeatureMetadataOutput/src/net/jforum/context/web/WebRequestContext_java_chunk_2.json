@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ParseFriendlyURL",
+    "description": "Parses friendly URLs to extract module, action, and parameters from the request URI"
+  },
+  {
+    "featureName": "HandleMultipartRequest",
+    "description": "Processes multipart form data requests including file uploads with proper encoding"
+  },
+  {
+    "featureName": "GetSessionContext",
+    "description": "Retrieves or creates a session context for the current web request"
+  },
+  {
+    "featureName": "ExtractRequestParameters",
+    "description": "Extracts and processes request parameters with proper character encoding handling"
+  }
+]

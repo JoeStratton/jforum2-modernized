@@ -1,0 +1,64 @@
+{
+  "featureName": "RefreshForum",
+  "description": "Updates a forum within its parent category in the cache.",
+  "inputValues": [
+    "forum-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Forum object to be refreshed\n     - Forum object must contain all necessary attributes including ID and categoryId\n     - System will use this object to update the cached version\n\n2. Data Validation\n   - Validate Forum object integrity\n     - Ensure forum object is not null\n     - Verify forum ID is valid (greater than 0)\n     - Verify categoryId is valid (greater than 0)\n     - Check that all required forum attributes are present\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Terminate the operation\n\n3. Business Rule Processing\n   - Verify category existence\n     - Retrieve the parent category using the forum's categoryId\n     - IF category does not exist THEN\n       - Log error about missing parent category\n       - Terminate the operation\n     - ELSE continue with refresh operation\n   - Check user permissions (if applicable)\n     - Verify current user has permission to modify forum data\n     - IF user lacks permission THEN\n       - Generate access denied message\n       - Terminate the operation\n\n4. Core Operation Execution\n   - Retrieve the parent category from cache\n     - Use forum's categoryId to identify the correct parent category\n   - Update forum in category\n     - Add or update the forum within the parent category's forum collection\n     - Ensure forum ordering is maintained within the category\n   - Refresh category in cache\n     - Update the category object in the cache with the modified forum\n     - Ensure all category relationships remain intact\n   - Update related cache entries\n     - Update any secondary cache entries that reference the forum\n     - Maintain consistency across all cached data\n\n5. Response Generation\n   - Generate success response\n     - Indicate the forum was successfully refreshed in the cache\n     - Include forum identifier in the response\n   - IF any errors occurred during the process THEN\n     - Generate appropriate error response\n     - Include details about what went wrong\n     - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Forum ID must be greater than 0",
+    "Forum categoryId must be greater than 0",
+    "Parent category must exist in the system",
+    "User must have permission to update forum data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the forum"
+        },
+        "categoryId": {
+          "type": "integer",
+          "description": "ID of the parent category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order within the category"
+        },
+        "totalTopics": {
+          "type": "integer",
+          "description": "Count of topics in the forum"
+        },
+        "totalPosts": {
+          "type": "integer",
+          "description": "Count of posts in the forum"
+        },
+        "lastPostInfo": {
+          "type": "object",
+          "description": "Information about the last post in the forum"
+        }
+      },
+      "required": [
+        "id",
+        "categoryId",
+        "name"
+      ]
+    }
+  }
+}

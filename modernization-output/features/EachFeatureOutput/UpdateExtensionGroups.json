@@ -1,0 +1,36 @@
+{
+  "featureName": "UpdateExtensionGroups",
+  "description": "Updates or deletes existing attachment extension groups.",
+  "inputValues": [
+    "extensionGroups-object-ExtensionGroup",
+    "deleteSelections-object-DeleteSelection"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - extensionGroups: List of extension group objects to update, each containing:\n           * id: Unique identifier for the extension group\n           * name: Name of the extension group\n           * allow: Boolean flag indicating if the group is allowed\n           * downloadMode: Integer representing the download mode\n           * uploadIcon: String path to the upload icon\n       - deleteSelections: List of extension group IDs to delete\n   1.2. System retrieves the total number of records to process\n\n2. Data Validation:\n   2.1. Validate extension group updates:\n       2.1.1. FOR each extension group in extensionGroups:\n           - Verify id is a valid positive integer\n           - Verify name is not empty\n           - Verify downloadMode is a valid option\n           - Verify uploadIcon path format is valid (if provided)\n       2.1.2. IF any validation fails:\n           - Generate appropriate error message\n           - Halt the update process\n   2.2. Validate deletion selections:\n       2.2.1. Verify all IDs in deleteSelections exist in the system\n       2.2.2. Check if any extension group marked for deletion is currently in use\n           - IF in use, generate warning message about potential impact\n\n3. Business Rule Processing:\n   3.1. Check system constraints:\n       3.1.1. Verify the user has administrative privileges\n       3.1.2. Ensure system is not in maintenance mode\n   3.2. Check for dependencies:\n       3.2.1. FOR each extension group ID in deleteSelections:\n           - Check if any file extensions are associated with this group\n           - IF associations exist:\n               * Generate warning about orphaned extensions\n               * Provide option to reassign or delete associated extensions\n\n4. Core Operation Execution:\n   4.1. Process deletions:\n       4.1.1. IF deleteSelections is not empty:\n           - Remove all selected extension groups from the system\n           - Log deletion activity\n   4.2. Process updates:\n       4.2.1. FOR each extension group in extensionGroups that is not in deleteSelections:\n           - Update the extension group record with new values\n           - Preserve any fields not explicitly changed\n           - Log update activity\n   4.3. Handle failures:\n       4.3.1. IF any operation fails:\n           - Roll back all changes made in this transaction\n           - Log the error details\n           - Prepare error message for user\n\n5. Response Generation:\n   5.1. Generate success response:\n       5.1.1. Create summary of changes made:\n           - Number of groups updated\n           - Number of groups deleted\n       5.1.2. Prepare updated list of all extension groups for display\n   5.2. Generate error response (if needed):\n       5.2.1. Include specific error messages for failed operations\n       5.2.2. Provide guidance on how to resolve issues\n   5.3. Return to extension groups management interface with appropriate message",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension group name must not be empty",
+    "Extension group ID must be a positive integer",
+    "Download mode must be a valid option",
+    "Upload icon path must be in a valid format if provided",
+    "Extension groups marked for deletion must exist in the system",
+    "User must have administrative privileges to update extension groups"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ExtensionGroup": {
+      "id": "number",
+      "name": "string",
+      "allow": "boolean",
+      "downloadMode": "number",
+      "uploadIcon": "string"
+    },
+    "DeleteSelection": {
+      "ids": [
+        "number"
+      ]
+    }
+  }
+}

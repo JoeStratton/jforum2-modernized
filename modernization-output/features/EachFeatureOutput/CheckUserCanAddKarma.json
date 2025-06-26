@@ -1,0 +1,44 @@
+{
+  "featureName": "CheckUserCanAddKarma",
+  "description": "Verifies if a user is eligible to add karma to a specific post.",
+  "inputValues": [
+    "userId-number-User",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): The identifier of the user attempting to add karma\n   - Collect postId (mandatory): The identifier of the post to which karma would be added\n\n2. Data Validation:\n   - Validate userId:\n      a. Verify userId is a positive integer\n      b. Verify userId corresponds to an existing user in the system\n      c. IF userId is invalid or non-existent, THEN return error message indicating invalid user\n   - Validate postId:\n      a. Verify postId is a positive integer\n      b. Verify postId corresponds to an existing post in the system\n      c. IF postId is invalid or non-existent, THEN return error message indicating invalid post\n\n3. Business Rule Processing:\n   - Check system karma configuration:\n      a. Verify karma functionality is enabled in the system\n      b. IF karma functionality is disabled, THEN return error message indicating feature unavailability\n   - Check user permissions:\n      a. Verify user has sufficient privileges to add karma\n      b. IF user lacks karma privileges, THEN return error message indicating insufficient permissions\n   - Check for previous karma contributions:\n      a. Query karma records to determine if the user has already added karma to this specific post\n      b. IF user has previously added karma to this post, THEN user cannot add karma again\n\n4. Core Operation Execution:\n   - Determine karma eligibility status:\n      a. IF all validations pass AND user has not previously added karma to this post, THEN\n         i. Set eligibility status to true (user can add karma)\n      b. ELSE\n         i. Set eligibility status to false (user cannot add karma)\n   - Record eligibility check event in system logs (optional):\n      a. Log the user ID, post ID, and eligibility result\n      b. Include timestamp of the eligibility check\n\n5. Response Generation:\n   - Generate response with eligibility status:\n      a. Return boolean result indicating whether user can add karma (true) or not (false)\n      b. IF eligibility status is false, THEN include reason code/message explaining why\n   - Include additional context information:\n      a. IF eligible, include information about karma point range allowed\n      b. IF not eligible, include when the user might be able to add karma again (if applicable)",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Post ID must be a valid positive integer",
+    "User must exist in the system",
+    "Post must exist in the system",
+    "User must have permission to add karma",
+    "User must not have previously added karma to the same post"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "karma": "object"
+    },
+    "Post": {
+      "id": "number",
+      "userId": "number",
+      "topicId": "number"
+    },
+    "Karma": {
+      "id": "number",
+      "postId": "number",
+      "postUserId": "number",
+      "fromUserId": "number",
+      "points": "number",
+      "topicId": "number",
+      "rateDate": "date"
+    }
+  }
+}

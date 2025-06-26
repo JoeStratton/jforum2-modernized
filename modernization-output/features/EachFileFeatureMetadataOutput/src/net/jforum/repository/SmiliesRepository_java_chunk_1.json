@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "LoadSmilies",
+    "description": "Loads all smilies from the database into the cache"
+  },
+  {
+    "featureName": "GetSmilies",
+    "description": "Retrieves the list of smilies with properly formatted URLs for display in the forum"
+  }
+]

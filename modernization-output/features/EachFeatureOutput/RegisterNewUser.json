@@ -1,0 +1,57 @@
+{
+  "featureName": "RegisterNewUser",
+  "description": "Handles new user registration with form display and validation.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "email-string-User",
+    "captchaResponse-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following user registration information:\n     a. username (mandatory): User's chosen identifier\n     b. password (mandatory): User's chosen password\n     c. email (mandatory): User's email address\n     d. captchaResponse (mandatory if enabled): User's response to security challenge\n   - System determines if registration is enabled\n   - System determines if email activation is required\n\n2. Data Validation:\n   - Validate username:\n     a. Check if username is not empty\n     b. Verify username length does not exceed maximum allowed length\n     c. Ensure username does not contain invalid characters (< or >)\n     d. Check if username is not already registered in the system\n   - Validate password:\n     a. Check if password is not empty\n   - Validate email:\n     a. Check if email is not already registered in the system\n   - Validate captcha (if enabled):\n     a. Verify user's captcha response matches the expected value\n   - IF any validation fails:\n     a. Display appropriate error message\n     b. Return user to registration form with entered values preserved\n     c. END process\n\n3. Business Rule Processing:\n   - Check if user registration is enabled in the system\n     a. IF registration is disabled AND current user does not have administration privileges:\n        i. Display registration disabled message\n        ii. END process\n   - Check if terms agreement is required\n     a. IF agreement is required AND user has not accepted agreement:\n        i. Display agreement terms to user\n        ii. Wait for user acceptance\n        iii. IF user accepts, continue process\n        iv. IF user rejects, END process\n\n4. Core Operation Execution:\n   - Create new user record with provided information:\n     a. Store username as provided\n     b. Encrypt password before storing\n     c. Store email as provided\n   - IF email activation is required:\n     a. Generate unique activation key for the user\n     b. Store activation key with user record\n     c. Send activation email to user's email address\n     d. Mark user account as inactive\n   - ELSE:\n     a. Mark user account as active\n   - Update system statistics:\n     a. Increment total user count\n     b. Update last registered user information\n\n5. Response Generation:\n   - IF email activation is required:\n     a. Display message instructing user to check email for activation instructions\n   - ELSE IF user was registered by administrator:\n     a. Redirect administrator to user management page\n   - ELSE:\n     a. Automatically log new user into the system\n     b. Create new session for the user\n     c. Display registration completion message\n     d. Provide links to profile editing page and homepage",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Password must not be empty",
+    "Username must not exceed maximum allowed length",
+    "Username must not contain < or > characters",
+    "Username must not already exist in the system",
+    "Email must not already be registered in the system",
+    "Captcha response must match expected value if captcha is enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "User's chosen identifier"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's encrypted password"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "activationKey": {
+          "type": "string",
+          "description": "Key for email account activation"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates if user account is active"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "email"
+      ]
+    }
+  }
+}

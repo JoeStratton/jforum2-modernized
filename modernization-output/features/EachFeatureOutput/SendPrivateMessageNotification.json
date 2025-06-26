@@ -1,0 +1,35 @@
+{
+  "featureName": "SendPrivateMessageNotification",
+  "description": "Sends email notifications to users when they receive new private messages.",
+  "inputValues": [
+    "user-object-User",
+    "messageLink-string-Link"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect user object (mandatory) containing recipient details\n   - Collect message link (mandatory) for accessing the private message\n   - System will use email templates (mandatory) for notification content\n   - User email address (mandatory from user object)\n\n2. Data Validation:\n   - Validate user object:\n      a. Check if user object is not null\n      b. Verify user has valid ID\n      c. IF user email is null or empty THEN\n         i. Exit process without sending notification\n         ii. Log skipped notification attempt\n      d. Validate email format for correctness\n   - Validate message link:\n      a. Ensure link is not empty\n      b. Verify link format is valid\n   - Validate system configuration:\n      a. Check if email notification feature is enabled\n      b. Verify email templates exist and are accessible\n\n3. Business Rule Processing:\n   - Check user notification preferences:\n      a. IF user has disabled private message notifications THEN\n         i. Skip notification process\n         ii. Log notification preference status\n      b. ELSE continue with notification process\n   - Check system notification limits:\n      a. Verify notification frequency limits are not exceeded\n      b. Check if user's daily notification limit is reached\n   - Prepare notification context:\n      a. Create parameter collection for template\n      b. Add user information to parameters\n      c. Add message access link to parameters\n      d. Add system information (site name, etc.) to parameters\n\n4. Core Operation Execution:\n   - Prepare email message:\n      a. Select appropriate email template\n      b. Apply template parameters to generate content\n      c. Set email subject line from configuration\n      d. Format email body with proper HTML/text content\n   - Send notification:\n      a. Add recipient email address\n      b. Set sender address from system configuration\n      c. Attempt to send email message\n      d. IF sending fails THEN\n         i. Log failure with reason\n         ii. Store notification for retry if applicable\n      e. ELSE mark notification as sent successfully\n   - Update notification records:\n      a. Record timestamp of notification\n      b. Update user's notification counter\n      c. Link notification record to private message\n\n5. Response Generation:\n   - For successful notification:\n      a. Return success status\n      b. Include notification ID if applicable\n      c. Include timestamp of notification\n   - For failed notification:\n      a. Return failure status\n      b. Include error reason\n      c. Include suggestion for retry if applicable\n   - For skipped notification (due to preferences):\n      a. Return skipped status\n      b. Include reason for skipping",
+  "databaseEntities": [
+    "User",
+    "PrivateMessage",
+    "NotificationPreference",
+    "NotificationLog"
+  ],
+  "validationRules": [
+    "User must have a valid email address",
+    "Email notification must be enabled in system settings",
+    "User must have private message notifications enabled in preferences",
+    "Email templates must exist and be accessible",
+    "Message link must be valid and accessible",
+    "Notification frequency limits must not be exceeded"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default email templates exist for private message notifications",
+    "Set default system configuration for notification settings"
+  ],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "notificationPreferences": "object"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "featureName": "DetectBotRequests",
+  "description": "Identifies if the current request is from a bot based on request attributes.",
+  "inputValues": [
+    "request-object-HttpRequest",
+    "configKeys-object-ConfigKeys"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HttpRequest object containing request information\n     - Request URI\n     - User-Agent header\n     - Remote host information\n   - Retrieve system configuration for bot detection\n     - Bot agent patterns list\n     - Bot host patterns list\n\n2. Data Validation:\n   - Validate that the HttpRequest object is not null\n     - IF HttpRequest is null THEN\n       - Return an error indicating invalid request\n     - END IF\n   - Check if the request URI is available\n     - IF request URI is null THEN\n       - Log warning about incomplete request information\n     - END IF\n   - Verify User-Agent header availability\n     - IF User-Agent is null THEN\n       - Note absence for later processing\n     - END IF\n\n3. Business Rule Processing:\n   - Check for robots.txt specific requests\n     - IF request URI contains \"robots.txt\" THEN\n       - Mark as bot with name \"Unknown (asked for robots.txt)\"\n       - Skip further checks\n     - END IF\n   - Apply User-Agent based detection\n     - IF User-Agent is available THEN\n       - Convert User-Agent to lowercase for case-insensitive matching\n       - FOR EACH bot agent pattern in configuration\n         - IF pattern is null THEN\n           - CONTINUE to next pattern\n         - END IF\n         - IF User-Agent contains the pattern THEN\n           - Mark as bot with name from User-Agent\n           - Skip further checks\n         - END IF\n       - END FOR\n     - END IF\n   - Apply hostname-based detection\n     - Retrieve remote host information\n     - IF remote host is available AND has valid format THEN\n       - Convert remote host to lowercase for case-insensitive matching\n       - FOR EACH bot host pattern in configuration\n         - IF pattern is null THEN\n           - CONTINUE to next pattern\n         - END IF\n         - IF remote host contains the pattern THEN\n           - Mark as bot with name from remote host\n           - Skip further checks\n         - END IF\n       - END FOR\n     - END IF\n\n4. Core Operation Execution:\n   - Determine final bot detection result\n     - IF any detection rule identified a bot THEN\n       - Set bot detection result to true with identified bot name\n     - ELSE\n       - Set bot detection result to false (not a bot)\n     - END IF\n   - Store the bot detection result\n     - Save bot status in request attributes for other components\n     - Record bot identification for analytics if enabled\n   - Apply system behavior adjustments for bots\n     - Modify session tracking behavior if request is from bot\n     - Adjust caching policies based on bot status\n\n5. Response Generation:\n   - Return the bot detection result\n     - IF bot was detected THEN\n       - Return the identified bot name\n     - ELSE\n       - Return null indicating no bot was detected\n     - END IF\n   - Include bot identification in session attributes\n   - Make bot status available for content customization",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "HttpRequest object must not be null",
+    "Bot detection configuration must be properly loaded",
+    "User-Agent pattern matching must be case-insensitive",
+    "Remote host pattern matching must be case-insensitive",
+    "Robots.txt requests must be automatically classified as bots",
+    "Session tracking must respect bot status for analytics purposes"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpRequest": {
+      "type": "object",
+      "properties": {
+        "getRequestURI": {
+          "type": "function",
+          "description": "Returns the URI for this request"
+        },
+        "getHeader": {
+          "type": "function",
+          "description": "Returns the value of the specified request header"
+        },
+        "getRemoteHost": {
+          "type": "function",
+          "description": "Returns the fully qualified name of the client or the last proxy that sent the request"
+        }
+      }
+    },
+    "ConfigKeys": {
+      "type": "object",
+      "properties": {
+        "botAgents": {
+          "type": "array",
+          "description": "List of user agent patterns that identify bots"
+        },
+        "botHosts": {
+          "type": "array",
+          "description": "List of host patterns that identify bots"
+        }
+      }
+    }
+  }
+}

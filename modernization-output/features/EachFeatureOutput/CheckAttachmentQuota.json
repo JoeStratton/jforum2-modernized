@@ -1,0 +1,68 @@
+{
+  "featureName": "CheckAttachmentQuota",
+  "description": "Validates if uploaded attachments exceed the user's quota limits.",
+  "inputValues": [
+    "userId-number-User",
+    "uploadedFiles-object-FileCollection",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): The identifier of the user uploading attachments\n   - Collect uploadedFiles (mandatory): Collection of files being uploaded\n      * Each file must contain: name, size, content type, and binary content\n      * Optional comment for each file (limited to 254 characters)\n   - Collect forumId (mandatory): The identifier of the forum where attachments will be posted\n\n2. Data Validation:\n   - Validate user permissions:\n      * Check if attachments are enabled for the specified forum\n      * Verify user has permission to upload attachments\n      * IF permissions are not valid, THEN abort process and return error message\n   - Validate file count:\n      * Ensure number of files does not exceed system-defined maximum per post\n      * IF too many files, THEN limit to maximum allowed\n   - Validate each file:\n      * Ensure filename does not contain null characters (security check)\n      * Verify file extension is allowed based on system configuration\n      * Check comment length does not exceed 254 characters\n      * IF any validation fails, THEN abort process and return appropriate error message\n\n3. Business Rule Processing:\n   - Calculate total size of all attachments being uploaded\n   - Retrieve user's quota limit:\n      * Identify all groups the user belongs to\n      * Find the highest quota limit among all user's groups\n      * IF no specific quota found, THEN use system default quota\n   - Check quota compliance:\n      * Compare total upload size against user's quota limit\n      * IF total size exceeds quota, THEN abort process and return quota exceeded error\n\n4. Core Operation Execution:\n   - For each valid file:\n      * Generate unique storage filename based on date, time, and user information\n      * Create directory structure if needed (year/month/day folders)\n      * Prepare attachment metadata including:\n         > Original filename\n         > Physical storage location\n         > File size\n         > MIME type\n         > Upload timestamp\n         > User-provided comment\n      * Determine if thumbnail generation is needed for image files\n   - Return validation success with prepared attachment information\n\n5. Response Generation:\n   - Success response:\n      * List of validated attachments ready for storage\n      * Confirmation that quota limits are satisfied\n   - Error response options:\n      * Permission denied: User cannot upload attachments\n      * Invalid file type: File extension not allowed\n      * Comment too long: Attachment comment exceeds character limit\n      * Quota exceeded: Detailed message showing limit and current usage\n      * Security violation: Malformed filenames or other security issues",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_attachments",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "User must have permission to upload attachments in the specified forum",
+    "Number of attachments must not exceed system-defined maximum per post",
+    "File extensions must be allowed according to system configuration",
+    "Attachment comments must not exceed 254 characters",
+    "Filenames must not contain null characters (security check)",
+    "Total attachment size must not exceed user's quota limit",
+    "User must belong to at least one group with defined quota limits"
+  ],
+  "dbSeedingOperations": [
+    "Ensure quota limits are defined for user groups",
+    "Configure allowed file extensions in the system",
+    "Set up maximum attachments per post system parameter"
+  ],
+  "schema": {
+    "FileCollection": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Original filename of the attachment"
+          },
+          "size": {
+            "type": "number",
+            "description": "Size of the file in bytes"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "MIME type of the file"
+          },
+          "content": {
+            "type": "object",
+            "description": "Binary content of the file"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Optional user comment about the attachment",
+            "maxLength": 254
+          }
+        },
+        "required": [
+          "name",
+          "size",
+          "contentType",
+          "content"
+        ]
+      }
+    }
+  }
+}

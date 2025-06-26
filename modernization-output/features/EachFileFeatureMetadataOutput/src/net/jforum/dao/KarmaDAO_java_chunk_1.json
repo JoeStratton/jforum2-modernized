@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "AddKarma",
+    "description": "Inserts a new karma record for a user"
+  },
+  {
+    "featureName": "GetUserKarma",
+    "description": "Retrieves the karma status of a specific user"
+  },
+  {
+    "featureName": "UpdateUserKarma",
+    "description": "Updates the karma status for a user in the users table"
+  },
+  {
+    "featureName": "CheckUserKarmaPermission",
+    "description": "Verifies if a user can add karma to a specific post"
+  },
+  {
+    "featureName": "GetPostKarma",
+    "description": "Retrieves the karma status of a specific post"
+  },
+  {
+    "featureName": "UpdateKarma",
+    "description": "Updates an existing karma record"
+  },
+  {
+    "featureName": "GetUserVotes",
+    "description": "Retrieves votes made by a user on posts within a topic"
+  },
+  {
+    "featureName": "GetUserTotalKarma",
+    "description": "Calculates and retrieves the total karma for a user"
+  },
+  {
+    "featureName": "GetMostRatedUsers",
+    "description": "Retrieves users with highest karma ratings within a date range"
+  }
+]

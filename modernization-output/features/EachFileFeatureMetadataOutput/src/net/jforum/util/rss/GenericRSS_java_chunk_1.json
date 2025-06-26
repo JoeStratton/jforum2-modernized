@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "CreateRSS",
+    "description": "Generates RSS feed content by processing a template with RSS data"
+  }
+]

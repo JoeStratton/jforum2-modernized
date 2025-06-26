@@ -1,0 +1,26 @@
+{
+  "featureName": "ReloadCategory",
+  "description": "Updates a category's name and order in the cache.",
+  "inputValues": [
+    "category-object-Category"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Category object with updated name and order\n   - Required fields:\n     * Category ID (system-generated identifier)\n     * Category name (mandatory string)\n     * Category order (mandatory number)\n\n2. Data Validation\n   - Validate Category object\n     * Verify Category ID exists and is a positive integer\n     * Verify Category name is not empty\n     * Verify Category order is a non-negative integer\n   - IF any validation fails THEN\n     * Generate appropriate error message\n     * Terminate the operation\n\n3. Business Rule Processing\n   - Check if the category exists in the system\n     * IF category does not exist THEN\n       * Generate error message indicating category not found\n       * Terminate the operation\n   - Check if another category already has the requested order\n     * Find category with the same order as the updated category\n     * Store reference to this category if found\n\n4. Core Operation Execution\n   - Create a temporary sorted collection of categories\n     * Add all existing categories to the collection\n   - IF another category exists with the same order THEN\n     * Remove that category from the temporary collection\n     * Remove that category from the cache by ID\n   - Add the updated category to the temporary collection\n   - Add the updated category to the cache by ID\n   - IF another category was found with the same order AND it's not the same category being updated THEN\n     * Remove the original version of the updated category from the collection\n     * Set the order of the displaced category to the original order of the updated category\n     * Add the displaced category back to the collection\n     * Update the displaced category in the cache by ID\n   - Update the categories collection in the cache\n\n5. Response Generation\n   - IF operation completes successfully THEN\n     * Return success status\n     * Indicate category was successfully updated in the cache\n   - IF any errors occur during processing THEN\n     * Return error status\n     * Include specific error details and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category ID must exist in the system",
+    "Category name must not be empty",
+    "Category order must be a non-negative integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    }
+  }
+}

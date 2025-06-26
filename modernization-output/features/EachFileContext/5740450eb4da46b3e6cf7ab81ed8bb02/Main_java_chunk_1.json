@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main.java\n\n Original Content: package net.jforum.tools.phpbb2jforum;\n\nimport java.io.IOException;\nimport java.sql.Connection;\nimport java.sql.DriverManager;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\nimport java.sql.Statement;\n\nimport net.jforum.util.DbUtils;\nimport net.jforum.util.preferences.SystemGlobals;\n\nimport org.apache.commons.lang.StringUtils;\n\n/**\n * @author Rafael Steil\n * @version $Id: Main.java,v 1.12 2007/08/31 01:21:34 rafaelsteil Exp $\n */",
+  "metadata": {
+    "fileId": "Main_java_chunk_1",
+    "fileName": "Main.java",
+    "filePath": "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main.java"
+  }
+}

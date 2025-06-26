@@ -1,0 +1,50 @@
+{
+  "featureName": "ProcessBasicAuthentication",
+  "description": "Handles HTTP Basic Authentication for user login.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "authorizationHeader-string-Request"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. Authorization header (mandatory) - Contains the Basic Authentication credentials\n     1.2. Username (system-generated from Authorization header)\n     1.3. Password (system-generated from Authorization header)\n\n2. Data Validation:\n   2.1. Validate Authorization Header:\n      2.1.1. Check if Authorization header exists\n      2.1.2. Verify header starts with 'Basic ' prefix\n      2.1.3. IF header is missing or invalid format, THEN proceed to standard login form\n   2.2. Decode Authorization Credentials:\n      2.2.1. Extract the base64-encoded portion of the Authorization header\n      2.2.2. Decode the base64 string to obtain username:password format\n      2.2.3. IF decoding fails, THEN return authentication error\n   2.3. Parse Credentials:\n      2.3.1. Split the decoded string at the colon character\n      2.3.2. Extract username portion (before colon)\n      2.3.3. Extract password portion (after colon)\n      2.3.4. IF colon separator not found, THEN return authentication error\n   2.4. Validate Credentials Format:\n      2.4.1. Verify username is not empty\n      2.4.2. Verify password is not empty\n      2.4.3. IF either credential is empty, THEN return authentication error\n\n3. Business Rule Processing:\n   3.1. Check Authentication Type:\n      3.1.1. Verify system is not configured for SSO-only authentication\n      3.1.2. IF system is SSO-only, THEN return authentication type error\n   3.2. Check Account Status:\n      3.2.1. Verify user account exists\n      3.2.2. Verify user account is active and not suspended\n      3.2.3. IF account doesn't exist or is inactive, THEN return invalid credentials error\n\n4. Core Operation Execution:\n   4.1. Authenticate User:\n      4.1.1. Validate username and password against stored credentials\n      4.1.2. IF credentials are invalid, THEN return authentication failure\n      4.1.3. IF credentials are valid, THEN proceed with login process\n   4.2. Create User Session:\n      4.2.1. Generate new user session\n      4.2.2. Remove any existing guest session for this connection\n      4.2.3. Populate session with user data\n      4.2.4. Set session last visit time\n      4.2.5. Store session in session repository\n   4.3. Handle Existing Sessions:\n      4.3.1. Check if user has an existing active session\n      4.3.2. IF existing session found, THEN store its data and remove it\n      4.3.3. Update last visit timestamp based on previous session if available\n   4.4. Load User Preferences:\n      4.4.1. Load user language preference\n      4.4.2. Load user security permissions\n\n5. Response Generation:\n   5.1. Generate Success Response:\n      5.1.1. Set authentication status as successful\n      5.1.2. Determine appropriate redirect location\n      5.1.3. Include user identification information\n   5.2. Generate Error Response:\n      5.2.1. IF authentication failed, THEN include error message\n      5.2.2. Provide option to retry authentication\n      5.2.3. Preserve return path if specified",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Authorization header must be present for Basic Authentication",
+    "Authorization header must start with 'Basic ' prefix",
+    "Authorization credentials must be valid base64 encoded string",
+    "Decoded credentials must contain a colon separator",
+    "Username must not be empty",
+    "Password must not be empty",
+    "User account must exist in the system",
+    "User account must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "active": "boolean",
+      "lang": "string"
+    },
+    "UserSession": {
+      "sessionId": "string",
+      "userId": "number",
+      "username": "string",
+      "startTime": "date",
+      "lastVisit": "date",
+      "sessionTime": "number",
+      "autoLogin": "boolean"
+    },
+    "Request": {
+      "headers": {
+        "Authorization": "string"
+      }
+    }
+  }
+}

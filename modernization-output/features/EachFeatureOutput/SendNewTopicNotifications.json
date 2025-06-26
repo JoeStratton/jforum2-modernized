@@ -1,0 +1,55 @@
+{
+  "featureName": "SendNewTopicNotifications",
+  "description": "Sends email notifications to subscribed users when a new forum topic is created.",
+  "inputValues": [
+    "forum-object-Forum",
+    "topic-object-Topic",
+    "post-object-Post",
+    "subscribedUsers-object-UserList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Forum information (required)\n     * Forum ID\n     * Forum name\n   - Collect Topic information (required)\n     * Topic ID\n     * Topic title\n     * Last post ID\n   - Collect Post information (optional)\n     * Post text content\n     * Post author information\n   - Collect list of subscribed users (required)\n     * User email addresses\n     * User notification preferences\n\n2. Data Validation:\n   - Validate Forum data\n     * Verify Forum ID exists\n     * Verify Forum is active and visible\n   - Validate Topic data\n     * Verify Topic ID exists\n     * Verify Topic title is not empty\n     * Verify Topic belongs to the specified Forum\n   - Validate Post data (if provided)\n     * Verify Post content is not empty\n     * Verify Post belongs to the specified Topic\n   - Validate subscribed users list\n     * Verify list contains at least one user\n     * Verify each user has a valid email address\n     * Verify each user has opted in for topic notifications\n   - IF any validation fails, THEN\n     * Log validation error\n     * Exit notification process\n\n3. Business Rule Processing:\n   - Check system notification settings\n     * Verify email notifications are enabled system-wide\n     * Retrieve email template configurations\n   - Process notification content\n     * Generate topic link URL\n     * Generate forum unwatch link URL\n     * Format post content for email (if post is provided)\n     * Prepare email subject line with topic title\n   - Apply user notification preferences\n     * Filter out users who disabled forum notifications\n     * Check notification frequency settings for each user\n   - IF system notifications are disabled, THEN\n     * Log notification skipped message\n     * Exit notification process\n\n4. Core Operation Execution:\n   - Prepare notification parameters\n     * Set topic information in template\n     * Set forum information in template\n     * Set post content in template (if available)\n     * Set direct link to the topic\n     * Set unsubscribe link for the forum\n   - Generate email content\n     * Apply email template with parameters\n     * Format subject line with topic title\n   - Process email queue\n     * Group users by notification preferences\n     * Prepare batch email operation\n     * Set email metadata (subject, from address, reply-to)\n   - Send notifications\n     * Process each user in the queue\n     * Send personalized email to each recipient\n     * Track delivery status\n   - IF any sending errors occur, THEN\n     * Log failed delivery attempts\n     * Continue with remaining recipients\n\n5. Response Generation:\n   - Generate notification summary\n     * Count of successful notifications sent\n     * Count of failed notifications\n     * Timestamp of notification completion\n   - Update notification records\n     * Mark topic notifications as sent\n     * Record notification timestamp\n   - Return notification status\n     * Success or failure indicator\n     * Error details if applicable\n     * Notification statistics summary",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Forum must exist and be active",
+    "Topic must exist and belong to the specified forum",
+    "Topic title must not be empty",
+    "Subscribed users list must not be empty",
+    "Each subscribed user must have a valid email address",
+    "Each subscribed user must have opted in for notifications",
+    "Email notifications must be enabled in system settings"
+  ],
+  "dbSeedingOperations": [
+    "Ensure system email templates exist for new topic notifications",
+    "Ensure system configuration contains valid email settings"
+  ],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "lastPostId": "number"
+    },
+    "Post": {
+      "id": "number",
+      "text": "string",
+      "authorId": "number"
+    },
+    "UserList": {
+      "type": "array",
+      "items": {
+        "id": "number",
+        "email": "string",
+        "notificationPreferences": "object"
+      }
+    }
+  }
+}

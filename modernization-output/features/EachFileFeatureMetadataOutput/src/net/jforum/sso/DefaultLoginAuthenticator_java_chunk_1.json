@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ValidateUserLogin",
+    "description": "Authenticates users by validating username and password against the database"
+  }
+]

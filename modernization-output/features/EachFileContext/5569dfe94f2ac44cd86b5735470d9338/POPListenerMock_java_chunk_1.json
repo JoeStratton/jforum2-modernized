@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: tests/core/net/jforum/api/integration/mail/pop/POPListenerMock.java\n\n Original Content: /*\n * Created on 30/08/2006 22:08:44\n */\npackage net.jforum.api.integration.mail.pop;\n\n/**\n * @author Rafael Steil\n * @version $Id: POPListenerMock.java,v 1.1 2006/08/31 02:12:22 rafaelsteil Exp $\n */\npublic class POPListenerMock extends POPListener\n{\n\tpublic POPListenerMock() \n\t{\n\t\tsuper.connector = new POPConnectorMock();\n\t}\n}",
+  "metadata": {
+    "fileId": "POPListenerMock_java_chunk_1",
+    "fileName": "POPListenerMock.java",
+    "filePath": "tests/core/net/jforum/api/integration/mail/pop/POPListenerMock.java"
+  }
+}

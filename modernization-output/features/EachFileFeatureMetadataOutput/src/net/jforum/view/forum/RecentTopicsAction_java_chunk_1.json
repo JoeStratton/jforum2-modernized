@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ListRecentTopics",
+    "description": "Displays a paginated list of recent forum topics accessible to the current user"
+  },
+  {
+    "featureName": "ShowTopicsByUser",
+    "description": "Retrieves and displays all forum topics created by a specific user with pagination"
+  }
+]

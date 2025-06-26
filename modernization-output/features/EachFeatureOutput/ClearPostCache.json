@@ -1,0 +1,22 @@
+{
+  "featureName": "ClearPostCache",
+  "description": "Clears the cache for posts in a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory) - The unique identifier of the topic whose post cache needs to be cleared\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n        IF topicId is missing THEN\n          Display error message \"Topic ID is required\"\n          Abort operation\n     b. Verify topicId is a positive integer\n        IF topicId is not a positive integer THEN\n          Display error message \"Topic ID must be a positive number\"\n          Abort operation\n     c. Verify topicId exists in the system\n        IF topicId does not exist in the system THEN\n          Display error message \"The specified topic does not exist\"\n          Abort operation\n\n3. Business Rule Processing:\n   - Check if post caching is enabled in the system\n     IF post caching is disabled THEN\n       Display message \"Post caching is not enabled in the system\"\n       Redirect to cache management overview\n       Abort operation\n   - Verify user has administrative privileges\n     IF user does not have administrative privileges THEN\n       Display error message \"Insufficient permissions to clear cache\"\n       Abort operation\n\n4. Core Operation Execution:\n   - Locate all cached posts associated with the specified topic\n   - Remove all cached post entries for the specified topic from the cache storage\n   - Record cache clearing event in system logs with following information:\n     a. Administrator who performed the action\n     b. Timestamp of the action\n     c. Topic ID affected\n     d. Number of post entries cleared\n\n5. Response Generation:\n   - Display success message \"Cache cleared successfully for topic [topicId]\"\n   - Show updated cache statistics:\n     a. Total number of topics currently in cache\n     b. Memory usage before and after clearing\n   - Provide option to:\n     a. Return to post cache management screen\n     b. View the topic whose cache was cleared\n     c. Clear cache for another topic",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Topic ID must be provided",
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have administrative privileges to clear cache",
+    "Post caching must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,46 @@
+{
+  "featureName": "DeleteTemporaryStorage",
+  "description": "Deletes the underlying storage for a file item including temporary disk files.",
+  "inputValues": [
+    "fileItem-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the FileItem object that needs its temporary storage deleted\n   - Determine if the FileItem has associated temporary storage\n   - Check if the FileItem is stored in memory or on disk\n\n2. Data Validation\n   - Verify the FileItem object is not null\n     * IF FileItem is null THEN\n       - Generate an error indicating invalid input\n       - Terminate the operation\n     * END IF\n   - Check if the FileItem has a valid store location\n     * IF store location cannot be determined THEN\n       - Log a warning about inability to locate temporary storage\n       - Skip to Response Generation\n     * END IF\n\n3. Business Rule Processing\n   - Determine if the file is currently in use\n     * IF file is locked or in use by another process THEN\n       - Generate appropriate warning\n       - Consider retry logic or delayed deletion\n     * END IF\n   - Check system permissions for file deletion\n     * IF current user lacks permission to delete the file THEN\n       - Generate appropriate error message\n       - Terminate the operation\n     * END IF\n\n4. Core Operation Execution\n   - Clear any cached content in memory\n     * Set any in-memory cached content references to null\n     * Release memory resources associated with the file content\n   - Retrieve the physical file location\n     * Get the reference to the temporary file on disk\n     * IF no file exists on disk THEN\n       - Skip to next step\n     * END IF\n   - Delete the physical file\n     * Check if the file exists\n     * IF file exists THEN\n       - Execute file deletion operation\n       - IF deletion fails THEN\n         - Log error details\n         - Generate appropriate error message\n       * END IF\n     * END IF\n   - Clean up any tracking resources\n     * Remove file from any cleanup tracking mechanisms\n     * Release any locks or handles on the file\n\n5. Response Generation\n   - Generate success response\n     * Indicate successful deletion of temporary storage\n     * Include details about freed resources if applicable\n   - Generate error response if needed\n     * Include specific error details if deletion failed\n     * Provide guidance on manual cleanup if automatic deletion failed",
+  "databaseEntities": [],
+  "validationRules": [
+    "FileItem object must not be null",
+    "System must have appropriate permissions to delete the file",
+    "File must not be locked by another process during deletion attempt"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "Name of the form field"
+        },
+        "storeLocation": {
+          "type": "object",
+          "description": "File object representing the temporary storage location"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Indicates if the item is a form field or file upload"
+        },
+        "cachedContent": {
+          "type": "object",
+          "description": "In-memory cached content of the file"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the file in bytes"
+        },
+        "name": {
+          "type": "string",
+          "description": "Original name of the file"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "featureName": "ReadHeadersFromMultipartStream",
+  "description": "Reads header part of a multipart encapsulation and returns it as a string.",
+  "inputValues": [
+    "multipartStream-object-MultipartStream"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the multipart stream object that contains the encapsulated data\n   - Prepare a byte array output stream to store header data\n   - Set maximum header size limit\n\n2. Data Validation:\n   - Validate that the multipart stream is properly initialized\n   - Verify that the stream is positioned at the beginning of a header section\n   - Ensure the header size limit is appropriate to prevent abuse\n\n3. Business Rule Processing:\n   - Check if header encoding is specified\n   - Verify that the stream has not reached its end\n   - Ensure the system has enough memory to process the header\n\n4. Core Operation Execution:\n   - Initialize counter variables and buffers\n   - Read bytes from the stream one by one\n     - IF byte matches the current position in the header separator pattern\n       - Increment the pattern match counter\n     - ELSE\n       - Reset the pattern match counter to zero\n     - Add the byte to the output buffer if within size limits\n     - Increment the size counter\n     - IF size exceeds maximum allowed size\n       - Continue reading but stop storing bytes\n   - Continue until the complete header separator pattern is found\n   - Convert the collected bytes to a string\n     - IF header encoding is specified\n       - TRY to use the specified encoding\n       - IF encoding is not supported\n         - Fall back to platform default encoding\n     - ELSE\n       - Use platform default encoding\n\n5. Response Generation:\n   - Return the complete header string including the trailing separator\n   - IF stream ended unexpectedly\n     - Generate appropriate error message\n   - IF header size exceeded maximum\n     - Include warning information",
+  "databaseEntities": [],
+  "validationRules": [
+    "Stream must not end unexpectedly during header reading",
+    "Header size must not exceed maximum allowed size",
+    "Header encoding must be supported if specified"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MultipartStream": {
+      "type": "object",
+      "properties": {
+        "buffer": {
+          "type": "array",
+          "description": "Buffer to store stream data"
+        },
+        "head": {
+          "type": "integer",
+          "description": "Current position in the buffer"
+        },
+        "tail": {
+          "type": "integer",
+          "description": "End position of data in the buffer"
+        },
+        "boundary": {
+          "type": "array",
+          "description": "Boundary separator pattern"
+        },
+        "headerEncoding": {
+          "type": "string",
+          "description": "Character encoding for headers"
+        }
+      }
+    }
+  }
+}

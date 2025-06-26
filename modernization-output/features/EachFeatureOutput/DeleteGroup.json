@@ -1,0 +1,50 @@
+{
+  "featureName": "DeleteGroup",
+  "description": "Removes a group from the system after verifying if deletion is possible.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the groupId (mandatory) to identify the group to be deleted\n   - System must have authenticated user with appropriate permissions (system-generated)\n\n2. Data Validation:\n   - Validate groupId:\n     a. Verify groupId is a positive integer\n     b. Verify groupId is not null or empty\n     c. Return appropriate error message if validation fails\n   - Validate user permissions:\n     a. Verify current user has administrative privileges to delete groups\n     b. Return permission denied error if user lacks required permissions\n\n3. Business Rule Processing:\n   - Check if group exists:\n     a. Search for group with the provided groupId\n     b. IF group not found, THEN\n        i. Generate group not found error\n        ii. Terminate the deletion process\n   - Check if group can be deleted:\n     a. Verify if the group is not a system-required group\n     b. Check if the group has no dependent relationships preventing deletion\n        i. Verify no users are currently assigned to this group\n        ii. Verify no forum permissions depend on this group\n     c. IF group cannot be deleted, THEN\n        i. Generate cannot delete group error with reason\n        ii. Terminate the deletion process\n\n4. Core Operation Execution:\n   - Begin deletion transaction:\n     a. Remove all user-group associations for this group\n     b. Remove all moderator-group associations for this group\n     c. Remove all permission settings and security roles associated with this group\n     d. Delete the group record itself\n     e. IF any step fails, THEN\n        i. Rollback all changes\n        ii. Generate system error message\n        iii. Terminate the process\n\n5. Response Generation:\n   - On successful deletion:\n     a. Generate success confirmation message\n     b. Include information about the deleted group\n     c. Provide navigation options to group management area\n   - On failure:\n     a. Return specific error message based on the failure reason\n     b. Provide guidance on how to resolve the issue\n     c. Maintain current state to allow user to try again",
+  "databaseEntities": [
+    "Group",
+    "User",
+    "GroupSecurity",
+    "UserGroup",
+    "ModeratorGroup"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "Group must be eligible for deletion",
+    "User must have administrative privileges to delete groups",
+    "System-required groups cannot be deleted",
+    "Groups with assigned users cannot be deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        },
+        "parentId": {
+          "type": "number",
+          "description": "Parent group identifier for hierarchical group structures"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

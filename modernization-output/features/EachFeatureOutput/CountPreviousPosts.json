@@ -1,0 +1,21 @@
+{
+  "featureName": "CountPreviousPosts",
+  "description": "Counts posts that came before a specific post in its topic.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the post ID (postId) as a required input\n   - System will use this ID to identify the target post\n\n2. Data Validation\n   - Validate that postId is provided\n     - IF postId is missing or null THEN\n       - Return error message: \"Post ID is required\"\n     - END IF\n   - Validate that postId is a positive integer\n     - IF postId is not a positive integer THEN\n       - Return error message: \"Post ID must be a positive integer\"\n     - END IF\n   - Validate that the post exists in the system\n     - IF post with postId does not exist THEN\n       - Return error message: \"Post not found\"\n     - END IF\n\n3. Business Rule Processing\n   - Verify user has permission to view the post\n     - IF user does not have permission to view the post THEN\n       - Return error message: \"You do not have permission to view this post\"\n     - END IF\n   - Check if the post belongs to a valid topic\n     - IF post's topic is invalid or deleted THEN\n       - Return error message: \"The post belongs to an invalid topic\"\n     - END IF\n\n4. Core Operation Execution\n   - Retrieve the target post's information\n     - Get the post's topic ID and creation timestamp\n   - Count all posts in the same topic that were created before the target post\n     - Query the posts table for posts with:\n       - Same topic ID as the target post\n       - Creation timestamp earlier than the target post's timestamp\n   - Store the count result\n   - IF any database errors occur during counting THEN\n     - Log the error details\n     - Return error message: \"Unable to count previous posts due to a system error\"\n   - END IF\n\n5. Response Generation\n   - Return the count of previous posts\n   - Include the following information in the response:\n     - Total number of posts that came before the specified post\n     - Post ID that was used for the query\n     - Topic ID that the post belongs to\n   - IF count operation was successful THEN\n     - Return success status with the count value\n   - ELSE\n     - Return error status with appropriate message\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post ID must be provided",
+    "Post ID must be a positive integer",
+    "Post must exist in the system",
+    "User must have permission to view the post",
+    "Post must belong to a valid topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

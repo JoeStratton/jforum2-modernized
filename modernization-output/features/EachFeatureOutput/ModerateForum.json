@@ -1,0 +1,56 @@
+{
+  "featureName": "ModerateForum",
+  "description": "Performs forum moderation actions like removing, moving, locking, or unlocking topics.",
+  "inputValues": [
+    "topicIds-object-Topic",
+    "forumId-number-Forum",
+    "toForumId-number-Forum",
+    "moderationAction-string-Action",
+    "logDescription-string-ModerationLog",
+    "logOriginalMessage-string-ModerationLog",
+    "returnUrl-string-Navigation"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topicIds: List of topic identifiers to be moderated\n     b. forumId: Current forum identifier where topics are located\n     c. toForumId: Target forum identifier (required only for move action)\n     d. moderationAction: Type of moderation action to perform (remove, move, lock, unlock)\n     e. logDescription: Description of the moderation action for logging\n     f. logOriginalMessage: Original content being moderated (if applicable)\n     g. returnUrl: URL to redirect after successful moderation\n\n2. Data Validation:\n   - Validate user permissions:\n     a. Verify user has general moderation access\n     b. Verify user has specific permission for the requested action:\n        i. For remove action: Verify post removal permission\n        ii. For move action: Verify topic move permission\n        iii. For lock/unlock actions: Verify topic lock/unlock permission\n   - Validate topic inputs:\n     a. Ensure at least one topic ID is provided\n     b. Verify all topic IDs exist in the system\n     c. For move action, verify target forum exists and is different from source forum\n   - Validate log information:\n     a. Ensure log description is provided\n     b. Ensure log type is valid\n\n3. Business Rule Processing:\n   - Check system state requirements:\n     a. Verify topics are in a state that allows the requested action\n     b. For move action, verify target forum can accept the topics\n     c. For lock action, verify topics are not already locked\n     d. For unlock action, verify topics are currently locked\n   - Prepare moderation log entry:\n     a. Set current user as the moderator\n     b. Set description and original message\n     c. Set appropriate log type based on action\n     d. Associate with affected topics\n\n4. Core Operation Execution:\n   - Based on moderation action, perform one of the following operations:\n     a. IF action is \"remove\":\n        i. For each topic in the list:\n           - Retrieve complete topic information\n           - Create moderation log entry\n           - Remove the topic and all associated posts\n           - Update forum statistics\n        ii. Clear topic caches\n        iii. Reload most recent topics\n     b. IF action is \"move\":\n        i. For each topic in the list:\n           - Move topic from source forum to target forum\n           - Create moderation log entry\n        ii. Update statistics for both source and target forums\n        iii. Clear topic caches for both forums\n        iv. Reload topic lists and forum information\n     c. IF action is \"lock\":\n        i. For each topic in the list:\n           - Set topic status to locked\n           - Create moderation log entry\n        ii. Clear relevant topic caches\n     d. IF action is \"unlock\":\n        i. For each topic in the list:\n           - Set topic status to unlocked\n           - Create moderation log entry\n        ii. Clear relevant topic caches\n\n5. Response Generation:\n   - Determine operation result status:\n     a. IF operation completed successfully:\n        i. IF return URL is provided:\n           - Redirect user to the specified return URL\n        ii. ELSE:\n           - Display success message with moderation completion details\n     b. IF permission check failed:\n        i. Display access denied message\n        ii. Log unauthorized access attempt\n     c. IF operation failed for other reasons:\n        i. Display appropriate error message\n        ii. Log the failure with details",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "User must have general moderation permission",
+    "User must have specific permission for the requested moderation action",
+    "At least one topic ID must be provided",
+    "All topic IDs must exist in the system",
+    "For move action, target forum must exist and be different from source forum",
+    "Moderation log description must be provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "postedBy": "number",
+      "status": "number"
+    },
+    "Action": {
+      "type": "string",
+      "enum": [
+        "remove",
+        "move",
+        "lock",
+        "unlock"
+      ]
+    },
+    "ModerationLog": {
+      "userId": "number",
+      "description": "string",
+      "originalMessage": "string",
+      "type": "number",
+      "topicId": "number",
+      "postId": "number"
+    }
+  }
+}

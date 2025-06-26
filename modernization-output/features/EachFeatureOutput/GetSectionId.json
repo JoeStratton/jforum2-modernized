@@ -1,0 +1,43 @@
+{
+  "featureName": "GetSectionId",
+  "description": "Retrieves the identifier of a permission section.",
+  "inputValues": [
+    "sectionId-string-PermissionSection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - sectionId (string, mandatory): The identifier of the permission section to retrieve\n\n2. Data Validation:\n   - Validate sectionId input:\n     - Check if sectionId is not null or empty\n     - IF sectionId is null or empty THEN\n       - Generate validation error message: \"Section identifier cannot be empty\"\n       - Return error response\n     - END IF\n\n3. Business Rule Processing:\n   - Verify permission section exists:\n     - Check if the requested permission section exists in the system\n     - IF permission section does not exist THEN\n       - Generate error message: \"Permission section not found\"\n       - Return error response\n     - END IF\n   - Verify user has access rights to view permission section:\n     - Check if the current user has sufficient privileges to access the section\n     - IF user lacks necessary access rights THEN\n       - Generate error message: \"Insufficient privileges to access this permission section\"\n       - Return error response\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve section identifier:\n     - Locate the permission section using the provided sectionId\n     - Extract the section identifier from the permission section\n     - Store the section identifier for response\n\n5. Response Generation:\n   - Prepare success response:\n     - Include the retrieved section identifier\n     - Include section metadata if available (such as section name)\n   - Handle potential errors:\n     - If section identifier could not be retrieved, provide appropriate error message\n     - Include support information for troubleshooting",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Section identifier must not be null or empty",
+    "Permission section must exist in the system",
+    "User must have sufficient privileges to access the permission section"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PermissionSection": {
+      "type": "object",
+      "properties": {
+        "sectionId": {
+          "type": "string",
+          "description": "Unique identifier for the permission section"
+        },
+        "sectionName": {
+          "type": "string",
+          "description": "Display name of the permission section"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Permission items associated with this section"
+          }
+        }
+      },
+      "required": [
+        "sectionId",
+        "sectionName"
+      ]
+    }
+  }
+}

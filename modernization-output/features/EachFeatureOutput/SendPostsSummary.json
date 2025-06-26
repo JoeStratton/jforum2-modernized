@@ -1,0 +1,36 @@
+{
+  "featureName": "SendPostsSummary",
+  "description": "Sends weekly summary emails of recent forum posts to subscribed recipients.",
+  "inputValues": [
+    "recipients-object-RecipientList",
+    "daysBefore-number-Integer",
+    "currentDate-date-Date"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect list of recipients (mandatory)\n   - Retrieve configuration for days before (system-generated from configuration)\n   - Get current date (system-generated)\n\n2. Data Validation:\n   - Validate recipients list:\n      * Check if recipients list is not null\n      * Verify recipients list is not empty\n      * Ensure each recipient has a valid email format\n      * IF any validation fails, THEN log error and abort process\n   - Validate days before value:\n      * Ensure days before is a positive integer\n      * Verify days before is within acceptable range (1-30)\n      * IF validation fails, THEN use default value or log error\n\n3. Business Rule Processing:\n   - Calculate date range for post selection:\n      * Calculate start date by subtracting days before from current date\n      * Use current date as end date\n      * Verify date range is valid (start date before end date)\n   - Check system readiness:\n      * Verify email service is available\n      * Ensure template for summary exists\n      * IF any system dependency is unavailable, THEN log error and abort\n\n4. Core Operation Execution:\n   - Retrieve posts within date range:\n      * Query database for posts created between start date and end date\n      * Sort posts by relevant criteria (date, popularity)\n      * Group posts by forums or categories if needed\n      * IF no posts found, THEN log information and abort process\n   - Prepare email content:\n      * Load email template\n      * Populate template with posts data\n      * Include forum URL and other required parameters\n      * Generate subject line for email\n   - Send emails to recipients:\n      * Convert recipient email addresses to user objects\n      * Process each recipient individually\n      * Track successful and failed deliveries\n      * Handle any sending errors appropriately\n      * Implement retry mechanism for failed deliveries if needed\n\n5. Response Generation:\n   - Generate operation summary:\n      * Count of emails successfully sent\n      * Count of posts included in summary\n      * Date range covered by the summary\n      * List of any delivery failures\n   - Log completion status:\n      * Record timestamp of operation completion\n      * Document any errors or exceptions encountered\n      * Store metrics about processing time and resource usage",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Recipients list must not be empty",
+    "Each recipient must have a valid email address",
+    "Days before value must be a positive integer",
+    "Start date must be before end date",
+    "Email template must exist and be valid",
+    "Forum URL must be properly configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RecipientList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "email"
+      },
+      "description": "List of email addresses to receive the summary"
+    }
+  }
+}

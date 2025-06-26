@@ -1,0 +1,29 @@
+{
+  "featureName": "ConfigureUploadSizeLimit",
+  "description": "Sets and retrieves maximum allowed upload size for file uploads.",
+  "inputValues": [
+    "sizeMax-number-UploadConfiguration",
+    "headerEncoding-string-UploadConfiguration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - sizeMax (number): The maximum allowed size for file uploads in bytes\n     - headerEncoding (string): The character encoding for reading part headers\n   - sizeMax is optional with a default value of -1 (no maximum)\n   - headerEncoding is optional with a default value of system default encoding\n\n2. Data Validation:\n   - Validate sizeMax input:\n     - IF sizeMax is provided and is not a number, THEN\n       - Return error message: \"Size maximum must be a numeric value\"\n     - IF sizeMax is provided and is less than -1, THEN\n       - Return error message: \"Size maximum must be -1 (unlimited) or a positive number\"\n   - Validate headerEncoding input:\n     - IF headerEncoding is provided and is not a valid character encoding, THEN\n       - Return error message: \"Invalid character encoding specified\"\n\n3. Business Rule Processing:\n   - Check system state for upload configuration:\n     - Verify the upload configuration system is initialized\n     - IF system is not in a state to accept configuration changes, THEN\n       - Return error message: \"Upload system is not ready for configuration\"\n   - Process size limit rules:\n     - IF sizeMax is set to -1, THEN\n       - Mark upload size as unlimited\n     - IF sizeMax is set to 0, THEN\n       - Return error message: \"Upload size cannot be set to zero\"\n     - IF sizeMax is positive, THEN\n       - Ensure the value doesn't exceed system capabilities\n       - IF sizeMax exceeds maximum possible system value, THEN\n         - Return error message: \"Requested size limit exceeds system capabilities\"\n\n4. Core Operation Execution:\n   - Apply the upload size configuration:\n     - Store the sizeMax value in the configuration system\n     - IF sizeMax is provided, THEN\n       - Update the maximum upload size setting\n     - IF headerEncoding is provided, THEN\n       - Update the header encoding setting\n     - Record configuration change in system logs\n     - Update any dependent components that need to be aware of the new limits\n   - Handle configuration persistence:\n     - Save configuration changes to ensure they persist across system restarts\n     - IF persistence fails, THEN\n       - Revert to previous configuration\n       - Return error message: \"Failed to save configuration changes\"\n\n5. Response Generation:\n   - Generate success response:\n     - Include confirmation that upload size limit has been configured\n     - Include the current values for sizeMax and headerEncoding\n     - Provide information about how the new limits will affect uploads\n   - IF any errors occurred during configuration, THEN\n     - Generate appropriate error response with details\n     - Include guidance on resolving the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "Upload size limit must be -1 (unlimited) or a positive number",
+    "Header encoding must be a valid character encoding",
+    "Upload configuration system must be initialized before changes",
+    "Upload size cannot be set to zero"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UploadConfiguration": {
+      "sizeMax": {
+        "type": "number",
+        "description": "Maximum allowed size for uploads in bytes. -1 indicates no maximum."
+      },
+      "headerEncoding": {
+        "type": "string",
+        "description": "Character encoding used when reading part headers. Null uses platform default."
+      }
+    }
+  }
+}

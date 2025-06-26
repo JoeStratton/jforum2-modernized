@@ -1,0 +1,79 @@
+{
+  "featureName": "CheckAutoLogin",
+  "description": "Verifies user credentials for automatic login using cookies and database validation.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "cookies-object-CookieCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the UserSession object for the current user\n   - Retrieve system cookie configuration settings\n      - Cookie name for user data\n      - Cookie name for user hash\n      - Cookie name for auto login flag\n   - Retrieve cookies from the user's request\n      - User ID cookie\n      - User hash cookie\n      - Auto login preference cookie\n\n2. Data Validation:\n   - Validate cookie existence\n      - Check if user ID cookie exists\n      - Check if user hash cookie exists\n      - Check if auto login cookie exists\n   - IF any required cookie is missing THEN\n      - Mark session as anonymous\n      - Return false (auto login not possible)\n   - Validate cookie values\n      - Verify user ID is not anonymous user ID\n      - Verify auto login value is set to \"1\"\n      - Verify user hash is not empty\n\n3. Business Rule Processing:\n   - IF user ID represents anonymous user THEN\n      - Mark session as anonymous\n      - Return false (auto login not possible)\n   - IF auto login preference is not enabled THEN\n      - Mark session as anonymous\n      - Return false (auto login not possible)\n   - Extract user ID from cookie\n   - Extract user hash from cookie\n   - Retrieve user authentication hash from database using user ID\n   - IF user hash from database is empty or null THEN\n      - Mark session as anonymous\n      - Return false (invalid user credentials)\n   - Generate security hash from stored user hash using encryption\n   - IF generated security hash does not match cookie hash THEN\n      - Make user session anonymous\n      - Return false (hash verification failed)\n\n4. Core Operation Execution:\n   - Set user ID in the session\n   - Retrieve complete user data from database using user ID\n   - IF user not found OR user ID mismatch OR user is deleted THEN\n      - Make user session anonymous\n      - Return false (user validation failed)\n   - Configure user session with user data\n      - Copy user data to session\n      - Check if user already has an active session\n      - IF existing session found THEN\n         - Store existing session data to database\n         - Retrieve user session data\n         - Remove old session\n      - ELSE\n         - Retrieve user session data from database\n      - IF no previous session data found THEN\n         - Set last visit time to current time\n      - ELSE\n         - Update last visit time based on previous session\n      - Set auto login flag to true in session\n      - Mark session as logged in\n      - Load user language preferences\n   - Return true (auto login successful)\n\n5. Response Generation:\n   - Return boolean result indicating success or failure of auto login\n   - IF successful THEN\n      - User session contains authenticated user information\n      - System recognizes user as logged in\n   - IF failed THEN\n      - User remains in anonymous state\n      - Standard login will be required",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User ID cookie must exist for auto login",
+    "User hash cookie must exist for auto login",
+    "Auto login cookie must exist and be set to '1'",
+    "User ID must not be the anonymous user ID",
+    "User hash from database must match the encrypted hash in cookie",
+    "User must exist in the database",
+    "User must not be marked as deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The ID of the user"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "The session identifier"
+        },
+        "ip": {
+          "type": "string",
+          "description": "The IP address of the user"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "The date of the user's last visit"
+        },
+        "startTime": {
+          "type": "date",
+          "description": "The start time of the session"
+        },
+        "sessionTime": {
+          "type": "number",
+          "description": "The duration of the session"
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "description": "Flag indicating if auto login is enabled"
+        },
+        "makeAnonymous": {
+          "type": "function",
+          "description": "Method to reset the session to anonymous state"
+        }
+      }
+    },
+    "CookieCollection": {
+      "type": "object",
+      "properties": {
+        "userData": {
+          "type": "string",
+          "description": "Cookie containing user identification data"
+        },
+        "userHash": {
+          "type": "string",
+          "description": "Cookie containing user authentication hash"
+        },
+        "autoLogin": {
+          "type": "string",
+          "description": "Cookie indicating auto login preference"
+        }
+      }
+    }
+  }
+}

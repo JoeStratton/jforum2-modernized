@@ -1,0 +1,38 @@
+{
+  "featureName": "CompareIpAddresses",
+  "description": "Compares IP addresses with support for wildcard matching patterns.",
+  "inputValues": [
+    "ipAddress1-string-IpAddress",
+    "ipAddress2-string-IpAddress"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect ipAddress1 (string, mandatory): The first IP address for comparison\n   - Collect ipAddress2 (string, mandatory): The second IP address for comparison\n   - System will determine if wildcards (*) are present in either address\n\n2. Data Validation:\n   - Validate ipAddress1 format:\n     a. Check if ipAddress1 is not empty\n     b. Verify ipAddress1 follows IP address format (xxx.xxx.xxx.xxx) where xxx can be a number or wildcard (*)\n     c. Ensure ipAddress1 has exactly 4 segments separated by periods\n     d. Return error if validation fails\n   - Validate ipAddress2 format:\n     a. Check if ipAddress2 is not empty\n     b. Verify ipAddress2 follows IP address format (xxx.xxx.xxx.xxx) where xxx can be a number or wildcard (*)\n     c. Ensure ipAddress2 has exactly 4 segments separated by periods\n     d. Return error if validation fails\n\n3. Business Rule Processing:\n   - Check for exact match:\n     a. IF ipAddress1 equals ipAddress2 (case-insensitive comparison)\n        THEN return match result as true\n   - Check for special cases:\n     a. IF either address consists of only wildcards (*.*.*.* format)\n        THEN return match result as false (prevent overly broad matching)\n\n4. Core Operation Execution:\n   - Split both IP addresses into segments:\n     a. Split ipAddress1 by period (.) delimiter into segments\n     b. Split ipAddress2 by period (.) delimiter into segments\n   - Compare segments one by one:\n     a. Initialize match status as true\n     b. Initialize wildcard-only flag as true\n     c. FOR each segment position (0 to 3):\n        i. IF current segment in either address is not a wildcard (*)\n           THEN set wildcard-only flag to false\n        ii. IF current segment in ipAddress1 is not a wildcard AND current segments don't match\n            THEN set match status to false and exit loop\n     d. IF wildcard-only flag is true\n        THEN set match status to false (prevent matching on all wildcards)\n\n5. Response Generation:\n   - Return the match result:\n     a. IF match status is true\n        THEN return successful match indication\n     b. ELSE return no match indication\n   - Include comparison details:\n     a. The original IP addresses compared\n     b. Which segments matched and which didn't\n     c. Whether wildcards were involved in the comparison",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "IP addresses must not be empty",
+    "IP addresses must have exactly 4 segments separated by periods",
+    "Each segment must be either a number or a wildcard (*)",
+    "An IP address consisting only of wildcards (*.*.*.*) is considered invalid for matching",
+    "Comparison must be case-insensitive"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "IpAddress": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "The IP address in xxx.xxx.xxx.xxx format where xxx can be a number or wildcard (*)"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The IP address split into its four segments"
+        }
+      }
+    }
+  }
+}

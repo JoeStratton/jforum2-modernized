@@ -1,0 +1,45 @@
+{
+  "featureName": "PreparePostForDisplay",
+  "description": "Formats post text for display by handling HTML, BBCode, and safety processing.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Post object that needs to be prepared for display\n   - Required fields: text content of the post\n   - System settings: HTML enabled flag, BBCode enabled flag, Smilies enabled flag\n\n2. Data Validation:\n   - Check if post text is null\n     - IF post text is null THEN\n       - Return the post without modifications\n     - END IF\n   - Verify post object has all required attributes accessible\n\n3. Business Rule Processing:\n   - Create a working copy of the post text for manipulation\n   - Check HTML permissions\n     - IF HTML is not enabled for this post THEN\n       - Convert all HTML special characters to their safe equivalents\n       - Replace < with &lt;\n       - Replace > with &gt;\n     - END IF\n   - Process newlines\n     - Replace all newline characters with HTML break tags\n   - Apply safety processing\n     - Run text through safety processor to remove potentially harmful content\n\n4. Core Operation Execution:\n   - Process special formatting blocks\n     - Identify if the post contains code blocks\n     - IF code blocks are present THEN\n       - Process text outside code blocks normally\n       - Process code blocks with special formatting:\n         - Preserve code formatting and syntax\n         - Apply syntax highlighting if language is specified\n         - Ensure code content is displayed securely\n     - ELSE\n       - Process entire text with standard formatting\n     - END IF\n   - Apply BBCode formatting\n     - IF BBCode is enabled for this post THEN\n       - Process all BBCode tags (except code tags which were handled separately)\n       - Convert BBCode formatting to appropriate HTML\n     - END IF\n   - Process smilies\n     - IF smilies are enabled for this post THEN\n       - Replace smilie codes with their corresponding image representations\n     - END IF\n   - Apply required BBCode processing regardless of settings\n   - Perform final safety check on all HTML attributes\n\n5. Response Generation:\n   - Update the post object with the processed text\n   - IF code blocks were processed THEN\n     - Set indicator that the post contains code blocks\n   - END IF\n   - Return the updated post object with display-ready text",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Post text must be processed according to HTML permission settings",
+    "BBCode must be processed only if BBCode is enabled for the post",
+    "Smilies must be processed only if smilies are enabled for the post",
+    "Code blocks must maintain their formatting and be processed separately",
+    "All HTML content must be made safe to prevent security vulnerabilities",
+    "Newlines must be converted to HTML break tags for proper display"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The content of the post"
+        },
+        "isHtmlEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if HTML is allowed in the post"
+        },
+        "isBbCodeEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if BBCode is allowed in the post"
+        },
+        "isSmiliesEnabled": {
+          "type": "boolean",
+          "description": "Flag indicating if smilies should be processed in the post"
+        }
+      }
+    }
+  }
+}

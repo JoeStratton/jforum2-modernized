@@ -1,0 +1,39 @@
+{
+  "featureName": "SelectBookmarkForUpdate",
+  "description": "Finds a bookmark by relation ID, type and user ID for updating.",
+  "inputValues": [
+    "relationId-number-Bookmark",
+    "relationType-number-BookmarkType",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. relationId (number): The identifier of the related entity (forum, topic, or user)\n     b. relationType (number): The type of bookmark (forum, topic, or user)\n     c. userId (number): The identifier of the user who owns the bookmark\n\n2. Data Validation:\n   - Validate relationId:\n     a. Verify relationId is a positive integer\n     b. IF relationId is missing or invalid, THEN return an error message\n   - Validate relationType:\n     a. Verify relationType is a valid bookmark type value\n     b. IF relationType is not a recognized type, THEN return an error message\n   - Validate userId:\n     a. Verify userId is a positive integer\n     b. IF userId is missing or invalid, THEN return an error message\n\n3. Business Rule Processing:\n   - Verify system access permissions:\n     a. Confirm the current user has permission to access bookmark data\n     b. IF user lacks permission, THEN return an access denied error\n   - Verify bookmark type validity:\n     a. Check if the provided relationType corresponds to a valid bookmark category\n     b. IF relationType is invalid, THEN return an invalid bookmark type error\n\n4. Core Operation Execution:\n   - Search for bookmark record:\n     a. Query the bookmark repository using the three parameters (relationId, relationType, userId)\n     b. Retrieve the matching bookmark record if it exists\n     c. IF no matching bookmark is found, THEN return a null or not found response\n     d. IF multiple records are found (data integrity issue), THEN log an error and return the first record\n   - Prepare bookmark data for update:\n     a. Retrieve all bookmark attributes including id, title, description, and visibility settings\n     b. Format the data in a structure suitable for updating\n\n5. Response Generation:\n   - Success response:\n     a. Return the complete bookmark object with all attributes populated\n     b. Include metadata such as creation date and last update timestamp if available\n   - Error response:\n     a. For validation errors, return specific error messages indicating which parameter failed\n     b. For permission errors, return appropriate access denied message\n     c. For not found scenario, return clear indication that the bookmark does not exist",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Relation ID must be a positive integer",
+    "Relation type must be a valid bookmark type (forum, topic, or user)",
+    "User ID must be a positive integer and correspond to an existing user",
+    "The combination of relation ID, relation type, and user ID must identify a unique bookmark"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    },
+    "BookmarkType": {
+      "FORUM": "number",
+      "TOPIC": "number",
+      "USER": "number"
+    }
+  }
+}

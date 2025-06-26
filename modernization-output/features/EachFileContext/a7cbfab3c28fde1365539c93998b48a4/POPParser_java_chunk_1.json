@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: src/net/jforum/api/integration/mail/pop/POPParser.java\n\n Original Content: /*\n * Created on 21/08/2006 22:00:12\n */\npackage net.jforum.api.integration.mail.pop;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\nimport javax.mail.Message;\n\nimport org.apache.log4j.Logger;\n\n/**\n * @author Rafael Steil\n * @version $Id: POPParser.java,v 1.3 2006/10/05 02:00:23 rafaelsteil Exp $\n */\npublic class POPParser\n{\n\tprivate static Logger logger = Logger.getLogger(POPParser.class);\n\t\n\tprivate List messages = new ArrayList();\n\t\n\tpublic void parseMessages(POPConnector connector)\n\t{\n\t\tMessage[] connectorMessages = connector.listMessages();\n\t\t\n\t\tfor (int i = 0; i < connectorMessages.length; i++) {\n\t\t\tPOPMessage message = new POPMessage(connectorMessages[i]);\n\t\t\tthis.messages.add(message);\n\t\t\t\n\t\t\tlogger.debug(\"Retrieved message \" + message);\n\t\t}\n\t}\n\t\n\tpublic List getMessages()\n\t{\n\t\treturn this.messages;\n\t}\n}",
+  "metadata": {
+    "fileId": "POPParser_java_chunk_1",
+    "fileName": "POPParser.java",
+    "filePath": "src/net/jforum/api/integration/mail/pop/POPParser.java"
+  }
+}

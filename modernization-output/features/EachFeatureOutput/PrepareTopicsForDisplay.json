@@ -1,0 +1,138 @@
+{
+  "featureName": "PrepareTopicsForDisplay",
+  "description": "Processes topic search results to prepare them for display in the UI.",
+  "inputValues": [
+    "topics-object-TopicList",
+    "userSession-object-UserSession",
+    "systemSettings-object-SystemSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect topic list containing topic information\n      1.1.1. Verify the topic list is not null\n      1.1.2. Determine if the list contains any topics\n   1.2. Collect user session information\n      1.2.1. Retrieve user's last visit timestamp\n      1.2.2. Retrieve user's read topics history\n      1.2.3. Retrieve user's read forums history\n   1.3. Collect system settings\n      1.3.1. Retrieve posts per page setting\n      1.3.2. Retrieve hot topic threshold setting\n      1.3.3. Determine if user is anonymous\n\n2. Data Validation:\n   2.1. Validate topic list structure\n      2.1.1. Ensure each topic entry contains required fields (id, title, forum id, post dates)\n      2.1.2. Verify topic metadata is complete\n      2.1.3. IF any topic is missing required fields, mark for special handling\n   2.2. Validate user session\n      2.2.1. Ensure user session contains valid last visit timestamp\n      2.2.2. Ensure topics read time map is accessible\n      2.2.3. IF session is invalid, use default processing rules\n\n3. Business Rule Processing:\n   3.1. Apply read status determination rules\n      3.1.1. IF user is anonymous, mark all topics as read\n      3.1.2. FOR each topic, check if forum was read after last post\n      3.1.3. FOR each topic, check if last post is older than user's last visit\n      3.1.4. FOR each topic, check if topic was specifically read by user\n   3.2. Apply pagination rules for topics\n      3.2.1. FOR each topic, calculate if pagination is needed based on reply count\n      3.2.2. IF topic has more replies than posts per page setting, enable pagination\n      3.2.3. Calculate total pages for topics requiring pagination\n   3.3. Apply hot topic rules\n      3.3.1. FOR each topic, check if reply count exceeds hot topic threshold\n      3.3.2. Mark topics exceeding threshold as hot topics\n\n4. Core Operation Execution:\n   4.1. Process each topic in the list\n      4.1.1. Create a new list to hold processed topics\n      4.1.2. FOR each topic in the original list:\n         4.1.2.1. Determine read status based on business rules\n         4.1.2.2. Calculate pagination requirements\n         4.1.2.3. Set hot topic status\n         4.1.2.4. Add processed topic to new list\n   4.2. Prepare topic display attributes\n      4.2.1. Set visual indicators for read/unread status\n      4.2.2. Set visual indicators for hot topics\n      4.2.3. Set pagination information for multi-page topics\n   4.3. Apply topic type classification\n      4.3.1. Identify and mark announcement topics\n      4.3.2. Identify and mark sticky topics\n      4.3.3. Identify and mark normal topics\n\n5. Response Generation:\n   5.1. Assemble display-ready topic list\n      5.1.1. Organize processed topics in appropriate structure for UI rendering\n      5.1.2. Include metadata about topic types and statuses\n      5.1.3. Include pagination information for topics\n   5.2. Prepare empty state handling\n      5.2.1. IF no topics match criteria, prepare appropriate message\n      5.2.2. Include suggestions for broadening search\n   5.3. Finalize response\n      5.3.1. Ensure all topics are properly formatted with display attributes\n      5.3.2. Return the prepared topic list",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_posts",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Topic list must contain valid topic objects",
+    "Each topic must have a valid ID",
+    "Each topic must have a title",
+    "Each topic must have a forum ID",
+    "Each topic must have last post date information",
+    "User session must contain valid last visit timestamp",
+    "System settings must include valid posts per page value",
+    "System settings must include valid hot topic threshold"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TopicList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the topic"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the topic"
+          },
+          "forumId": {
+            "type": "number",
+            "description": "ID of the forum containing this topic"
+          },
+          "lastPostDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the last post in the topic"
+          },
+          "totalReplies": {
+            "type": "number",
+            "description": "Number of replies in the topic"
+          },
+          "type": {
+            "type": "number",
+            "description": "Type of the topic (normal, sticky, announcement)"
+          },
+          "status": {
+            "type": "number",
+            "description": "Status of the topic (locked, unlocked)"
+          },
+          "read": {
+            "type": "boolean",
+            "description": "Whether the topic has been read by the user"
+          },
+          "hot": {
+            "type": "boolean",
+            "description": "Whether the topic is considered 'hot' based on reply count"
+          },
+          "paginate": {
+            "type": "boolean",
+            "description": "Whether the topic needs pagination"
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total number of pages for the topic"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "forumId",
+          "lastPostDate",
+          "totalReplies"
+        ]
+      }
+    },
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "ID of the current user"
+        },
+        "lastVisit": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of user's last visit"
+        },
+        "topicsReadTime": {
+          "type": "object",
+          "description": "Map of topic IDs to timestamps when they were last read"
+        },
+        "topicsReadTimeByForum": {
+          "type": "object",
+          "description": "Map of forum IDs to timestamps when they were last read"
+        }
+      },
+      "required": [
+        "userId",
+        "lastVisit"
+      ]
+    },
+    "SystemSettings": {
+      "type": "object",
+      "properties": {
+        "postsPerPage": {
+          "type": "number",
+          "description": "Number of posts to display per page"
+        },
+        "hotTopicThreshold": {
+          "type": "number",
+          "description": "Minimum number of replies for a topic to be considered 'hot'"
+        },
+        "anonymousUserId": {
+          "type": "number",
+          "description": "User ID representing anonymous users"
+        }
+      },
+      "required": [
+        "postsPerPage",
+        "hotTopicThreshold",
+        "anonymousUserId"
+      ]
+    }
+  }
+}

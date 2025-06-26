@@ -1,0 +1,22 @@
+{
+  "featureName": "ModerationDone",
+  "description": "Completes the moderation process and displays a confirmation to the user.",
+  "inputValues": [
+    "returnUrl-string-System"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. returnUrl (string, mandatory): The URL to return to after moderation is complete\n     b. System retrieves current moderation context from the session\n\n2. Data Validation\n   - Validate returnUrl:\n     a. IF returnUrl is null or empty THEN\n        i. Set returnUrl to default forum page\n        ii. Log validation error: \"Return URL is missing\"\n     b. ELSE\n        i. Verify returnUrl is a valid internal system URL\n        ii. IF not valid THEN\n           1. Set returnUrl to default forum page\n           2. Log security warning: \"Invalid return URL attempted\"\n\n3. Business Rule Processing\n   - Verify moderation permissions:\n     a. Check if current user has moderation privileges\n     b. IF user lacks moderation privileges THEN\n        i. Generate access denied message\n        ii. Log unauthorized access attempt\n        iii. RETURN with access denied template\n   - Verify moderation session:\n     a. Check if there is an active moderation session\n     b. IF no active moderation session THEN\n        i. Log error: \"No moderation in progress\"\n        ii. RETURN with error template\n\n4. Core Operation Execution\n   - Process moderation completion:\n     a. Retrieve moderation actions from session\n     b. FOR EACH moderation action in session:\n        i. Mark action as completed in the system\n        ii. Update moderation log with completion timestamp and user information\n        iii. IF action affects topics or posts THEN\n           1. Update relevant topic/post status flags\n           2. Update forum statistics if necessary\n     c. Clear moderation session data\n     d. Generate success notification\n\n5. Response Generation\n   - Prepare confirmation view:\n     a. Set template to moderation completion template\n     b. Include the following in the response context:\n        i. Success message: \"Moderation actions completed successfully\"\n        ii. Summary of moderation actions performed\n        iii. Return URL for navigation back to forum\n     c. IF any warnings occurred during processing THEN\n        i. Include warning messages in the response\n     d. RETURN moderation completion template",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have moderation privileges to complete moderation",
+    "An active moderation session must exist",
+    "Return URL must be a valid internal system URL",
+    "All moderation actions must be properly recorded in the moderation log"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

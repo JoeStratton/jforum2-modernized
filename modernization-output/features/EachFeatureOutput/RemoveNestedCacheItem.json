@@ -1,0 +1,17 @@
+{
+  "featureName": "RemoveNestedCacheItem",
+  "description": "Removes a nested item from the cache using a fully qualified name and key.",
+  "inputValues": [
+    "fqn-string-CacheIdentifier",
+    "key-string-ItemKey"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect fully qualified name (fqn) as string (mandatory)\n   - Collect key as string (mandatory)\n   - System will use these to locate and remove the specific cached item\n\n2. Data Validation:\n   - Validate fully qualified name (fqn):\n     * Check if fqn is not null\n     * Check if fqn is not an empty string\n     * IF validation fails, THEN generate appropriate error message\n   - Validate key:\n     * Check if key is not null\n     * Check if key is not an empty string\n     * IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if cache system is initialized:\n     * Verify that the cache storage mechanism is ready\n     * IF cache is not initialized, THEN report system error\n   - Check if the specified fqn exists in cache:\n     * Look up the fqn in the cache storage\n     * IF fqn does not exist, THEN no action is needed (silent operation)\n\n4. Core Operation Execution:\n   - Retrieve the nested map associated with the fqn:\n     * Access the cache storage using the fqn as identifier\n     * Obtain the map of key-value pairs stored under this fqn\n     * IF map exists:\n       > Remove the entry with the specified key from the map\n       > No changes to other entries in the map\n     * IF map does not exist:\n       > No action required\n       > Operation completes successfully (silent operation)\n\n5. Response Generation:\n   - For successful operation:\n     * No specific success response needed as this is typically a silent operation\n     * Cache state is updated with item removed\n   - For error conditions:\n     * Return appropriate error message based on validation failures\n     * Include details about which parameter failed validation",
+  "databaseEntities": [],
+  "validationRules": [
+    "Fully qualified name (fqn) must not be null or empty",
+    "Key must not be null or empty",
+    "Cache system must be initialized before removal operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

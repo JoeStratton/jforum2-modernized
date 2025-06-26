@@ -1,0 +1,61 @@
+{
+  "featureName": "FillPollFromRequest",
+  "description": "Creates a new Poll object from HTTP request parameters including options and poll duration.",
+  "inputValues": [
+    "poll_label-string-Poll",
+    "poll_option_count-number-Poll",
+    "poll_option_*-string-PollOption",
+    "poll_length-number-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs from the request:\n     a. poll_label (string): The title or description of the poll\n     b. poll_option_count (number): The number of poll options available\n     c. poll_option_* (string array): Multiple option text values, where * is the option index\n     d. poll_length (number): The duration for which the poll will remain active\n   - Note: poll_label is mandatory, other fields are optional\n\n2. Data Validation:\n   - Validate poll_label:\n     a. IF poll_label is null OR empty THEN\n        i. Return null (no poll will be created)\n     b. ELSE continue processing\n   - Validate poll options:\n     a. Each option must be trimmed of leading/trailing spaces\n     b. Empty options after trimming should be ignored\n     c. At least one valid option must exist for a valid poll\n   - Validate poll_length:\n     a. IF provided, must be convertible to a valid integer\n     b. IF not provided, system default duration will apply\n\n3. Business Rule Processing:\n   - Check system constraints:\n     a. Verify the user has permission to create polls\n     b. Ensure the poll complies with forum rules and settings\n   - Process poll options:\n     a. Count the number of valid options after filtering\n     b. Ensure the number of options does not exceed system limits\n     c. Verify option text lengths are within acceptable limits\n\n4. Core Operation Execution:\n   - Create a new Poll object:\n     a. Set the poll label with the validated poll_label value\n     b. Set the poll start time to the current date/time\n     c. IF poll_length is provided and valid THEN\n        i. Set the poll duration to the specified value\n     d. Process each poll option:\n        i. FOR each index from 0 to poll_option_count\n           1. Retrieve the option text for the current index\n           2. IF option exists and is not empty after trimming THEN\n              a. Create a new PollOption object\n              b. Set the option ID to the current index\n              c. Set the option text to the trimmed value\n              d. Add the option to the Poll object\n\n5. Response Generation:\n   - Return the fully constructed Poll object with:\n     a. Poll label\n     b. Start time\n     c. Duration (if specified)\n     d. Collection of valid poll options\n   - IF no valid poll could be created (no label or no valid options) THEN\n     a. Return null to indicate poll creation failure",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Poll label must not be empty",
+    "At least one valid poll option must exist",
+    "Poll options must not be empty after trimming",
+    "Poll length must be a valid integer if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The title or description of the poll"
+        },
+        "startTime": {
+          "type": "date",
+          "description": "The date and time when the poll starts"
+        },
+        "length": {
+          "type": "number",
+          "description": "The duration for which the poll will remain active"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "Collection of poll options"
+        }
+      }
+    },
+    "PollOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "The identifier for the poll option"
+        },
+        "text": {
+          "type": "string",
+          "description": "The text content of the poll option"
+        }
+      }
+    }
+  }
+}

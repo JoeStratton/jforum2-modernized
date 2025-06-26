@@ -1,0 +1,36 @@
+{
+  "featureName": "ProcessTextWithCodeBlocks",
+  "description": "Processes post text with special handling for code blocks and syntax highlighting.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post object containing:\n     a. Text content (mandatory)\n     b. HTML enabled flag (boolean)\n     c. BBCode enabled flag (boolean)\n     d. Smilies enabled flag (boolean)\n\n2. Data Validation:\n   - Validate post text content:\n     a. IF post text is null THEN\n        i. Return the post without processing\n     b. ELSE\n        i. Continue with text processing\n\n3. Business Rule Processing:\n   - Process HTML safety:\n     a. IF HTML is not enabled THEN\n        i. Replace all '<' characters with '&lt;'\n        ii. Replace all '>' characters with '&gt;'\n     b. Replace all newline characters with HTML break tags\n     c. Apply safe HTML processing to prevent security issues\n\n4. Core Operation Execution:\n   - Code Block Detection and Processing:\n     a. Search for code block markers in the text\n     b. IF no code blocks are found THEN\n        i. Process the entire text normally with BBCode and smilies as configured\n     c. ELSE IF BBCode is enabled THEN\n        i. Set code block flag to true for template context\n        ii. Process text in segments:\n           1. For each segment before a code block:\n              - Apply normal text processing (BBCode, smilies)\n           2. For each code block segment:\n              - Identify language specification if present\n              - Restore newlines from HTML breaks\n              - Escape HTML-like tags\n              - Apply syntax highlighting formatting\n           3. Process any remaining text after the last code block\n\n   - Normal Text Processing:\n     a. IF smilies are enabled THEN\n        i. Replace smilie codes with corresponding image references\n     b. IF BBCode is enabled THEN\n        i. Process all non-code BBCode tags according to registered patterns\n     c. Apply required BBCode processing regardless of settings\n\n5. Response Generation:\n   - Return the processed post object with:\n     a. Formatted text with all processing applied\n     b. Code blocks properly formatted with syntax highlighting\n     c. Template context updated with code block presence flag if applicable",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Post text may be null, in which case no processing occurs",
+    "Code blocks must be properly formatted with [code] or [code=language] tags",
+    "Code blocks must have matching closing [/code] tags",
+    "HTML safety must be enforced based on user permissions"
+  ],
+  "dbSeedingOperations": [
+    "Ensure smilies are properly loaded in the system",
+    "Ensure BBCode definitions are properly registered in the system"
+  ],
+  "schema": {
+    "Post": {
+      "text": "string",
+      "htmlEnabled": "boolean",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "userId": "number",
+      "userIp": "string",
+      "subject": "string",
+      "signatureEnabled": "boolean",
+      "time": "date"
+    }
+  }
+}

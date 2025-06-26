@@ -1,0 +1,47 @@
+{
+  "featureName": "SetupTopicListingContext",
+  "description": "Configures template context with topic types, statuses, and moderation permissions for topic listing pages.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "securityRepository-object-SecurityRepository"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve current template context\n   - Obtain user session information\n   - Identify user permissions\n   \n2. Data Validation:\n   - Verify template context is available\n   - Confirm user session is valid\n   - Ensure security repository contains necessary permission data\n   \n3. Business Rule Processing:\n   - Determine user's moderation capabilities\n     3.1. Check if user has general moderation access\n     3.2. Check if user can remove posts\n     3.3. Check if user can move topics\n     3.4. Check if user can lock or unlock topics\n   - Verify system configuration settings\n     3.5. Determine if RSS functionality is enabled\n   \n4. Core Operation Execution:\n   - Add topic type constants to template context\n     4.1. Add announcement topic type\n     4.2. Add sticky topic type\n     4.3. Add normal topic type\n   - Add topic status constants to template context\n     4.4. Add locked status\n     4.5. Add unlocked status\n   - Add moderation permission flags to template context\n     4.6. Set general moderator flag\n     4.7. Set post removal permission flag\n     4.8. Set topic movement permission flag\n     4.9. Set topic lock/unlock permission flag\n   - Add system configuration flags\n     4.10. Set RSS availability flag\n   \n5. Response Generation:\n   - Return updated template context with all necessary values\n   - Make context available for use in topic listing views",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Template context must be available",
+    "User session must be valid",
+    "Security repository must contain user permissions",
+    "Topic type constants must be correctly defined",
+    "Topic status constants must be correctly defined"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "lastVisit": {
+          "type": "object",
+          "description": "Timestamp of user's last visit"
+        }
+      }
+    },
+    "SecurityRepository": {
+      "type": "object",
+      "properties": {
+        "permissions": {
+          "type": "object",
+          "description": "Collection of user permissions"
+        }
+      }
+    }
+  }
+}

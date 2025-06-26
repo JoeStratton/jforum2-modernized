@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "ModerateForum",
+    "description": "Performs forum moderation actions like removing, moving, locking, or unlocking topics"
+  },
+  {
+    "featureName": "RemoveTopics",
+    "description": "Deletes forum topics with proper permission checks and updates related forum data"
+  },
+  {
+    "featureName": "MoveTopics",
+    "description": "Prepares context for moving topics between forums"
+  },
+  {
+    "featureName": "MoveTopicsSave",
+    "description": "Executes the actual movement of topics between forums with permission validation"
+  },
+  {
+    "featureName": "LockUnlockTopics",
+    "description": "Changes the lock status of forum topics"
+  },
+  {
+    "featureName": "SaveModerationLog",
+    "description": "Records moderation actions in the system log"
+  },
+  {
+    "featureName": "BuildModerationLogFromRequest",
+    "description": "Creates moderation log entries from request parameters"
+  }
+]

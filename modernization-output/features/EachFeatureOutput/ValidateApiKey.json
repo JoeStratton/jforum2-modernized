@@ -1,0 +1,29 @@
+{
+  "featureName": "ValidateApiKey",
+  "description": "Authenticates REST API requests by validating the provided API key against stored credentials.",
+  "inputValues": [
+    "apiKey-string-ApiCredential"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the API key (string) from the request\n   - The API key is mandatory and must be provided in the request\n   - No default values are applicable\n\n2. Data Validation\n   - Validate API key format\n     - Check if the API key is not null or empty\n     - Verify the API key follows the expected format (alphanumeric string)\n     - IF validation fails, THEN prepare error message indicating invalid API key format\n\n3. Business Rule Processing\n   - Verify system readiness for API key validation\n     - Check if the credential storage system is accessible\n     - IF credential storage is not accessible, THEN prepare system unavailable error\n\n4. Core Operation Execution\n   - Retrieve stored API credentials\n     - Access the credential storage to find matching API key\n     - Compare the provided API key with stored credentials\n     - IF a match is found, THEN mark authentication as successful\n     - IF no match is found, THEN mark authentication as failed\n\n5. Response Generation\n   - Generate authentication result\n     - IF authentication is successful\n       - Return success indicator (true)\n       - Allow the API request to proceed\n     - IF authentication fails\n       - Return failure indicator (false)\n       - Include appropriate authentication failure message\n       - Deny access to the requested API functionality",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_api_credentials"
+  ],
+  "validationRules": [
+    "API key must not be null or empty",
+    "API key must match a valid credential in the system",
+    "API key must be in the correct format"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one valid API key exists in the credential storage system"
+  ],
+  "schema": {
+    "ApiCredential": {
+      "apiKey": "string",
+      "isActive": "boolean",
+      "createdDate": "date",
+      "expiryDate": "date",
+      "permissions": "string"
+    }
+  }
+}

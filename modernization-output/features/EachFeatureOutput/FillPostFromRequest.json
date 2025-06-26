@@ -1,0 +1,86 @@
+{
+  "featureName": "FillPostFromRequest",
+  "description": "Creates or updates post objects from HTTP request parameters.",
+  "inputValues": [
+    "subject-string-Post",
+    "message-string-Post",
+    "disable_bbcode-boolean-Post",
+    "disable_smilies-boolean-Post",
+    "attach_sig-boolean-Post",
+    "disable_html-boolean-Post",
+    "forum_id-number-Forum",
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs from the HTTP request:\n     a. subject (string): The post subject/title\n     b. message (string): The main content of the post\n     c. disable_bbcode (boolean): Whether BBCode is disabled for this post\n     d. disable_smilies (boolean): Whether smilies are disabled for this post\n     e. attach_sig (boolean): Whether to attach user signature to the post\n     f. disable_html (boolean): Whether HTML is disabled for this post\n     g. forum_id (number): The ID of the forum where the post belongs\n     h. post (object, optional): Existing Post object for edit operations\n   - System will determine if this is a new post creation or an edit operation based on the presence of a post object\n\n2. Data Validation:\n   - Validate subject:\n     a. Check if subject is provided\n     b. Ensure subject follows forum rules for length and content\n   - Validate message:\n     a. Check if message is not empty\n     b. Ensure message follows forum rules for length and content\n   - Validate forum_id:\n     a. Ensure forum_id is a valid number\n     b. Verify the forum exists in the system\n   - IF any validation fails, THEN:\n     a. Generate appropriate error message\n     b. Return to the post form with error details\n\n3. Business Rule Processing:\n   - Determine post formatting settings:\n     a. Set BBCode enabled status to TRUE if disable_bbcode parameter is not present\n     b. Set Smilies enabled status to TRUE if disable_smilies parameter is not present\n     c. Set Signature enabled status to TRUE if attach_sig parameter is present\n   - Determine HTML permissions:\n     a. Check if current user has HTML permission for the specified forum\n     b. Set HTML enabled status to TRUE if user has permission AND disable_html parameter is not present\n   - IF this is a new post (not an edit), THEN:\n     a. Record the user's IP address\n     b. Set the user ID from the current session\n     c. Set the current timestamp as post creation time\n\n4. Core Operation Execution:\n   - Create or update Post object:\n     a. Set the subject field with the provided subject value\n     b. Set BBCode enabled flag based on previous determination\n     c. Set Smilies enabled flag based on previous determination\n     d. Set Signature enabled flag based on previous determination\n     e. Set HTML enabled flag based on previous determination\n   - Process the message content:\n     a. IF HTML is enabled, THEN:\n        i. Apply safety filtering to the message to prevent XSS attacks\n     b. ELSE:\n        i. Use the message as-is without HTML filtering\n     c. Set the processed message to the post object\n   - IF this is a new post, THEN:\n     a. Set the user's IP address to the post\n     b. Set the user ID to the post\n     c. Set the current timestamp to the post\n   - Return the fully populated Post object\n\n5. Response Generation:\n   - Return the populated Post object for further processing\n   - IF any errors occurred during processing, THEN:\n     a. Include error details with the response\n     b. Indicate which fields had validation issues\n   - IF successful, THEN:\n     a. Return the complete Post object ready for database persistence\n     b. Include any formatting flags that were set during processing",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Post subject must not be empty",
+    "Post message must not be empty",
+    "Forum ID must be valid",
+    "User must be logged in to create or edit a post",
+    "HTML usage must be permitted by forum settings and user permissions",
+    "Post content must comply with forum safety rules"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Post title or subject"
+        },
+        "text": {
+          "type": "string",
+          "description": "Post content or message"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic this post belongs to"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this post belongs to"
+        },
+        "time": {
+          "type": "date",
+          "description": "Timestamp when the post was created"
+        },
+        "userIp": {
+          "type": "string",
+          "description": "IP address of the user who created the post"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Whether BBCode formatting is enabled for this post"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Whether HTML is enabled for this post"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Whether smilies are enabled for this post"
+        },
+        "signatureEnabled": {
+          "type": "boolean",
+          "description": "Whether user signature is attached to this post"
+        }
+      }
+    }
+  }
+}

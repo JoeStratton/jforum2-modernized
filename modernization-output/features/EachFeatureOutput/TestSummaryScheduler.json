@@ -1,0 +1,48 @@
+{
+  "featureName": "TestSummaryScheduler",
+  "description": "Tests the functionality of the summary scheduler and its frequency for sending post summaries to users.",
+  "inputValues": [
+    "timeRange-object-DateRange",
+    "recipients-object-RecipientsList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect timeRange (DateRange object) with startDate and endDate\n   - Collect recipients (RecipientsList object) containing user information\n   - System will use current date as endDate if not provided\n   - System will calculate startDate as 7 days before endDate if not provided\n\n2. Data Validation:\n   - Validate timeRange:\n      * Ensure startDate is before endDate\n      * Ensure startDate is not null\n      * Ensure endDate is not null or use current date\n      * IF any validation fails, THEN display appropriate error message\n   - Validate recipients:\n      * Ensure recipients list is accessible\n      * IF recipients list cannot be accessed, THEN display error message\n      * IF recipients list is empty, THEN display notification\n\n3. Business Rule Processing:\n   - Verify scheduler configuration:\n      * Check if scheduler is properly configured\n      * Verify frequency settings for summary delivery\n      * Ensure scheduler has necessary permissions to run\n      * IF configuration is invalid, THEN display configuration error\n   - Verify system resources:\n      * Check if email service is available\n      * Ensure database connection is active\n      * IF any required resource is unavailable, THEN abort operation and log error\n\n4. Core Operation Execution:\n   - Initialize summary scheduler:\n      * Set up scheduler with configured frequency\n      * Start the scheduler job\n      * Monitor for any initialization errors\n      * IF initialization fails, THEN log error and abort operation\n   - Retrieve posts within time range:\n      * Query posts created between startDate and endDate\n      * Filter posts based on user preferences if applicable\n      * Sort posts by relevance or chronological order\n      * IF no posts found, THEN prepare empty summary notification\n   - Generate summary content:\n      * Format post information (subject, author, date, content excerpt)\n      * Group posts by categories or forums if applicable\n      * Create personalized content for each recipient\n      * IF content generation fails, THEN log error and continue with next recipient\n   - Send summary emails:\n      * For each recipient in the list:\n         > Prepare personalized email with summary content\n         > Send email to recipient\n         > Track delivery status\n      * IF sending fails for any recipient, THEN log error and continue with next recipient\n\n5. Response Generation:\n   - Prepare execution summary:\n      * Count of posts included in summary\n      * Count of recipients processed\n      * Count of successful email deliveries\n      * Count of failed email deliveries\n   - Generate test results:\n      * Scheduler initialization status\n      * Post retrieval status\n      * Email sending status\n      * Overall test status (success/failure)\n   - Log detailed results:\n      * Record timing information\n      * Document any errors or exceptions\n      * Store metrics for performance analysis",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Start date must be before end date",
+    "Time range must not exceed system-defined maximum period",
+    "Recipients list must be accessible",
+    "Email service must be available for sending summaries",
+    "Scheduler must be properly configured",
+    "Summary frequency must match configured settings"
+  ],
+  "dbSeedingOperations": [
+    "Ensure test users exist with valid email addresses",
+    "Create test posts within the specified time range",
+    "Configure test summary preferences for users"
+  ],
+  "schema": {
+    "DateRange": {
+      "startDate": "date",
+      "endDate": "date"
+    },
+    "RecipientsList": {
+      "users": [
+        {
+          "userId": "number",
+          "email": "string",
+          "username": "string",
+          "preferences": {
+            "summaryEnabled": "boolean",
+            "summaryFrequency": "string"
+          }
+        }
+      ]
+    }
+  }
+}

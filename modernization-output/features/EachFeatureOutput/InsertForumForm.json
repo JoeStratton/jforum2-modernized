@@ -1,0 +1,61 @@
+{
+  "featureName": "InsertForumForm",
+  "description": "Prepares the form for creating a new forum with category and group options.",
+  "inputValues": [
+    "forum_name-string-Forum",
+    "description-string-Forum",
+    "categories_id-number-Category",
+    "moderate-boolean-Forum",
+    "groups-object-GroupSelection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Prepare form for creating a new forum\n   - Required inputs:\n     a. forum_name (mandatory): Name of the forum\n     b. description (mandatory): Description of the forum\n     c. categories_id (mandatory): Category to which forum belongs\n     d. moderate (optional): Whether forum is moderated, default is false\n     e. groups (mandatory): Selection of user groups for permission settings\n\n2. Data Validation:\n   - Validate forum name:\n     a. IF forum_name is empty THEN\n        i. Display error message \"Forum name cannot be empty\"\n     b. IF forum_name length exceeds maximum allowed THEN\n        i. Display error message \"Forum name too long\"\n   - Validate description:\n     a. IF description is empty THEN\n        i. Display error message \"Description cannot be empty\"\n     b. IF description length exceeds maximum allowed THEN\n        i. Display error message \"Description too long\"\n   - Validate category selection:\n     a. IF categories_id is not selected THEN\n        i. Display error message \"Please select a category\"\n     b. IF selected category does not exist THEN\n        i. Display error message \"Invalid category selected\"\n\n3. Business Rule Processing:\n   - Load available categories:\n     a. Retrieve all categories from the system\n     b. Format categories for display in selection dropdown\n   - Load available user groups:\n     a. Retrieve all user groups from the system\n     b. Organize groups in tree structure for hierarchical display\n   - Initialize permission selections:\n     a. Create empty selected list for permissions\n     b. Set default permission options for new forums\n\n4. Core Operation Execution:\n   - Prepare form context:\n     a. Set form action to \"insertSave\" for submission handling\n     b. Add categories to form context\n     c. Add groups to form context\n     d. Add empty selected list to form context for permissions\n   - Display permission options:\n     a. Group access permissions (who can see the forum)\n     b. Anonymous posting permissions\n     c. Read-only access permissions\n     d. HTML usage permissions\n\n5. Response Generation:\n   - Display form with the following sections:\n     a. Basic forum information fields (name, description)\n     b. Category selection dropdown\n     c. Moderation option checkbox\n     d. Group permission selection checkboxes\n   - Include submission and cancel buttons\n   - On submission error:\n     a. Display validation error messages\n     b. Preserve user-entered data\n   - On cancel:\n     a. Return to forum listing page without saving",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Forum name must not be empty",
+    "Forum description must not be empty",
+    "A category must be selected for the forum",
+    "At least one user group must have access permission to the forum",
+    "Selected category must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupSelection": {
+      "type": "object",
+      "properties": {
+        "groupsAccess": {
+          "type": "array",
+          "description": "Groups that can access the forum",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupsAnonymous": {
+          "type": "array",
+          "description": "Groups that can post anonymously",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupsReadOnly": {
+          "type": "array",
+          "description": "Groups with read-only access",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupsHtml": {
+          "type": "array",
+          "description": "Groups with HTML disabled",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

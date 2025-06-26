@@ -1,0 +1,22 @@
+{
+  "featureName": "RemoveTopicSubscription",
+  "description": "Removes a user's subscription from a topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a) topicId (mandatory): The unique identifier of the topic\n     b) userId (mandatory): The unique identifier of the user\n   - No optional fields or default values are required\n\n2. Data Validation:\n   - Validate topicId:\n     a) Verify topicId is a positive integer\n     b) Verify topicId is not null\n     c) Return error message if validation fails: \"Invalid topic identifier provided\"\n   - Validate userId:\n     a) Verify userId is a positive integer\n     b) Verify userId is not null\n     c) Return error message if validation fails: \"Invalid user identifier provided\"\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a) Check if topic with topicId exists in the system\n     b) IF topic does not exist, THEN return error: \"Topic not found\"\n   - Verify user existence:\n     a) Check if user with userId exists in the system\n     b) IF user does not exist, THEN return error: \"User not found\"\n   - Verify subscription existence:\n     a) Check if the user is currently subscribed to the topic\n     b) IF user is not subscribed, THEN return message: \"User is not subscribed to this topic\"\n\n4. Core Operation Execution:\n   - Remove subscription record:\n     a) Locate the subscription record that links the user to the topic\n     b) Delete the subscription record from the system\n     c) IF deletion fails, THEN:\n        i. Log the error details\n        ii. Return error: \"Failed to remove subscription\"\n   - Update subscription counters (if applicable):\n     a) Decrement the subscription count for the topic\n     b) Update any related subscription statistics\n\n5. Response Generation:\n   - Success response:\n     a) Generate confirmation message: \"Subscription successfully removed\"\n     b) Include topic information in the response\n   - Error response:\n     a) Include specific error message based on the failure point\n     b) Provide guidance on how to resolve the issue if applicable",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a valid positive integer",
+    "User ID must be a valid positive integer",
+    "Topic must exist in the system",
+    "User must exist in the system",
+    "User must be currently subscribed to the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

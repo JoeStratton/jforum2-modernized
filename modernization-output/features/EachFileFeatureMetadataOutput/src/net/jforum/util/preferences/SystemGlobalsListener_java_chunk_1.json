@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ReloadSystemConfiguration",
+    "description": "Reloads system configuration when configuration files change"
+  }
+]

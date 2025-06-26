@@ -1,0 +1,38 @@
+{
+  "featureName": "ListUsers",
+  "description": "Retrieves a list of all users in the system with pagination and filtering options.",
+  "inputValues": [
+    "start-number-Pagination",
+    "usersPerPage-number-Pagination",
+    "username-string-SearchFilter",
+    "group_id-number-GroupFilter"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pagination parameters:\n     a. start - Starting position for pagination (optional, defaults to 1)\n     b. usersPerPage - Number of users to display per page (system-configured value)\n   - Collect filter parameters:\n     a. username - Search string for filtering users by name (optional)\n     b. group_id - Group identifier for filtering users by group (optional)\n\n2. Data Validation:\n   - Validate pagination parameters:\n     a. Check if start is a positive integer\n     b. IF start is invalid, THEN use default value of 1\n     c. Retrieve system-configured value for usersPerPage\n   - Validate filter parameters:\n     a. IF username is provided, THEN ensure it's properly formatted\n     b. IF group_id is provided, THEN ensure it's a valid integer\n     c. IF group_id equals 0, THEN treat as no group filter\n\n3. Business Rule Processing:\n   - Determine the appropriate query type:\n     a. IF username is provided and not empty, THEN prepare for name-based search\n     b. ELSE IF group_id is provided and not zero, THEN prepare for group-based search\n     c. ELSE prepare for standard paginated list\n   - Calculate pagination values:\n     a. Determine total number of users based on query type\n     b. Calculate total pages based on usersPerPage\n     c. Validate that requested page is within range\n\n4. Core Operation Execution:\n   - Execute the appropriate query based on type:\n     a. IF performing name-based search:\n        i. Retrieve users matching the provided username pattern\n     b. ELSE IF performing group-based search:\n        i. Retrieve users belonging to the specified group\n        ii. Apply pagination to the results\n     c. ELSE:\n        i. Retrieve all users with pagination\n   - Prepare additional context data:\n     a. Retrieve group information for group selection\n     b. Format pagination information\n     c. Prepare any search parameters for display\n\n5. Response Generation:\n   - Success response:\n     a. Format the list of retrieved users\n     b. Include pagination information (current page, total pages)\n     c. Include search/filter parameters if applicable\n     d. Include group information for filtering options\n     e. Return the complete response to the user\n   - Error response:\n     a. Format any errors that occurred during processing\n     b. Include appropriate error messages\n     c. Return the error information to the user",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Pagination start parameter must be a positive integer",
+    "Users per page must follow system configuration",
+    "Group ID must be a valid integer if provided",
+    "User must have administrative permissions to view user list"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "active": "boolean",
+      "groups": "array"
+    },
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    }
+  }
+}

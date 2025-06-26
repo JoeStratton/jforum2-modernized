@@ -1,0 +1,20 @@
+{
+  "featureName": "CompleteUserRegistration",
+  "description": "Finalizes user registration by updating system data and showing completion page.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect userId (number) from the user session\n   - System will retrieve the user information based on this ID\n\n2. Data Validation\n   - Validate that userId exists in the system\n     * IF userId is not found or invalid THEN\n       - Display error message to user\n       - Redirect user to registration page\n     * END IF\n   - Validate that user registration is in progress\n     * IF user registration is not in progress THEN\n       - Display appropriate error message\n       - Redirect to home page\n     * END IF\n\n3. Business Rule Processing\n   - Check if the user has already completed registration\n     * IF registration is already complete THEN\n       - Display notification message\n       - Redirect to user profile page\n       - Exit process\n     * END IF\n   - Verify all required registration steps are completed\n     * IF any required steps are incomplete THEN\n       - Identify missing information\n       - Redirect user to complete the missing steps\n       - Exit process\n     * END IF\n\n4. Core Operation Execution\n   - Update system records with new user information\n     * Update last registered user information in the system\n     * Increment total user count in the system\n   - Mark user registration as complete in the database\n     * Update user status to 'active' or equivalent\n     * Set registration completion timestamp\n   - Generate user profile links\n     * Create link to user profile page\n     * Create link to home page\n   - Prepare completion message for display\n     * Include links to profile and home pages in the message\n     * Format message according to system templates\n\n5. Response Generation\n   - Display registration completion page to user\n     * Show congratulatory message\n     * Display links to profile page for customization\n     * Display link to home page to start using the system\n   - Provide next steps information\n     * Suggest profile completion options\n     * Recommend initial system navigation paths\n     * Offer help resources if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must exist in the system",
+    "User registration must be in progress",
+    "All required registration steps must be completed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

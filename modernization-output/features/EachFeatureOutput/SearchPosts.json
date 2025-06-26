@@ -1,0 +1,59 @@
+{
+  "featureName": "SearchPosts",
+  "description": "Performs a search against indexed forum posts using provided search arguments.",
+  "inputValues": [
+    "keywords-string-SearchArgs",
+    "forumIds-number-SearchArgs",
+    "startDate-date-SearchArgs",
+    "endDate-date-SearchArgs",
+    "searchType-string-SearchArgs",
+    "orderBy-string-SearchArgs",
+    "searchIn-object-SearchOptions"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect search parameters from user:\n       - keywords: The text to search for (mandatory)\n       - forumIds: List of forum IDs to search within (optional)\n       - startDate: Beginning date range for posts (optional)\n       - endDate: Ending date range for posts (optional)\n       - searchType: Type of search to perform (optional, default: 'all words')\n       - orderBy: Result ordering preference (optional, default: 'relevance')\n       - searchIn: Options for where to search (optional)\n          - title: Whether to search in post titles (default: true)\n          - content: Whether to search in post content (default: true)\n\n2. Data Validation:\n   2.1. Validate keywords input:\n       - IF keywords is empty or null THEN\n           - Return error message: \"Search keywords cannot be empty\"\n       - IF keywords length is less than minimum allowed characters THEN\n           - Return error message: \"Search keywords must be at least [minimum] characters long\"\n       - IF keywords contains invalid characters THEN\n           - Return error message: \"Search keywords contain invalid characters\"\n\n   2.2. Validate date range:\n       - IF both startDate and endDate are provided THEN\n           - IF startDate is after endDate THEN\n               - Return error message: \"Start date cannot be after end date\"\n\n   2.3. Validate forum selection:\n       - IF forumIds is provided THEN\n           - FOR EACH forumId in forumIds DO\n               - IF forumId does not exist in the system THEN\n                   - Remove invalid forumId from the list\n           - IF all forumIds were invalid THEN\n               - Return error message: \"No valid forums selected for search\"\n\n   2.4. Validate search options:\n       - IF searchType is provided THEN\n           - IF searchType is not one of the valid options (all words, any words, exact phrase) THEN\n               - Set searchType to default value\n       - IF orderBy is provided THEN\n           - IF orderBy is not one of the valid options (relevance, date) THEN\n               - Set orderBy to default value\n\n3. Business Rule Processing:\n   3.1. Check user permissions:\n       - IF user is not logged in AND search requires authentication THEN\n           - Return error message: \"You must be logged in to perform a search\"\n       - IF user is logged in THEN\n           - FOR EACH forumId in forumIds DO\n               - IF user does not have access to the forum THEN\n                   - Remove forumId from the list\n\n   3.2. Check search frequency limits:\n       - IF user has performed a search within the cooldown period THEN\n           - Return error message: \"Please wait [remaining time] before performing another search\"\n\n   3.3. Prepare search context:\n       - Create search arguments object with validated parameters\n       - Set default values for any missing optional parameters\n       - Determine search scope based on user's forum access permissions\n\n4. Core Operation Execution:\n   4.1. Prepare search index access:\n       - Initialize the search index reader\n       - Prepare query based on search parameters\n       - Apply forum filters to the query\n       - Apply date range filters to the query\n\n   4.2. Execute search operation:\n       - Perform the search against the index\n       - Collect matching document references\n       - Calculate relevance scores for results\n       - Sort results according to orderBy parameter\n\n   4.3. Process search results:\n       - Retrieve post details for each matching document\n       - Filter results based on user's access permissions\n       - Paginate results if necessary\n       - Highlight matching keywords in result snippets\n\n   4.4. Handle search exceptions:\n       - IF index is corrupted or unavailable THEN\n           - Log error details\n           - Return error message: \"Search is temporarily unavailable\"\n       - IF search times out THEN\n           - Log timeout information\n           - Return error message: \"Search operation timed out. Please refine your search criteria.\"\n\n5. Response Generation:\n   5.1. Prepare success response:\n       - Format the list of matching posts\n       - Include post metadata (author, date, forum, etc.)\n       - Include highlighted snippets showing keyword context\n       - Include pagination information\n       - Include search statistics (total matches, search time)\n\n   5.2. Prepare error response:\n       - IF any errors occurred during search THEN\n           - Include specific error message\n           - Include suggestions for improving search\n\n   5.3. Return search results to user:\n       - Display formatted results\n       - Provide options for refining search\n       - Provide links to matching posts",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Search keywords cannot be empty",
+    "Search keywords must meet minimum length requirements",
+    "Date range must be valid (start date before end date)",
+    "User must have permission to access selected forums",
+    "Search frequency must not exceed system limits",
+    "At least one valid forum must be selected if forum filtering is used",
+    "Search indexing must be enabled in system configuration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchOptions": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "boolean",
+          "description": "Whether to search in post titles"
+        },
+        "content": {
+          "type": "boolean",
+          "description": "Whether to search in post content"
+        }
+      }
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "description": "List of matching posts"
+        },
+        "totalRecords": {
+          "type": "number",
+          "description": "Total number of matching records"
+        }
+      }
+    }
+  }
+}

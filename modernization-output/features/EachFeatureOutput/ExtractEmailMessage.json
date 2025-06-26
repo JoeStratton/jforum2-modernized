@@ -1,0 +1,62 @@
+{
+  "featureName": "ExtractEmailMessage",
+  "description": "Extracts and processes email message content from POP3 messages including headers, body, and metadata.",
+  "inputValues": [
+    "message-object-Message"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Message object containing raw email data\n   - System will extract the following components:\n     * Subject line\n     * Message content\n     * Sender information\n     * Reply-to address\n     * References header\n     * In-Reply-To header\n     * Content type\n     * List email address\n     * Send date\n     * All headers\n\n2. Data Validation:\n   - Validate Message object is not null\n     * IF Message object is null THEN return error indicating invalid input\n   - Validate Message can be accessed\n     * IF Message cannot be accessed THEN handle exception and return appropriate error\n   - Validate required message components\n     * Check that subject can be retrieved\n     * Check that content can be accessed\n     * Check that sender information is available\n     * IF any critical component is inaccessible THEN log specific validation error\n\n3. Business Rule Processing:\n   - Determine message content type\n     * IF content is multipart THEN identify primary content part\n     * IF content type is text/html or text/plain THEN prepare for text extraction\n     * IF content type is unsupported THEN note limitation in processing\n   - Process special headers\n     * Check for In-Reply-To header to establish message threading\n     * Check for References header to maintain conversation context\n     * Store all headers in accessible format for later reference\n   - Handle reply address determination\n     * IF specific reply-to address exists THEN use it\n     * ELSE use sender address as reply-to address\n\n4. Core Operation Execution:\n   - Extract message metadata\n     * Extract subject line\n     * Extract sender address\n     * Extract recipient address\n     * Extract sent date\n     * Extract reply-to address\n   - Process message headers\n     * Iterate through all headers\n     * Store headers in structured format\n     * Identify and specially handle In-Reply-To and References headers\n   - Extract message content\n     * IF message is multipart THEN select appropriate part for content extraction\n     * Open input stream to message content\n     * Read content in chunks to handle large messages efficiently\n     * Convert content to string representation\n     * Close all resources properly to prevent leaks\n   - Handle any exceptions during extraction\n     * Catch and properly handle I/O exceptions\n     * Catch and properly handle messaging exceptions\n     * Ensure resources are released even if exceptions occur\n\n5. Response Generation:\n   - Assemble extracted message components into structured format\n     * Combine all extracted metadata and content\n     * Format data for consistent access\n   - Provide complete message representation\n     * Include all extracted fields in consistent format\n     * Make all message components accessible through standard interface\n   - Return fully processed message object\n     * Ensure all components are properly extracted and formatted\n     * Provide access methods for all message components",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Message object must not be null",
+    "Message content must be accessible",
+    "Sender information must be available",
+    "Resources must be properly closed after extraction",
+    "Content type must be properly identified",
+    "Message headers must be properly extracted and stored"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Message": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Email subject line"
+        },
+        "content": {
+          "type": "object",
+          "description": "Raw message content"
+        },
+        "from": {
+          "type": "array",
+          "description": "Sender address information"
+        },
+        "replyTo": {
+          "type": "array",
+          "description": "Reply-to address information"
+        },
+        "recipients": {
+          "type": "array",
+          "description": "Message recipients"
+        },
+        "sentDate": {
+          "type": "object",
+          "description": "Date when message was sent"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME content type of message"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Collection of message headers"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "featureName": "ParseParameterCharArray",
+  "description": "Extracts name/value pairs from a character array using specified separator character.",
+  "inputValues": [
+    "chars-object-CharArray",
+    "offset-number-Integer",
+    "length-number-Integer",
+    "separator-string-Character"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the character array to be parsed\n   - Collect the offset position to start parsing from\n   - Collect the length of the array segment to parse\n   - Collect the separator character that divides name/value pairs\n   - Determine if parameter names should be converted to lowercase (configuration setting)\n\n2. Data Validation:\n   - Verify the character array is not null\n     * IF character array is null THEN\n       * Return empty collection of parameters\n       * End processing\n   - Verify the offset is within array bounds\n     * IF offset is negative or greater than array length THEN\n       * Return error for invalid offset\n   - Verify the length is valid\n     * IF length is negative or offset+length exceeds array size THEN\n       * Return error for invalid length\n   - Verify the separator character is valid\n     * IF separator is not a valid character THEN\n       * Return error for invalid separator\n\n3. Business Rule Processing:\n   - Initialize result collection for storing name/value pairs\n   - Set up parsing position at the specified offset\n   - Set maximum position as offset + length\n   - WHILE there are characters remaining to process:\n     * Extract parameter name by parsing until '=' or separator is encountered\n       * Skip leading whitespace characters\n       * Collect characters until delimiter is found\n       * Trim trailing whitespace characters\n     * IF '=' character is found after parameter name THEN\n       * Move past the '=' character\n       * Extract parameter value by parsing until separator is encountered\n         * Handle quoted values (enclosed in double quotes)\n         * Handle escaped characters within quotes\n         * Remove surrounding quotes if present\n     * ELSE\n       * Set parameter value to null (parameter without value)\n     * IF separator character is found THEN\n       * Move past the separator character\n     * IF parameter name is not empty THEN\n       * IF lowercase setting is enabled THEN\n         * Convert parameter name to lowercase\n       * Store parameter name and value in result collection\n\n4. Core Operation Execution:\n   - Process each name/value pair sequentially\n   - Handle special cases:\n     * Quoted values that may contain separator characters\n     * Escaped quote characters within quoted values\n     * Parameters with no values\n   - Maintain uniqueness of parameter names in result collection\n     * If duplicate names are found, later values override earlier ones\n\n5. Response Generation:\n   - Return the complete collection of parsed name/value pairs\n   - Ensure parameter names are unique in the result\n   - Preserve the original character case of values\n   - Apply lowercase conversion to names if configured",
+  "databaseEntities": [],
+  "validationRules": [
+    "Character array must not be null",
+    "Offset must be within array bounds",
+    "Length must be valid for the array",
+    "Parameter names must be unique in result collection",
+    "Quoted values must handle escaped characters properly",
+    "Parameter names should be converted to lowercase if configured"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CharArray": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "description": "Array of characters to be parsed"
+        }
+      },
+      "required": [
+        "data"
+      ]
+    }
+  }
+}

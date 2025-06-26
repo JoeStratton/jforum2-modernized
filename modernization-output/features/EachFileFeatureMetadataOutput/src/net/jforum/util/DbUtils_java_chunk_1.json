@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CloseResultSetAndStatement",
+    "description": "Safely closes both ResultSet and Statement objects to prevent resource leaks in database operations"
+  },
+  {
+    "featureName": "CloseResultSet",
+    "description": "Safely closes a ResultSet object to release database resources"
+  },
+  {
+    "featureName": "CloseStatement",
+    "description": "Safely closes a Statement object and clears warnings to release database resources"
+  }
+]

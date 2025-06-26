@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "CreatePostDataAccess",
+    "description": "Provides data access implementation for posts in SQL Server 2000 environment"
+  },
+  {
+    "featureName": "CreateTopicDataAccess",
+    "description": "Provides data access implementation for topics in SQL Server 2000 environment"
+  },
+  {
+    "featureName": "CreateUserDataAccess",
+    "description": "Provides data access implementation for users in SQL Server 2000 environment"
+  },
+  {
+    "featureName": "CreateModerationLogDataAccess",
+    "description": "Provides data access implementation for moderation logs in SQL Server 2000 environment"
+  }
+]

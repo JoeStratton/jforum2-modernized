@@ -1,0 +1,37 @@
+{
+  "featureName": "GetSessionAttributeNames",
+  "description": "Retrieves all attribute names stored in the session context.",
+  "inputValues": [
+    "sessionContext-object-SessionContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Receive sessionContext object (mandatory)\n   - No additional user inputs required\n   - System will use the provided session context to retrieve attribute names\n\n2. Data Validation:\n   - Validate session context existence\n     a. IF sessionContext is null THEN\n        i. Generate error message indicating invalid session context\n        ii. Terminate process and return error\n     b. ELSE\n        i. Proceed to next step\n   - Validate session context state\n     a. IF session has been invalidated THEN\n        i. Generate error message indicating session is no longer valid\n        ii. Terminate process and return error\n     b. ELSE\n        i. Proceed to next step\n\n3. Business Rule Processing:\n   - Check session access permissions\n     a. IF current user has permission to access session attributes THEN\n        i. Proceed to next step\n     b. ELSE\n        i. Generate error message indicating insufficient permissions\n        ii. Terminate process and return error\n   - Check session timeout status\n     a. IF session has timed out THEN\n        i. Generate error message indicating expired session\n        ii. Terminate process and return error\n     b. ELSE\n        i. Proceed to next step\n\n4. Core Operation Execution:\n   - Retrieve attribute names from session\n     a. Access internal data structure of session context\n     b. Extract all attribute names (keys) from the session data structure\n     c. Create a collection to hold the attribute names\n     d. Add each attribute name to the collection\n     e. IF extraction fails THEN\n        i. Generate error message indicating retrieval failure\n        ii. Terminate process and return error\n     f. ELSE\n        i. Proceed to next step\n\n5. Response Generation:\n   - Prepare attribute names collection for return\n     a. Format the collection of attribute names according to system requirements\n     b. Return the collection of attribute names\n     c. IF collection is empty THEN\n        i. Return empty collection (not an error condition)\n     d. ELSE\n        i. Return populated collection with all attribute names",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session context must not be null",
+    "Session must not be invalidated",
+    "User must have permission to access session attributes",
+    "Session must not be expired"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionContext": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of attributes stored in the session"
+        }
+      },
+      "required": [
+        "id",
+        "attributes"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "CheckAttachmentThumbnail",
+    "description": "Determines if a thumbnail exists for the attachment based on system configuration"
+  },
+  {
+    "featureName": "GetAttachmentThumbnailPath",
+    "description": "Retrieves the file path for an attachment's thumbnail image"
+  }
+]

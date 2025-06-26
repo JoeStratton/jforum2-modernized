@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ReviewPrivateMessage",
+    "description": "Displays a private message in review mode"
+  },
+  {
+    "featureName": "DeletePrivateMessage",
+    "description": "Deletes selected private messages and updates unread message count"
+  },
+  {
+    "featureName": "ReplyToPrivateMessage",
+    "description": "Creates a reply to an existing private message with prefixed subject"
+  },
+  {
+    "featureName": "QuotePrivateMessage",
+    "description": "Creates a reply with quoted content from the original private message"
+  },
+  {
+    "featureName": "ListPrivateMessages",
+    "description": "Lists private messages by redirecting to inbox view"
+  }
+]

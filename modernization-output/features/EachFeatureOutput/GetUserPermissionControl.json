@@ -1,0 +1,43 @@
+{
+  "featureName": "GetUserPermissionControl",
+  "description": "Retrieves permission control schema for a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - userId (number, mandatory): The unique identifier of the user\n   - System will determine if force reload is required (boolean, optional, default: false)\n\n2. Data Validation\n   - Validate userId:\n     - IF userId is null or not a positive integer THEN\n       - Return error message \"Invalid user identifier provided\"\n     - END IF\n\n3. Business Rule Processing\n   - Check cache availability:\n     - IF cache system is not initialized THEN\n       - Log error \"Cache system not available\"\n       - Return error message \"System configuration error\"\n     - END IF\n   - Determine if permission control needs to be loaded:\n     - IF force reload is true OR user's permission control is not in cache THEN\n       - Mark permission control for loading\n     - ELSE\n       - Use cached permission control\n     - END IF\n\n4. Core Operation Execution\n   - IF permission control needs to be loaded THEN\n     - Retrieve user information:\n       - Query user data using userId\n       - IF user not found THEN\n         - Log error \"User not found\"\n         - Return error message \"User does not exist\"\n       - END IF\n     - Create new permission control instance\n     - Load user's roles and permissions:\n       - Retrieve all groups the user belongs to\n       - For each group:\n         - Load associated roles and permissions\n         - Add to permission control schema\n     - Store permission control in cache:\n       - Associate with userId for future retrieval\n       - Set appropriate cache expiration\n   - ELSE\n     - Retrieve existing permission control from cache\n   - END IF\n   - Verify permission control integrity:\n     - IF permission control is null or invalid THEN\n       - Log error \"Failed to load security roles\"\n       - Return error message \"Unable to retrieve user permissions\"\n     - END IF\n\n5. Response Generation\n   - Prepare permission control response:\n     - Include all roles associated with the user\n     - Include all permission values for each role\n     - Format according to system requirements\n   - Return the complete permission control schema\n   - Log successful retrieval of permission control",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Permission control must be successfully loaded or retrieved from cache"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PermissionControl": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

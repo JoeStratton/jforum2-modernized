@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "GetCategoryById",
+    "description": "Retrieves a specific forum category by its ID"
+  },
+  {
+    "featureName": "ListAllCategories",
+    "description": "Retrieves all forum categories from the database"
+  },
+  {
+    "featureName": "CheckCategoryDeletability",
+    "description": "Verifies if a specific category can be safely deleted"
+  },
+  {
+    "featureName": "DeleteCategory",
+    "description": "Removes a category from the system"
+  },
+  {
+    "featureName": "UpdateCategory",
+    "description": "Updates an existing category's information"
+  },
+  {
+    "featureName": "CreateCategory",
+    "description": "Adds a new category to the forum system"
+  },
+  {
+    "featureName": "ChangeCategoryOrderUp",
+    "description": "Moves a category up in the display order"
+  },
+  {
+    "featureName": "ChangeCategoryOrderDown",
+    "description": "Moves a category down in the display order"
+  }
+]

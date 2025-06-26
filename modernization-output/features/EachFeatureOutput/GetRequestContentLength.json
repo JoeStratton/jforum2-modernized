@@ -1,0 +1,30 @@
+{
+  "featureName": "GetRequestContentLength",
+  "description": "Retrieves the content length of an HTTP servlet request.",
+  "inputValues": [
+    "request-object-HttpServletRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HttpServletRequest object\n     - This is a mandatory input\n     - No default values are applicable\n\n2. Data Validation:\n   - Validate the HttpServletRequest object\n     - Check if the request object is not null\n     - IF request is null THEN\n       - Generate an error indicating invalid request\n       - Terminate the operation\n     - END IF\n\n3. Business Rule Processing:\n   - Verify the request can be processed\n     - Check if the request contains content length information\n     - No specific business constraints apply to this operation\n\n4. Core Operation Execution:\n   - Access the content length information\n     - Extract the content length value from the request\n     - The content length represents the size of the request body in bytes\n     - IF content length information is not available THEN\n       - Return a default value (typically -1) indicating unknown length\n     - END IF\n\n5. Response Generation:\n   - Return the content length value\n     - The value is returned as an integer\n     - A positive number indicates the actual content length in bytes\n     - Zero indicates empty content\n     - A negative value may indicate that the content length is unknown",
+  "databaseEntities": [],
+  "validationRules": [
+    "The request object must not be null",
+    "The request must be a valid HTTP servlet request"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpServletRequest": {
+      "type": "object",
+      "description": "Represents an HTTP request received by a servlet",
+      "properties": {
+        "contentLength": {
+          "type": "integer",
+          "description": "The length, in bytes, of the request body"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The MIME type of the body of the request"
+        }
+      }
+    }
+  }
+}

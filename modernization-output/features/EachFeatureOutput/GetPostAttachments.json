@@ -1,0 +1,49 @@
+{
+  "featureName": "GetPostAttachments",
+  "description": "Retrieves all attachments associated with a specific post.",
+  "inputValues": [
+    "postId-number-Post",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (mandatory) from the request\n   - Collect forumId (mandatory) from the request\n   - System will use these identifiers to locate the specific post and check permissions\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a positive integer\n     c. IF validation fails, THEN prepare appropriate error message\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF validation fails, THEN prepare appropriate error message\n\n3. Business Rule Processing:\n   - Verify post existence:\n     a. Check if the post with the given postId exists in the system\n     b. IF post does not exist, THEN prepare \"Post not found\" error message\n   - Verify user permissions:\n     a. Check if the current user has permission to download attachments\n     b. Check if attachments are enabled for the specified forum\n     c. IF user lacks either permission, THEN return an empty list of attachments\n\n4. Core Operation Execution:\n   - Retrieve attachments:\n     a. Query the attachment repository for all attachments linked to the specified postId\n     b. For each attachment found:\n        i. Retrieve basic attachment metadata (name, size, upload date, comment)\n        ii. Determine file type and appropriate display/download method\n        iii. Check if thumbnails exist for image attachments\n        iv. Prepare attachment information for response\n     c. IF no attachments are found, prepare empty result set\n     d. IF retrieval operation fails, prepare system error message\n\n5. Response Generation:\n   - Format attachment list response:\n     a. Include total count of attachments found\n     b. For each attachment, include:\n        i. Attachment identifier\n        ii. File name (real filename)\n        iii. File size\n        iv. Upload date\n        v. File type information and extension\n        vi. Download information and physical download mode\n        vii. Comment associated with the attachment\n        viii. Thumbnail information for image attachments if available\n     c. IF operation was successful, return attachment list with success status\n     d. IF any errors occurred, return appropriate error message with error status",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_attachments",
+    "jforum_extension_groups",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Post must exist in the system",
+    "User must have permission to view attachments in the specified forum",
+    "Attachment records must be associated with the specified post ID"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "userId": "number",
+      "info": {
+        "filesize": "number",
+        "comment": "string",
+        "mimetype": "string",
+        "realFilename": "string",
+        "uploadTimeInMillis": "number",
+        "physicalFilename": "string",
+        "extension": {
+          "extension": "string",
+          "extensionGroupId": "number"
+        }
+      }
+    },
+    "QuotaLimit": {
+      "id": "number",
+      "size": "number",
+      "sizeInBytes": "number"
+    }
+  }
+}

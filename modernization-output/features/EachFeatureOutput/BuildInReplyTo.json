@@ -1,0 +1,45 @@
+{
+  "featureName": "BuildInReplyTo",
+  "description": "Generates an In-Reply-To header for forum post replies based on topic information.",
+  "inputValues": [
+    "topic-object-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Topic object with the following required attributes:\n     * firstPostId (number): The ID of the first post in the topic\n     * id (number): The ID of the topic\n     * forumId (number): The ID of the forum containing the topic\n   - All fields are mandatory for proper header generation\n\n2. Data Validation:\n   - Validate Topic object existence\n     * IF Topic is null or undefined THEN\n       - Return error: \"Topic information is required\"\n     * END IF\n   - Validate Topic attributes\n     * IF Topic.firstPostId is missing or not a positive integer THEN\n       - Return error: \"Valid first post ID is required\"\n     * END IF\n     * IF Topic.id is missing or not a positive integer THEN\n       - Return error: \"Valid topic ID is required\"\n     * END IF\n     * IF Topic.forumId is missing or not a positive integer THEN\n       - Return error: \"Valid forum ID is required\"\n     * END IF\n\n3. Business Rule Processing:\n   - Check system configuration for header format requirements\n     * Verify header format pattern is configured correctly\n     * Ensure domain name for message ID is properly set\n   - Determine if additional metadata should be included in the header\n     * Check if timestamp inclusion is enabled\n     * Check if randomization is enabled for uniqueness\n\n4. Core Operation Execution:\n   - Construct the In-Reply-To header string\n     * Start with opening angle bracket '<'\n     * Append the first post ID from the topic\n     * Append separator '.'\n     * Append the topic ID\n     * Append separator '.'\n     * Append the forum ID\n     * Append separator '.'\n     * Generate and append a unique timestamp\n     * Generate and append a random number for additional uniqueness\n     * Append '@' followed by the system domain identifier\n     * End with closing angle bracket '>'\n   - Format the complete header according to email standards\n\n5. Response Generation:\n   - Return the fully constructed In-Reply-To header string\n   - Include metadata about the header generation process\n     * Source topic information\n     * Generation timestamp\n     * Format version used\n   - Provide usage instructions for the header in email communications",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic object must not be null",
+    "First post ID must be a positive integer",
+    "Topic ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "Generated header must follow the format '<firstPostId.topicId.forumId.timestamp.randomNumber@domain>'"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "firstPostId": {
+          "type": "number",
+          "description": "ID of the first post in the topic"
+        },
+        "id": {
+          "type": "number",
+          "description": "ID of the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum containing the topic"
+        }
+      },
+      "required": [
+        "firstPostId",
+        "id",
+        "forumId"
+      ]
+    }
+  }
+}

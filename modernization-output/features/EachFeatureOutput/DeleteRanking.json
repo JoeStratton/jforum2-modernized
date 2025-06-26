@@ -1,0 +1,31 @@
+{
+  "featureName": "DeleteRanking",
+  "description": "Removes a ranking from the system by its ID.",
+  "inputValues": [
+    "rankingId-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required input:\n     a. rankingId (number, mandatory): The unique identifier of the ranking to be deleted\n\n2. Data Validation:\n   - Validate the rankingId input:\n     a. Check if rankingId is provided\n        IF rankingId is missing or null THEN\n          Generate error message: \"Ranking ID is required\"\n          Exit process\n     b. Verify rankingId is a positive integer\n        IF rankingId is not a positive integer THEN\n          Generate error message: \"Ranking ID must be a positive integer\"\n          Exit process\n     c. Check if rankingId exists in the system\n        IF rankingId does not exist in the system THEN\n          Generate error message: \"Ranking with the specified ID does not exist\"\n          Exit process\n\n3. Business Rule Processing:\n   - Check if the ranking is currently in use:\n     a. Verify if any users are currently assigned this ranking\n        IF ranking is assigned to one or more users THEN\n          Generate error message: \"Cannot delete ranking as it is currently assigned to users\"\n          Exit process\n     b. Check if the ranking is a system default ranking\n        IF ranking is a system default ranking THEN\n          Generate error message: \"Cannot delete a system default ranking\"\n          Exit process\n     c. Check if the ranking is referenced by other system components\n        IF ranking is referenced by other components THEN\n          Generate error message: \"Cannot delete ranking as it is referenced by other system components\"\n          Exit process\n     d. Check if the ranking is a special ranking\n        IF ranking is marked as special THEN\n          Verify no special permissions are required to delete it\n          IF special permissions are required but not present THEN\n            Generate error message: \"Cannot delete special ranking without proper authorization\"\n            Exit process\n\n4. Core Operation Execution:\n   - Perform the ranking deletion:\n     a. Begin transaction\n     b. Remove the ranking record from the database using the rankingId\n     c. IF deletion operation fails THEN\n          Rollback transaction\n          Generate error message: \"Failed to delete ranking due to system error\"\n          Exit process\n     d. Commit transaction\n     e. Update any caches or in-memory structures that may contain ranking information\n\n5. Response Generation:\n   - Generate success response:\n     a. Create confirmation message: \"Ranking successfully deleted\"\n     b. Include the ID of the deleted ranking in the response\n     c. Return success status and confirmation message",
+  "databaseEntities": [
+    "Ranking",
+    "User"
+  ],
+  "validationRules": [
+    "Ranking ID must be provided",
+    "Ranking ID must be a positive integer",
+    "Ranking must exist in the system",
+    "Ranking must not be currently assigned to any users",
+    "System default rankings cannot be deleted",
+    "Rankings referenced by other system components cannot be deleted",
+    "Special rankings may require additional authorization to delete"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "image": "string",
+      "min": "number",
+      "special": "boolean"
+    }
+  }
+}

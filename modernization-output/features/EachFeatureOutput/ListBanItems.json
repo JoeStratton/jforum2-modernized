@@ -1,0 +1,23 @@
+{
+  "featureName": "ListBanItems",
+  "description": "Retrieves and displays all banned items including emails, users, and IPs.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for initial list display\n   - System will retrieve all banned items from the data store\n\n2. Data Validation:\n   - No input validation required for initial list display\n\n3. Business Rule Processing:\n   3.1. Verify user has administrative access\n      - IF user does not have admin privileges THEN\n         - Display access denied message\n         - Terminate process\n      - END IF\n\n4. Core Operation Execution:\n   4.1. Retrieve banned items\n      - Query data store for all banned items\n      - Organize items by type (email, user, IP)\n      - Sort items in appropriate order (alphabetical or chronological)\n   4.2. Process banned items for display\n      - For each banned item:\n         - Format the item details for display\n         - Include item type (email, user, IP)\n         - Include value of the banned item\n         - Include date when the ban was created\n         - Include ban reason if available\n         - Add item to display collection\n\n5. Response Generation:\n   5.1. Prepare display data\n      - Format the list of banned items for display\n      - Include column headers for item type, value, and other relevant information\n      - Include total count of banned items\n   5.2. Generate display view\n      - Display the list of banned items in tabular format\n      - Include action buttons for each item (delete, edit)\n      - Include option to add new banned items\n      - IF no banned items exist THEN\n         - Display message indicating no banned items found\n      - END IF",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to view banned items",
+    "Banned items must be categorized by type (email, user, IP)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BanItem": {
+      "id": "number",
+      "type": "string",
+      "value": "string",
+      "creationDate": "date",
+      "reason": "string"
+    }
+  }
+}

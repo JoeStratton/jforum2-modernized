@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "MonitorFileChanges",
+    "description": "Monitors files for changes and notifies listeners when modifications are detected"
+  },
+  {
+    "featureName": "AddFileChangeListener",
+    "description": "Registers a listener to be notified when a specified file changes"
+  },
+  {
+    "featureName": "RemoveFileChangeListener",
+    "description": "Stops monitoring a specific file by removing its change listener"
+  }
+]

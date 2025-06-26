@@ -1,0 +1,33 @@
+{
+  "featureName": "GetGroupSecurityDAO",
+  "description": "Provides access to MySQL 3.23 specific implementation of group security data access operations.",
+  "inputValues": [
+    "databaseType-string-Database"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database type information (string)\n   - System will determine if the database is MySQL 3.23\n   - No user input is required as this is a system-level operation\n\n2. Data Validation:\n   - Validate database type information\n     a. Check if database type is properly specified\n     b. Verify that database type is supported by the system\n     c. IF database type is not specified or not supported, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Verify system configuration for database access\n     a. Check if database connection parameters are properly configured\n     b. Verify that the system has necessary permissions to access the database\n     c. IF any configuration is missing or invalid, THEN log error and return appropriate message\n   - Determine appropriate Group Security DAO implementation\n     a. IF database type is MySQL 3.23, THEN select MySQL323GroupSecurityDAO implementation\n     b. ELSE use standard implementation based on database type\n\n4. Core Operation Execution:\n   - Initialize the appropriate Group Security DAO implementation\n     a. Create an instance of the DAO if it doesn't exist\n     b. Ensure the DAO is properly configured for database access\n   - Prepare the DAO for use\n     a. Set any required configuration parameters\n     b. Initialize any required resources\n   - Return the initialized DAO instance\n     a. Ensure the instance is ready for use\n     b. Verify that all required methods are available\n\n5. Response Generation:\n   - Return the Group Security DAO instance\n     a. Include reference to the appropriate implementation\n     b. Ensure the instance is properly initialized\n   - IF any errors occurred during the process:\n     a. Generate appropriate error message\n     b. Include details about the nature of the error\n     c. Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Database type must be supported by the system",
+    "Database connection parameters must be properly configured",
+    "System must have necessary permissions to access the database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupSecurityDAO": {
+      "type": "object",
+      "properties": {
+        "implementation": {
+          "type": "string",
+          "description": "The specific implementation of the GroupSecurityDAO"
+        },
+        "databaseType": {
+          "type": "string",
+          "description": "The type of database being used"
+        }
+      }
+    }
+  }
+}

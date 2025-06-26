@@ -1,0 +1,50 @@
+{
+  "featureName": "SaveNewBanner",
+  "description": "Creates and saves a new banner with specified attributes.",
+  "inputValues": [
+    "comment-string-Banner",
+    "active-boolean-Banner",
+    "type-number-Banner",
+    "name-string-Banner",
+    "description-string-Banner",
+    "width-number-Banner",
+    "height-number-Banner",
+    "url-string-Banner",
+    "placement-number-Banner",
+    "weight-number-Banner",
+    "views-number-Banner",
+    "clicks-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following banner information from the user:\n     1.1. name (mandatory): Banner name identifier\n     1.2. comment (optional): Additional notes about the banner\n     1.3. active (mandatory): Boolean flag indicating if banner is active\n     1.4. type (mandatory): Numeric value representing banner type\n     1.5. description (mandatory): Detailed description of the banner\n     1.6. width (mandatory): Numeric width of the banner in pixels\n     1.7. height (mandatory): Numeric height of the banner in pixels\n     1.8. url (mandatory): Web address the banner links to\n     1.9. placement (mandatory): Numeric value indicating display position\n     1.10. weight (mandatory): Numeric value for banner priority\n     1.11. views (mandatory): Initial view count, typically zero for new banners\n     1.12. clicks (mandatory): Initial click count, typically zero for new banners\n\n2. Data Validation:\n   2.1. Validate name field:\n      - IF name is empty or null THEN\n        - Generate error message: \"Banner name is required\"\n      - IF name exceeds maximum allowed length THEN\n        - Generate error message: \"Banner name cannot exceed [X] characters\"\n   2.2. Validate type field:\n      - IF type is not a valid banner type value THEN\n        - Generate error message: \"Invalid banner type selected\"\n   2.3. Validate dimensions:\n      - IF width is not a positive number THEN\n        - Generate error message: \"Width must be a positive number\"\n      - IF height is not a positive number THEN\n        - Generate error message: \"Height must be a positive number\"\n   2.4. Validate URL:\n      - IF url is empty or null THEN\n        - Generate error message: \"Banner URL is required\"\n      - IF url format is invalid THEN\n        - Generate error message: \"Please enter a valid URL\"\n   2.5. Validate placement:\n      - IF placement value is not within valid range THEN\n        - Generate error message: \"Invalid placement position selected\"\n   2.6. Validate weight:\n      - IF weight is negative THEN\n        - Generate error message: \"Weight cannot be negative\"\n   2.7. Validate counters:\n      - IF views is negative THEN\n        - Generate error message: \"View count cannot be negative\"\n      - IF clicks is negative THEN\n        - Generate error message: \"Click count cannot be negative\"\n\n3. Business Rule Processing:\n   3.1. Check system banner limits:\n      - IF maximum number of active banners would be exceeded THEN\n        - Generate warning: \"Adding this banner may affect system performance\"\n   3.2. Check banner name uniqueness:\n      - IF banner with same name already exists THEN\n        - Generate warning: \"A banner with this name already exists\"\n   3.3. Verify banner dimensions compatibility:\n      - IF banner dimensions exceed recommended sizes for selected placement THEN\n        - Generate warning: \"Banner dimensions may not be optimal for selected placement\"\n   3.4. Check URL accessibility:\n      - IF banner URL appears to be inaccessible THEN\n        - Generate warning: \"The specified URL may not be accessible\"\n\n4. Core Operation Execution:\n   4.1. Create new banner object:\n      - Initialize a new banner entity\n      - Populate all banner attributes from validated input\n   4.2. Save banner to storage:\n      - Add banner to persistent storage\n      - Generate unique identifier for the banner\n   4.3. Update banner index:\n      - Add banner to active banners list if active flag is true\n   4.4. Initialize banner statistics:\n      - Set creation timestamp\n      - Initialize tracking data for banner performance\n   4.5. Handle any storage failures:\n      - IF storage operation fails THEN\n        - Revert any partial changes\n        - Log detailed error information\n        - Prepare user-friendly error message\n\n5. Response Generation:\n   5.1. For successful creation:\n      - Generate success message: \"Banner '[name]' has been successfully created\"\n      - Include banner ID in response\n      - Provide link to view all banners\n   5.2. For validation failures:\n      - Return all validation error messages\n      - Preserve user input for correction\n   5.3. For system failures:\n      - Generate appropriate error message\n      - Provide guidance on next steps\n      - Include support reference if applicable",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner name must not be empty",
+    "Banner type must be a valid value",
+    "Banner width and height must be positive numbers",
+    "Banner URL must not be empty",
+    "Banner URL must be in valid format",
+    "Banner placement must be within valid range",
+    "Banner weight must not be negative",
+    "Banner view and click counts must not be negative"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "comment": "string",
+      "active": "boolean",
+      "type": "number",
+      "name": "string",
+      "description": "string",
+      "width": "number",
+      "height": "number",
+      "url": "string",
+      "placement": "number",
+      "weight": "number",
+      "views": "number",
+      "clicks": "number"
+    }
+  }
+}

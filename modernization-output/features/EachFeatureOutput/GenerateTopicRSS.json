@@ -1,0 +1,72 @@
+{
+  "featureName": "GenerateTopicRSS",
+  "description": "Creates RSS feeds for forum topics with post content, author information, and publication dates.",
+  "inputValues": [
+    "title-string-Topic",
+    "description-string-Topic",
+    "forumId-number-Forum",
+    "posts-object-PostList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. title (mandatory): String representing the RSS feed title\n     b. description (mandatory): String describing the RSS feed content\n     c. forumId (mandatory): Numeric identifier for the forum\n     d. posts (mandatory): List of post objects to include in the feed\n\n2. Data Validation:\n   - Validate title:\n     a. Check if title is not empty\n     b. Verify title length is within acceptable limits\n     c. IF validation fails, THEN return error message\n   - Validate description:\n     a. Check if description is not empty\n     b. Verify description length is within acceptable limits\n     c. IF validation fails, THEN return error message\n   - Validate forumId:\n     a. Check if forumId is a positive integer\n     b. Verify forumId exists in the system\n     c. IF validation fails, THEN return error message\n   - Validate posts:\n     a. Check if posts list is not empty\n     b. Verify each post contains required fields (id, topicId, subject, text, postUsername, time)\n     c. IF validation fails, THEN return error message\n\n3. Business Rule Processing:\n   - Check system configuration:\n     a. Retrieve system encoding settings\n     b. Retrieve URL extension settings\n     c. IF any configuration is missing, THEN use default values\n   - Check user permissions:\n     a. Verify current user has access to the specified forum\n     b. Verify current user has permission to view the posts\n     c. IF permission check fails, THEN return access denied error\n\n4. Core Operation Execution:\n   - Initialize RSS feed:\n     a. Create new RSS feed with provided title and description\n     b. Set encoding based on system configuration\n     c. Set feed link to forum URL using forumId\n   - Process each post in the posts list:\n     a. Disable BBCode rendering for post content\n     b. Disable smilies rendering for post content\n     c. Create RSS item for each post with:\n        i. Author set to post username\n        ii. Publication date formatted from post timestamp\n        iii. Link pointing to the specific post\n        iv. Title set to post subject\n        v. Content type set to HTML\n        vi. Description set to formatted post text\n     d. Add item to RSS feed\n   - Finalize RSS feed:\n     a. Set content type headers\n     b. Format feed according to RSS specification\n\n5. Response Generation:\n   - Success response:\n     a. Return complete RSS feed in XML format\n     b. Include proper XML headers and content type\n     c. Include all generated RSS items\n   - Error response:\n     a. Return appropriate error message\n     b. Include error code and description\n     c. Log error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Title must not be empty",
+    "Description must not be empty",
+    "Forum ID must be a positive integer",
+    "Forum ID must reference an existing forum",
+    "Posts list must not be empty",
+    "Each post must contain required fields (id, topicId, subject, text, postUsername, time)",
+    "User must have permission to access the forum",
+    "User must have permission to view the posts"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PostList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the post"
+          },
+          "topicId": {
+            "type": "number",
+            "description": "Identifier of the topic this post belongs to"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line of the post"
+          },
+          "text": {
+            "type": "string",
+            "description": "Content of the post"
+          },
+          "postUsername": {
+            "type": "string",
+            "description": "Username of the post author"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the post was created"
+          }
+        },
+        "required": [
+          "id",
+          "topicId",
+          "subject",
+          "text",
+          "postUsername",
+          "time"
+        ]
+      }
+    }
+  }
+}

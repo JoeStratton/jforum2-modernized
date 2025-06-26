@@ -1,0 +1,65 @@
+{
+  "featureName": "ViewNewMessages",
+  "description": "Shows messages posted since the user's last visit.",
+  "inputValues": [
+    "lastVisitDate-date-UserSession",
+    "currentDate-date-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the user's last visit timestamp from the session\n   - Use the current system date as the end date for the search\n   - Both inputs are system-generated and do not require user input\n\n2. Data Validation:\n   - Validate user session exists\n     - IF user session is not found THEN\n       - Redirect to login page\n       - Display appropriate message\n     - END IF\n   - Validate last visit date is available\n     - IF last visit date is not available THEN\n       - Use a default date (system registration date or earliest possible date)\n     - END IF\n   - Validate that last visit date is before current date\n     - IF last visit date is after current date THEN\n       - Use system registration date instead\n     - END IF\n\n3. Business Rule Processing:\n   - Check user permissions for viewing messages\n     - IF user does not have permission to view messages THEN\n       - Display access denied message\n       - Terminate the operation\n     - END IF\n   - Determine which forums the user has access to\n     - FOR each forum in the system\n       - Check if user has permission to view the forum\n       - Add accessible forums to a list\n     - END FOR\n   - IF no accessible forums found THEN\n     - Display appropriate message that no forums are available\n     - Terminate the operation\n   - END IF\n\n4. Core Operation Execution:\n   - Search for all messages posted between last visit date and current date\n     - Filter messages to only include those from forums the user can access\n     - Sort messages by date (newest first)\n     - Group messages by forum and topic\n   - Process search results\n     - Format dates according to user preferences\n     - Prepare message previews\n     - Count total number of new messages found\n   - IF no new messages found THEN\n     - Prepare \"no new messages\" notification\n   - END IF\n\n5. Response Generation:\n   - Prepare the view with the following information:\n     - List of new messages grouped by forum and topic\n     - For each message include:\n       - Author information\n       - Post date and time\n       - Message preview/excerpt\n       - Link to the full message\n     - Total count of new messages\n     - Last visit date used for the search\n     - Current date used for the search\n   - Display the new messages page to the user\n   - Provide navigation options to:\n     - View full messages\n     - Mark all as read\n     - Return to forum list",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to view new messages",
+    "Last visit date must be a valid date",
+    "Last visit date must be before current date",
+    "User must have permission to view the forums containing the messages",
+    "Only messages from accessible forums should be displayed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Timestamp of user's last visit"
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "postDate": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}

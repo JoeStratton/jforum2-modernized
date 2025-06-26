@@ -1,0 +1,80 @@
+{
+  "featureName": "CreateNewPost",
+  "description": "Enables users to create new posts or topics with attachment support.",
+  "inputValues": [
+    "title-string-Post",
+    "content-string-Post",
+    "forumId-number-Forum",
+    "topicId-number-Topic",
+    "attachments-object-Attachment",
+    "notifyOnReplies-boolean-Post",
+    "topicType-number-Topic",
+    "pollOptions-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. If creating a new topic:\n        - Forum ID (mandatory)\n        - Topic title (mandatory)\n        - Message content (mandatory)\n        - Topic type (optional, default: normal)\n        - Notification preference (optional, default: false)\n        - Attachments (optional)\n        - Poll options (optional)\n     b. If replying to existing topic:\n        - Topic ID (mandatory)\n        - Message content (mandatory)\n        - Notification preference (optional, default: false)\n        - Attachments (optional)\n\n2. Data Validation\n   - Validate user permissions:\n     a. IF user is not logged in AND anonymous posting is not allowed for the forum THEN\n        - Display error message\n        - Terminate process\n     b. IF forum is read-only THEN\n        - Display error message\n        - Terminate process\n     c. IF creating a new topic AND user only has reply permissions THEN\n        - Display \"reply only\" error message\n        - Terminate process\n     d. IF replying to a topic AND topic is locked AND user is not a moderator THEN\n        - Display \"topic locked\" error message\n        - Terminate process\n   - Validate input fields:\n     a. IF creating a new topic THEN\n        - Verify topic title is not empty\n        - Verify topic title length is within allowed limits\n     b. Verify message content is not empty\n     c. Verify message content length is within allowed limits\n     d. IF attachments are provided THEN\n        - Verify attachments are enabled for the forum\n        - Verify user has permission to add attachments\n        - Verify number of attachments does not exceed maximum allowed\n        - Verify total attachment size does not exceed user's quota\n        - Verify each attachment has valid file extension\n     e. IF poll is provided THEN\n        - Verify user has permission to create polls\n        - Verify poll has at least 2 options\n        - Verify poll options are not empty\n\n3. Business Rule Processing\n   - Check forum accessibility:\n     a. Retrieve forum information using forum ID\n     b. IF forum does not exist THEN\n        - Display error message\n        - Terminate process\n     c. Verify user has access to the specified forum\n   - Check topic accessibility (for replies):\n     a. IF replying to a topic THEN\n        - Retrieve topic information using topic ID\n        - IF topic does not exist THEN\n           - Display \"topic not found\" error message\n           - Terminate process\n        - Verify topic belongs to the specified forum\n   - Process HTML permissions:\n     a. Check if HTML is allowed in the forum for the current user\n     b. IF HTML is not allowed THEN\n        - Strip HTML tags from message content\n   - Process captcha verification:\n     a. IF system requires captcha for posts THEN\n        - Verify captcha input matches expected value\n        - IF captcha verification fails THEN\n           - Display error message\n           - Request new captcha input\n           - Terminate process\n\n4. Core Operation Execution\n   - Prepare post data:\n     a. Create new post object with collected data\n     b. Set user ID from current session\n     c. Set post creation date to current time\n     d. Process message text (format BBCode, smilies, etc.)\n   - Save post to database:\n     a. IF creating new topic THEN\n        - Create new topic record\n        - Set first post ID to the new post\n        - Set topic type (normal, sticky, announcement)\n        - IF poll options provided THEN\n           - Create new poll record\n           - Associate poll with topic\n     b. Save post content to database\n     c. Update forum statistics (post count, last post info)\n     d. Update user statistics (post count)\n   - Process attachments:\n     a. IF attachments are provided THEN\n        - For each attachment:\n           - Save attachment metadata\n           - Associate attachment with post\n           - Update user's quota usage\n   - Set notification preferences:\n     a. IF user requested notifications THEN\n        - Add user to topic notification list\n\n5. Response Generation\n   - Generate success response:\n     a. IF operation successful THEN\n        - Prepare confirmation message\n        - Include link to newly created post/topic\n        - Redirect user to the appropriate page\n     b. IF any errors occurred THEN\n        - Display specific error messages\n        - Preserve user input for correction\n        - Provide guidance on resolving issues",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must have permission to post in the selected forum",
+    "Forum must exist and be accessible to the user",
+    "When replying, topic must exist and be accessible to the user",
+    "When replying, topic must not be locked unless user is a moderator",
+    "When creating a topic, user must have topic creation permission",
+    "Message content cannot be empty",
+    "Topic title cannot be empty when creating a new topic",
+    "Attachments must not exceed the maximum allowed number per post",
+    "Attachments total size must not exceed user's quota limit",
+    "User must pass captcha verification if enabled",
+    "Poll must have at least 2 options if provided",
+    "User must have permission to create polls if poll is provided",
+    "User must have permission to create sticky/announcement topics if specified"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "fileContent": {
+          "type": "string",
+          "format": "binary"
+        },
+        "fileSize": {
+          "type": "number"
+        },
+        "contentType": {
+          "type": "string"
+        }
+      }
+    },
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "length": {
+          "type": "number"
+        },
+        "allowMultipleVotes": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

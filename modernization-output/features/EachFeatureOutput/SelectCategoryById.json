@@ -1,0 +1,25 @@
+{
+  "featureName": "SelectCategoryById",
+  "description": "Retrieves a forum category by its unique identifier.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the categoryId (number) - mandatory\n   - No default values or special formats required\n\n2. Data Validation:\n   - Validate categoryId:\n     a. Check if categoryId is provided\n     b. Verify categoryId is a valid number\n     c. Ensure categoryId is positive\n   - If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check system state to ensure database connection is available\n   - Verify user has permission to access category information\n   - If any checks fail, prepare appropriate error message\n\n4. Core Operation Execution:\n   - Prepare to retrieve category data:\n     a. Create a new Category object to store results\n     b. Set up query parameters using the provided categoryId\n     c. Execute the category retrieval operation\n     d. If category exists in the database:\n        i. Extract category details (id, name, display order, moderation status)\n        ii. Populate the Category object with retrieved data\n     e. If category doesn't exist:\n        i. Return an empty Category object\n     f. If any errors occur during retrieval:\n        i. Log the error details\n        ii. Prepare appropriate error message\n        iii. Handle the exception according to system guidelines\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Return the populated Category object with all details\n     b. Include category id, name, display order, and moderation status\n   - For failed retrieval:\n     a. Return appropriate error information\n     b. Include error code and descriptive message\n     c. Provide guidance for resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category ID must be provided",
+    "Category ID must be a valid positive number",
+    "User must have permission to view categories"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "moderated": "boolean"
+    }
+  }
+}

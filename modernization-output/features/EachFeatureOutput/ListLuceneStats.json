@@ -1,0 +1,19 @@
+{
+  "featureName": "ListLuceneStats",
+  "description": "Displays statistics about the Lucene search index including status, document count, and index location.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for initial display\n   - System will gather the following information:\n     * Index directory location\n     * Index existence status\n     * Current indexing status\n     * Index lock status\n     * Last modification date\n     * Index version\n     * Number of documents in index\n     * Total messages in system\n\n2. Data Validation:\n   - Verify search engine configuration\n     * IF search engine is not Lucene THEN\n       - Display notification that Lucene is not enabled\n       - Exit process\n     * END IF\n   - Verify index directory accessibility\n     * IF index directory cannot be accessed THEN\n       - Set information availability flag to false\n     * ELSE\n       - Set information availability flag to true\n     * END IF\n\n3. Business Rule Processing:\n   - Check if index exists\n     * IF index directory exists THEN\n       - Set index exists flag to true\n     * ELSE\n       - Set index exists flag to false\n     * END IF\n   - Check if indexing is currently in progress\n     * IF system is currently indexing THEN\n       - Set currently indexing flag to true\n     * ELSE\n       - Set currently indexing flag to false\n     * END IF\n   - IF information is available THEN\n     * Check if index is locked\n     * Retrieve last modification date\n     * Retrieve index location path\n     * Count total messages in system\n     * Retrieve index version\n     * Count number of documents in index\n   * END IF\n\n4. Core Operation Execution:\n   - Gather all statistics data into a structured format\n   - Prepare display context with all collected information\n   - Handle any exceptions during data collection\n     * IF exception occurs during data collection THEN\n       - Log error details\n       - Set appropriate error flags\n     * END IF\n   - Ensure proper resource cleanup\n     * Close any open index readers\n\n5. Response Generation:\n   - Display statistics dashboard with the following sections:\n     * Index Status Information:\n       - Whether index exists\n       - Whether system is currently indexing\n       - Whether index is locked (if information available)\n     * Index Details (if information available):\n       - Last modification date\n       - Index location path\n       - Index version\n       - Number of documents in index\n       - Total messages in system\n     * Index Management Options:\n       - Create index directory (if doesn't exist)\n       - Reconstruct index options\n       - Cancel indexing option (if currently indexing)",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Search engine must be configured as Lucene",
+    "Index directory must be properly configured in system settings",
+    "User must have administrative privileges to view statistics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

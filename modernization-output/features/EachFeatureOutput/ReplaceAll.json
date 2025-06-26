@@ -1,0 +1,36 @@
+{
+  "featureName": "ReplaceAll",
+  "description": "Performs string replacement operations for content transformation.",
+  "inputValues": [
+    "content-string-TextContent",
+    "searchPattern-string-Pattern",
+    "replacementValue-string-Replacement"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. content (string, mandatory): The original text content to be processed\n     b. searchPattern (string, mandatory): The pattern to search for in the content\n     c. replacementValue (string, mandatory): The value to replace the pattern with\n\n2. Data Validation:\n   - Validate content input:\n     a. IF content is null or empty THEN\n        i. Generate error message: \"Content cannot be empty\"\n        ii. Abort operation and return error\n   - Validate searchPattern input:\n     a. IF searchPattern is null or empty THEN\n        i. Generate error message: \"Search pattern cannot be empty\"\n        ii. Abort operation and return error\n   - Validate replacementValue input:\n     a. IF replacementValue is null THEN\n        i. Set replacementValue to an empty string\n        ii. Log warning about null replacement being converted to empty string\n\n3. Business Rule Processing:\n   - Check for special handling requirements:\n     a. IF content contains binary or non-text data THEN\n        i. Generate warning about potential data corruption\n        ii. Proceed with caution or abort based on configuration settings\n     b. IF searchPattern appears extremely frequently in content THEN\n        i. Evaluate performance implications\n        ii. Consider chunking the operation for large content\n     c. IF content size exceeds system-defined threshold THEN\n        i. Evaluate memory requirements\n        ii. Consider streaming approach for replacement\n\n4. Core Operation Execution:\n   - Initialize a buffer to hold the modified content\n     a. Create a new string buffer with the original content\n   - Perform the replacement operation:\n     a. Find the first occurrence of searchPattern in the buffer\n     b. WHILE an occurrence is found DO\n        i. Replace the current occurrence with replacementValue\n        ii. Find the next occurrence of searchPattern in the buffer\n   - Handle any exceptions during replacement:\n     a. IF an exception occurs during replacement THEN\n        i. Log the error details\n        ii. Abort operation and return error with details\n\n5. Response Generation:\n   - Prepare the response with the transformed content:\n     a. Convert the buffer to a string\n     b. Include the following in the response:\n        i. The transformed content\n        ii. Number of replacements made\n        iii. Original content length\n        iv. New content length\n   - Return success response with the transformed content",
+  "databaseEntities": [],
+  "validationRules": [
+    "Content must not be null or empty",
+    "Search pattern must not be null or empty",
+    "Replacement value must be initialized (default to empty string if null)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "TextContent": {
+      "type": "object",
+      "properties": {
+        "originalText": {
+          "type": "string",
+          "description": "The original text content before transformation"
+        },
+        "transformedText": {
+          "type": "string",
+          "description": "The text content after transformation"
+        },
+        "replacementCount": {
+          "type": "integer",
+          "description": "Number of replacements performed"
+        }
+      }
+    }
+  }
+}

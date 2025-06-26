@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "FindUrlPattern",
+    "description": "Retrieves a URL pattern by its name from the patterns collection"
+  },
+  {
+    "featureName": "AddUrlPattern",
+    "description": "Adds a new URL pattern with name and value to the patterns collection"
+  }
+]

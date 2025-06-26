@@ -1,0 +1,47 @@
+{
+  "featureName": "SaveModerationDecisions",
+  "description": "Processes moderation decisions and refreshes the forum view.",
+  "inputValues": [
+    "post_id-string-Post",
+    "status-string-ModerationStatus",
+    "forum_id-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. post_id (array of identifiers, mandatory): The identifiers of posts pending moderation\n     1.2. status_{post_id} (string, mandatory): The moderation decision for each post ('aprove', 'reject', or 'defer')\n     1.3. forum_id (number, mandatory): The identifier of the forum being moderated\n\n2. Data Validation\n   2.1. Validate post identifiers\n      - Verify that post_id values are provided\n      - Verify that each post_id is valid and exists in the system\n      - Generate error if no posts are selected for moderation\n   2.2. Validate moderation status\n      - Verify that a status is provided for each post\n      - Verify that each status is one of the allowed values ('aprove', 'reject', or 'defer')\n      - Generate error if any status is invalid\n   2.3. Validate forum identifier\n      - Verify that forum_id is provided\n      - Verify that forum_id corresponds to an existing forum\n      - Generate error if forum does not exist\n\n3. Business Rule Processing\n   3.1. Check user permissions\n      - Verify that the current user has moderation privileges for the specified forum\n      - Generate error if user lacks moderation permissions\n   3.2. Verify post moderation status\n      - For each post, verify that it is actually pending moderation\n      - Skip processing for posts that are not awaiting moderation\n\n4. Core Operation Execution\n   4.1. Process each post based on moderation decision\n      - FOR EACH post in the selected posts:\n         4.1.1. IF status is 'defer'\n            - Skip processing this post and continue to the next one\n         4.1.2. IF status is 'aprove'\n            - Retrieve complete post information\n            - Verify post is awaiting moderation\n            - IF post is not awaiting moderation\n               - Skip to next post\n            - Retrieve post author information\n            - Retrieve associated topic information\n            - Update post status to approved\n            - Determine if this is the first post in the topic\n            - Update topic statistics (reply count, last post information)\n            - Update forum statistics\n            - Notify subscribed users about the new post\n            - Increment the post count for the author\n            - Update any relevant caches\n         4.1.3. IF status is 'reject'\n            - Retrieve complete post information\n            - Verify post is awaiting moderation\n            - IF post is not awaiting moderation\n               - Skip to next post\n            - Delete the post from the system\n            - Delete any attachments associated with the post\n            - Check if this was the only post in the topic\n            - IF no posts remain in the topic\n               - Delete the topic\n            - Update forum statistics\n\n5. Response Generation\n   5.1. Prepare view data\n      - Retrieve updated forum information\n      - Retrieve updated list of topics in the forum\n      - Prepare context data for display\n   5.2. Generate success response\n      - Display updated moderation view with current forum state\n      - Show confirmation message about processed moderation actions\n   5.3. Handle error conditions\n      - IF any errors occurred during processing\n         - Display appropriate error messages\n         - Maintain form state for correction",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "User must have moderation privileges for the forum",
+    "Posts must exist and be in pending moderation status",
+    "Each post must have a valid moderation decision (approve, reject, or defer)",
+    "Forum must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "formatedTime": "string",
+      "moderationNeeded": "boolean"
+    },
+    "ModerationStatus": {
+      "type": "string",
+      "enum": [
+        "aprove",
+        "reject",
+        "defer"
+      ]
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string"
+    }
+  }
+}

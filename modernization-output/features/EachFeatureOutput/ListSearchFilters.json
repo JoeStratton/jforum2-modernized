@@ -1,0 +1,35 @@
+{
+  "featureName": "ListSearchFilters",
+  "description": "Shows the search filters page as the default list action for forum content.",
+  "inputValues": [
+    "categories-object-Category",
+    "pageTitle-string-PageTitle"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect system configuration settings\n     - Topics per page configuration\n     - Posts per page configuration\n   - No user inputs required at this stage as this is the initial filter display\n\n2. Data Validation:\n   - Verify user has permission to access search functionality\n     - IF user does not have search permission THEN\n       - Display appropriate error message\n       - Redirect to permission denied page\n     - END IF\n   - Verify system search functionality is enabled\n     - IF search functionality is disabled THEN\n       - Display appropriate system message\n       - Redirect to home page\n     - END IF\n\n3. Business Rule Processing:\n   - Retrieve all forum categories\n     - Fetch complete list of categories from the system\n     - Verify categories are properly sorted by display order\n     - IF no categories exist THEN\n       - Prepare empty category list for display\n     - END IF\n   - Prepare page title information\n     - Set page title to search-related text from language resources\n   - Determine user's search permissions\n     - Check if user can search in all forums or only specific ones\n     - Prepare list of searchable forums based on user permissions\n\n4. Core Operation Execution:\n   - Prepare search filter form\n     - Initialize search form with default values\n     - Set up category dropdown options\n     - Set up forum dropdown options based on categories\n     - Set up date range selector defaults\n     - Set up sorting options (relevance, date, etc.)\n     - Set up matching options (all keywords, any keywords)\n   - Prepare template data\n     - Add categories list to template context\n     - Add page title to template context\n     - Add any user-specific search preferences\n\n5. Response Generation:\n   - Display search filters template\n     - Show search form with all available filters\n     - Include appropriate help text for search options\n     - Ensure form is properly structured for submission\n     - Display category and forum selection options\n   - Provide clear instructions on search usage\n     - Include examples of effective search terms\n     - Show tips for advanced search techniques\n   - Prepare for subsequent search action\n     - Set up form submission target\n     - Ensure all necessary hidden fields are included",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have permission to access search functionality",
+    "System search functionality must be enabled",
+    "At least one searchable forum must exist",
+    "Search form must contain all required filter options"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "PageTitle": {
+      "title": "string",
+      "description": "string"
+    }
+  }
+}

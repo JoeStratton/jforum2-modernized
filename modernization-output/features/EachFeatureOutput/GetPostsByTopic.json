@@ -1,0 +1,45 @@
+{
+  "featureName": "GetPostsByTopic",
+  "description": "Retrieves all posts for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topicId (mandatory) to identify the topic for which posts should be retrieved\n   - System will use this identifier to locate all related posts\n\n2. Data Validation\n   - Validate topicId\n     - Ensure topicId is provided\n     - Verify topicId is a positive integer\n     - Confirm topicId exists in the system\n     - IF topicId is invalid or not found THEN\n       - Generate appropriate error message\n       - Terminate process and return error\n\n3. Business Rule Processing\n   - Check user permissions\n     - Verify current user has access rights to view the requested topic\n     - IF user lacks permission THEN\n       - Generate access denied error\n       - Terminate process and return error\n   - Check topic status\n     - Verify topic is not deleted or in a restricted state\n     - IF topic is unavailable THEN\n       - Generate appropriate status message\n       - Terminate process and return error\n\n4. Core Operation Execution\n   - Retrieve posts for the specified topic\n     - Query all posts associated with the provided topicId\n     - Sort posts by chronological order (oldest to newest)\n     - For each post, collect:\n       - Post identifier\n       - Post content/text\n       - Author information\n       - Creation timestamp\n       - Edit information (if applicable)\n       - Formatting settings (HTML enabled, BBCode enabled, etc.)\n       - Attachment indicators\n   - Process post metadata\n     - Format timestamps according to system settings\n     - Prepare user display information\n     - Process any special content indicators\n\n5. Response Generation\n   - Prepare success response\n     - Include list of all retrieved posts with complete information\n     - Include topic information (title, creation date, etc.)\n     - Include pagination information if applicable\n     - Return formatted post collection to the caller\n   - Handle empty results\n     - IF no posts found for valid topic THEN\n       - Return empty collection with appropriate indicator\n       - Include topic information for context",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to view the topic",
+    "Topic must not be deleted or restricted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "editCount": "number",
+      "editTime": "date",
+      "subject": "string",
+      "text": "string",
+      "postUsername": "string",
+      "hasAttachments": "boolean",
+      "moderate": "boolean",
+      "formatedTime": "string",
+      "karma": "number"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "featureName": "GenerateUnwatchLink",
+  "description": "Creates personalized links allowing users to unsubscribe from topic notifications.",
+  "inputValues": [
+    "userId-number-User",
+    "topicId-number-Topic",
+    "forumLink-string-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory): The unique identifier for the topic\n   - Collect userId (mandatory): The unique identifier of the user to generate the link for\n   - Collect forumLink (mandatory): The base URL for the forum system\n   - System will generate a timestamp (system-generated): Used for link validation\n\n2. Data Validation:\n   - Validate topicId:\n     a. Must be a positive integer\n     b. Must reference an existing topic in the system\n     c. Return error if topic does not exist: \"Topic not found\"\n   - Validate userId:\n     a. Must be a positive integer\n     b. Must reference an existing user in the system\n     c. Return error if user does not exist: \"User not found\"\n   - Validate forumLink:\n     a. Must be a valid URL string\n     b. Must not be empty\n     c. Return error if invalid: \"Invalid forum URL\"\n   - Validate user subscription status:\n     a. Check if user is currently subscribed to the topic\n     b. Return error if not subscribed: \"User is not subscribed to this topic\"\n\n3. Business Rule Processing:\n   - Verify user permissions:\n     a. Check if user has permission to unsubscribe from notifications\n     b. Return error if no permission: \"User does not have permission to unsubscribe\"\n   - Verify topic status:\n     a. Check if topic is active and not locked or deleted\n     b. Return error if topic is inactive: \"Cannot unsubscribe from inactive topic\"\n   - Verify system notification settings:\n     a. Check if notification system is enabled\n     b. Return error if disabled: \"Notification system is currently disabled\"\n\n4. Core Operation Execution:\n   - Generate unique token:\n     a. Create a secure token combining userId, topicId, and timestamp\n     b. Apply encryption or hashing to secure the token\n     c. Store token in the system with expiration date\n   - Construct unwatch URL:\n     a. Combine forumLink with appropriate path components\n     b. Append the topic identifier\n     c. Add the generated security token\n     d. Format according to system URL standards\n   - Record link generation:\n     a. Log the generation of unwatch link for auditing\n     b. Store link-user association for tracking\n     c. Update user notification preferences if needed\n\n5. Response Generation:\n   - Success response:\n     a. Return the complete unwatch URL\n     b. Include expiration information for the link\n     c. Provide usage instructions if applicable\n   - Error response:\n     a. Return specific error message based on validation failures\n     b. Include support contact information\n     c. Provide alternative unsubscription methods if available",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Topic ID must reference an existing topic",
+    "User ID must reference an existing user",
+    "User must be currently subscribed to the topic",
+    "Forum link must be a valid URL string",
+    "Topic must be active (not locked or deleted)",
+    "User must have permission to unsubscribe from notifications"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UnwatchLink": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The complete URL for unsubscribing"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user the link is generated for"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic to unsubscribe from"
+        },
+        "expirationDate": {
+          "type": "date",
+          "description": "Date when the unwatch link expires"
+        },
+        "token": {
+          "type": "string",
+          "description": "Security token to validate the unwatch request"
+        }
+      },
+      "required": [
+        "url",
+        "userId",
+        "topicId",
+        "expirationDate",
+        "token"
+      ]
+    }
+  }
+}

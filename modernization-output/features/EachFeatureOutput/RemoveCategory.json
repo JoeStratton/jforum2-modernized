@@ -1,0 +1,44 @@
+{
+  "featureName": "RemoveCategory",
+  "description": "Removes a category from the cache system.",
+  "inputValues": [
+    "category-object-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Category object to be removed\n     - Category must contain at minimum the category ID\n     - Other category properties may be present but are not required for removal\n\n2. Data Validation:\n   - Validate Category object\n     - Verify the Category object is not null\n     - Verify the Category ID is valid (greater than 0)\n     - IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if the category exists in the cache\n     - Verify the category with the provided ID exists in the cache system\n     - IF category does not exist, THEN generate a \"Category not found\" error\n   - Check for dependencies\n     - Determine if any forums are associated with this category\n     - Note any relationships that will be affected by removal\n\n4. Core Operation Execution:\n   - Remove category from primary storage\n     - Remove the category entry using the category ID as key\n   - Update category collection\n     - Retrieve the current set of categories\n     - Remove the target category from the set\n     - Save the updated set back to the cache\n   - Update relationship mappings\n     - Retrieve the current relationship map\n     - Remove all entries where the category ID matches the target category\n     - Save the updated relationship map back to the cache\n   - Handle any cleanup operations\n     - Ensure all references to the category are removed\n     - Update any dependent counters or statistics\n\n5. Response Generation:\n   - Generate success response\n     - Indicate the category was successfully removed\n     - Include the ID of the removed category\n   - Generate error response if any operation failed\n     - Include specific error details and reason for failure\n     - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category object must not be null",
+    "Category ID must be greater than zero",
+    "Category must exist in the cache before removal"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order of the category"
+        },
+        "forums": {
+          "type": "array",
+          "description": "List of forums associated with this category"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ParseDatabaseDumpFile",
+    "description": "Parses SQL dump files by reading and filtering statements, removing comments and empty lines"
+  }
+]

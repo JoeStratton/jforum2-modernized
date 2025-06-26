@@ -1,0 +1,43 @@
+{
+  "featureName": "SetupPermissions",
+  "description": "Configures user permissions and group relationships in the JForum system.",
+  "inputValues": [
+    "groupId-number-Group",
+    "adminUsers-object-AdminUsers"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect groupId (mandatory): The identifier of the admin group\n   - Collect adminUsers (mandatory): List of users to be assigned admin permissions\n   - System will use existing database connection\n\n2. Data Validation:\n   - Validate groupId:\n      * Verify groupId is a positive integer\n      * Check if groupId exists in the groups table\n      * If validation fails, generate appropriate error message\n   - Validate adminUsers:\n      * Verify adminUsers list is not empty\n      * Verify each user ID in the list is valid\n      * Check if all users exist in the users table\n      * If validation fails, generate appropriate error message\n   - Validate system state:\n      * Verify database connection is active\n      * If connection is not available, generate connection error\n\n3. Business Rule Processing:\n   - Check if admin group exists:\n      * Query the groups table to find the admin group\n      * If admin group doesn't exist, create it with appropriate permissions\n   - Check if admin role exists:\n      * Query the roles table to find the admin role\n      * If admin role doesn't exist, create it with appropriate permissions\n   - Verify user-group relationships:\n      * Check if users are already assigned to admin group\n      * Identify which users need new group assignments\n\n4. Core Operation Execution:\n   - Retrieve maximum group ID:\n      * Query the database to get the highest existing group ID\n      * Store this value for reference\n   - Assign admin users to admin group:\n      * For each admin user:\n         > Create user-group relationship record\n         > Link user ID with admin group ID\n         > Set appropriate permission flags\n   - Update permission settings:\n      * Set forum access permissions for admin group\n      * Set moderation permissions for admin group\n      * Set system administration permissions for admin group\n   - If any operation fails:\n      * Roll back all changes made in this transaction\n      * Log the specific failure point and reason\n\n5. Response Generation:\n   - On success:\n      * Generate confirmation message with number of users assigned\n      * Include summary of permissions configured\n      * Return success status code\n   - On failure:\n      * Generate detailed error message\n      * Include specific validation or processing failure\n      * Provide guidance for resolving the issue\n      * Return appropriate error status code",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Admin group must exist in the system",
+    "Admin users list must not be empty",
+    "All admin users must exist in the users table",
+    "Database connection must be active",
+    "Each user can only be assigned to the admin group once"
+  ],
+  "dbSeedingOperations": [
+    "Create admin group if it doesn't exist",
+    "Create admin role if it doesn't exist"
+  ],
+  "schema": {
+    "AdminUsers": {
+      "type": "object",
+      "properties": {
+        "userIds": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "User ID to be assigned admin permissions"
+          }
+        }
+      },
+      "required": [
+        "userIds"
+      ]
+    }
+  }
+}

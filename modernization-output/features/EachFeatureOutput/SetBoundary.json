@@ -1,0 +1,34 @@
+{
+  "featureName": "SetBoundary",
+  "description": "Changes boundary tokens for nested multipart stream processing.",
+  "inputValues": [
+    "boundary-object-Boundary"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the boundary token (byte array) to be set for the multipart stream\n   - The boundary token is required and must be provided as a byte array\n   - No default values are provided for the boundary token\n\n2. Data Validation:\n   - Validate that the boundary token is not null\n     * IF boundary token is null THEN generate error message indicating boundary cannot be null\n   - Validate the boundary token length\n     * Compare the length of the provided boundary token with the current boundary length minus 4\n     * IF lengths do not match THEN generate an IllegalBoundaryException with message \"The length of a boundary token can not be changed\"\n     * The validation ensures nested multipart streams maintain consistent boundary token lengths\n\n3. Business Rule Processing:\n   - Verify that the multipart stream is properly initialized\n     * Ensure the internal boundary array has been created\n     * Ensure the boundaryLength property has been set\n     * IF the stream is not initialized THEN generate an error indicating the stream must be initialized first\n   - Check if the stream is in a state where boundary can be changed\n     * Ensure the stream is not in the middle of processing an encapsulation\n     * IF the stream is in an invalid state THEN generate an error indicating boundary cannot be changed in current state\n\n4. Core Operation Execution:\n   - Prepare to update the boundary token in the multipart stream\n     * The boundary array stores the token with a prefix of CR, LF, DASH, DASH (4 bytes)\n     * Only update the portion after this prefix\n   - Copy the provided boundary token into the internal boundary array\n     * Use System.arraycopy to copy the provided boundary token into the internal boundary array starting at position 4\n     * The first 4 positions in the array (0-3) remain unchanged as they contain CR, LF, DASH, DASH\n   - Update is complete without modifying other stream properties\n     * The boundaryLength and keepRegion properties remain unchanged as the new boundary has the same length\n\n5. Response Generation:\n   - For successful boundary update:\n     * No specific response is generated as the operation is void\n     * The multipart stream now uses the new boundary for parsing nested streams\n   - For validation failures:\n     * Return an IllegalBoundaryException with a descriptive message\n     * Include details about why the boundary token was rejected",
+  "databaseEntities": [],
+  "validationRules": [
+    "Boundary token must not be null",
+    "New boundary token length must match the current boundary length minus 4",
+    "Multipart stream must be properly initialized before changing boundary",
+    "Stream must not be in the middle of processing an encapsulation when changing boundary"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Boundary": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "Byte array representing the boundary token"
+        },
+        "length": {
+          "type": "integer",
+          "description": "Length of the boundary token"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

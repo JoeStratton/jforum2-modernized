@@ -1,0 +1,54 @@
+{
+  "featureName": "ManageGroupHierarchy",
+  "description": "Manages hierarchical group structures with parent-child relationships and nested subgroups.",
+  "inputValues": [
+    "groupId-number-Group",
+    "groupName-string-Group",
+    "parentGroupId-number-Group",
+    "subgroups-object-GroupNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect group information:\n     1.1. Group ID (mandatory, system-generated unique identifier)\n     1.2. Group name (mandatory, user-provided string)\n     1.3. Parent group ID (optional, references existing group)\n     1.4. Subgroups (optional, collection of group nodes)\n\n2. Data Validation:\n   2.1. Validate Group ID:\n      - IF creating new group, THEN ensure ID is not provided (system will generate)\n      - IF updating existing group, THEN verify ID exists in the system\n      - IF ID is invalid, THEN return error message \"Invalid group ID\"\n   2.2. Validate Group Name:\n      - Verify name is not empty\n      - Verify name length is between 3 and 50 characters\n      - IF name validation fails, THEN return error message \"Group name must be between 3 and 50 characters\"\n   2.3. Validate Parent Group ID:\n      - IF parent group ID is provided, THEN verify it exists in the system\n      - Verify no circular references (group cannot be its own ancestor)\n      - IF parent validation fails, THEN return error message \"Invalid parent group\"\n   2.4. Validate Subgroups:\n      - IF subgroups are provided, THEN verify each subgroup has valid data\n      - Verify no duplicate subgroup IDs\n      - IF subgroup validation fails, THEN return error message \"Invalid subgroup data\"\n\n3. Business Rule Processing:\n   3.1. Check Hierarchy Constraints:\n      - Verify maximum nesting depth is not exceeded (limit to 5 levels)\n      - Verify user has permission to modify the group hierarchy\n      - IF hierarchy constraints violated, THEN return error message \"Hierarchy constraints violated\"\n   3.2. Check Group Relationships:\n      - Verify no conflicting group relationships\n      - Ensure group membership integrity is maintained\n      - IF relationship constraints violated, THEN return error message \"Invalid group relationship\"\n   3.3. Check System Constraints:\n      - Verify system groups cannot be modified if protected\n      - Ensure required system groups remain in the hierarchy\n      - IF system constraints violated, THEN return error message \"System group constraints violated\"\n\n4. Core Operation Execution:\n   4.1. Process Group Creation/Update:\n      - IF new group, THEN create group record with provided name\n      - IF existing group, THEN update group information\n      - Set parent-child relationship if parent ID is provided\n      - IF operation fails, THEN rollback all changes and return error\n   4.2. Process Subgroup Management:\n      - FOR each subgroup in the collection:\n        - IF subgroup exists, THEN update subgroup information\n        - IF subgroup is new, THEN create new subgroup\n        - Set parent-child relationship with current group\n      - Remove any existing subgroups not in the provided collection if applicable\n      - IF subgroup operations fail, THEN rollback changes and return error\n   4.3. Update Group Hierarchy:\n      - Recalculate and update the complete group hierarchy structure\n      - Update all affected group relationships\n      - IF hierarchy update fails, THEN rollback changes and return error\n\n5. Response Generation:\n   5.1. Prepare Success Response:\n      - Include updated group information\n      - Include complete hierarchy information with all subgroups\n      - Include operation status and timestamp\n   5.2. Handle Error Scenarios:\n      - Provide detailed error information if any operation failed\n      - Include guidance on resolving the error\n      - Log error details for system administrators",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group name must not be empty",
+    "Group name must be between 3 and 50 characters",
+    "Group hierarchy cannot exceed 5 levels of nesting",
+    "Group cannot be its own ancestor (no circular references)",
+    "System protected groups cannot be modified",
+    "Each group must have a unique ID",
+    "Parent group must exist in the system"
+  ],
+  "dbSeedingOperations": [
+    "Create default system groups if not present",
+    "Establish initial group hierarchy structure"
+  ],
+  "schema": {
+    "GroupNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "extraNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/GroupNode"
+          },
+          "description": "Collection of subgroups"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "featureName": "GenerateRecentTopicsRSS",
+  "description": "Creates an RSS feed for recent forum topics with title, description, and links.",
+  "inputValues": [
+    "title-string-RSSFeed",
+    "description-string-RSSFeed",
+    "posts-object-ForumPosts"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. title (string): The title for the RSS feed\n     b. description (string): The description for the RSS feed\n     c. posts (object): List of forum posts to include in the feed\n   - System-generated fields:\n     a. forumLink: Base URL for the forum\n     b. encoding: Character encoding for the feed\n     c. forumName: Name of the forum for title generation\n\n2. Data Validation:\n   a. Title Validation:\n      - Check if title is not empty\n      - Verify title length is within acceptable limits (1-100 characters)\n      - IF title is invalid THEN generate error message\n   b. Description Validation:\n      - Check if description is not empty\n      - Verify description length is within acceptable limits (1-500 characters)\n      - IF description is invalid THEN generate error message\n   c. Posts Collection Validation:\n      - Verify posts collection is not null\n      - Check if posts collection contains at least one item\n      - IF posts collection is invalid THEN generate error message\n   d. Authentication Validation:\n      - Check if user authentication is required for accessing the feed\n      - IF authentication is required and user is not authenticated THEN request authentication\n\n3. Business Rule Processing:\n   a. System Configuration Verification:\n      - Verify system encoding setting is available\n      - Check if forum base URL is properly configured\n      - Verify forum name is available for title generation\n      - Verify posts per page configuration is available\n      - IF any system configuration is missing THEN generate configuration error\n   b. Access Control Verification:\n      - Verify current user has permission to view the posts in the feed\n      - Check if topics are from accessible forums\n      - IF user lacks permission THEN exclude restricted posts from the feed\n   c. Content Filtering:\n      - Apply content filtering rules to remove inappropriate content\n      - Filter out posts from restricted forums if applicable\n      - Limit number of posts based on system configuration\n\n4. Core Operation Execution:\n   a. RSS Feed Initialization:\n      - Create new RSS feed object with provided title and description\n      - Set feed encoding using system configuration\n      - Set feed link using forum base URL + \"recentTopics/list\" + extension\n   b. Feed Items Generation:\n      - FOR EACH post in posts collection:\n         i. Create new feed item\n         ii. Set item title using post title\n         iii. Set item description using post content (possibly truncated)\n         iv. Set item link using forum URL + post URL\n         v. Set item publication date using post creation date\n         vi. Set item author using post author information\n         vii. Add item to feed\n   c. Feed Finalization:\n      - Apply any feed-wide settings (language, copyright, etc.)\n      - Prepare feed for output generation\n      - Increment view counters for topics if applicable\n\n5. Response Generation:\n   a. Success Response:\n      - Generate complete RSS XML document\n      - Set appropriate content type for RSS feed (text/xml)\n      - Include feed metadata (version, encoding)\n      - Return complete feed with all items\n   b. Error Response:\n      - IF any errors occurred during processing THEN:\n         i. Generate appropriate error message\n         ii. Log error details\n         iii. Return error response with explanation\n   c. Authentication Response:\n      - IF authentication is required THEN:\n         i. Request basic authentication\n         ii. Process authentication credentials if provided\n         iii. Redirect to appropriate page after authentication",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_forums",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "RSS feed title must not be empty",
+    "RSS feed description must not be empty",
+    "Posts collection must contain at least one item",
+    "System encoding configuration must be available",
+    "Forum base URL must be properly configured",
+    "User must have permission to view the posts included in the feed",
+    "Topics must be from accessible forums",
+    "User authentication may be required for accessing certain forums"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ForumPosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the post"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the forum post"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the forum post"
+          },
+          "authorId": {
+            "type": "integer",
+            "description": "ID of the post author"
+          },
+          "authorName": {
+            "type": "string",
+            "description": "Name of the post author"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the post was created"
+          },
+          "forumId": {
+            "type": "integer",
+            "description": "ID of the forum containing this post"
+          },
+          "topicId": {
+            "type": "integer",
+            "description": "ID of the topic containing this post"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "authorId",
+          "creationDate",
+          "topicId"
+        ]
+      }
+    }
+  }
+}

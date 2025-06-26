@@ -1,0 +1,50 @@
+{
+  "featureName": "UpdateMessageType",
+  "description": "Updates the status or type of a private message in the system.",
+  "inputValues": [
+    "messageId-number-PrivateMessage",
+    "newType-number-PrivateMessageType",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the private message ID (mandatory).\n   1.2. Collect the new message type/status code (mandatory).\n      1.2.1. Valid message types include NEW, READ, UNREAD, SENT, SAVED, etc.\n   1.3. Collect the user ID of the requester (mandatory, system-generated).\n\n2. Data Validation:\n   2.1. Validate Private Message ID:\n      2.1.1. Check if the message ID is provided.\n      2.1.2. Verify the message ID is a positive integer.\n      2.1.3. IF validation fails, THEN return appropriate error message.\n   2.2. Validate New Message Type:\n      2.2.1. Check if the new type is provided.\n      2.2.2. Verify the new type is within the allowed range of message types.\n      2.2.3. Ensure the new type is different from the current type.\n      2.2.4. IF validation fails, THEN return appropriate error message.\n   2.3. Validate User ID:\n      2.3.1. Check if the user ID is provided.\n      2.3.2. Verify the user ID is a positive integer.\n      2.3.3. Confirm the user exists in the system.\n      2.3.4. IF validation fails, THEN return appropriate error message.\n\n3. Business Rule Processing:\n   3.1. Verify Message Ownership:\n      3.1.1. Check if the message exists in the system.\n      3.1.2. Verify the requesting user is either the sender or recipient of the message.\n      3.1.3. IF user is not authorized to modify this message, THEN return access denied error.\n   3.2. Verify Message State:\n      3.2.1. Check if the message is in a state that allows type modification.\n      3.2.2. Verify the requested type change is valid for the current message state.\n      3.2.3. Ensure the type change follows the allowed state transitions (e.g., NEW to READ).\n      3.2.4. IF state transition is invalid, THEN return appropriate error message.\n\n4. Core Operation Execution:\n   4.1. Update Message Type:\n      4.1.1. Prepare the message update with the new type value.\n      4.1.2. Apply the type change to the message record in the database.\n      4.1.3. Record the timestamp of the update if required.\n      4.1.4. IF update operation fails, THEN rollback changes and return system error.\n   4.2. Update Related Records:\n      4.2.1. If the type change affects message visibility, update relevant counters.\n      4.2.2. If the type change affects message status, update any related notification settings.\n      4.2.3. Update any message flags that depend on the message type.\n      4.2.4. IF related updates fail, THEN attempt to restore previous state.\n\n5. Response Generation:\n   5.1. Success Response:\n      5.1.1. Prepare confirmation of successful type update.\n      5.1.2. Include the message ID and new type in the response.\n      5.1.3. Include any relevant updated message metadata.\n      5.1.4. Return success status to the user.\n   5.2. Error Response:\n      5.2.1. For validation errors, provide specific field-level error messages.\n      5.2.2. For authorization errors, return appropriate access denied message.\n      5.2.3. For system errors, return generic error with support reference.",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Message ID must be a positive integer",
+    "New message type must be a valid type code (NEW, READ, UNREAD, SENT, SAVED)",
+    "User must be either the sender or recipient of the message",
+    "Message must exist in the system",
+    "User must be authorized to modify the message type",
+    "The new type must be different from the current message type",
+    "The type change must follow allowed state transitions"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "type": "number",
+      "fromUser": "object-User",
+      "toUser": "object-User",
+      "sentDate": "date",
+      "subject": "string",
+      "text": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean"
+    },
+    "PrivateMessageType": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

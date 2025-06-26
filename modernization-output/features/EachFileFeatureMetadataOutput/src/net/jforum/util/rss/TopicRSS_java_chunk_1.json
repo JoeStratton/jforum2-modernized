@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "GenerateTopicRSS",
+    "description": "Creates RSS feeds for forum topics with post content, author information, and publication dates"
+  },
+  {
+    "featureName": "PrepareRSSContent",
+    "description": "Formats forum posts into RSS items with links, titles, and HTML content"
+  }
+]

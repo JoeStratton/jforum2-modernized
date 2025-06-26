@@ -1,0 +1,33 @@
+{
+  "featureName": "LoadPostContents",
+  "description": "Retrieves and displays the content of a specific forum post.",
+  "inputValues": [
+    "id-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post ID (id) from the request\n   - Validate that post ID is a positive integer\n   - Mark post ID as mandatory\n\n2. Data Validation:\n   - Validate post ID format:\n     - Ensure post ID is a valid number\n     - Verify post ID is greater than zero\n   - IF validation fails, THEN:\n     - Generate appropriate error message\n     - Return error response\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify the forum system is operational\n     - Confirm post retrieval functionality is available\n   - Check user permissions:\n     - Verify if the current user has permission to view the requested post\n     - IF user lacks permission, THEN:\n       - Generate access denied error\n       - Return error response\n\n4. Core Operation Execution:\n   - Retrieve post data:\n     - Locate post record using the provided post ID\n     - IF post not found, THEN:\n       - Generate post not found error\n       - Return error response\n     - Extract post content and metadata\n   - Prepare post for display:\n     - Format post content according to system settings\n     - Process any special formatting (HTML, BBCode, etc.)\n     - Prepare user information associated with the post\n\n5. Response Generation:\n   - Construct success response:\n     - Include formatted post content\n     - Include post metadata (author, date, etc.)\n     - Include any relevant user information\n   - Return formatted post data to the user interface\n   - IF any errors occurred during processing, THEN:\n     - Generate appropriate error response\n     - Include error details and possible resolution steps",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post ID must be a valid positive integer",
+    "Post must exist in the system",
+    "User must have permission to view the post",
+    "Post content must be properly formatted for display"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "userId": "number",
+      "topicId": "number",
+      "text": "string",
+      "subject": "string",
+      "htmlEnabled": "boolean",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "postDate": "date"
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "featureName": "ProcessSearchKeywords",
+  "description": "Processes search keywords with options for exact matching or partial matching.",
+  "inputValues": [
+    "keywords-string-SearchArgs",
+    "matchType-string-SearchArgs",
+    "matchAllKeywords-boolean-SearchArgs",
+    "author-number-SearchArgs",
+    "forumId-number-SearchArgs",
+    "orderBy-string-SearchArgs",
+    "orderDir-string-SearchArgs",
+    "fromDate-date-SearchArgs",
+    "toDate-date-SearchArgs",
+    "initialRecord-number-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search parameters from the user:\n     a. keywords (string): The search terms entered by the user\n     b. matchType (string): The type of matching to perform (exact or partial)\n     c. matchAllKeywords (boolean): Whether all keywords must be present in results\n     d. author (number): Optional ID of the post author to filter by\n     e. forumId (number): Optional forum ID to restrict search to\n     f. orderBy (string): Field to sort results by\n     g. orderDir (string): Direction of sorting (ascending or descending)\n     h. fromDate (date): Optional start date for filtering results\n     i. toDate (date): Optional end date for filtering results\n     j. initialRecord (number): Starting point for pagination\n\n2. Data Validation:\n   - Validate keywords input:\n     a. IF keywords is null or empty THEN\n        i. Set keywords array to empty\n        ii. Set raw keywords to empty string\n     b. ELSE\n        i. Trim whitespace from keywords\n        ii. Store original trimmed keywords as raw keywords\n   - Validate matchType parameter:\n     a. Ensure matchType is a valid option\n   - Validate matchAllKeywords parameter:\n     a. Ensure matchAllKeywords is a boolean value\n   - Validate author parameter:\n     a. IF author is provided THEN\n        i. Ensure author ID exists in the system\n   - Validate forumId parameter:\n     a. IF forumId is provided THEN\n        i. Ensure forum ID exists in the system\n   - Validate ordering parameters:\n     a. IF orderDir is not \"ASC\" or \"DESC\" THEN\n        i. Set orderDir to default value \"DESC\"\n     b. Ensure orderBy is a valid field name\n   - Validate date range:\n     a. IF fromDate is provided THEN\n        i. Ensure it is a valid date format\n     b. IF toDate is provided THEN\n        i. Ensure it is a valid date format\n        ii. Ensure toDate is not earlier than fromDate\n   - Validate initialRecord:\n     a. Ensure initialRecord is a non-negative number\n\n3. Business Rule Processing:\n   - Process keywords based on matching preferences:\n     a. IF keywords is not empty THEN\n        i. Split keywords string into an array by spaces\n        ii. IF matchAllKeywords is true THEN\n            1. Set search mode to require all terms\n        iii. ELSE\n            1. Set search mode to match any terms\n     b. IF matchType is specified THEN\n        i. Apply the specified matching strategy (exact or partial)\n   - Apply search filters:\n     a. IF author is specified THEN\n        i. Add author filter to search criteria\n     b. IF forumId is specified THEN\n        i. Add forum filter to search criteria\n     c. IF date range is specified THEN\n        i. Add date range filter to search criteria\n   - Determine result ordering:\n     a. Apply orderBy and orderDir to result set configuration\n   - Configure pagination:\n     a. Set starting record position to initialRecord\n     b. Calculate maximum records to fetch based on system configuration\n\n4. Core Operation Execution:\n   - Prepare search query:\n     a. Construct search parameters based on validated inputs\n     b. Apply all filters and constraints\n     c. Configure result ordering\n     d. Set pagination parameters\n   - Execute search operation:\n     a. Process keywords according to matchType and matchAllKeywords settings\n     b. Apply all filters (author, forum, date range)\n     c. Retrieve matching records\n     d. Sort results according to orderBy and orderDir\n     e. Apply pagination to limit result set\n   - Handle potential search execution issues:\n     a. IF search execution fails THEN\n        i. Capture error details\n        ii. Prepare error response\n\n5. Response Generation:\n   - Format search results:\n     a. Compile list of matching items\n     b. Include pagination information\n     c. Include total result count\n   - Generate response:\n     a. IF search was successful THEN\n        i. Return formatted search results\n        ii. Include search metadata (filters applied, sorting, etc.)\n     b. ELSE\n        i. Return appropriate error message\n        ii. Include guidance for refining search",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Keywords must be properly formatted for searching",
+    "Match type must be a valid option",
+    "Order direction must be either 'ASC' or 'DESC'",
+    "If date range is provided, toDate must not be earlier than fromDate",
+    "Initial record must be a non-negative number",
+    "Author ID must exist in the system if specified",
+    "Forum ID must exist in the system if specified"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Search terms entered by the user"
+        },
+        "matchType": {
+          "type": "string",
+          "description": "Type of matching to perform (exact or partial)"
+        },
+        "matchAllKeywords": {
+          "type": "boolean",
+          "description": "Whether all keywords must be present in results"
+        },
+        "author": {
+          "type": "number",
+          "description": "ID of the post author to filter by"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Forum ID to restrict search to"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "orderDir": {
+          "type": "string",
+          "description": "Direction of sorting (ascending or descending)"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for filtering results"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for filtering results"
+        },
+        "initialRecord": {
+          "type": "number",
+          "description": "Starting point for pagination"
+        }
+      }
+    }
+  }
+}

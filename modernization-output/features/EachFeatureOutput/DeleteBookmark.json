@@ -1,0 +1,30 @@
+{
+  "featureName": "DeleteBookmark",
+  "description": "Removes a bookmark from the system.",
+  "inputValues": [
+    "bookmark_id-number-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the bookmark_id (mandatory) from the user request\n   - System retrieves the current user's ID from the active session\n\n2. Data Validation\n   - Validate bookmark_id\n     2.1. Verify bookmark_id is provided\n     2.2. Verify bookmark_id is a valid positive integer\n     2.3. IF bookmark_id is missing or invalid THEN\n          2.3.1. Generate an error message indicating invalid bookmark ID\n          2.3.2. Terminate the process\n\n3. Business Rule Processing\n   - Verify bookmark existence and ownership\n     3.1. Retrieve the bookmark record using the bookmark_id\n     3.2. IF bookmark does not exist THEN\n          3.2.1. Generate a \"Bookmark not found\" error message\n          3.2.2. Terminate the process\n     3.3. Verify the current user is the owner of the bookmark\n          3.3.1. Compare the bookmark's user ID with the current user's ID\n          3.3.2. IF user IDs do not match THEN\n                 3.3.2.1. Generate a \"Not authorized to delete this bookmark\" error message\n                 3.3.2.2. Terminate the process\n\n4. Core Operation Execution\n   - Delete the bookmark\n     4.1. Remove the bookmark record from the system using the bookmark_id\n     4.2. IF deletion fails THEN\n          4.2.1. Generate a system error message\n          4.2.2. Log the error details\n          4.2.3. Terminate the process\n\n5. Response Generation\n   - Generate success response\n     5.1. Prepare confirmation message that the bookmark was successfully deleted\n     5.2. Redirect the user to their bookmark list page\n     5.3. Display the updated list of bookmarks for the user",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Bookmark ID must be a valid positive integer",
+    "Bookmark must exist in the system",
+    "User must be the owner of the bookmark to delete it",
+    "User must be logged in to delete bookmarks"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "featureName": "RemoveForumSubscription",
+  "description": "Removes a user's subscription from a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): Numeric identifier of the forum\n   - Collect userId (mandatory): Numeric identifier of the user\n   - No default values are provided for these fields\n   - Both fields are required to identify the specific subscription to remove\n\n2. Data Validation:\n   - Validate forumId:\n      a. Check if forumId is provided\n      b. Verify forumId is a positive integer\n      c. Return error if validation fails: \"Forum identifier must be a valid positive number\"\n   - Validate userId:\n      a. Check if userId is provided\n      b. Verify userId is a positive integer\n      c. Return error if validation fails: \"User identifier must be a valid positive number\"\n\n3. Business Rule Processing:\n   - Verify forum existence:\n      a. Check if forum with forumId exists in the system\n      b. IF forum does not exist, THEN return error: \"Forum not found\"\n   - Verify user existence:\n      a. Check if user with userId exists in the system\n      b. IF user does not exist, THEN return error: \"User not found\"\n   - Verify subscription existence:\n      a. Check if the user is currently subscribed to the forum\n      b. IF user is not subscribed, THEN return notification: \"User is not subscribed to this forum\"\n      c. IF user is subscribed, THEN proceed to next step\n\n4. Core Operation Execution:\n   - Remove subscription record:\n      a. Locate the subscription record matching the forumId and userId\n      b. Remove the subscription record from the system\n      c. IF removal fails, THEN:\n         i. Log the failure details\n         ii. Return error: \"Failed to remove subscription\"\n      d. IF removal succeeds, THEN proceed to next step\n   - Update user subscription status:\n      a. Update user's subscription list to reflect the removal\n      b. Update forum's subscriber count if applicable\n\n5. Response Generation:\n   - Success response:\n      a. Generate confirmation message: \"Subscription successfully removed\"\n      b. Include details of the forum name in the confirmation\n      c. Provide option to resubscribe if needed\n   - Error response:\n      a. Include specific error message based on the failure point\n      b. Provide guidance on how to resolve the issue\n      c. Include support contact information if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid positive integer",
+    "User ID must be a valid positive integer",
+    "Forum must exist in the system",
+    "User must exist in the system",
+    "User must be currently subscribed to the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

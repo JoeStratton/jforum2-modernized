@@ -1,0 +1,20 @@
+{
+  "featureName": "DeleteCategory",
+  "description": "Removes a category from the system after verifying it can be safely deleted.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the categoryId (mandatory, number) to identify the category to be deleted\n   - System will use the current user's session for authorization verification\n\n2. Data Validation:\n   - Validate categoryId:\n     a. Verify categoryId is not null or empty\n     b. Verify categoryId is a positive integer\n     c. Verify categoryId exists in the system by retrieving category details\n     d. If any validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check user authorization:\n     a. Verify current user has administrative privileges to delete categories\n     b. If user lacks permission, generate authorization error\n   - Check if category can be deleted:\n     a. Verify the category is not in use by calling canDelete method\n     b. Check if any forums are associated with this category\n     c. IF category has associated forums or other dependencies:\n        i. Generate error message indicating category cannot be deleted due to dependencies\n        ii. Provide information about the dependencies preventing deletion\n     c. IF category can be deleted:\n        i. Proceed to deletion process\n\n4. Core Operation Execution:\n   - Delete the category:\n     a. Remove the category record from the database\n     b. Update display order of remaining categories if necessary\n     c. IF deletion fails:\n        i. Log the error details\n        ii. Roll back any partial changes\n        iii. Generate system error message\n\n5. Response Generation:\n   - For successful deletion:\n     a. Generate success message confirming category removal\n     b. Provide updated list of remaining categories\n   - For failed deletion:\n     a. Return appropriate error message based on failure reason\n     b. Provide guidance on resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category ID must be a positive integer",
+    "Category must exist in the system",
+    "User must have administrative privileges to delete categories",
+    "Category must not have associated forums or other dependencies"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

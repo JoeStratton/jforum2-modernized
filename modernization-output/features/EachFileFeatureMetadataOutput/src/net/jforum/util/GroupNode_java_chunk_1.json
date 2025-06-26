@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ManageGroupHierarchy",
+    "description": "Manages hierarchical group structures with parent-child relationships and nested subgroups"
+  },
+  {
+    "featureName": "AddGroupNode",
+    "description": "Adds a new node to the group hierarchy structure"
+  },
+  {
+    "featureName": "RetrieveGroupNode",
+    "description": "Retrieves a specific node from the group hierarchy by position"
+  }
+]

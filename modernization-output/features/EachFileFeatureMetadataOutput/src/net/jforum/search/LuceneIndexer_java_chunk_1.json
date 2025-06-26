@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "BatchCreatePostIndex",
+    "description": "Adds a post to the search index in batch mode using RAM directory"
+  },
+  {
+    "featureName": "CreatePostIndex",
+    "description": "Indexes a single forum post for search functionality"
+  },
+  {
+    "featureName": "UpdatePostIndex",
+    "description": "Updates the search index for a modified forum post"
+  },
+  {
+    "featureName": "DeletePostIndex",
+    "description": "Removes a post from the search index"
+  },
+  {
+    "featureName": "FlushRAMDirectory",
+    "description": "Commits indexed documents from RAM to persistent storage"
+  },
+  {
+    "featureName": "WatchNewDocumentAdded",
+    "description": "Registers listeners to be notified when new documents are indexed"
+  }
+]

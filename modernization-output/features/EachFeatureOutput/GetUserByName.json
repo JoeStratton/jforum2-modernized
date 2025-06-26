@@ -1,0 +1,61 @@
+{
+  "featureName": "GetUserByName",
+  "description": "Retrieves a specific user by their username.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the username (string) from the request.\n   1.2. Username is mandatory.\n\n2. Data Validation:\n   2.1. Validate username input:\n      2.1.1. Check if username is not empty or null.\n      2.1.2. IF username is empty or null, THEN:\n         2.1.2.1. Generate an error message indicating username is required.\n         2.1.2.2. Return error response.\n      2.1.3. Check if username format is valid according to system rules.\n      2.1.4. IF username format is invalid, THEN:\n         2.1.4.1. Generate an error message indicating invalid username format.\n         2.1.4.2. Return error response.\n\n3. Business Rule Processing:\n   3.1. Check if the system is in a valid state to process user retrieval requests:\n      3.1.1. Verify that the user database is accessible.\n      3.1.2. IF database is not accessible, THEN:\n         3.1.2.1. Log the system error.\n         3.1.2.2. Return appropriate error response.\n   3.2. Check if the requesting user has permission to view user information:\n      3.2.1. IF requesting user lacks permission, THEN:\n         3.2.1.1. Generate an access denied error message.\n         3.2.1.2. Return error response.\n\n4. Core Operation Execution:\n   4.1. Search for the user with the provided username:\n      4.1.1. Look up the user record in the user database.\n      4.1.2. IF user is not found, THEN:\n         4.1.2.1. Set result to null or empty.\n      4.1.3. IF user is found, THEN:\n         4.1.3.1. Retrieve the complete user information.\n         4.1.3.2. Check if the user account is active.\n         4.1.3.3. Check if the user account is deleted.\n         4.1.3.4. Prepare user data for response.\n\n5. Response Generation:\n   5.1. IF user was found, THEN:\n      5.1.1. Format the user data according to the response requirements.\n      5.1.2. Include user details such as ID, username, email, registration date, etc.\n      5.1.3. Return success response with user data.\n   5.2. IF user was not found, THEN:\n      5.2.1. Return appropriate response indicating user not found.\n   5.3. Include any additional information or next steps in the response.",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty or null",
+    "Username must follow the system's format requirements",
+    "User database must be accessible",
+    "Requesting user must have permission to view user information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the user account is active"
+        },
+        "deleted": {
+          "type": "boolean",
+          "description": "Whether the user account is deleted"
+        },
+        "posts": {
+          "type": "integer",
+          "description": "Number of posts made by the user"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Groups the user belongs to"
+        }
+      }
+    }
+  }
+}

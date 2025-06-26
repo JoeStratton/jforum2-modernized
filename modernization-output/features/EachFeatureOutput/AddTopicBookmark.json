@@ -1,0 +1,39 @@
+{
+  "featureName": "AddTopicBookmark",
+  "description": "Creates a bookmark for a specific topic with title and description.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "isPublic-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - topicId: Identifier of the topic to bookmark (mandatory, system-provided)\n       - title: Title for the bookmark (mandatory, user-provided)\n       - description: Description for the bookmark (optional, user-provided)\n       - isPublic: Flag indicating if bookmark is publicly visible (optional, user-provided, defaults to false)\n   1.2. System automatically collects:\n       - userId: Identifier of the current user (system-generated)\n       - bookmarkType: Set to TOPIC type (system-generated)\n\n2. Data Validation:\n   2.1. Validate Topic Existence:\n       2.1.1. Check if the provided topicId exists in the system\n       2.1.2. IF topic does not exist, THEN\n              - Generate error message: \"The specified topic does not exist\"\n              - Terminate the process\n   2.2. Validate Title:\n       2.2.1. Check if title is provided\n       2.2.2. IF title is empty, THEN\n              - Use the original topic title as default\n       2.2.3. Sanitize title to prevent security issues\n   2.3. Validate Description:\n       2.3.1. IF description is provided, THEN\n              - Sanitize description to prevent security issues\n   2.4. Validate User Authentication:\n       2.4.1. Verify user is logged in (not anonymous)\n       2.4.2. IF user is anonymous, THEN\n              - Generate error message: \"Anonymous users cannot create bookmarks\"\n              - Terminate the process\n\n3. Business Rule Processing:\n   3.1. Check Bookmark Feature Availability:\n       3.1.1. Verify the bookmark feature is enabled for the system\n       3.1.2. IF feature is disabled, THEN\n              - Generate error message: \"Bookmark feature is currently disabled\"\n              - Terminate the process\n   3.2. Check for Existing Bookmark:\n       3.2.1. Search for an existing bookmark with the same topicId, bookmarkType, and userId\n       3.2.2. IF bookmark already exists, THEN\n              - Prepare for update operation instead of creation\n              - Pre-populate form fields with existing values\n\n4. Core Operation Execution:\n   4.1. Create Bookmark Record:\n       4.1.1. IF updating existing bookmark, THEN\n              - Update the existing bookmark with new title, description, and visibility settings\n       4.1.2. ELSE (creating new bookmark)\n              - Create new bookmark record with:\n                * User ID\n                * Topic ID\n                * Bookmark type (TOPIC)\n                * Title\n                * Description\n                * Public visibility flag\n       4.1.3. Save the bookmark to the database\n       4.1.4. IF save operation fails, THEN\n              - Generate error message: \"Failed to save bookmark\"\n              - Terminate the process\n\n5. Response Generation:\n   5.1. Success Response:\n       5.1.1. Generate confirmation message: \"Topic successfully bookmarked\"\n       5.1.2. Provide options to:\n              - View all bookmarks\n              - Return to the bookmarked topic\n   5.2. Error Response:\n       5.2.1. Display appropriate error message based on the failure point\n       5.2.2. Provide options to:\n              - Try again\n              - Cancel the operation",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic must exist in the system",
+    "User must be authenticated (not anonymous)",
+    "Bookmark feature must be enabled in the system",
+    "Title must not be empty (will default to topic title if not provided)",
+    "Content must be sanitized to prevent security issues"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string"
+    }
+  }
+}

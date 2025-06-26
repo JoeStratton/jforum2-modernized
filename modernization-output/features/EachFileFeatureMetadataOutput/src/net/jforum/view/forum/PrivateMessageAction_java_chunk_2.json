@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "ViewPrivateMessageInbox",
+    "description": "Displays the user's private message inbox with a list of received messages"
+  },
+  {
+    "featureName": "ViewPrivateMessageSentbox",
+    "description": "Displays the user's sent private messages"
+  },
+  {
+    "featureName": "ComposePrivateMessage",
+    "description": "Provides a form for composing and sending new private messages"
+  },
+  {
+    "featureName": "SendPrivateMessageToUser",
+    "description": "Initiates a private message composition to a specific user"
+  },
+  {
+    "featureName": "SavePrivateMessage",
+    "description": "Processes and saves a composed private message with notification support"
+  },
+  {
+    "featureName": "FindUserForPrivateMessage",
+    "description": "Searches for users by username to select as private message recipients"
+  },
+  {
+    "featureName": "ReadPrivateMessage",
+    "description": "Displays the content of a private message and marks it as read"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "featureName": "GetUserTotalKarma",
+  "description": "Calculates and retrieves the total karma points accumulated by a user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId as a numeric identifier\n   - System will use the userId to retrieve karma information\n   - No additional input parameters required\n\n2. Data Validation:\n   - Validate userId exists and is valid\n     - IF userId is missing THEN return error \"User identifier is required\"\n     - IF userId is not a positive integer THEN return error \"Valid user identifier is required\"\n     - IF userId does not correspond to an existing user THEN return error \"User not found\"\n\n3. Business Rule Processing:\n   - Check if karma feature is enabled in the system\n     - IF karma feature is disabled THEN return appropriate notification\n   - Verify user account status\n     - IF user account is inactive or suspended THEN proceed but note this in response\n   - Check karma calculation permissions\n     - IF current user lacks permission to view karma THEN return appropriate error\n\n4. Core Operation Execution:\n   - Create a karma status object to hold the user's karma information\n   - Retrieve total karma votes received by the user\n     - Query the database for total points received\n     - Query the database for total number of votes received\n   - Calculate karma points average\n     - IF votes received is zero THEN set karma points to zero\n     - ELSE divide total points by votes received to get average karma points\n   - Retrieve votes given by the user\n     - Query the database for total number of votes given by the user\n   - Populate the karma status object with:\n     - Total points received\n     - Total votes received\n     - Calculated karma points average\n     - Total votes given by the user\n   - Associate the karma status with the user object\n\n5. Response Generation:\n   - Prepare user object with karma information\n     - Include user identification details\n     - Include karma status containing:\n       * Total points received\n       * Number of votes received\n       * Average karma points\n       * Number of votes given\n   - Format response according to system standards\n   - Return complete user with karma information to the requester\n   - IF any errors occurred during processing THEN include error details in response",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Karma feature must be enabled in the system",
+    "Requesting user must have permission to view karma information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "karma": {
+          "type": "object",
+          "description": "User's karma status information",
+          "properties": {
+            "totalPoints": {
+              "type": "number",
+              "description": "Total karma points received"
+            },
+            "votesReceived": {
+              "type": "number",
+              "description": "Number of karma votes received"
+            },
+            "karmaPoints": {
+              "type": "number",
+              "description": "Average karma points (totalPoints/votesReceived)"
+            },
+            "votesGiven": {
+              "type": "number",
+              "description": "Number of karma votes given to others"
+            }
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

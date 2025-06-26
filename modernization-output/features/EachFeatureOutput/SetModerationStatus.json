@@ -1,0 +1,39 @@
+{
+  "featureName": "SetModerationStatus",
+  "description": "Updates moderation status for all topics in a forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "status-boolean-ModerationStatus"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory, number): Identifier of the forum to update\n   - Collect status (mandatory, boolean): New moderation status to set\n   - System will use current user session for authorization\n\n2. Data Validation:\n   - Validate forumId:\n     2.1. Check if forumId is provided and is a positive integer\n     2.2. IF forumId is missing or invalid THEN\n          2.2.1. Return error message \"Invalid forum identifier\"\n   - Validate status:\n     2.3. Check if status is provided as a boolean value\n     2.4. IF status is not a boolean THEN\n          2.4.1. Return error message \"Moderation status must be true or false\"\n   - Validate user permissions:\n     2.5. Check if current user has moderation privileges for the specified forum\n     2.6. IF user lacks required permissions THEN\n          2.6.1. Return error message \"Insufficient permissions to modify moderation status\"\n\n3. Business Rule Processing:\n   - Verify forum existence:\n     3.1. Check if forum with provided forumId exists in the system\n     3.2. IF forum does not exist THEN\n          3.2.1. Return error message \"Forum not found\"\n   - Check system state:\n     3.3. Verify the system is not in maintenance mode\n     3.4. IF system is in maintenance mode THEN\n          3.4.1. Return error message \"System is currently in maintenance mode\"\n   - Check forum state:\n     3.5. Verify the forum is active and not locked\n     3.6. IF forum is locked or inactive THEN\n          3.6.1. Return error message \"Cannot modify moderation status of inactive or locked forum\"\n\n4. Core Operation Execution:\n   - Update moderation status:\n     4.1. Begin transaction\n     4.2. Update all topics in the specified forum with the new moderation status\n     4.3. IF update operation fails THEN\n          4.3.1. Rollback transaction\n          4.3.2. Log error details\n          4.3.3. Return error message \"Failed to update moderation status\"\n     4.4. Commit transaction\n   - Update forum metadata:\n     4.5. Update forum's last modified timestamp\n     4.6. Record the user who made the change\n     4.7. IF metadata update fails THEN\n          4.7.1. Log warning (non-critical failure)\n\n5. Response Generation:\n   - Success response:\n     5.1. Generate confirmation message including:\n          5.1.1. Number of topics affected\n          5.1.2. New moderation status\n          5.1.3. Forum name\n     5.2. Include timestamp of the operation\n   - Error response:\n     5.3. Include specific error message from previous steps\n     5.4. Provide guidance on how to resolve the issue\n     5.5. Include support reference information if needed",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users",
+    "jforum_groups",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Moderation status must be a boolean value",
+    "User must have moderation privileges for the specified forum",
+    "Forum must exist in the system",
+    "Forum must be active and not locked",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "isActive": "boolean",
+      "isLocked": "boolean",
+      "lastModified": "date",
+      "moderationEnabled": "boolean"
+    },
+    "ModerationStatus": {
+      "enabled": "boolean"
+    }
+  }
+}

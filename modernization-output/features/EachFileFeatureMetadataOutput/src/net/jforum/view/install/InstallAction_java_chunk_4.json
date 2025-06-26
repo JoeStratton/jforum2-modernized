@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CheckInstallationInformation",
+    "description": "Validates and stores installation parameters for JForum setup including database and forum configuration"
+  },
+  {
+    "featureName": "StoreSupportProjectMessage",
+    "description": "Creates a support announcement topic in the forum with information about contributing to JForum"
+  },
+  {
+    "featureName": "WelcomeInstallation",
+    "description": "Displays the welcome page for JForum installation process"
+  }
+]

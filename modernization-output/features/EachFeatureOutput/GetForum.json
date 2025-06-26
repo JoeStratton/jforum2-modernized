@@ -1,0 +1,50 @@
+{
+  "featureName": "GetForum",
+  "description": "Retrieves a specific forum if it exists and is accessible to the user.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forumId (mandatory): Numeric identifier of the forum to retrieve\n   - Collect userId (system-generated): Current user's identifier\n\n2. Data Validation\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. Return error message if validation fails\n\n3. Business Rule Processing\n   - Check forum existence:\n     a. Retrieve category relationship for the requested forum\n     b. IF category relationship is not found THEN\n        i. Return null indicating forum does not exist\n     c. Retrieve category using the relationship\n\n   - Check user access permissions:\n     a. Verify if the category containing the forum is accessible to the user\n     b. IF category is not accessible THEN\n        i. Return null indicating forum is not accessible\n\n4. Core Operation Execution\n   - Retrieve forum data:\n     a. Get forum object from the category using forumId\n     b. IF forum is not found in the category THEN\n        i. Return null indicating forum does not exist\n\n   - Prepare forum data for display:\n     a. Ensure forum metadata is properly loaded\n     b. Load forum statistics if needed\n     c. Load last post information if needed\n     d. Load moderator list if needed\n\n5. Response Generation\n   - Success response:\n     a. Return complete forum object with all relevant information\n     b. Include forum properties (name, description, etc.)\n     c. Include forum statistics (total posts, total topics)\n     d. Include last post information\n\n   - Error response:\n     a. Return null if forum does not exist\n     b. Return null if forum exists but user does not have access",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "User must have access permission to view the forum",
+    "Forum must exist in the system",
+    "Category containing the forum must be accessible to the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostInfo": "object"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "LastPostInfo": {
+      "postId": "number",
+      "postDate": "string",
+      "postTimeMillis": "number",
+      "topicId": "number",
+      "topicReplies": "number",
+      "userId": "number",
+      "username": "string"
+    }
+  }
+}

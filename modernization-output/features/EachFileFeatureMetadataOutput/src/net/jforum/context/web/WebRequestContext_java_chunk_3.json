@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "GetRequestParameter",
+    "description": "Retrieves parameter values from web requests with support for different data types"
+  },
+  {
+    "featureName": "ManageRequestParameters",
+    "description": "Adds, replaces, or modifies request parameters with support for list values"
+  },
+  {
+    "featureName": "HandleRequestNavigation",
+    "description": "Manages action and module parameters for determining navigation flow in the application"
+  },
+  {
+    "featureName": "ResolveClientIPAddress",
+    "description": "Determines the actual client IP address with support for forwarded requests"
+  },
+  {
+    "featureName": "ResolveContextPath",
+    "description": "Retrieves the application context path with support for proxied environments"
+  }
+]

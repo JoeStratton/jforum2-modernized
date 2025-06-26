@@ -1,0 +1,23 @@
+{
+  "featureName": "ContextToLogin",
+  "description": "Prepares template context for login page with return path handling and SSO redirect support.",
+  "inputValues": [
+    "returnPath-string-ReturnPath"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. returnPath (string, optional): The path to return to after login\n     b. authType (string, system-generated): Authentication type from system configuration\n     c. ssoRedirect (string, system-generated): SSO redirect URL from system configuration\n\n2. Data Validation:\n   - Validate returnPath:\n     a. IF returnPath is not provided THEN\n        i. Get current request URI\n        ii. Get current query string\n        iii. IF query string exists THEN\n             - Set returnPath = URI + \"?\" + query string\n        iv. ELSE\n             - Set returnPath = URI\n     b. No specific format validation required for returnPath\n\n3. Business Rule Processing:\n   - Check authentication configuration:\n     a. Retrieve authentication type from system configuration\n     b. IF authentication type is SSO THEN\n        i. Check if SSO redirect URL is configured\n        ii. IF SSO redirect URL is configured THEN\n            - Validate SSO redirect URL format:\n              * Verify URL has a proper scheme (must be absolute URL)\n              * IF URL is not absolute THEN\n                  - Generate error indicating SSO redirect URL should start with a scheme\n\n4. Core Operation Execution:\n   - Set up template context:\n     a. Add returnPath to template context for use in login form\n     b. IF authentication type is SSO AND SSO redirect URL is configured THEN\n        i. Encode the forum base URL + returnPath using UTF-8\n        ii. Prepare the complete redirect URL:\n            - IF SSO redirect URL contains '?' THEN\n                * Append '&returnUrl=' + encoded return path\n            - ELSE\n                * Append '?returnUrl=' + encoded return path\n        iii. Set up system redirect to the complete SSO URL\n\n5. Response Generation:\n   - Return the template key for the login page\n   - IF SSO redirect is configured THEN\n     a. System will perform redirect to SSO provider\n   - ELSE\n     a. System will display the login form template\n     b. The login form will include the returnPath for post-login navigation",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "SSO redirect URL must be an absolute URL with a scheme if SSO authentication is enabled",
+    "Return path must be properly captured from current request if not explicitly provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ReturnPath": {
+      "type": "string",
+      "description": "The URL path to return to after successful login"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SetCustomMessageId",
+    "description": "Sets a custom Message-ID header for email messages"
+  },
+  {
+    "featureName": "UpdateMessageID",
+    "description": "Updates the Message-ID header using either a custom ID or the default implementation"
+  }
+]

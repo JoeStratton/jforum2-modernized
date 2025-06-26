@@ -1,0 +1,60 @@
+{
+  "featureName": "GetTopicNotificationUsers",
+  "description": "Retrieves users to be notified about new posts in a topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory) - Unique identifier for the topic\n\n2. Data Validation:\n   - Validate topicId:\n      a. Check if topicId is provided\n      b. Verify topicId is a positive integer\n      c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check topic existence:\n      a. Verify the topic with the provided topicId exists in the system\n      b. If topic does not exist, generate a \"Topic not found\" error\n   - Check notification settings:\n      a. Verify if the notification feature is enabled system-wide\n      b. If notifications are disabled, return empty user list with appropriate message\n\n4. Core Operation Execution:\n   - Retrieve subscription information:\n      a. Identify all users who have subscribed to the topic\n      b. Filter out users with disabled notification preferences\n      c. Filter out users who don't have permission to view the topic\n   - Compile user information:\n      a. For each subscribed user, gather necessary contact information\n      b. Include user preferences regarding notification format (if applicable)\n      c. Sort users based on appropriate criteria (e.g., username)\n\n5. Response Generation:\n   - Success response:\n      a. Return list of users to be notified with their relevant information\n      b. Include metadata about the notification (topic title, forum name)\n   - Error response:\n      a. Return appropriate error message if any step fails\n      b. Include error code and suggested resolution steps",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have an active subscription to the topic",
+    "User must have permission to view the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address for notifications"
+        },
+        "notificationPreferences": {
+          "type": "object",
+          "description": "User's preferences for receiving notifications"
+        }
+      }
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum containing this topic"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "PreparePostForDisplay",
+    "description": "Formats post text for display by handling HTML, BBCode, and safety processing"
+  },
+  {
+    "featureName": "ProcessTextWithCodeBlocks",
+    "description": "Processes post text with special handling for code blocks and syntax highlighting"
+  },
+  {
+    "featureName": "ParseCode",
+    "description": "Parses code blocks with syntax highlighting and proper formatting"
+  },
+  {
+    "featureName": "ProcessSmilies",
+    "description": "Replaces smilie codes with their corresponding image URLs in post text"
+  },
+  {
+    "featureName": "FillPostFromRequest",
+    "description": "Creates or updates post objects from HTTP request parameters"
+  },
+  {
+    "featureName": "CheckPostEditPermission",
+    "description": "Determines if current user has permission to edit a specific post"
+  },
+  {
+    "featureName": "RetrieveTopicPosts",
+    "description": "Retrieves and prepares posts for a topic with pagination and edit permissions"
+  }
+]

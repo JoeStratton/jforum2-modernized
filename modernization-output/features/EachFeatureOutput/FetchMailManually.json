@@ -1,0 +1,36 @@
+{
+  "featureName": "FetchMailManually",
+  "description": "Triggers manual execution of the POP3 mail fetching process.",
+  "inputValues": [
+    "adminRequest-boolean-AdminAction"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the admin request to manually fetch mail\n   - Verify the request is coming from an authenticated admin user\n   - No additional input parameters are required\n\n2. Data Validation\n   - Validate user authentication status\n     * Check if the user is logged in\n     * IF user is not logged in, THEN redirect to login page\n   - Validate user permissions\n     * Check if the user has administration privileges\n     * IF user does not have admin privileges, THEN deny access and redirect to login\n\n3. Business Rule Processing\n   - Verify system readiness for mail fetching\n     * Check if mail fetching service is properly configured\n     * Verify mail server settings are available\n   - Check if mail fetching is already in progress\n     * IF a mail fetching process is already running, THEN notify admin\n     * ELSE proceed with the operation\n\n4. Core Operation Execution\n   - Initialize mail fetching process\n     * Create a new thread for mail fetching operation\n     * Start the thread to run asynchronously\n     * Execute the POP3 mail listener process\n     * Fetch messages from the configured mail server\n     * Process received messages according to system rules\n     * Handle any exceptions that occur during mail fetching\n   - Update system status\n     * Record the time of last mail fetch operation\n     * Log the operation details for auditing purposes\n\n5. Response Generation\n   - Prepare admin dashboard view\n     * Include system statistics and status information\n     * Show confirmation message that mail fetching has been initiated\n     * Display any relevant system notifications\n   - Handle error scenarios\n     * IF mail fetching initialization fails, THEN show appropriate error message\n     * Include troubleshooting information if needed\n   - Return control to admin main page\n     * Display updated dashboard with current system status",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must be logged in to access this feature",
+    "User must have administration privileges",
+    "Mail fetching service must be properly configured",
+    "Only one mail fetching process can run at a time"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AdminAction": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "ID of the admin user performing the action"
+        },
+        "hasAdminAccess": {
+          "type": "boolean",
+          "description": "Flag indicating if user has admin privileges"
+        }
+      }
+    }
+  }
+}

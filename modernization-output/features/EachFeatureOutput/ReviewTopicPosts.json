@@ -1,0 +1,41 @@
+{
+  "featureName": "ReviewTopicPosts",
+  "description": "Shows posts in a topic in reverse chronological order for review purposes.",
+  "inputValues": [
+    "topic_id-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topic_id (mandatory) from the user request\n   - System will determine the current user_id from the active session\n\n2. Data Validation:\n   - Validate that topic_id is provided and is a valid number\n     * IF topic_id is missing or invalid, THEN display error message\n   - Validate that the topic exists in the system\n     * IF topic does not exist, THEN display \"Topic not found\" message\n   - Validate user has permission to access the topic's forum\n     * IF user does not have access permission, THEN deny access\n\n3. Business Rule Processing:\n   - Check if the topic is accessible to the current user\n     * Verify the forum permissions for the current user\n     * IF user lacks permission to view the forum, THEN deny access\n   - Determine the number of posts to display per page from system configuration\n   - Calculate the starting position for pagination\n\n4. Core Operation Execution:\n   - Retrieve the topic information based on topic_id\n   - Retrieve all posts for the specified topic with pagination\n     * Get posts starting from the calculated position\n     * Limit results to the configured posts-per-page count\n   - Retrieve information about all users who posted in the topic\n   - Reverse the chronological order of posts (newest first)\n   - Prepare each post for display\n     * Format post content according to display rules\n     * Process any special formatting or tags\n\n5. Response Generation:\n   - Display the topic review page with the following information:\n     * List of posts in reverse chronological order\n     * User information for each post author\n     * Post content with proper formatting\n     * Post metadata (date, time, etc.)\n   - IF no posts are found, THEN display appropriate message",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be a valid number",
+    "Topic must exist in the system",
+    "User must have permission to access the forum containing the topic",
+    "Posts must be displayed in reverse chronological order (newest first)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "forumId": "number",
+      "content": "string",
+      "postDate": "date"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "featureName": "GetFileContentType",
+  "description": "Retrieves the content type of the uploaded file.",
+  "inputValues": [
+    "fileItem-object-DiskFileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Receive a file item object containing file metadata and content\n   - Required inputs:\n     * fileItem: The DiskFileItem object containing file information\n   - No additional inputs required as all necessary data is contained in the file item\n\n2. Data Validation:\n   - Validate file item object\n     * Check if file item is not null\n     * IF file item is null THEN\n       - Return error indicating invalid file item\n     * END IF\n\n3. Business Rule Processing:\n   - Check if content type information is available\n     * IF content type is null THEN\n       - Determine if content type can be inferred from file properties\n       - IF content type cannot be determined THEN\n         - Prepare to return null or default content type\n       - END IF\n     * END IF\n   - Check if character set information is needed\n     * IF character set information is requested THEN\n       - Prepare to extract character set from content type\n     * END IF\n\n4. Core Operation Execution:\n   - Retrieve content type from file item\n     * Access the stored content type value from the file item\n     * IF content type contains character set information THEN\n       - Parse the content type string to separate MIME type and character set\n     * END IF\n   - Process content type information\n     * IF content type is null THEN\n       - Attempt to determine content type based on file name or content\n     * END IF\n\n5. Response Generation:\n   - Prepare content type response\n     * Format the content type string according to standard MIME format\n     * IF character set information is available and relevant THEN\n       - Include character set information in the response\n     * END IF\n   - Return the content type information\n     * Return the complete content type string\n     * IF an error occurred during processing THEN\n       - Return appropriate error information\n     * END IF",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "File item must not be null",
+    "Content type may be null if not specified by the browser"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DiskFileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field as provided by the browser"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type passed by the browser, or null if not defined"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether or not this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "number",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored"
+        }
+      }
+    }
+  }
+}

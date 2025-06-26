@@ -1,0 +1,18 @@
+{
+  "featureName": "ChangeBoardDefaultLanguage",
+  "description": "Updates the default language used throughout the forum.",
+  "inputValues": [
+    "newDefaultLanguage-string-Language"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. newDefaultLanguage (string): The language code for the new default language\n     - This is a mandatory field with no default value\n     - The value must correspond to an available language in the system\n\n2. Data Validation:\n   - Validate the newDefaultLanguage input:\n     a. Check if the newDefaultLanguage is not null or empty\n        IF newDefaultLanguage is null or empty THEN\n          Generate error message: \"Default language cannot be empty\"\n          Exit process\n        END IF\n     b. Check if the newDefaultLanguage exists in the system\n        IF newDefaultLanguage does not exist in available languages THEN\n          Generate error message: \"The specified language is not available in the system\"\n          Exit process\n        END IF\n\n3. Business Rule Processing:\n   - Check system state for language change:\n     a. Verify if the requested language is different from current default\n        IF newDefaultLanguage is same as current default language THEN\n          Generate notification: \"The requested language is already set as default\"\n          Exit process without making changes\n        END IF\n     b. Verify if language resources are accessible\n        IF language resource files cannot be accessed THEN\n          Generate error message: \"Cannot access language resources\"\n          Exit process\n        END IF\n\n4. Core Operation Execution:\n   - Change the default language:\n     a. Load the new language resources\n        - Access language resource files for the new language\n        - If merging with admin language is required, perform merge\n     b. Set the new language as system default\n        - Update system configuration to use new language\n        - Store the new default language setting\n     c. IF any errors occur during language change THEN\n          Revert to previous default language\n          Generate error message: \"Failed to change default language\"\n          Exit process\n        END IF\n\n5. Response Generation:\n   - Generate success response:\n     a. Create confirmation message that language was changed successfully\n     b. Include the name of the new default language in the response\n     c. Provide information about system-wide effect of the change\n     d. IF users need to refresh or restart sessions THEN\n          Include this information in the response\n        END IF",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "New default language must not be null or empty",
+    "New default language must exist in the system's available languages",
+    "Language resource files must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

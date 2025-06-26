@@ -1,0 +1,33 @@
+{
+  "featureName": "ReadBoundary",
+  "description": "Detects boundary tokens in multipart streams to separate content encapsulations.",
+  "inputValues": [
+    "input-object-InputStream",
+    "boundary-object-ByteArray",
+    "bufSize-number-Integer"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the input stream (InputStream) containing multipart data\n   - Collect the boundary token (byte array) that separates content parts\n   - Collect buffer size (integer) for processing the request\n   - System will use default buffer size if not provided\n\n2. Data Validation:\n   - Validate input stream is not null\n     * IF input stream is null THEN return error message\n   - Validate boundary token is not null and not empty\n     * IF boundary token is null or empty THEN return error message\n   - Validate buffer size is sufficient\n     * IF buffer size is smaller than boundary length plus overhead THEN return error message\n     * Buffer must be large enough to contain boundary string, plus 4 characters for CR/LF and double dash, plus at least one byte of data\n\n3. Business Rule Processing:\n   - Initialize buffer for processing the request\n     * Create new byte array with specified buffer size\n   - Prepare boundary token for detection\n     * Prepend CR/LF/DASH/DASH to the boundary to properly identify boundaries\n     * Calculate boundary length including the prepended characters\n     * Calculate keep region (amount of data that must be kept in buffer)\n   - Initialize buffer position trackers\n     * Set head index to 0 (first valid character in buffer)\n     * Set tail index to 0 (last valid character in buffer + 1)\n\n4. Core Operation Execution:\n   - Read data from input stream into buffer\n     * IF buffer is depleted (head equals tail) THEN refill buffer\n     * IF no more data available THEN indicate end of stream\n   - Scan buffer for boundary token\n     * Move head position past boundary length\n     * Read next two bytes after boundary\n     * IF bytes match stream terminator (--) THEN mark as final boundary\n     * IF bytes match field separator (CRLF) THEN mark as intermediate boundary\n     * IF bytes don't match either pattern THEN report malformed stream\n   - Handle special cases\n     * Work around browser bugs (e.g., IE5 Mac bug with input type=image)\n     * Handle unexpected stream endings\n\n5. Response Generation:\n   - Return boundary detection result\n     * IF stream terminator detected THEN indicate no more encapsulations\n     * IF field separator detected THEN indicate more encapsulations available\n     * IF malformed boundary detected THEN return appropriate error\n   - Provide position information for content extraction\n     * Return current buffer position for content processing",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input stream must not be null",
+    "Boundary token must not be null or empty",
+    "Buffer size must be sufficient to contain boundary plus overhead",
+    "Characters following boundary must be valid terminators or separators",
+    "Stream must not end unexpectedly during boundary detection"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "description": "Input stream containing multipart data"
+    },
+    "ByteArray": {
+      "type": "object",
+      "description": "Byte array representing boundary token"
+    },
+    "Integer": {
+      "type": "number",
+      "description": "Size of buffer for processing request"
+    }
+  }
+}

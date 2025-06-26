@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ParseParameterString",
+    "description": "Extracts name/value pairs from a string using specified separator character"
+  },
+  {
+    "featureName": "ParseParameterCharArray",
+    "description": "Extracts name/value pairs from a character array using specified separator character"
+  },
+  {
+    "featureName": "ConfigureCaseConversion",
+    "description": "Controls whether parameter names are converted to lowercase during parsing"
+  }
+]

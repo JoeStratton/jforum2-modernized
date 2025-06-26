@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ManageHttpSessionAttributes",
+    "description": "Provides session attribute management with get, set and remove operations"
+  },
+  {
+    "featureName": "GetSessionIdentification",
+    "description": "Retrieves session identification information including ID and creation details"
+  }
+]

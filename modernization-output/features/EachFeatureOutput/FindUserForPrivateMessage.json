@@ -1,0 +1,25 @@
+{
+  "featureName": "FindUserForPrivateMessage",
+  "description": "Searches for users by username to select as private message recipients.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. username (string, mandatory): The partial or complete username to search for\n\n2. Data Validation:\n   - Validate username input:\n     a. IF username is empty or null THEN\n        i. Set showResult flag to false\n        ii. Skip to Response Generation step\n     b. ELSE\n        i. Proceed to Business Rule Processing\n\n3. Business Rule Processing:\n   - Verify user session:\n     a. IF user is not logged in THEN\n        i. Redirect to login page\n        ii. End process\n     b. ELSE\n        i. Continue with search operation\n\n4. Core Operation Execution:\n   - Perform user search:\n     a. Search the system for users whose names match the provided username pattern\n     b. Retrieve matching user records including:\n        i. User ID\n        ii. Username\n        iii. Other relevant user information\n     c. Compile results into a list of matching users\n     d. Set showResult flag to true\n\n5. Response Generation:\n   - Prepare search results display:\n     a. IF search was performed (showResult is true) THEN\n        i. Include list of matching users in the response\n        ii. Display username search term used\n     b. ELSE\n        i. Display empty search form\n     c. Present interface for user selection\n     d. Provide option to select a user from results to compose a private message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_privmsgs"
+  ],
+  "validationRules": [
+    "User must be logged in to search for message recipients",
+    "Username search term must not be empty to perform search"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

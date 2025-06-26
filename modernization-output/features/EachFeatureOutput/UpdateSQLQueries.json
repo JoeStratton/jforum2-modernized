@@ -1,0 +1,41 @@
+{
+  "featureName": "UpdateSQLQueries",
+  "description": "Loads and updates SQL query definitions appropriate for the detected MySQL version.",
+  "inputValues": [
+    "databaseConnection-object-Connection",
+    "systemConfiguration-object-SystemConfiguration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database connection object\n   - Collect system configuration settings\n   - Determine database driver name from configuration\n   \n2. Data Validation:\n   - Validate database connection is not null\n     * IF connection is null THEN\n       * Log warning message\n       * Exit process\n     * END IF\n   - Validate database driver is MySQL\n     * IF database driver is not MySQL THEN\n       * Exit process without changes\n     * END IF\n   \n3. Business Rule Processing:\n   - Detect MySQL version information\n     * Retrieve database metadata from connection\n     * Extract major and minor version numbers\n     * Log detected version information\n   - Determine appropriate configuration based on version\n     * IF major version is 3 AND minor version is 23 THEN\n       * Mark for MySQL 3.23 specific handling\n     * ELSE IF major version is 4 AND minor version is 0 THEN\n       * Mark for MySQL 4.0 specific handling\n     * ELSE IF major version is greater than 4 OR (major version is 4 AND minor version is greater than 0) THEN\n       * Mark for MySQL 4.1+ specific handling\n     * END IF\n   \n4. Core Operation Execution:\n   - Process MySQL 3.23 specific configuration (if applicable)\n     * Ensure data access driver class is set to MySQL 3.23 specific driver\n     * Load current SQL queries configuration\n     * Check for necessary query keys in configuration\n     * IF required keys are missing or configuration is empty THEN\n       * Load MySQL 3.23 specific SQL queries from file\n       * Save updated SQL queries configuration\n     * END IF\n   - Process MySQL 4.0 specific configuration (if applicable)\n     * Ensure data access driver class is set to standard MySQL driver\n     * Load current SQL queries configuration\n     * IF configuration is empty or missing specific keys THEN\n       * Load MySQL 4.0 specific SQL queries from file\n       * Save updated SQL queries configuration\n     * END IF\n   - Process MySQL 4.1+ specific configuration (if applicable)\n     * Ensure data access driver class is set to standard MySQL driver\n     * Load current SQL queries configuration\n     * IF configuration is not empty THEN\n       * Reset SQL queries configuration to empty\n     * END IF\n     * Update encoding settings to remove MySQL-specific encoding parameters\n   \n5. Response Generation:\n   - Log completion of configuration updates\n   - Reload system configuration with updated settings\n   - Return success status indicating whether changes were made",
+  "databaseEntities": [],
+  "validationRules": [
+    "Database connection must not be null",
+    "Database driver must be MySQL to apply workarounds",
+    "Configuration files must be writable to apply changes",
+    "SQL query definition files must exist in the expected locations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "description": "Database metadata information"
+        }
+      }
+    },
+    "SystemConfiguration": {
+      "type": "object",
+      "properties": {
+        "databaseDriverName": {
+          "type": "string",
+          "description": "Name of the database driver"
+        },
+        "configurationPaths": {
+          "type": "object",
+          "description": "Paths to configuration files"
+        }
+      }
+    }
+  }
+}

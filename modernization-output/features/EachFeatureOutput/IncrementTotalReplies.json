@@ -1,0 +1,40 @@
+{
+  "featureName": "IncrementTotalReplies",
+  "description": "Increases the reply counter for a topic when a new reply is added.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number) that identifies the topic to update\n   - System will use the current database connection from the context\n\n2. Data Validation:\n   - Validate that topicId is provided\n     * IF topicId is null or zero THEN\n       - Return error: \"Topic ID is required\"\n     * END IF\n   - Validate that topicId represents an existing topic\n     * IF topic does not exist THEN\n       - Return error: \"Topic not found\"\n     * END IF\n\n3. Business Rule Processing:\n   - Check if the topic is in a valid state for incrementing replies\n     * IF topic is locked or deleted THEN\n       - Return error: \"Cannot add replies to this topic\"\n     * END IF\n   - Verify user has permission to add replies to this topic\n     * IF user does not have permission THEN\n       - Return error: \"Insufficient permissions to add replies\"\n     * END IF\n\n4. Core Operation Execution:\n   - Begin database transaction\n     * Increment the total_replies counter for the specified topic\n     * Update the last_post_date to current timestamp\n     * IF any database operation fails THEN\n       - Rollback transaction\n       - Log the error details\n       - Return error: \"Failed to update reply count\"\n     * END IF\n   - Commit transaction\n\n5. Response Generation:\n   - IF operation successful THEN\n     * Return success response with updated topic information\n     * Include new reply count in the response\n   - ELSE\n     * Return appropriate error message based on the failure point\n     * Include suggestion for user action if applicable\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the database",
+    "Topic must not be locked or deleted",
+    "User must have permission to reply to the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Count of replies to the topic"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date and time of the last reply"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

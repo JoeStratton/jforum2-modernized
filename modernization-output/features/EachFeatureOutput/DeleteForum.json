@@ -1,0 +1,25 @@
+{
+  "featureName": "DeleteForum",
+  "description": "Removes a forum and its associated security roles from the system.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required input:\n     a. forumId (number): Unique identifier of the forum to be deleted\n   - No optional inputs are required\n   - No default values are provided\n\n2. Data Validation\n   - Validate forumId:\n     a. Check if forumId is provided\n        IF forumId is missing or null THEN\n          Return error message: \"Forum ID is required\"\n     b. Check if forumId is a valid number\n        IF forumId is not a valid number THEN\n          Return error message: \"Forum ID must be a valid number\"\n     c. Check if forumId is positive\n        IF forumId is not positive THEN\n          Return error message: \"Forum ID must be a positive number\"\n\n3. Business Rule Processing\n   - Verify forum existence:\n     a. Check if the forum with the provided ID exists in the system\n        IF forum does not exist THEN\n          Return error message: \"Forum not found\"\n   - Check for dependencies:\n     a. Determine if there are active topics in the forum\n        IF active topics exist THEN\n          Display warning message: \"This forum contains topics that will also be deleted\"\n     b. Check if users have bookmarked this forum\n        IF bookmarks exist THEN\n          Display warning message: \"Users have bookmarked this forum\"\n   - Verify user permissions:\n     a. Check if the current user has permission to delete forums\n        IF user does not have permission THEN\n          Return error message: \"Insufficient permissions to delete forum\"\n\n4. Core Operation Execution\n   - Begin deletion process:\n     a. Start a transaction to ensure data integrity\n     b. Delete all security roles associated with the forum\n        FOR EACH security role related to the forum\n          Remove the role from the system\n     c. Delete the forum record from the database\n     d. IF any step fails THEN\n          Rollback the transaction\n          Return error message: \"Failed to delete forum. Please try again.\"\n     e. Commit the transaction if all operations succeed\n\n5. Response Generation\n   - Generate success response:\n     a. Create a confirmation message: \"Forum successfully deleted\"\n     b. Include the ID of the deleted forum in the response\n     c. Include timestamp of when the deletion occurred\n   - Provide next steps information:\n     a. Suggest returning to the forum list\n     b. Offer option to create a new forum\n   - Log the deletion event for audit purposes",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_user_groups",
+    "jforum_moderator_groups",
+    "jforum_bookmarks"
+  ],
+  "validationRules": [
+    "Forum ID must be provided",
+    "Forum ID must be a valid positive number",
+    "Forum must exist in the system",
+    "User must have permission to delete forums",
+    "All associated security roles must be removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

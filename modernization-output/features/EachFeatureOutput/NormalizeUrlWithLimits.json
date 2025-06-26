@@ -1,0 +1,33 @@
+{
+  "featureName": "NormalizeUrlWithLimits",
+  "description": "Normalizes URLs with customizable character limits and truncation options.",
+  "inputValues": [
+    "url-string-UrlInput",
+    "limit-number-CharacterLimit",
+    "friendlyTruncate-boolean-TruncationOption"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the URL string to be normalized (mandatory)\n   - Collect character limit for truncation (optional, default: 30)\n   - Collect friendly truncation flag (optional, default: true)\n\n2. Data Validation:\n   - Validate URL input:\n     a. Check if URL is not null or empty\n     b. If URL is null or empty, return an error message\n   - Validate character limit:\n     a. Ensure limit is a positive integer\n     b. If limit is negative or zero, use the default limit value\n   - Validate friendly truncation flag:\n     a. Ensure the value is a boolean\n     b. If invalid, use the default value (true)\n\n3. Business Rule Processing:\n   - Determine the effective character limit to use:\n     a. IF custom limit is provided and valid, use it\n     b. ELSE use the default limit (30 characters)\n   - Determine the truncation behavior:\n     a. IF friendly truncation is enabled, prepare to avoid cutting words\n     b. ELSE prepare for strict character limit enforcement\n\n4. Core Operation Execution:\n   - Initialize an empty result container for the normalized URL\n   - Process the input URL character by character:\n     a. FOR each character in the input URL:\n        i. IF within character limit OR (friendly truncation is enabled AND processing beyond limit but last character added wasn't a separator):\n           - IF character is a space or hyphen:\n             * IF friendly truncation is enabled AND beyond limit, stop processing\n             * IF previous character in result isn't already a separator, add an underscore\n           - ELSE IF character is a letter or digit:\n             * Add the character to the result\n           - ELSE IF friendly truncation is enabled AND beyond limit:\n             * Stop processing\n   - Convert the final result to lowercase\n\n5. Response Generation:\n   - Return the normalized URL string\n   - IF the URL was truncated, indicate this in the response\n   - IF any errors occurred during processing, return appropriate error information",
+  "databaseEntities": [],
+  "validationRules": [
+    "URL input must not be null or empty",
+    "Character limit must be a positive integer",
+    "Friendly truncation flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlInput": {
+      "type": "string",
+      "description": "The URL string to be normalized"
+    },
+    "CharacterLimit": {
+      "type": "number",
+      "description": "Maximum number of characters to process",
+      "default": 30
+    },
+    "TruncationOption": {
+      "type": "boolean",
+      "description": "Whether to use friendly truncation that avoids cutting words",
+      "default": true
+    }
+  }
+}

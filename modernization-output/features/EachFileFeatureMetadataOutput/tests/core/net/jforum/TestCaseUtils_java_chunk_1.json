@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "LoadEnvironment",
+    "description": "Initializes the JForum environment by loading configuration files and setting up system globals"
+  },
+  {
+    "featureName": "InitDatabaseImplementation",
+    "description": "Sets up database connectivity by loading drivers, queries, and initializing the data access layer"
+  },
+  {
+    "featureName": "GetRootDir",
+    "description": "Retrieves the application's root directory path for configuration and resource loading"
+  }
+]

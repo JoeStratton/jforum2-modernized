@@ -1,0 +1,94 @@
+{
+  "featureName": "UpdateAttachment",
+  "description": "Updates an attachment's comment information.",
+  "inputValues": [
+    "attachmentId-number-Attachment",
+    "comment-string-Attachment",
+    "downloadCount-number-Attachment",
+    "attachment-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. attachmentId (number, mandatory): The unique identifier of the attachment to update\n     1.2. comment (string, optional): The new comment text for the attachment\n     1.3. downloadCount (number, optional): The current download count for the attachment\n     1.4. attachment (object, optional): Complete attachment object with updated information\n\n2. Data Validation\n   - Validate all input parameters:\n     2.1. Validate attachmentId:\n         2.1.1. IF attachmentId is null or not a positive integer THEN\n             - Generate error: \"Attachment ID must be a valid positive number\"\n         2.1.2. Check if attachment exists in the system\n             - IF attachment not found THEN\n                 - Generate error: \"Attachment with the specified ID does not exist\"\n     2.2. Validate comment:\n         2.2.1. IF comment is provided THEN\n             - Check if comment length is within allowed limits\n             - IF comment exceeds maximum length THEN\n                 - Generate error: \"Comment exceeds maximum allowed length\"\n     2.3. Validate downloadCount:\n         2.3.1. IF downloadCount is provided THEN\n             - Verify downloadCount is a non-negative integer\n             - IF downloadCount is negative THEN\n                 - Generate error: \"Download count cannot be negative\"\n\n3. Business Rule Processing\n   - Verify user permissions and system state:\n     3.1. Check if the current user has permission to update the attachment\n         3.1.1. Retrieve the attachment's associated post information\n         3.1.2. Determine if current user is the owner of the post or has moderator privileges\n         3.1.3. IF user does not have permission THEN\n             - Generate error: \"You do not have permission to update this attachment\"\n     3.2. Check if the attachment is not locked or in a state that prevents updates\n         3.2.1. IF attachment is locked or cannot be modified THEN\n             - Generate error: \"This attachment cannot be modified\"\n     3.3. Verify attachment extension information is valid\n         3.3.1. IF attachment has an invalid extension THEN\n             - Generate error: \"Invalid attachment extension\"\n\n4. Core Operation Execution\n   - Update the attachment information:\n     4.1. Retrieve the existing attachment record using attachmentId\n     4.2. Update the attachment information:\n         4.2.1. IF using complete attachment object THEN\n             - Extract comment from the attachment object\n             - Extract downloadCount from the attachment object\n         4.2.2. ELSE use the provided parameters directly\n     4.3. Save the updated attachment information to the database\n         4.3.1. Update the comment field in the attachment record\n         4.3.2. Update the download count field in the attachment record\n         4.3.3. IF database update fails THEN\n             - Log the error details\n             - Roll back any partial changes\n             - Generate error: \"Failed to update attachment information\"\n\n5. Response Generation\n   - Prepare and return the operation result:\n     5.1. IF update operation was successful THEN\n         5.1.1. Generate success response with updated attachment details\n         5.1.2. Include confirmation message: \"Attachment updated successfully\"\n     5.2. ELSE\n         5.2.1. Return appropriate error message based on the failure reason\n         5.2.2. Include guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Attachment ID must be a valid positive number",
+    "Attachment must exist in the system",
+    "User must have permission to update the attachment",
+    "Comment length must not exceed the maximum allowed length",
+    "Download count must be a non-negative integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the attachment"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post this attachment belongs to"
+        },
+        "privmsgsId": {
+          "type": "number",
+          "description": "ID of the private message this attachment belongs to"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who uploaded the attachment"
+        },
+        "info": {
+          "type": "object",
+          "description": "Detailed information about the attachment",
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "User-provided comment for the attachment"
+            },
+            "downloadCount": {
+              "type": "number",
+              "description": "Number of times the attachment has been downloaded"
+            },
+            "filesize": {
+              "type": "number",
+              "description": "Size of the attachment file in bytes"
+            },
+            "mimetype": {
+              "type": "string",
+              "description": "MIME type of the attachment"
+            },
+            "physicalFilename": {
+              "type": "string",
+              "description": "Name of the file as stored in the system"
+            },
+            "realFilename": {
+              "type": "string",
+              "description": "Original filename of the attachment"
+            },
+            "uploadTime": {
+              "type": "date",
+              "description": "Date and time when the attachment was uploaded"
+            },
+            "extension": {
+              "type": "object",
+              "description": "Information about the file extension",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "description": "ID of the extension"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "featureName": "ImportForumStructure",
+  "description": "Transfers categories, forums, topics and related forum structure data.",
+  "inputValues": [
+    "baseDirectory-string-SystemConfig",
+    "sourceConnection-object-DatabaseConnection",
+    "targetConnection-object-DatabaseConnection",
+    "importOptions-object-ImportOptions"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect baseDirectory (string): Path to the base directory containing configuration files\n   - Collect sourceConnection (object): Connection details for the source forum database\n   - Collect targetConnection (object): Connection details for the target forum database\n   - Collect importOptions (object): Configuration options for the import process\n     - Include options for selecting which elements to import (users, posts, messages, etc.)\n     - Include formatting options for text conversion\n\n2. Data Validation:\n   - Validate baseDirectory:\n     - Check if the directory exists\n     - Verify required configuration files are present\n     - IF validation fails, THEN display appropriate error message and exit\n   - Validate source connection:\n     - Test connection to source database\n     - Verify required tables exist in source database\n     - IF connection fails, THEN display connection error and exit\n   - Validate target connection:\n     - Test connection to target database\n     - Verify required tables exist in target database\n     - IF connection fails, THEN display connection error and exit\n   - Validate import options:\n     - Check that selected import options are valid\n     - Verify any custom formatting rules are properly formatted\n     - IF validation fails, THEN display appropriate error message and exit\n\n3. Business Rule Processing:\n   - Check system resources:\n     - Verify sufficient memory for the operation\n     - Estimate required disk space for the import\n     - IF resources insufficient, THEN warn user and confirm continuation\n   - Check target database state:\n     - Verify if target database already contains data\n     - IF data exists, THEN prompt for confirmation to clean/overwrite\n     - Check for data integrity constraints that might affect import\n   - Prepare text conversion rules:\n     - Load text formatting conversion rules\n     - Compile regular expressions for text transformations\n     - Validate all conversion patterns are valid\n\n4. Core Operation Execution:\n   - Initialize system:\n     - Load configuration settings\n     - Establish database connections\n     - Prepare statement templates\n   - Clean target tables:\n     - Remove existing data from all target tables\n     - Reset auto-increment counters if applicable\n     - Log cleaning operations\n   - Import user data:\n     - Transfer user profiles and credentials\n     - Maintain user IDs where possible\n     - Convert user signatures using text conversion rules\n     - Log progress of user import\n   - Import forum structure:\n     - Transfer categories maintaining hierarchy\n     - Transfer forums with proper category associations\n     - Transfer forum permissions and settings\n     - Log progress of structure import\n   - Import topics and posts:\n     - Count total posts to provide progress updates\n     - Transfer topics with metadata\n     - Transfer posts with proper topic associations\n     - Convert post text using text conversion rules\n     - Log progress at regular intervals\n   - Import private messages:\n     - Transfer message headers and metadata\n     - Convert message text using text conversion rules\n     - Maintain sender/recipient relationships\n     - Log progress of message import\n   - Import supplementary data:\n     - Transfer user groups and memberships\n     - Transfer moderation assignments\n     - Transfer ban lists and restrictions\n     - Transfer voting and poll data\n     - Log completion of each supplementary data type\n   - Setup permissions:\n     - Configure default permission groups\n     - Assign users to appropriate groups\n     - Set administrative permissions\n     - Verify permission integrity\n\n5. Response Generation:\n   - Generate import summary:\n     - Total number of users imported\n     - Total number of categories and forums imported\n     - Total number of topics and posts imported\n     - Total number of private messages imported\n     - List of any items that failed to import\n   - Generate warnings:\n     - Identify any data inconsistencies found\n     - List any formatting issues encountered\n     - Highlight permissions that may need manual review\n   - Provide next steps:\n     - Suggest verification procedures\n     - Recommend backup of the newly imported data\n     - Suggest manual review of administrative settings",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_user_groups",
+    "jforum_moderator_groups",
+    "jforum_smilies",
+    "jforum_words"
+  ],
+  "validationRules": [
+    "Base directory must exist and contain required configuration files",
+    "Source database connection must be valid and accessible",
+    "Target database connection must be valid and accessible",
+    "Source database must contain required forum structure tables",
+    "Target database tables must be compatible with the import structure",
+    "Text conversion rules must be properly formatted",
+    "User IDs must be preserved during import to maintain relationships",
+    "Post text must be converted according to formatting rules",
+    "Category and forum hierarchies must be maintained",
+    "Topic and post relationships must be preserved",
+    "User group assignments must be correctly transferred",
+    "Administrative permissions must be properly configured after import"
+  ],
+  "dbSeedingOperations": [
+    "Create default administrative user group",
+    "Assign administrative roles to appropriate users",
+    "Set up anonymous user account",
+    "Configure default permission settings"
+  ],
+  "schema": {
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "driverClass": {
+          "type": "string",
+          "description": "Database driver class name"
+        },
+        "url": {
+          "type": "string",
+          "description": "Database connection URL"
+        },
+        "username": {
+          "type": "string",
+          "description": "Database username"
+        },
+        "password": {
+          "type": "string",
+          "description": "Database password"
+        },
+        "tablePrefix": {
+          "type": "string",
+          "description": "Prefix used for database tables"
+        }
+      },
+      "required": [
+        "driverClass",
+        "url",
+        "username",
+        "password"
+      ]
+    },
+    "ImportOptions": {
+      "type": "object",
+      "properties": {
+        "importUsers": {
+          "type": "boolean",
+          "description": "Whether to import user data"
+        },
+        "importCategories": {
+          "type": "boolean",
+          "description": "Whether to import categories"
+        },
+        "importForums": {
+          "type": "boolean",
+          "description": "Whether to import forums"
+        },
+        "importTopics": {
+          "type": "boolean",
+          "description": "Whether to import topics"
+        },
+        "importPosts": {
+          "type": "boolean",
+          "description": "Whether to import posts"
+        },
+        "importPrivateMessages": {
+          "type": "boolean",
+          "description": "Whether to import private messages"
+        },
+        "cleanTargetTables": {
+          "type": "boolean",
+          "description": "Whether to clean target tables before import"
+        },
+        "textConversionRules": {
+          "type": "array",
+          "description": "Rules for converting text formatting",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regular expression pattern to match"
+              },
+              "replacement": {
+                "type": "string",
+                "description": "Replacement text"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

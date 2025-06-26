@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "InsertConfig",
+    "description": "Inserts a new configuration entry into the system"
+  },
+  {
+    "featureName": "UpdateConfig",
+    "description": "Updates an existing configuration entry with new values"
+  },
+  {
+    "featureName": "DeleteConfig",
+    "description": "Removes a configuration entry from the system"
+  },
+  {
+    "featureName": "SelectAllConfigs",
+    "description": "Retrieves all configuration entries from the system"
+  },
+  {
+    "featureName": "SelectConfigByName",
+    "description": "Retrieves a specific configuration entry by its name"
+  }
+]

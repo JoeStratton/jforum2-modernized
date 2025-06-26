@@ -1,0 +1,25 @@
+{
+  "featureName": "EditCategory",
+  "description": "Prepares the form for editing an existing forum category.",
+  "inputValues": [
+    "category_id-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the category_id (mandatory) from the request\n   - System will use this ID to retrieve the existing category information\n\n2. Data Validation:\n   - Validate that category_id is provided\n     - IF category_id is missing or invalid THEN\n       - Display error message indicating invalid category ID\n       - Return user to category list page\n     - END IF\n   - Validate that category with provided ID exists in the system\n     - IF category does not exist THEN\n       - Display error message indicating category not found\n       - Return user to category list page\n     - END IF\n\n3. Business Rule Processing:\n   - Check if the current user has permission to edit categories\n     - IF user lacks edit permission THEN\n       - Display access denied message\n       - Return user to previous page\n     - END IF\n   - Retrieve complete category information from the database\n     - Include category name, moderation status, and any other relevant attributes\n     - IF retrieval fails THEN\n       - Log the error\n       - Display system error message\n       - Return user to category list page\n     - END IF\n\n4. Core Operation Execution:\n   - Prepare the edit form with the retrieved category data\n     - Populate form fields with current category values\n     - Set form action to the appropriate save endpoint\n   - Load any additional context data needed for the form\n     - Load moderation options\n   - Prepare the user interface for category editing\n     - Set the template to category edit view\n     - Set the form submission action to \"editSave\"\n\n5. Response Generation:\n   - Display the category edit form to the user\n     - Show current category name and settings\n     - Provide form fields for modifying category attributes\n     - Include submit and cancel buttons\n   - IF any errors occurred during processing THEN\n     - Display appropriate error messages\n     - Maintain any user-entered data where possible\n   - END IF",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category ID must be a valid integer",
+    "Category must exist in the system",
+    "User must have permission to edit categories"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "moderated": "boolean",
+      "order": "number"
+    }
+  }
+}

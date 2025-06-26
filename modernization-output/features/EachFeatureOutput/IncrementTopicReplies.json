@@ -1,0 +1,19 @@
+{
+  "featureName": "IncrementTopicReplies",
+  "description": "Increments the reply count for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number) from the request\n   - System will use this identifier to locate the specific topic\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if topic with provided topicId exists in the system\n     b. If topic not found, generate \"Topic not found\" error\n   - Verify topic status:\n     a. Check if topic is not locked or deleted\n     b. If topic is locked, generate \"Cannot update locked topic\" error\n     c. If topic is deleted, generate \"Cannot update deleted topic\" error\n\n4. Core Operation Execution:\n   - Retrieve current reply count for the topic\n   - Increment the reply count by 1\n   - Update the topic record with new reply count\n   - Update the last modified timestamp for the topic\n   - If any operation fails:\n     a. Revert any partial changes\n     b. Generate appropriate error message\n\n5. Response Generation:\n   - On success:\n     a. Return confirmation message\n     b. Include updated reply count in response\n   - On failure:\n     a. Return error details\n     b. Include error code and description",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic must not be locked or deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

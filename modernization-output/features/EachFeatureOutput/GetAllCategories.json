@@ -1,0 +1,54 @@
+{
+  "featureName": "GetAllCategories",
+  "description": "Retrieves all categories accessible to the current user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect userId (number) from the current user session\n   - If userId is not provided, use the current authenticated user's ID from the session facade\n   - System will use this userId to filter categories based on access permissions\n\n2. Data Validation\n   - Validate that userId is a valid positive integer\n     - IF userId is invalid or negative THEN\n       - Generate an error message indicating invalid user identification\n       - Terminate the process\n     - END IF\n   - Verify that the user session is active\n     - IF user session has expired THEN\n       - Generate an authentication required error\n       - Terminate the process\n     - END IF\n   - Verify the system cache is initialized\n     - IF the categories cache is not initialized THEN\n       - Initialize the categories cache\n     - END IF\n\n3. Business Rule Processing\n   - Retrieve user's permission control settings\n     - Load security repository data for the specified userId\n     - Prepare permission control object with user's access rights\n   - Initialize an empty categories list to store results\n   - Retrieve the complete set of categories from the system cache\n     - IF categories set is not found or is null THEN\n       - Attempt to reload categories data from the data source\n       - IF reload fails THEN\n         - Generate a system error indicating categories could not be loaded\n         - Terminate the process\n       - END IF\n     - END IF\n\n4. Core Operation Execution\n   - For each category in the complete categories set:\n     - Check if the current user has access permission to the category\n       - Verify category access permission using permission control object\n       - IF user has access permission to the category THEN\n         - Add the category to the results list\n         - For each forum in the category:\n           - Check if the user has access permission to the forum\n           - IF user has access permission to the forum THEN\n             - Include the forum in the category's forum list\n           - ELSE\n             - Exclude the forum from the category's forum list\n           - END IF\n       - END IF\n   - Sort the categories list by display order\n     - Categories with lower order values appear first in the list\n   - For each category in the filtered list:\n     - Sort the forums within the category by their display order\n\n5. Response Generation\n   - Prepare the response with the filtered categories list\n     - For each accessible category, include:\n       - Category ID\n       - Category name\n       - Category description\n       - Category display order\n       - List of forums within the category (only those accessible to the user)\n         - For each forum include:\n           - Forum ID\n           - Forum name\n           - Forum description\n           - Forum order\n           - Last post information (if available)\n           - Total topics count\n           - Total posts count\n   - Return the complete list of accessible categories\n   - IF no categories are accessible to the user THEN\n     - Return an empty list (not an error)\n   - END IF",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "User must have an active session",
+    "User must have appropriate permissions to view categories",
+    "Categories must be properly loaded in the system",
+    "Category order must be respected in the display sequence",
+    "Forums within categories must be ordered by their display sequence"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostInfo": "object-LastPostInfo"
+    },
+    "LastPostInfo": {
+      "postId": "number",
+      "postDate": "string",
+      "postTimeMillis": "number",
+      "topicId": "number",
+      "topicReplies": "number",
+      "userId": "number",
+      "username": "string"
+    }
+  }
+}

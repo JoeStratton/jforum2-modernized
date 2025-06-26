@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ExpandVariables",
+    "description": "Replaces variable placeholders in text with their actual values from a variable store"
+  },
+  {
+    "featureName": "ClearCache",
+    "description": "Clears the internal cache of previously expanded variable strings"
+  }
+]

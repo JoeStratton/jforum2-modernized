@@ -1,0 +1,56 @@
+{
+  "featureName": "AddRssItem",
+  "description": "Adds a new item entry to an RSS document.",
+  "inputValues": [
+    "item-object-RSSItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the RSSItem object with the following properties:\n     * title: The title of the RSS item\n     * description: The description of the RSS item\n     * link: The link to the full content\n     * pubDate: The publication date of the item\n     * author: The author of the item (optional)\n     * categories: List of categories the item belongs to (optional)\n   - Verify the RSS document instance is properly initialized with:\n     * title: The document title\n     * description: The document description\n     * encoding: The character encoding\n     * link: The main document link\n\n2. Data Validation:\n   - Validate the RSSItem object:\n     * Verify title is not null or empty\n       IF title is null or empty THEN\n         Generate error: \"RSS item title cannot be empty\"\n       END IF\n     * Verify description is not null or empty\n       IF description is null or empty THEN\n         Generate error: \"RSS item description cannot be empty\"\n       END IF\n     * Verify link is not null and has valid URL format\n       IF link is null or invalid format THEN\n         Generate error: \"RSS item link must be a valid URL\"\n       END IF\n     * Verify pubDate is in valid date format\n       IF pubDate is provided and has invalid format THEN\n         Generate error: \"Publication date must be in valid format\"\n       END IF\n\n3. Business Rule Processing:\n   - Check if the RSS document has reached maximum allowed items (if applicable)\n     IF maximum item limit is defined AND current items count >= maximum limit THEN\n       Generate warning: \"Maximum RSS items limit reached\"\n       Determine if oldest items should be removed or new item rejected\n     END IF\n   - Check for duplicate items\n     FOR EACH existing item in RSS document\n       IF existing item has same link as new item THEN\n         Generate warning: \"Item with this link already exists\"\n         Determine if item should be updated or rejected\n       END IF\n     END FOR\n\n4. Core Operation Execution:\n   - Add the validated RSSItem to the RSS document's items collection\n     * Access the internal list of items in the RSS document\n     * Add the new RSSItem object to the list\n   - Update any internal indices or references if necessary\n   - Update the last modified timestamp of the RSS document if applicable\n\n5. Response Generation:\n   - On Success:\n     * Return confirmation that the item was added successfully\n     * Include the current count of items in the RSS document\n   - On Failure:\n     * Return appropriate error message based on validation failures\n     * Include guidance on how to correct the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "RSS item title must not be empty",
+    "RSS item description must not be empty",
+    "RSS item link must be a valid URL",
+    "Publication date must be in valid format if provided",
+    "RSS document must be initialized before adding items"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RSSItem": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the RSS item"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the RSS item"
+        },
+        "link": {
+          "type": "string",
+          "description": "The link to the full content"
+        },
+        "pubDate": {
+          "type": "string",
+          "description": "The publication date of the item"
+        },
+        "author": {
+          "type": "string",
+          "description": "The author of the item"
+        },
+        "categories": {
+          "type": "array",
+          "description": "List of categories the item belongs to",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "link"
+      ]
+    }
+  }
+}

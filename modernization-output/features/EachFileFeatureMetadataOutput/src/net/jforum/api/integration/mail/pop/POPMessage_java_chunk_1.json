@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ExtractEmailMessage",
+    "description": "Extracts and processes email message content from POP3 messages including headers, body, and metadata"
+  },
+  {
+    "featureName": "ParseMultipartMessage",
+    "description": "Parses multipart email messages to extract text content from different parts"
+  },
+  {
+    "featureName": "ExtractEmailMetadata",
+    "description": "Extracts email metadata including subject, sender, reply-to, references, and dates"
+  }
+]

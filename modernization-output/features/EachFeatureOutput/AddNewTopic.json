@@ -1,0 +1,79 @@
+{
+  "featureName": "AddNewTopic",
+  "description": "Creates a new forum topic with initial metadata.",
+  "inputValues": [
+    "title-string-Topic",
+    "forumId-number-Forum",
+    "content-string-Post",
+    "user-object-User",
+    "type-number-Topic",
+    "isModerated-boolean-Topic",
+    "attachments-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect required inputs:\n     a) title (string, mandatory): The title of the new topic\n     b) forumId (number, mandatory): The forum where the topic will be created\n     c) content (string, mandatory): The content of the first post\n     d) user (object, mandatory): The user creating the topic\n     e) type (number, optional, default=0): The type of topic (normal, sticky, announcement)\n     f) isModerated (boolean, optional, default=false): Whether the topic requires moderation\n     g) attachments (object, optional): Any files attached to the first post\n\n2. Data Validation:\n   - Validate topic title:\n     a) Check if title is not empty\n     b) Verify title length is between 3 and 100 characters\n     c) IF validation fails, THEN return error message \"Topic title must be between 3 and 100 characters\"\n   - Validate forum:\n     a) Check if forumId exists in the system\n     b) Verify user has permission to create topics in this forum\n     c) IF forum doesn't exist, THEN return error message \"Selected forum does not exist\"\n     d) IF user lacks permission, THEN return error message \"You don't have permission to create topics in this forum\"\n   - Validate content:\n     a) Check if content is not empty\n     b) Verify content length is within allowed limits\n     c) IF content is empty, THEN return error message \"Post content cannot be empty\"\n     d) IF content exceeds maximum length, THEN return error message \"Post content exceeds maximum allowed length\"\n   - Validate attachments (if provided):\n     a) Check if file types are allowed\n     b) Verify file sizes are within limits\n     c) IF any attachment validation fails, THEN return appropriate error message\n\n3. Business Rule Processing:\n   - Check forum status:\n     a) Verify forum is not locked or archived\n     b) IF forum is locked, THEN return error message \"Cannot create topic in a locked forum\"\n   - Check user status:\n     a) Verify user is not banned or restricted\n     b) IF user is banned, THEN return error message \"Banned users cannot create topics\"\n   - Check rate limiting:\n     a) Verify user hasn't exceeded topic creation rate limits\n     b) IF rate limit exceeded, THEN return error message \"You are creating topics too quickly. Please wait before creating another topic\"\n   - Check moderation requirements:\n     a) Determine if topic requires moderation based on forum settings and user permissions\n     b) Set isModerated flag accordingly\n\n4. Core Operation Execution:\n   - Create new topic record:\n     a) Generate a new topic ID\n     b) Set topic properties: title, forumId, type, isModerated\n     c) Set creation timestamp to current time\n     d) Associate topic with the creating user\n     e) Initialize topic counters (views=0, replies=0)\n   - Create first post:\n     a) Generate a new post ID\n     b) Set post content and metadata\n     c) Associate post with the topic and user\n     d) Set post timestamp to current time\n     e) Process and store any attachments\n   - Update topic with post references:\n     a) Set topic's firstPostId to the created post ID\n     b) Set topic's lastPostId to the same post ID\n   - Update forum statistics:\n     a) Increment forum's total topics count\n     b) Update forum's last post information\n   - IF topic requires moderation:\n     a) Mark topic as pending approval\n     b) Do not display in public listings until approved\n   - IF any operation fails:\n     a) Roll back all created records\n     b) Return appropriate error message\n\n5. Response Generation:\n   - For successful creation:\n     a) Return success status\n     b) Include created topic ID\n     c) Include navigation information to view the new topic\n     d) Include moderation status if applicable\n   - For failure:\n     a) Return error status\n     b) Include specific error message\n     c) Include any field-specific validation errors\n     d) Provide guidance on how to correct the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Topic title must not be empty",
+    "Topic title must be between 3 and 100 characters",
+    "Forum ID must exist in the system",
+    "User must have permission to create topics in the selected forum",
+    "Post content cannot be empty",
+    "Post content must not exceed maximum allowed length",
+    "Forum must not be locked or archived",
+    "User must not be banned or restricted",
+    "User must not exceed topic creation rate limits",
+    "Attachment file types must be allowed",
+    "Attachment file sizes must be within limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's display name"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "filename": {
+          "type": "string",
+          "description": "Name of the attached file"
+        },
+        "fileContent": {
+          "type": "object",
+          "description": "Content of the attached file"
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "Size of the attached file in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the attached file"
+        }
+      },
+      "required": [
+        "filename",
+        "fileContent"
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "featureName": "AddBanEntry",
+  "description": "Adds a new ban entry to the banlist cache.",
+  "inputValues": [
+    "banEntry-object-Banlist"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the ban entry object with the following properties:\n     - id: A unique identifier for the ban entry\n     - Type information (could be IP, username, or email)\n     - Value of the ban entry (the actual IP, username, or email to ban)\n     - Additional metadata (creation date, expiration date if applicable)\n   - System will automatically assign an ID if not provided\n\n2. Data Validation\n   - Validate ban entry object structure\n     - Ensure the ban entry has a valid type specified\n     - Ensure the ban value is not empty\n     - Verify the format of the ban value based on its type:\n       * IF type is IP, THEN validate IP address format\n       * IF type is email, THEN validate email format\n       * IF type is username, THEN validate username format\n     - Check that expiration date, if provided, is in the future\n   - IF any validation fails, THEN\n     - Generate appropriate error message\n     - Halt the process and return validation error\n\n3. Business Rule Processing\n   - Check for duplicate ban entries\n     - Retrieve current banlist from cache\n     - Check if an identical ban entry already exists\n     - IF duplicate found, THEN\n       * Generate duplicate entry error\n       * Halt the process\n   - Verify user has appropriate permissions to add ban entries\n   - Check system limits on number of ban entries if applicable\n\n4. Core Operation Execution\n   - Retrieve the current banlist map from cache\n     - IF banlist does not exist in cache, THEN create a new empty map\n   - Add the new ban entry to the banlist map\n     - Use the ban entry ID as the key\n     - Store the complete ban entry object as the value\n   - Update the banlist in the cache with the modified map\n   - Persist the ban entry to the database for permanent storage\n     - Create database record with all ban entry details\n     - Ensure database operation completes successfully\n   - IF database operation fails, THEN\n     - Remove the entry from cache\n     - Generate appropriate error message\n     - Halt the process\n\n5. Response Generation\n   - Generate success response\n     - Include confirmation message\n     - Include the ID of the newly added ban entry\n     - Include summary of the ban entry details\n   - Return success status with ban entry information\n   - Log the addition of the new ban entry for audit purposes",
+  "databaseEntities": [
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "Ban entry must have a valid type (IP, username, or email)",
+    "Ban value must not be empty",
+    "Ban value must match the format requirements for its type",
+    "Expiration date, if provided, must be in the future",
+    "Duplicate ban entries are not allowed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the ban entry"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of ban (IP, username, email)",
+          "enum": [
+            "IP",
+            "USERNAME",
+            "EMAIL"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "The actual value to ban (IP address, username, or email)"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the ban entry was created"
+        },
+        "expirationDate": {
+          "type": "date",
+          "description": "Optional date when the ban expires"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ]
+    }
+  }
+}

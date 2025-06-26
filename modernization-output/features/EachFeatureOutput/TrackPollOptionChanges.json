@@ -1,0 +1,33 @@
+{
+  "featureName": "TrackPollOptionChanges",
+  "description": "Tracks modifications to existing poll options by comparing text values.",
+  "inputValues": [
+    "firstPoll-object-Poll",
+    "secondPoll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. firstPoll (mandatory): The original poll object with current options\n     b. secondPoll (mandatory): The modified poll object with updated options\n\n2. Data Validation:\n   - Validate poll objects:\n     a. Check if firstPoll is not null\n        IF firstPoll is null THEN\n           Return error message \"Original poll cannot be null\"\n     b. Check if secondPoll is not null\n        IF secondPoll is null THEN\n           Return error message \"Modified poll cannot be null\"\n     c. Verify both polls have options collections\n        IF either poll's options collection is null THEN\n           Initialize as empty collection\n\n3. Business Rule Processing:\n   - Compare poll metadata:\n     a. Check if poll labels are different\n        IF firstPoll.label != secondPoll.label THEN\n           Mark changes detected\n     b. Check if poll lengths are different\n        IF firstPoll.length != secondPoll.length THEN\n           Mark changes detected\n   - Process option changes:\n     a. Initialize collections for tracking:\n        - deletedOptions: Options present in first poll but missing in second\n        - newOptions: Options present in second poll but not in first\n        - changedOptions: Options present in both but with different text\n     b. FOR EACH option in firstPoll.options:\n        i. Find matching option by ID in secondPoll.options\n        ii. IF matching option found THEN\n            - Compare text values\n            - IF texts are different THEN\n              Add to changedOptions\n        iii. IF no matching option found THEN\n            Add to deletedOptions\n     c. FOR EACH option in secondPoll.options:\n        i. Find matching option by ID in firstPoll.options\n        ii. IF no matching option found THEN\n            Add to newOptions\n\n4. Core Operation Execution:\n   - Compile change summary:\n     a. Set hasChanges flag to true if any of the following conditions are met:\n        - Poll metadata (label or length) has changed\n        - deletedOptions collection is not empty\n        - newOptions collection is not empty\n        - changedOptions collection is not empty\n     b. Organize all changes into appropriate collections:\n        - Store all deleted options in deletedOptions collection\n        - Store all new options in newOptions collection\n        - Store all modified options in changedOptions collection\n\n5. Response Generation:\n   - Return change tracking object with:\n     a. hasChanges: Boolean indicating if any changes were detected\n     b. deletedOptions: Collection of options removed from the poll\n     c. newOptions: Collection of options added to the poll\n     d. changedOptions: Collection of options with modified text\n     e. Original reference polls for context",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "First poll object must not be null",
+    "Second poll object must not be null",
+    "Poll options must have unique IDs",
+    "Option text changes must be tracked when text values differ",
+    "Options present in first poll but not in second are considered deleted",
+    "Options present in second poll but not in first are considered new"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "label": "string",
+      "length": "number",
+      "options": "array:PollOption"
+    },
+    "PollOption": {
+      "id": "number",
+      "text": "string"
+    }
+  }
+}

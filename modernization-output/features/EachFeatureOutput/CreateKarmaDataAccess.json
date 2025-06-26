@@ -1,0 +1,59 @@
+{
+  "featureName": "CreateKarmaDataAccess",
+  "description": "Provides data access functionality for karma system in SQL Server environment.",
+  "inputValues": [
+    "karmaId-number-Karma",
+    "userId-number-User",
+    "postId-number-Post",
+    "points-number-Karma",
+    "topicId-number-Topic",
+    "rateDate-date-Karma",
+    "karmaStatus-object-KarmaStatus"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect karma data inputs:\n     1.1. userId (mandatory): Identifier of the user giving karma\n     1.2. postId (mandatory): Identifier of the post receiving karma\n     1.3. points (mandatory): Numeric value representing karma points\n     1.4. topicId (optional): Identifier of the topic containing the post\n     1.5. rateDate (system-generated): Current timestamp when karma is given\n     1.6. karmaId (system-generated): Unique identifier for the karma entry\n\n2. Data Validation:\n   2.1. Validate userId:\n      - Check if userId is not null\n      - Verify userId exists in the jforum_users table\n      - IF userId is invalid THEN return error message \"Invalid user identifier\"\n   2.2. Validate postId:\n      - Check if postId is not null\n      - Verify postId exists in the jforum_posts table\n      - IF postId is invalid THEN return error message \"Invalid post identifier\"\n   2.3. Validate points:\n      - Check if points value is within allowed range\n      - IF points value is outside allowed range THEN return error message \"Karma points must be within valid range\"\n   2.4. Validate user karma permissions:\n      - Check if user has permission to give karma\n      - IF user lacks permission THEN return error message \"User does not have permission to give karma\"\n   2.5. Validate karma uniqueness:\n      - Check if user has already given karma to this post\n      - IF duplicate karma entry exists THEN return error message \"User has already rated this post\"\n\n3. Business Rule Processing:\n   3.1. Check system karma settings:\n      - Verify karma system is enabled\n      - Check minimum time between karma ratings\n      - IF karma system is disabled THEN return error message \"Karma system is currently disabled\"\n      - IF minimum time between ratings not met THEN return error message \"Please wait before giving more karma\"\n   3.2. Check post eligibility:\n      - Verify post is not locked or in a restricted forum\n      - Verify post is not the user's own post\n      - IF post is locked THEN return error message \"Cannot rate locked posts\"\n      - IF post belongs to the user THEN return error message \"Cannot rate your own posts\"\n   3.3. Calculate karma impact:\n      - Determine how the new karma affects the post's total karma\n      - Determine how the new karma affects the post author's total karma\n\n4. Core Operation Execution:\n   4.1. Create karma record:\n      - Generate new karma entry with collected data\n      - Associate karma with user, post, and topic\n      - Set timestamp for the karma action\n      - Store karma points value\n   4.2. Update related records:\n      - Update post's total karma score\n      - Update post author's total karma score\n      - Update karma count statistics\n   4.3. Handle transaction integrity:\n      - Ensure all updates are completed successfully\n      - IF any operation fails THEN rollback all changes and return error message \"Failed to process karma operation\"\n\n5. Response Generation:\n   5.1. For successful karma operation:\n      - Return success status\n      - Include updated karma totals for the post\n      - Include updated karma totals for the post author\n   5.2. For failed karma operation:\n      - Return failure status\n      - Include specific error message explaining the failure reason\n      - Include guidance for resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must exist in the system",
+    "Post must exist in the system",
+    "User must have permission to give karma",
+    "User cannot rate their own posts",
+    "User cannot rate the same post multiple times",
+    "Karma points must be within the allowed range",
+    "Karma system must be enabled",
+    "Minimum time between karma ratings must be respected",
+    "Post must not be in a locked state"
+  ],
+  "dbSeedingOperations": [
+    "Ensure karma configuration settings are initialized",
+    "Set up default karma permissions for user groups"
+  ],
+  "schema": {
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "totalPoints": {
+          "type": "number",
+          "description": "Total karma points for the post"
+        },
+        "voterCount": {
+          "type": "number",
+          "description": "Number of users who have rated the post"
+        },
+        "userKarmaPoints": {
+          "type": "number",
+          "description": "Total karma points for the post author"
+        },
+        "lastVoteDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last karma vote"
+        }
+      }
+    }
+  }
+}

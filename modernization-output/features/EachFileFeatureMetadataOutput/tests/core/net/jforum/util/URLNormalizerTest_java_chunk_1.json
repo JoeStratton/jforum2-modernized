@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "TestURLNormalization",
+    "description": "Tests URL normalization functionality including space replacement, character limits, and special character removal"
+  }
+]

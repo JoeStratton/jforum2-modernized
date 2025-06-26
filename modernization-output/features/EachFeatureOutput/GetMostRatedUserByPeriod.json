@@ -1,0 +1,43 @@
+{
+  "featureName": "GetMostRatedUserByPeriod",
+  "description": "Retrieves users with highest karma ratings within a specified time period.",
+  "inputValues": [
+    "startIndex-number-Pagination",
+    "firstPeriod-date-DateRange",
+    "lastPeriod-date-DateRange",
+    "orderField-string-SortOption"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. startIndex (number): Starting position for pagination results\n     b. firstPeriod (date): Beginning date of the time period\n     c. lastPeriod (date): Ending date of the time period\n     d. orderField (string): Field to sort results by\n\n2. Data Validation:\n   - Validate date range parameters:\n     a. Verify firstPeriod is not null\n     b. Verify lastPeriod is not null\n     c. Verify firstPeriod is before lastPeriod\n        i. IF firstPeriod is after lastPeriod THEN\n           - Generate an error message indicating invalid date range\n           - Halt processing and return error\n   - Validate startIndex parameter:\n     a. Verify startIndex is a non-negative integer\n        i. IF startIndex is negative THEN\n           - Set startIndex to default value (0)\n   - Validate orderField parameter:\n     a. Verify orderField is one of the allowed sorting fields\n        i. IF orderField is invalid or empty THEN\n           - Set orderField to default value (\"user_karma\")\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify karma tracking is enabled in the system\n        i. IF karma tracking is disabled THEN\n           - Return empty result set with appropriate message\n   - Prepare query parameters:\n     a. Format date parameters to system standard\n     b. Sanitize orderField to prevent injection\n     c. Determine result limit based on system configuration\n\n4. Core Operation Execution:\n   - Retrieve user karma data:\n     a. Query the karma records within the specified date range\n     b. Apply pagination starting from startIndex\n     c. Sort results according to orderField in descending order\n     d. For each qualifying user record:\n        i. Calculate total karma points received\n        ii. Calculate total number of votes received\n        iii. Calculate average karma rating\n        iv. Calculate total votes given by the user\n   - Compile user information:\n     a. For each user with karma data:\n        i. Retrieve basic user information (ID, username)\n        ii. Associate karma statistics with user\n        iii. Add to result collection\n\n5. Response Generation:\n   - Format the result set:\n     a. Create a list of user objects with their karma information\n     b. Include for each user:\n        i. User identifier and username\n        ii. Total karma points received\n        iii. Number of votes received\n        iv. Average karma rating\n        v. Number of votes given\n   - Return the formatted list of users ordered by the specified field\n   - Include metadata:\n     a. Total number of matching users\n     b. Period start and end dates\n     c. Sort field used",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "First period date must be before last period date",
+    "Start index must be a non-negative integer",
+    "Order field must be a valid sortable field",
+    "Date range must be within allowed system limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "karma": {
+        "totalPoints": "number",
+        "votesReceived": "number",
+        "karmaPoints": "number",
+        "votesGiven": "number"
+      }
+    },
+    "DateRange": {
+      "date": "date"
+    },
+    "Pagination": {
+      "index": "number"
+    },
+    "SortOption": {
+      "field": "string"
+    }
+  }
+}

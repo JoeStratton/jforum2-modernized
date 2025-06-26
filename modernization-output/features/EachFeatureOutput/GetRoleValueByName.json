@@ -1,0 +1,29 @@
+{
+  "featureName": "GetRoleValueByName",
+  "description": "Retrieves a RoleValue object by its name from the collection.",
+  "inputValues": [
+    "valueName-string-RoleValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. valueName (string, mandatory): The name of the RoleValue to retrieve\n\n2. Data Validation:\n   - Validate the valueName input:\n     a. Check if valueName is provided\n        IF valueName is null or empty THEN\n          Return appropriate error message indicating valueName is required\n     b. Check if valueName is of valid format\n        IF valueName format is invalid THEN\n          Return appropriate error message indicating invalid format\n\n3. Business Rule Processing:\n   - Verify collection access:\n     a. Check if the RoleValue collection is accessible\n        IF collection is not accessible THEN\n          Return appropriate error message indicating collection access issue\n     b. Check if the user has permission to access the collection\n        IF user lacks permission THEN\n          Return appropriate error message indicating permission issue\n\n4. Core Operation Execution:\n   - Search for the requested RoleValue:\n     a. Initialize result variable to null\n     b. Iterate through each item in the collection:\n        FOR each item in the collection DO\n          IF current item is a RoleValue object THEN\n            IF current item's value matches the requested valueName THEN\n              Set result to current item\n              Exit the loop\n        END FOR\n     c. Handle search completion:\n        IF no matching RoleValue was found THEN\n          Prepare null result\n\n5. Response Generation:\n   - Generate appropriate response:\n     a. IF a matching RoleValue was found THEN\n          Return the found RoleValue object with its properties\n     b. ELSE\n          Return null to indicate no matching RoleValue was found\n     c. Include any relevant metadata about the search operation\n        (e.g., time taken, number of items searched)",
+  "databaseEntities": [],
+  "validationRules": [
+    "The valueName parameter must not be null or empty",
+    "The collection must be accessible",
+    "Only RoleValue objects can be added to the collection"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RoleValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The name/value of the role value"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

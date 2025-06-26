@@ -1,0 +1,63 @@
+{
+  "featureName": "GetUserByUsername",
+  "description": "Retrieves a user by their username with all associated profile information.",
+  "inputValues": [
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required input:\n     a. username (string): The unique identifier for the user to retrieve\n   - No optional fields are required for this operation\n   - No system-generated fields are needed at this stage\n\n2. Data Validation\n   - Validate the username input:\n     a. Check if username is provided\n        IF username is empty or null THEN\n          Return error message \"Username cannot be empty\"\n     b. Check if username format is valid\n        IF username contains invalid characters THEN\n          Return error message \"Username contains invalid characters\"\n     c. Check if username length is within acceptable range\n        IF username length is outside valid range THEN\n          Return error message \"Username must be between X and Y characters\"\n\n3. Business Rule Processing\n   - Verify system state for user retrieval:\n     a. Check if the user database is accessible\n        IF database connection fails THEN\n          Return error message \"Unable to access user database\"\n     b. Check if the requesting entity has permission to view user data\n        IF permission check fails THEN\n          Return error message \"Insufficient permissions to view user data\"\n\n4. Core Operation Execution\n   - Retrieve user data by username:\n     a. Search for user record matching the provided username\n        IF no user found THEN\n          Return error message \"User not found\"\n     b. Retrieve user's basic profile information\n        - Personal details (email, registration date, etc.)\n        - Preferences and settings\n        - Activity statistics\n     c. Retrieve user's extended profile information\n        - Biography\n        - Contact information\n        - Social media handles\n     d. Retrieve user's group memberships\n        FOR each group the user belongs to:\n          - Get group name and ID\n          - Add to user's group list\n     e. Calculate user's status information\n        - Active/inactive status\n        - Last visit timestamp\n        - Total posts count\n\n5. Response Generation\n   - Prepare success response with user data:\n     a. Format user profile information\n     b. Include all retrieved user attributes\n     c. Include group membership information\n     d. Include activity statistics\n   - Return complete user profile object\n   - If any errors occurred during retrieval:\n     a. Generate appropriate error message\n     b. Include error details and suggestions for resolution",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must contain valid characters",
+    "Username must be within the allowed length range",
+    "User must exist in the system",
+    "Requesting entity must have permission to view user data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "lastVisit": "date",
+      "totalPosts": "number",
+      "signature": "string",
+      "biography": "string",
+      "avatar": "string",
+      "website": "string",
+      "from": "string",
+      "occupation": "string",
+      "interests": "string",
+      "gender": "string",
+      "rankId": "number",
+      "karma": "number",
+      "active": "number",
+      "groups": "array",
+      "privateMessagesCount": "number",
+      "settings": {
+        "allowHtml": "boolean",
+        "allowBbCode": "boolean",
+        "allowSmilies": "boolean",
+        "notifyOnMessages": "boolean",
+        "viewEmailEnabled": "boolean",
+        "viewOnlineEnabled": "boolean",
+        "attachSignatureEnabled": "boolean"
+      },
+      "contactInfo": {
+        "aim": "string",
+        "icq": "string",
+        "msnm": "string",
+        "yim": "string"
+      }
+    },
+    "Group": {
+      "id": "number",
+      "name": "string"
+    }
+  }
+}

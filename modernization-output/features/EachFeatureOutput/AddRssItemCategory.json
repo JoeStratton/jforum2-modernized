@@ -1,0 +1,65 @@
+{
+  "featureName": "AddRssItemCategory",
+  "description": "Associates categories with RSS items to enable content classification.",
+  "inputValues": [
+    "rssItem-object-RSSItem",
+    "categoryName-string-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the RSS item object (mandatory)\n   - Collect the category name (mandatory)\n   - System will validate if the RSS item object exists\n   - System will validate if the category name is provided\n\n2. Data Validation:\n   - Validate RSS item object:\n     * Check if the RSS item is not null\n     * Verify the RSS item has required properties (title, link)\n     * IF RSS item is invalid THEN return validation error\n   - Validate category name:\n     * Check if category name is not empty\n     * Check if category name is not null\n     * Check if category name length is within acceptable limits (1-50 characters)\n     * IF category name is invalid THEN return validation error\n\n3. Business Rule Processing:\n   - Check if the RSS item already has categories:\n     * IF categories collection is null THEN initialize a new categories collection\n   - Check for duplicate categories:\n     * FOR EACH existing category in the RSS item's categories collection\n       * IF current category name matches the provided category name THEN\n         * Return duplicate category error\n       * END IF\n     * END FOR\n\n4. Core Operation Execution:\n   - Add the category to the RSS item:\n     * Add the provided category name to the RSS item's categories collection\n     * Update the RSS item's metadata to reflect the new category association\n     * IF addition fails THEN\n       * Log the failure reason\n       * Revert any partial changes\n       * Return operation failure error\n     * END IF\n\n5. Response Generation:\n   - On Success:\n     * Return success status\n     * Include the updated RSS item with the new category in the response\n     * Include the total count of categories now associated with the RSS item\n   - On Error:\n     * Return appropriate error code and message\n     * Include guidance on how to resolve the issue\n     * Provide reference to support resources if needed",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "RSS item must not be null",
+    "Category name must not be empty",
+    "Category name must be between 1 and 50 characters",
+    "Category name must not already exist in the RSS item's categories"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RSSItem": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "The author of the RSS item"
+        },
+        "link": {
+          "type": "string",
+          "description": "The URL link to the RSS item content"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the RSS item"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the RSS item"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the RSS item description"
+        },
+        "publishDate": {
+          "type": "string",
+          "description": "The publication date of the RSS item"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of categories associated with the RSS item"
+        }
+      },
+      "required": [
+        "title",
+        "link"
+      ]
+    },
+    "Category": {
+      "type": "string",
+      "description": "The name of a category to be associated with an RSS item"
+    }
+  }
+}

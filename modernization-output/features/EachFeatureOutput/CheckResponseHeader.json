@@ -1,0 +1,28 @@
+{
+  "featureName": "CheckResponseHeader",
+  "description": "Checks if a specific header exists in the HTTP response.",
+  "inputValues": [
+    "headerName-string-Header"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the required header name (string) to check for in the response\n   - The header name is mandatory and must be provided as a non-empty string\n\n2. Data Validation:\n   - Validate the header name input:\n     a. Check if the header name is not null\n     b. Check if the header name is not an empty string\n     c. IF header name is null or empty THEN\n        - Generate an error indicating that a valid header name must be provided\n        - Terminate the operation and return error\n     d. ELSE continue to the next step\n\n3. Business Rule Processing:\n   - Verify the response context is properly initialized:\n     a. Check if the response context object exists\n     b. IF response context is null THEN\n        - Generate an error indicating that the response context is not available\n        - Terminate the operation and return error\n     c. ELSE continue to the next step\n\n4. Core Operation Execution:\n   - Check for the existence of the specified header:\n     a. Query the response context for the specified header name\n     b. Determine if the header exists in the current response\n     c. Store the result (true if header exists, false if not)\n\n5. Response Generation:\n   - Return the header existence check result:\n     a. IF header exists THEN\n        - Return a success response with value true\n        - Include the header name that was found\n     b. ELSE\n        - Return a success response with value false\n        - Include the header name that was not found\n     c. Include any additional context information if needed",
+  "databaseEntities": [],
+  "validationRules": [
+    "Header name must not be null or empty",
+    "Response context must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Header": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the HTTP header to check"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

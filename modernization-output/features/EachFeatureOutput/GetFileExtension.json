@@ -1,0 +1,37 @@
+{
+  "featureName": "GetFileExtension",
+  "description": "Extracts and returns the file extension from an uploaded file.",
+  "inputValues": [
+    "uploadedFile-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the uploaded file object (FileItem)\n   - Check if the file object is not null\n   - Verify the file has a name property\n\n2. Data Validation:\n   - Validate that the uploaded file object exists\n     - IF file object is null THEN return error message \"No file provided\"\n   - Validate that the file has a name\n     - IF file name is empty THEN return error message \"File has no name\"\n   - Validate that the file name contains an extension\n     - IF file name does not contain a period (.) THEN return error message \"File has no extension\"\n\n3. Business Rule Processing:\n   - Check if extension has already been extracted\n     - IF extension is already stored and not empty THEN return the stored extension\n   - Determine the position of the last period in the file name\n     - Find the last occurrence of period (.) character in the file name\n     - IF no period is found THEN return error message \"Invalid file name format\"\n\n4. Core Operation Execution:\n   - Extract the extension from the file name\n     - Get the substring of the file name starting from the position after the last period\n     - Store the extracted extension for future reference\n   - Normalize the extension if needed\n     - Convert extension to lowercase for consistency (optional)\n     - Remove any trailing whitespace or special characters (optional)\n\n5. Response Generation:\n   - Return the extracted file extension\n   - IF extraction was successful THEN return the extension string\n   - IF any errors occurred during extraction THEN return appropriate error message",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Uploaded file must not be null",
+    "File name must not be empty",
+    "File name must contain at least one period character",
+    "Extension must be extractable from the file name"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the uploaded file"
+        },
+        "inputStream": {
+          "type": "object",
+          "description": "Stream containing the file data"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

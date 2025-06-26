@@ -1,0 +1,35 @@
+{
+  "featureName": "ParseContentHeaders",
+  "description": "Parses HTTP headers from multipart content sections into key-value pairs.",
+  "inputValues": [
+    "headerPart-string-HeaderContent",
+    "contentType-string-ContentType",
+    "headers-object-HeaderCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect headerPart (string): The raw header content to be parsed\n   - Collect contentType (string): The Content-Type header value containing boundary information\n   - Collect headers (object): Optional existing header collection for appending values\n\n2. Data Validation:\n   - Validate headerPart:\n     2.1. Check if headerPart is not null\n     2.2. Check if headerPart contains valid content\n     2.3. Return empty map if headerPart is invalid\n   - Validate contentType (when applicable):\n     2.4. Check if contentType contains boundary parameter\n     2.5. Generate appropriate error message if boundary is missing\n\n3. Business Rule Processing:\n   - Process header format rules:\n     3.1. Determine maximum header size allowed\n     3.2. Check if header size exceeds maximum allowed size\n     3.3. Verify header format follows standard specifications\n   - Process multi-value header rules:\n     3.4. Identify rules for handling multiple headers with same name\n     3.5. Determine delimiter for combining multiple header values\n\n4. Core Operation Execution:\n   - Initialize header collection:\n     4.1. Create empty map to store header key-value pairs\n     4.2. Initialize parsing variables and buffers\n   - Parse individual headers:\n     4.3. Read header content line by line\n     4.4. For each line:\n        4.4.1. Check if line is empty (indicating end of headers)\n        4.4.2. Verify line contains colon separator\n        4.4.3. Skip malformed lines (no colon)\n        4.4.4. Extract header name (before colon, trimmed, converted to lowercase)\n        4.4.5. Extract header value (after colon, trimmed)\n   - Handle duplicate headers:\n     4.5. Check if header name already exists in collection\n     4.6. IF header exists:\n        4.6.1. Append new value to existing value with comma separator\n     4.7. ELSE:\n        4.7.1. Add new header name and value to collection\n   - Handle special headers:\n     4.8. Process Content-Disposition header to extract field names and filenames\n     4.9. Process Content-Type header to extract boundary information\n\n5. Response Generation:\n   - Prepare header collection response:\n     5.1. Finalize the map of parsed headers\n     5.2. Handle any parsing exceptions gracefully\n     5.3. Return the complete header collection\n   - Include metadata:\n     5.4. Add information about any skipped or malformed headers\n     5.5. Include count of successfully parsed headers",
+  "databaseEntities": [],
+  "validationRules": [
+    "Header part must not be null or empty",
+    "Header lines must contain a colon separator",
+    "Header names must be trimmed and converted to lowercase",
+    "Header values must be trimmed",
+    "Multiple headers with the same name must be combined with comma separators",
+    "Maximum header size must not exceed system-defined limit"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HeaderCollection": {
+      "type": "object",
+      "properties": {
+        "headerName": {
+          "type": "string",
+          "description": "The lowercase name of the header"
+        },
+        "headerValue": {
+          "type": "string",
+          "description": "The value of the header, or comma-separated values for multiple headers with the same name"
+        }
+      }
+    }
+  }
+}

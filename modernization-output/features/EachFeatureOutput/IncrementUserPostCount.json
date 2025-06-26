@@ -1,0 +1,18 @@
+{
+  "featureName": "IncrementUserPostCount",
+  "description": "Increases the post count for a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, number) to identify the user whose post count will be incremented\n   - System will use the current database connection from the execution context\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. If validation fails, generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if user exists in the system:\n     a. Verify the user with the provided userId exists in the database\n     b. Confirm the user is not marked as deleted\n     c. If user does not exist or is deleted, abort the operation and return error\n\n4. Core Operation Execution:\n   - Update user record:\n     a. Retrieve the current post count for the user\n     b. Increment the post count by 1\n     c. Update the user record with the new post count\n     d. If update fails, handle database exception and provide rollback mechanism\n\n5. Response Generation:\n   - For successful operation:\n     a. Return confirmation that post count was incremented\n     b. Include the updated post count in the response\n   - For failed operation:\n     a. Return appropriate error message\n     b. Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User must not be marked as deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

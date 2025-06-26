@@ -1,0 +1,51 @@
+{
+  "featureName": "UpdateCategory",
+  "description": "Updates an existing category's information in the system.",
+  "inputValues": [
+    "categoryId-number-Category",
+    "name-string-Category",
+    "isModerated-boolean-Category",
+    "category-object-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - categoryId (number): Unique identifier of the category to update\n       - name (string): New name for the category\n       - isModerated (boolean): Flag indicating if the category is moderated\n   1.2. System will retrieve the existing category information based on categoryId\n\n2. Data Validation:\n   2.1. Validate categoryId:\n       - IF categoryId is not provided or is not a positive integer THEN\n         - Generate error: \"Category ID must be a valid positive integer\"\n       - IF category with provided categoryId does not exist THEN\n         - Generate error: \"Category not found with the provided ID\"\n   2.2. Validate name:\n       - IF name is empty or null THEN\n         - Generate error: \"Category name cannot be empty\"\n       - IF name exceeds maximum allowed length THEN\n         - Generate error: \"Category name cannot exceed [maximum] characters\"\n       - IF name contains disallowed characters THEN\n         - Generate error: \"Category name contains invalid characters\"\n   2.3. Validate isModerated:\n       - IF isModerated is provided and is not a boolean value THEN\n         - Generate error: \"Moderation status must be a boolean value\"\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify user has permission to update categories\n       - IF user lacks required permissions THEN\n         - Generate error: \"Insufficient permissions to update category\"\n   3.2. Check for name conflicts:\n       - IF another category (different ID) exists with the same name THEN\n         - Generate warning: \"Another category with this name already exists\"\n   3.3. Verify category relationships:\n       - Check if category has associated forums\n       - IF category has associated forums THEN\n         - Note that forums will remain associated with the updated category\n       - IF changing moderation status THEN\n         - Verify impact on existing forums within the category\n\n4. Core Operation Execution:\n   4.1. Prepare category update:\n       - Create updated category object with new information\n       - Preserve any fields not being updated\n   4.2. Execute category update:\n       - Update category record with new name\n       - Update category moderation status\n       - IF update fails THEN\n         - Generate error: \"Failed to update category information\"\n         - Log detailed error information\n   4.3. Handle related updates:\n       - IF moderation status changed THEN\n         - Update moderation status of all forums within the category\n         - Update repository to reflect the changes\n\n5. Response Generation:\n   5.1. For successful update:\n       - Generate success message: \"Category updated successfully\"\n       - Include updated category information in response\n       - Include moderation status in response\n       - Refresh the category listing to show updated information\n   5.2. For failed update:\n       - Include specific error message explaining the failure\n       - Include guidance on how to resolve the issue\n       - Provide original category information for reference",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Category ID must be a valid positive integer",
+    "Category must exist in the system",
+    "Category name cannot be empty",
+    "Category name must not exceed the maximum allowed length",
+    "Moderation status must be a boolean value",
+    "User must have permission to update categories"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "order": {
+          "type": "number",
+          "description": "Position of the category in display sequence"
+        },
+        "isModerated": {
+          "type": "boolean",
+          "description": "Flag indicating if the category is moderated"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

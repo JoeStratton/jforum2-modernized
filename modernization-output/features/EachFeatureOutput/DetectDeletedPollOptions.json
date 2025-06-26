@@ -1,0 +1,62 @@
+{
+  "featureName": "DetectDeletedPollOptions",
+  "description": "Identifies poll options that have been removed between poll versions.",
+  "inputValues": [
+    "firstPoll-object-Poll",
+    "secondPoll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - firstPoll (mandatory): The complete, most recent poll version, typically from the database\n     - secondPoll (mandatory): The poll to compare with, typically containing updated data\n\n2. Data Validation:\n   - Validate firstPoll input:\n     - IF firstPoll is null THEN\n       - Return empty result with no changes detected\n     - Verify firstPoll contains a valid label property\n     - Verify firstPoll contains a valid length property\n     - Verify firstPoll contains a list of options\n   - Validate secondPoll input:\n     - IF secondPoll is null THEN\n       - Return empty result with no changes detected\n     - Verify secondPoll contains a valid label property\n     - Verify secondPoll contains a valid length property\n     - Verify secondPoll contains a list of options\n\n3. Business Rule Processing:\n   - Initialize tracking variables:\n     - Create empty lists for deleted options, new options, and changed options\n     - Set hasChanges flag to false initially\n   - Compare poll metadata:\n     - IF firstPoll label does not match secondPoll label THEN\n       - Set hasChanges flag to true\n     - IF firstPoll length does not match secondPoll length THEN\n       - Set hasChanges flag to true\n\n4. Core Operation Execution:\n   - Process existing options:\n     - FOR EACH option in firstPoll options:\n       - Search for matching option by ID in secondPoll options\n       - IF matching option found THEN\n         - IF option text does not match matching option text THEN\n           - Add matching option to changed options list\n           - Set hasChanges flag to true\n       - ELSE (no matching option found)\n         - Add option to deleted options list\n         - Set hasChanges flag to true\n   - Process new options:\n     - FOR EACH option in secondPoll options:\n       - Search for matching option by ID in firstPoll options\n       - IF no matching option found THEN\n         - Add option to new options list\n         - Set hasChanges flag to true\n\n5. Response Generation:\n   - Prepare result object containing:\n     - List of deleted options\n     - List of new options\n     - List of changed options\n     - Boolean flag indicating if any changes were detected\n   - Return the complete result object",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Both poll versions must be provided for comparison",
+    "Poll options must have unique identifiers",
+    "Poll options must contain text content"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The title or question of the poll"
+        },
+        "length": {
+          "type": "number",
+          "description": "The duration or time limit of the poll"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PollOption"
+          },
+          "description": "List of available options in the poll"
+        }
+      },
+      "required": [
+        "label",
+        "length",
+        "options"
+      ]
+    },
+    "PollOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll option"
+        },
+        "text": {
+          "type": "string",
+          "description": "The content or description of the poll option"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ]
+    }
+  }
+}

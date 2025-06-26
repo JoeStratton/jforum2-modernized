@@ -1,0 +1,25 @@
+{
+  "featureName": "GetPendingActivations",
+  "description": "Retrieves a list of users with pending account activations.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current database connection for retrieval\n\n2. Data Validation:\n   - Verify database connection is available\n   - IF database connection is not available THEN\n     - Generate appropriate error message\n     - Terminate process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view pending activations\n   - IF user does not have required permissions THEN\n     - Generate access denied error\n     - Terminate process\n   - END IF\n   - Prepare query parameters for retrieving pending activations\n\n4. Core Operation Execution:\n   - Execute database query to retrieve pending user activations\n   - FOR each pending user record found:\n     - Extract user identifier\n     - Extract username\n     - Extract registration date\n     - Create user object with extracted information\n     - Add user object to result list\n   - END FOR\n   - IF database error occurs during retrieval THEN\n     - Log error details\n     - Generate database error message\n     - Terminate process\n   - END IF\n\n5. Response Generation:\n   - Return list of pending activation users\n   - IF no pending activations found THEN\n     - Return empty list\n   - END IF\n   - Include count of pending activations in response\n   - Format response according to system requirements",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User must have administrative privileges to access pending activations",
+    "Database connection must be available",
+    "User records must contain valid registration dates",
+    "User records must contain valid usernames"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "active": "number"
+    }
+  }
+}

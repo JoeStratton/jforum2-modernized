@@ -1,0 +1,22 @@
+{
+  "featureName": "IsUserSubscribed",
+  "description": "Checks if a user is subscribed to a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory, number): The unique identifier of the forum\n   - Collect userId (mandatory, number): The unique identifier of the user\n\n2. Data Validation:\n   - Validate forumId:\n      a. Check if forumId is provided\n      b. Verify forumId is a positive integer\n      c. IF forumId is invalid, THEN return error message \"Invalid forum identifier\"\n   - Validate userId:\n      a. Check if userId is provided\n      b. Verify userId is a positive integer\n      c. IF userId is invalid, THEN return error message \"Invalid user identifier\"\n\n3. Business Rule Processing:\n   - Verify forum existence:\n      a. Check if the forum with the given forumId exists in the system\n      b. IF forum does not exist, THEN return error message \"Forum not found\"\n   - Verify user existence:\n      a. Check if the user with the given userId exists in the system\n      b. IF user does not exist, THEN return error message \"User not found\"\n   - Check user permissions:\n      a. Verify if the user has permission to view the specified forum\n      b. IF user does not have permission, THEN return error message \"User does not have permission to access this forum\"\n\n4. Core Operation Execution:\n   - Query subscription records:\n      a. Search for a subscription record that matches both the forumId and userId\n      b. IF a matching record is found, THEN set isSubscribed to true\n      c. IF no matching record is found, THEN set isSubscribed to false\n\n5. Response Generation:\n   - Prepare the response:\n      a. Include the subscription status (isSubscribed: true/false)\n      b. Include the forumId and userId in the response\n   - Return the response to the caller",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "User ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must exist in the system",
+    "User must have permission to access the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

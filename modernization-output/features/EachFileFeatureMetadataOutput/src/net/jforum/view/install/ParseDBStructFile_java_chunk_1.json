@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ParseDatabaseStructureFile",
+    "description": "Parses database structure files to extract SQL statements for database setup"
+  }
+]

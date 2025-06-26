@@ -1,0 +1,50 @@
+{
+  "featureName": "DeleteAllRoles",
+  "description": "Deletes all security roles from a specific user group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the group ID (mandatory).\n   1.2. System prepares to remove all security roles associated with this group.\n\n2. Data Validation:\n   2.1. Validate Group ID:\n      2.1.1. Check if group ID is provided.\n      2.1.2. Verify group ID is a positive integer.\n      2.1.3. IF group ID is invalid or missing, THEN display error message and terminate operation.\n   2.2. Verify Group Existence:\n      2.2.1. Check if the group with the provided ID exists in the system.\n      2.2.2. IF group does not exist, THEN display appropriate error message and terminate operation.\n\n3. Business Rule Processing:\n   3.1. Check User Permissions:\n      3.1.1. Verify if the current user has administrative privileges to modify security roles.\n      3.1.2. IF user lacks sufficient permissions, THEN display access denied message and terminate operation.\n   3.2. Check System Constraints:\n      3.2.1. Verify if the group is not a system-reserved group with mandatory roles.\n      3.2.2. IF attempting to modify a protected system group, THEN display warning message and request confirmation.\n   3.3. Check for Dependent Operations:\n      3.3.1. Determine if any critical system functions depend on roles in this group.\n      3.3.2. IF critical dependencies exist, THEN display warning message with potential impacts.\n   3.4. Check Role Collection Status:\n      3.4.1. Verify if the security model is properly initialized.\n      3.4.2. IF security model is not initialized, THEN log error and terminate operation.\n\n4. Core Operation Execution:\n   4.1. Begin Role Deletion Transaction:\n      4.1.1. Start a database transaction to ensure data integrity.\n      4.1.2. Prepare to track all changes for potential rollback.\n   4.2. Retrieve Role IDs:\n      4.2.1. Retrieve all role IDs associated with the specified group.\n      4.2.2. Create a list of these role IDs for processing.\n      4.2.3. IF no roles are found, THEN proceed to step 5 as the operation is complete.\n   4.3. Remove Role Values:\n      4.3.1. Delete all role values linked to the retrieved role IDs.\n      4.3.2. Verify all role values are successfully removed.\n   4.4. Remove Group Roles:\n      4.4.1. Delete all role entries for the specified group.\n      4.4.2. Verify all group roles are successfully removed.\n   4.5. Update Role Collection:\n      4.5.1. Update the in-memory role collection to reflect the changes.\n      4.5.2. Ensure consistency between database and memory representation.\n   4.6. Commit or Rollback:\n      4.6.1. IF all deletion operations complete successfully, THEN commit the transaction.\n      4.6.2. IF any errors occur during deletion, THEN rollback all changes and log the error.\n\n5. Response Generation:\n   5.1. Success Response:\n      5.1.1. Generate confirmation message indicating all roles were successfully deleted.\n      5.1.2. Include summary of the number of roles removed.\n      5.1.3. Provide option to review the updated group permissions.\n   5.2. Error Response:\n      5.2.1. IF operation failed, THEN provide detailed error information.\n      5.2.2. Include guidance on how to resolve common issues.\n      5.2.3. Provide contact information for support if needed.",
+  "databaseEntities": [
+    "Group",
+    "Role",
+    "RoleValue",
+    "User",
+    "Forum",
+    "GroupSecurity"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "User must have administrative privileges to delete roles",
+    "System-reserved groups may require special confirmation before role deletion",
+    "Security model must be properly initialized before performing role operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "Role": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "RoleValue": {
+      "id": "number",
+      "roleId": "number",
+      "value": "string"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "GroupSecurity": {
+      "groupId": "number",
+      "roleId": "number"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "featureName": "SetResponseContentLength",
+    "description": "Sets the content length of the HTTP response"
+  },
+  {
+    "featureName": "CheckResponseHeader",
+    "description": "Checks if a specific header exists in the HTTP response"
+  },
+  {
+    "featureName": "SetResponseHeader",
+    "description": "Sets a header with specified name and value in the HTTP response"
+  },
+  {
+    "featureName": "AddResponseCookie",
+    "description": "Adds a cookie to the HTTP response"
+  },
+  {
+    "featureName": "EncodeRedirectURL",
+    "description": "Encodes a URL for HTTP redirect with session tracking if needed"
+  },
+  {
+    "featureName": "SendRedirect",
+    "description": "Redirects client to a new URL with support for absolute path configuration"
+  },
+  {
+    "featureName": "GetResponseEncoding",
+    "description": "Retrieves the character encoding of the HTTP response"
+  },
+  {
+    "featureName": "SetContentType",
+    "description": "Sets the content type of the HTTP response"
+  },
+  {
+    "featureName": "GetOutputStream",
+    "description": "Retrieves the output stream for writing binary data to the response"
+  },
+  {
+    "featureName": "GetWriter",
+    "description": "Retrieves a PrintWriter for writing character data to the response"
+  },
+  {
+    "featureName": "EncodeURL",
+    "description": "Encodes a URL with session tracking information if needed"
+  },
+  {
+    "featureName": "SendErrorStatus",
+    "description": "Sends an error response with the specified status code"
+  },
+  {
+    "featureName": "AddResponseHeader",
+    "description": "Adds a header with specified name and value to the HTTP response"
+  }
+]

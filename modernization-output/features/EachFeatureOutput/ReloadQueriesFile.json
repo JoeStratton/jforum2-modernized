@@ -1,0 +1,17 @@
+{
+  "featureName": "ReloadQueriesFile",
+  "description": "Reloads SQL queries configuration when the queries file changes.",
+  "inputValues": [
+    "filename-string-File"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the filename (string) of the changed queries file\n   - This input is mandatory and system-provided when a file change is detected\n\n2. Data Validation:\n   - Validate that the filename is not null or empty\n     * IF filename is null or empty THEN\n       - Log error message about invalid filename\n       - Terminate the operation\n     * END IF\n   - Verify that the file exists in the system\n     * IF file does not exist THEN\n       - Log error message about non-existent file\n       - Terminate the operation\n     * END IF\n\n3. Business Rule Processing:\n   - Check if the system is in a state where reloading queries is allowed\n     * IF system is in initialization phase THEN\n       - Defer reload until initialization completes\n     * END IF\n   - Determine if the changed file is the main queries file or a driver-specific file\n     * Store the file type information for later processing\n\n4. Core Operation Execution:\n   - Log information message that reload operation is starting for the specified filename\n   - Load the queries from the changed file into the system configuration\n     * Parse the file contents\n     * Extract query definitions\n     * Update the system's query repository\n   - Check if the changed file is the driver-specific queries file\n     * IF changed file is NOT the driver-specific queries file THEN\n       - Retrieve the driver-specific queries filename from system configuration\n       - Load the driver-specific queries to ensure consistency\n     * END IF\n   - IF any errors occur during reload THEN\n     - Log detailed error information\n     - Attempt to restore previous query definitions if possible\n     - Notify system administrators about the failure\n   - END IF\n\n5. Response Generation:\n   - Log successful completion of the reload operation\n   - Update system status indicators to reflect the new queries configuration\n   - No explicit user response as this is a system background operation",
+  "databaseEntities": [],
+  "validationRules": [
+    "Filename must not be null or empty",
+    "File must exist in the system",
+    "File must contain valid SQL query definitions",
+    "System must not be in a state that prevents configuration reloading"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ReloadQueriesFile",
+    "description": "Reloads SQL queries configuration when the queries file changes"
+  }
+]

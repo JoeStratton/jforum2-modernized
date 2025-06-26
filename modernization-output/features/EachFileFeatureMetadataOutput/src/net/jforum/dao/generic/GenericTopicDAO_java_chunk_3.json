@@ -1,0 +1,58 @@
+[
+  {
+    "featureName": "SelectTopicsByUser",
+    "description": "Retrieves topics created by a specific user with pagination support"
+  },
+  {
+    "featureName": "CountUserTopics",
+    "description": "Counts the total number of topics created by a specific user"
+  },
+  {
+    "featureName": "GetMaxPostId",
+    "description": "Retrieves the highest post ID within a specific topic"
+  },
+  {
+    "featureName": "GetTotalPosts",
+    "description": "Counts the total number of posts within a specific topic"
+  },
+  {
+    "featureName": "NotifyUsers",
+    "description": "Identifies users to notify about topic updates and marks topic as unread for them"
+  },
+  {
+    "featureName": "SubscribeUsers",
+    "description": "Subscribes multiple users to a topic for notifications"
+  },
+  {
+    "featureName": "SubscribeUser",
+    "description": "Subscribes a single user to a topic for notifications"
+  },
+  {
+    "featureName": "CheckUserSubscription",
+    "description": "Verifies if a user is subscribed to a specific topic"
+  },
+  {
+    "featureName": "RemoveSubscription",
+    "description": "Removes a user's subscription from a specific topic"
+  },
+  {
+    "featureName": "RemoveTopicSubscriptions",
+    "description": "Removes all user subscriptions for a specific topic"
+  },
+  {
+    "featureName": "UpdateReadStatus",
+    "description": "Updates the read/unread status of a topic for a specific user"
+  },
+  {
+    "featureName": "LockUnlockTopics",
+    "description": "Locks or unlocks multiple topics to control posting ability"
+  },
+  {
+    "featureName": "GetNewMessages",
+    "description": "Retrieves topics with new messages based on a list of topic IDs"
+  },
+  {
+    "featureName": "FillTopicsData",
+    "description": "Populates topic objects with complete data including user information"
+  }
+]

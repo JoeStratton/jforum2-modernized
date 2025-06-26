@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ShowActivityLog",
+    "description": "Displays moderation activity logs with pagination and access control"
+  },
+  {
+    "featureName": "DoModeration",
+    "description": "Performs moderation actions on forum content with return URL handling"
+  },
+  {
+    "featureName": "MoveTopic",
+    "description": "Relocates forum topics to different forums"
+  },
+  {
+    "featureName": "ModerationDone",
+    "description": "Completes moderation process and displays confirmation"
+  }
+]

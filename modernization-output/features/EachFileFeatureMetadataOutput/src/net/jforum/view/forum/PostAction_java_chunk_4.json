@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "EditPost",
+    "description": "Prepares the post editing interface with attachments, polls, and security checks"
+  },
+  {
+    "featureName": "QuotePost",
+    "description": "Creates a reply to a post with quoted content after validating access permissions"
+  },
+  {
+    "featureName": "EditSavePost",
+    "description": "Saves edited post content with attachments and handles poll modifications"
+  }
+]

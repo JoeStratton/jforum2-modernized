@@ -1,0 +1,3253 @@
+{
+  "InitializeConnectionPool": {
+    "src/net/jforum/C3P0PooledConnection_java_chunk_1.json": "completed"
+  },
+  "GetDatabaseConnection": {
+    "src/net/jforum/C3P0PooledConnection_java_chunk_1.json": "completed",
+    "src/net/jforum/DataSourceConnection_java_chunk_1.json": "completed",
+    "src/net/jforum/SimpleConnection_java_chunk_1.json": "completed"
+  },
+  "ReleaseConnection": {
+    "src/net/jforum/C3P0PooledConnection_java_chunk_1.json": "completed",
+    "src/net/jforum/DataSourceConnection_java_chunk_1.json": "completed"
+  },
+  "ReleaseAllConnections": {
+    "src/net/jforum/C3P0PooledConnection_java_chunk_1.json": "completed"
+  },
+  "ConfigurePoolParameters": {
+    "src/net/jforum/C3P0PooledConnection_java_chunk_1.json": "completed"
+  },
+  "ProcessRequest": {
+    "src/net/jforum/Command_java_chunk_1.json": "completed"
+  },
+  "RenderTemplate": {
+    "src/net/jforum/Command_java_chunk_1.json": "completed"
+  },
+  "StartSystemGlobals": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "LoadModulesMapping": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "CreateLoginAuthenticator": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "LoadUrlPatterns": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "ListenForChanges": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "LoadDaoImplementation": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "StartCacheEngine": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "StopCacheEngine": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "StartSearchIndexer": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "StartSummaryJob": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed",
+    "src/net/jforum/summary/SummaryScheduler_java_chunk_1.json": "completed"
+  },
+  "StartPop3Integration": {
+    "src/net/jforum/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "PrepareTemplateContext": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed"
+  },
+  "CheckAutoLogin": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed",
+    "tests/core/net/jforum/AutoLoginTest_java_chunk_1.json": "completed"
+  },
+  "ConfigureUserSession": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed"
+  },
+  "CheckSSO": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed"
+  },
+  "RefreshSession": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed"
+  },
+  "GetCookie": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed",
+    "src/net/jforum/ControllerUtils_java_chunk_3.json": "completed"
+  },
+  "AddCookie": {
+    "src/net/jforum/ControllerUtils_java_chunk_2.json": "completed",
+    "src/net/jforum/ControllerUtils_java_chunk_3.json": "completed"
+  },
+  "InitializeDatabaseConnection": {
+    "src/net/jforum/DataSourceConnection_java_chunk_1.json": "completed",
+    "src/net/jforum/SimpleConnection_java_chunk_1.json": "completed"
+  },
+  "HandleSessionDestruction": {
+    "src/net/jforum/ForumSessionListener_java_chunk_1.json": "completed"
+  },
+  "StartDatabase": {
+    "src/net/jforum/ForumStartup_java_chunk_1.json": "completed"
+  },
+  "StartForumRepository": {
+    "src/net/jforum/ForumStartup_java_chunk_1.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_2.json": "completed"
+  },
+  "ProcessInstallRequest": {
+    "src/net/jforum/InstallServlet_java_chunk_1.json": "completed"
+  },
+  "RedirectToForumsList": {
+    "src/net/jforum/InstallServlet_java_chunk_1.json": "completed"
+  },
+  "RenderInstallationTemplate": {
+    "src/net/jforum/InstallServlet_java_chunk_1.json": "completed"
+  },
+  "HandleInstallationExceptions": {
+    "src/net/jforum/InstallServlet_java_chunk_1.json": "completed"
+  },
+  "InitializeForumSystem": {
+    "src/net/jforum/JForum_java_chunk_1.json": "completed"
+  },
+  "ProcessForumRequest": {
+    "src/net/jforum/JForum_java_chunk_1.json": "completed"
+  },
+  "EnforceBanRules": {
+    "src/net/jforum/JForum_java_chunk_1.json": "completed"
+  },
+  "RenderForumContent": {
+    "src/net/jforum/JForum_java_chunk_1.json": "completed"
+  },
+  "ManageForumShutdown": {
+    "src/net/jforum/JForum_java_chunk_1.json": "completed"
+  },
+  "StartApplication": {
+    "src/net/jforum/JForumBaseServlet_java_chunk_1.json": "completed"
+  },
+  "InitializeServlet": {
+    "src/net/jforum/JForumBaseServlet_java_chunk_1.json": "completed"
+  },
+  "LoadConfigurationComponents": {
+    "src/net/jforum/JForumBaseServlet_java_chunk_1.json": "completed"
+  },
+  "GetExecutionContext": {
+    "src/net/jforum/JForumExecutionContext_java_chunk_1.json": "completed"
+  },
+  "ManageDatabaseConnection": {
+    "src/net/jforum/JForumExecutionContext_java_chunk_1.json": "completed"
+  },
+  "HandleRedirection": {
+    "src/net/jforum/JForumExecutionContext_java_chunk_1.json": "completed"
+  },
+  "ManageContentType": {
+    "src/net/jforum/JForumExecutionContext_java_chunk_1.json": "completed"
+  },
+  "RequestBasicAuthentication": {
+    "src/net/jforum/JForumExecutionContext_java_chunk_1.json": "completed"
+  },
+  "AddUserSession": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/UserSessionDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserSessionDAO_java_chunk_1.json": "completed"
+  },
+  "ManageSessionAttributes": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed",
+    "src/net/jforum/context/web/WebSessionContext_java_chunk_1.json": "completed"
+  },
+  "RemoveUserSession": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "GetSessionInformation": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "CheckUserSessionStatus": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "ManageLoginState": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "TrackTopicReadTimes": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "ClearSessions": {
+    "src/net/jforum/SessionFacade_java_chunk_2.json": "completed"
+  },
+  "StoreSessionData": {
+    "src/net/jforum/SessionFacade_java_chunk_3.json": "completed"
+  },
+  "StoreSessionDataWithConnection": {
+    "src/net/jforum/SessionFacade_java_chunk_3.json": "completed"
+  },
+  "ReleaseDatabaseConnection": {
+    "src/net/jforum/SimpleConnection_java_chunk_1.json": "completed"
+  },
+  "ProcessUrlPattern": {
+    "src/net/jforum/UrlPattern_java_chunk_1.json": "completed"
+  },
+  "GetUrlPatternComponents": {
+    "src/net/jforum/UrlPattern_java_chunk_1.json": "completed"
+  },
+  "FindUrlPattern": {
+    "src/net/jforum/UrlPatternCollection_java_chunk_1.json": "completed"
+  },
+  "AddUrlPattern": {
+    "src/net/jforum/UrlPatternCollection_java_chunk_1.json": "completed"
+  },
+  "BuildMessageId": {
+    "src/net/jforum/api/integration/mail/pop/MessageId_java_chunk_1.json": "completed"
+  },
+  "BuildInReplyTo": {
+    "src/net/jforum/api/integration/mail/pop/MessageId_java_chunk_1.json": "completed"
+  },
+  "ParseMessageId": {
+    "src/net/jforum/api/integration/mail/pop/MessageId_java_chunk_1.json": "completed"
+  },
+  "OpenPopConnection": {
+    "src/net/jforum/api/integration/mail/pop/POPConnector_java_chunk_1.json": "completed"
+  },
+  "ListMailMessages": {
+    "src/net/jforum/api/integration/mail/pop/POPConnector_java_chunk_1.json": "completed"
+  },
+  "ClosePopConnection": {
+    "src/net/jforum/api/integration/mail/pop/POPConnector_java_chunk_1.json": "completed"
+  },
+  "StartPOP3IntegrationJob": {
+    "src/net/jforum/api/integration/mail/pop/POPJobStarter_java_chunk_1.json": "completed"
+  },
+  "ProcessMailIntegration": {
+    "src/net/jforum/api/integration/mail/pop/POPListener_java_chunk_1.json": "completed"
+  },
+  "ExtractEmailMessage": {
+    "src/net/jforum/api/integration/mail/pop/POPMessage_java_chunk_1.json": "completed"
+  },
+  "ParseMultipartMessage": {
+    "src/net/jforum/api/integration/mail/pop/POPMessage_java_chunk_1.json": "completed"
+  },
+  "ExtractEmailMetadata": {
+    "src/net/jforum/api/integration/mail/pop/POPMessage_java_chunk_1.json": "completed"
+  },
+  "ParsePOPMessages": {
+    "src/net/jforum/api/integration/mail/pop/POPParser_java_chunk_1.json": "completed"
+  },
+  "GetParsedMessages": {
+    "src/net/jforum/api/integration/mail/pop/POPParser_java_chunk_1.json": "completed"
+  },
+  "InsertMessagesFromPOP": {
+    "src/net/jforum/api/integration/mail/pop/POPPostAction_java_chunk_1.json": "completed"
+  },
+  "InsertForumPostFromEmail": {
+    "src/net/jforum/api/integration/mail/pop/POPPostAction_java_chunk_1.json": "completed"
+  },
+  "DiscoverForumIdFromEmail": {
+    "src/net/jforum/api/integration/mail/pop/POPPostAction_java_chunk_1.json": "completed"
+  },
+  "ExtractTopicRelationships": {
+    "src/net/jforum/api/integration/mail/pop/POPPostAction_java_chunk_1.json": "completed"
+  },
+  "ValidateApiKey": {
+    "src/net/jforum/api/rest/RESTAuthentication_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/ApiDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericApiDAO_java_chunk_1.json": "completed"
+  },
+  "ListUsers": {
+    "src/net/jforum/api/rest/UserREST_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "CreateUser": {
+    "src/net/jforum/api/rest/UserREST_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "AuthenticateApiRequest": {
+    "src/net/jforum/api/rest/UserREST_java_chunk_1.json": "completed"
+  },
+  "InitializeCache": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "StopCache": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddCacheItem": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddCacheItemWithFqn": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetCacheItem": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetCacheNode": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetCacheValues": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed"
+  },
+  "RemoveCacheItem": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed"
+  },
+  "RemoveCacheNode": {
+    "src/net/jforum/cache/CacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddNestedCacheItem": {
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetNestedCacheItem": {
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed"
+  },
+  "RemoveNestedCacheItem": {
+    "src/net/jforum/cache/DefaultCacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddNamespacedCacheItem": {
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetCacheNamespace": {
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetNamespaceValues": {
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "RemoveCacheNamespace": {
+    "src/net/jforum/cache/EhCacheEngine_java_chunk_1.json": "completed",
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "StopCacheService": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddCacheEntry": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "AddNamespacedCacheEntry": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetCacheEntry": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "GetNamespacedCacheEntry": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "RemoveCacheEntry": {
+    "src/net/jforum/cache/JBossCacheEngine_java_chunk_1.json": "completed"
+  },
+  "HandleNodeModification": {
+    "src/net/jforum/cache/JBossCacheListener_java_chunk_1.json": "completed"
+  },
+  "EncodeURL": {
+    "src/net/jforum/context/JForumContext_java_chunk_1.json": "completed",
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "DetectBotRequests": {
+    "src/net/jforum/context/JForumContext_java_chunk_1.json": "completed",
+    "src/net/jforum/util/legacy/clickstream/BotChecker_java_chunk_1.json": "completed"
+  },
+  "ManageRequestParameters": {
+    "src/net/jforum/context/standard/StandardRequestContext_java_chunk_1.json": "completed",
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_3.json": "completed"
+  },
+  "AccessRequestAttributes": {
+    "src/net/jforum/context/standard/StandardRequestContext_java_chunk_1.json": "completed"
+  },
+  "ManageSessionContext": {
+    "src/net/jforum/context/standard/StandardRequestContext_java_chunk_1.json": "completed"
+  },
+  "GetSessionAttribute": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed"
+  },
+  "GetSessionAttributeNames": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed"
+  },
+  "GetSessionId": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed"
+  },
+  "InvalidateSession": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed",
+    "src/net/jforum/context/web/WebSessionContext_java_chunk_1.json": "completed"
+  },
+  "RemoveSessionAttribute": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed"
+  },
+  "SetSessionAttribute": {
+    "src/net/jforum/context/standard/StandardSessionContext_java_chunk_1.json": "completed"
+  },
+  "ParseFriendlyURL": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_2.json": "completed"
+  },
+  "HandleMultipartRequest": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_2.json": "completed"
+  },
+  "GetSessionContext": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_2.json": "completed"
+  },
+  "ExtractRequestParameters": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_2.json": "completed"
+  },
+  "GetRequestParameter": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_3.json": "completed"
+  },
+  "HandleRequestNavigation": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_3.json": "completed"
+  },
+  "ResolveClientIPAddress": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_3.json": "completed"
+  },
+  "ResolveContextPath": {
+    "src/net/jforum/context/web/WebRequestContext_java_chunk_3.json": "completed"
+  },
+  "SetResponseContentLength": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "CheckResponseHeader": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "SetResponseHeader": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "AddResponseCookie": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "EncodeRedirectURL": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "SendRedirect": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "GetResponseEncoding": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "SetContentType": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "GetOutputStream": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "GetWriter": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "SendErrorStatus": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "AddResponseHeader": {
+    "src/net/jforum/context/web/WebResponseContext_java_chunk_1.json": "completed"
+  },
+  "GetSessionIdentifier": {
+    "src/net/jforum/context/web/WebSessionContext_java_chunk_1.json": "completed"
+  },
+  "ListSessionAttributes": {
+    "src/net/jforum/context/web/WebSessionContext_java_chunk_1.json": "completed"
+  },
+  "AddAttachment": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "UpdateAttachment": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "RemoveAttachment": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "GetPostAttachments": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "GetAttachmentById": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed"
+  },
+  "ManageQuotaLimits": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "ManageGroupQuotas": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed"
+  },
+  "ManageExtensionGroups": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "ManageExtensions": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "CheckExtensionSecurity": {
+    "src/net/jforum/dao/AttachmentDAO_java_chunk_1.json": "completed"
+  },
+  "InsertBanlistEntry": {
+    "src/net/jforum/dao/BanlistDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBanlistDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteBanlistEntry": {
+    "src/net/jforum/dao/BanlistDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBanlistDAO_java_chunk_1.json": "completed"
+  },
+  "GetAllBanlistEntries": {
+    "src/net/jforum/dao/BanlistDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBanlistDAO_java_chunk_1.json": "completed"
+  },
+  "SelectBannerById": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllBanners": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewBanner": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateBanner": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "CheckBannerDeletionEligibility": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteBanner": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "SelectActiveBannersByPlacement": {
+    "src/net/jforum/dao/BannerDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed"
+  },
+  "GetCategoryById": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed"
+  },
+  "ListAllCategories": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed"
+  },
+  "CheckCategoryDeletability": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteCategory": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateCategory": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "CreateCategory": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed"
+  },
+  "ChangeCategoryOrderUp": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed"
+  },
+  "ChangeCategoryOrderDown": {
+    "src/net/jforum/dao/CategoryDAO_java_chunk_1.json": "completed"
+  },
+  "InsertConfig": {
+    "src/net/jforum/dao/ConfigDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericConfigDAO_java_chunk_1.json": "completed",
+    "tests/core/net/jforum/repository/ConfigModelDummy_java_chunk_1.json": "completed"
+  },
+  "UpdateConfig": {
+    "src/net/jforum/dao/ConfigDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericConfigDAO_java_chunk_1.json": "completed",
+    "tests/core/net/jforum/repository/ConfigModelDummy_java_chunk_1.json": "completed"
+  },
+  "DeleteConfig": {
+    "src/net/jforum/dao/ConfigDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericConfigDAO_java_chunk_1.json": "completed",
+    "tests/core/net/jforum/repository/ConfigModelDummy_java_chunk_1.json": "completed"
+  },
+  "GetAllConfigs": {
+    "src/net/jforum/dao/ConfigDAO_java_chunk_1.json": "completed"
+  },
+  "GetConfigByName": {
+    "src/net/jforum/dao/ConfigDAO_java_chunk_1.json": "completed"
+  },
+  "SelectGroupById": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllGroups": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed"
+  },
+  "CheckGroupDeletionEligibility": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteGroup": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateGroup": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewGroup": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed"
+  },
+  "SelectUsersInGroup": {
+    "src/net/jforum/dao/GroupDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteForumRoles": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteAllRoles": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/mysql/security/MySQL323GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/security/PermissionControl_java_chunk_1.json": "completed"
+  },
+  "AddRole": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/security/RoleCollection_java_chunk_1.json": "completed"
+  },
+  "AddRoleValue": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/security/RoleValueCollection_java_chunk_1.json": "completed"
+  },
+  "LoadRoles": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/SecurityCommon_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/mysql/security/MySQL323GroupSecurityDAO_java_chunk_1.json": "completed"
+  },
+  "LoadRolesByUserGroups": {
+    "src/net/jforum/dao/GroupSecurityDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/security/GenericGroupSecurityDAO_java_chunk_1.json": "completed"
+  },
+  "AddKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateUserKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "CheckUserKarmaPermission": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed"
+  },
+  "GetPostKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserVotes": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserTotalKarma": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "GetMostRatedUsers": {
+    "src/net/jforum/dao/KarmaDAO_java_chunk_1.json": "completed"
+  },
+  "GetPostsToIndex": {
+    "src/net/jforum/dao/LuceneDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "GetPostsData": {
+    "src/net/jforum/dao/LuceneDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "FirstPostIdByDate": {
+    "src/net/jforum/dao/LuceneDAO_java_chunk_1.json": "completed"
+  },
+  "LastPostIdByDate": {
+    "src/net/jforum/dao/LuceneDAO_java_chunk_1.json": "completed"
+  },
+  "FirstPostId": {
+    "src/net/jforum/dao/LuceneDAO_java_chunk_1.json": "completed"
+  },
+  "ApprovePost": {
+    "src/net/jforum/dao/ModerationDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericModerationDAO_java_chunk_1.json": "completed"
+  },
+  "GetTopicsByForum": {
+    "src/net/jforum/dao/ModerationDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericModerationDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "GetCategoryPendingModeration": {
+    "src/net/jforum/dao/ModerationDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericModerationDAO_java_chunk_1.json": "completed"
+  },
+  "AddModerationLog": {
+    "src/net/jforum/dao/ModerationLogDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericModerationLogDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/oracle/OracleModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "GetModerationLogs": {
+    "src/net/jforum/dao/ModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "CountModerationLogs": {
+    "src/net/jforum/dao/ModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "HandleMySQLWorkarounds": {
+    "src/net/jforum/dao/MySQLVersionWorkarounder_java_chunk_1.json": "completed"
+  },
+  "FixMySQLEncoding": {
+    "src/net/jforum/dao/MySQLVersionWorkarounder_java_chunk_1.json": "completed"
+  },
+  "ConfigureDAOImplementation": {
+    "src/net/jforum/dao/MySQLVersionWorkarounder_java_chunk_1.json": "completed"
+  },
+  "UpdateSQLQueries": {
+    "src/net/jforum/dao/MySQLVersionWorkarounder_java_chunk_1.json": "completed"
+  },
+  "GetPollById": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed"
+  },
+  "DeletePoll": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "DeletePollByTopicId": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "UpdatePoll": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "CreatePoll": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed"
+  },
+  "VoteOnPoll": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/PostAction_java_chunk_2.json": "completed"
+  },
+  "CheckUserVotedByUserId": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed"
+  },
+  "CheckUserVotedByIpAddress": {
+    "src/net/jforum/dao/PollDAO_java_chunk_1.json": "completed"
+  },
+  "SendPrivateMessage": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "DeletePrivateMessages": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateMessageType": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "GetInboxMessages": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "GetSentMessages": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "GetPrivateMessageById": {
+    "src/net/jforum/dao/PrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "SelectRankingById": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllRankings": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteRanking": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateRanking": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewRanking": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "SelectSpecialRankings": {
+    "src/net/jforum/dao/RankingDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericRankingDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewSmilie": {
+    "src/net/jforum/dao/SmilieDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteSmilie": {
+    "src/net/jforum/dao/SmilieDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSmilieDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateSmilie": {
+    "src/net/jforum/dao/SmilieDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSmilieDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed"
+  },
+  "GetAllSmilies": {
+    "src/net/jforum/dao/SmilieDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSmilieDAO_java_chunk_1.json": "completed"
+  },
+  "GetSmilieById": {
+    "src/net/jforum/dao/SmilieDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSmilieDAO_java_chunk_1.json": "completed"
+  },
+  "SelectLastPosts": {
+    "src/net/jforum/dao/SummaryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSummaryDAO_java_chunk_1.json": "completed"
+  },
+  "ListRecipients": {
+    "src/net/jforum/dao/SummaryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericSummaryDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/summary/SummaryModel_java_chunk_1.json": "completed"
+  },
+  "SelectTopicById": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "SelectRawTopic": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "SelectTopicsByForum": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "SelectTopicTitlesByIds": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "SelectTopicsByForumWithPagination": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/hsqldb/HsqldbTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/oracle/OracleTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000TopicDAO_java_chunk_1.json": "completed"
+  },
+  "SelectTopicsByUser": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "CountUserTopics": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "DeleteTopic": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "DeleteMultipleTopics": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteTopicsByForum": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateTopic": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "CreateTopic": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "IncrementTopicViews": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "IncrementTopicReplies": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "DecrementTopicReplies": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "ManageTopicSubscription": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "CheckUserSubscription": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "RemoveTopicSubscription": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "RemoveAllTopicSubscriptions": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateTopicReadStatus": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "LockUnlockTopics": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "SelectRecentTopics": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000TopicDAO_java_chunk_1.json": "completed"
+  },
+  "SelectHottestTopics": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000TopicDAO_java_chunk_1.json": "completed"
+  },
+  "SetTopicModerationStatus": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/common/ModerationCommon_java_chunk_1.json": "completed"
+  },
+  "GetTopicPosters": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "FindTopicsByDateRange": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "ManageTopicPostIds": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "FixTopicPostIds": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "GetTopicNotificationUsers": {
+    "src/net/jforum/dao/TopicDAO_java_chunk_1.json": "completed"
+  },
+  "SelectGroups": {
+    "src/net/jforum/dao/TreeGroupDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericTreeGroupDAO_java_chunk_1.json": "completed"
+  },
+  "GetUserById": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserByName": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ListAllUsers": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ListUsersWithKarma": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ListUsersByGroup": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "SearchUsersByName": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "DeleteUser": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "UndeleteUser": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "UpdateUser": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "CreateUserWithId": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "SetUserActiveStatus": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "SetUserRanking": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "IncrementUserPosts": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "DecrementUserPosts": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "GetLastRegisteredUser": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "GetTotalUserCount": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetUserCountByGroup": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "CheckUserDeletionStatus": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "CheckUsernameExists": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ValidateUserLogin": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/sso/DefaultLoginAuthenticator_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "AddUserToGroups": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "RemoveUserFromGroups": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "StoreLostPasswordHash": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ValidateLostPasswordHash": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "ResetUserPassword": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "GetUsernameByEmail": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "ValidateActivationKey": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "ActivateUserAccount": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "UpdateUsername": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "CheckUsernameChanged": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "SaveUserAuthHash": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "GetUserAuthHash": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "ListPendingActivations": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed"
+  },
+  "FindUserByEmail": {
+    "src/net/jforum/dao/UserDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "UpdateUserSession": {
+    "src/net/jforum/dao/UserSessionDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/generic/GenericUserSessionDAO_java_chunk_1.json": "completed"
+  },
+  "GetUserSessionById": {
+    "src/net/jforum/dao/UserSessionDAO_java_chunk_1.json": "completed"
+  },
+  "ExecuteAutoKeysQuery": {
+    "src/net/jforum/dao/generic/AutoKeys_java_chunk_1.json": "completed"
+  },
+  "GetStatementForAutoKeys": {
+    "src/net/jforum/dao/generic/AutoKeys_java_chunk_1.json": "completed"
+  },
+  "AddQuotaLimit": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateQuotaLimit": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "CleanGroupQuota": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "SetGroupQuota": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "RemoveQuotaLimit": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "SelectQuotaLimit": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "SelectQuotaLimitByGroup": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "SelectGroupsQuotaLimits": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "AddExtensionGroup": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "RemoveExtensionGroups": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "SelectExtensionGroups": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "ExtensionsForSecurity": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateExtensionGroup": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "AddExtension": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed"
+  },
+  "RemoveExtensions": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "SelectExtensions": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "UpdateExtension": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "SelectExtensionByName": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "SelectAttachmentsByPostId": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "SelectAttachmentById": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "CheckPhysicalDownloadMode": {
+    "src/net/jforum/dao/generic/GenericAttachmentDAO_java_chunk_3.json": "completed"
+  },
+  "CheckBannerDeletability": {
+    "src/net/jforum/dao/generic/GenericBannerDAO_java_chunk_1.json": "completed"
+  },
+  "AddBookmark": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateBookmark": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "RemoveBookmark": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "SelectBookmarksByUser": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllUserBookmarks": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "SelectBookmarkById": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "SelectBookmarkForUpdate": {
+    "src/net/jforum/dao/generic/GenericBookmarkDAO_java_chunk_1.json": "completed"
+  },
+  "SelectCategoryById": {
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllCategories": {
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewCategory": {
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "SetCategoryOrder": {
+    "src/net/jforum/dao/generic/GenericCategoryDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllConfigs": {
+    "src/net/jforum/dao/generic/GenericConfigDAO_java_chunk_1.json": "completed",
+    "tests/core/net/jforum/repository/ConfigModelDummy_java_chunk_1.json": "completed"
+  },
+  "SelectConfigByName": {
+    "src/net/jforum/dao/generic/GenericConfigDAO_java_chunk_1.json": "completed",
+    "tests/core/net/jforum/repository/ConfigModelDummy_java_chunk_1.json": "completed"
+  },
+  "SelectForumById": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "SelectAllForums": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "SetForumOrderUp": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "SetForumOrderDown": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "DeleteForum": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateForum": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "AddNewForum": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "SetLastPost": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "IncrementTotalTopics": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "DecrementTotalTopics": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed"
+  },
+  "GetLastPostInfo": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "GetModeratorList": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "GetTotalMessages": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_4.json": "completed"
+  },
+  "GetTotalTopics": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed"
+  },
+  "GetMaxPostId": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "MoveTopics": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "CheckUnreadTopics": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed"
+  },
+  "SetModerated": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed"
+  },
+  "GetBoardStatus": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed"
+  },
+  "NotifyUsers": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/view/forum/common/ForumCommon_java_chunk_1.json": "completed"
+  },
+  "SubscribeUser": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "IsUserSubscribed": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed"
+  },
+  "RemoveSubscription": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "CheckUserForumSubscription": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_4.json": "completed"
+  },
+  "RemoveForumSubscription": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_4.json": "completed"
+  },
+  "RemoveAllForumSubscriptions": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_4.json": "completed"
+  },
+  "DiscoverForumIdByEmail": {
+    "src/net/jforum/dao/generic/GenericForumDAO_java_chunk_4.json": "completed"
+  },
+  "UpdateGroupInformation": {
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "CreateNewGroup": {
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "GetGroupMembers": {
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "ListAllGroups": {
+    "src/net/jforum/dao/generic/GenericGroupDAO_java_chunk_1.json": "completed"
+  },
+  "CheckUserCanAddKarma": {
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed"
+  },
+  "GetMostRatedUserByPeriod": {
+    "src/net/jforum/dao/generic/GenericKarmaDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerKarmaDAO_java_chunk_1.json": "completed"
+  },
+  "GetFirstPostId": {
+    "src/net/jforum/dao/generic/GenericLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "GetFirstPostIdByDate": {
+    "src/net/jforum/dao/generic/GenericLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "GetLastPostIdByDate": {
+    "src/net/jforum/dao/generic/GenericLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "AddMailIntegration": {
+    "src/net/jforum/dao/generic/GenericMailIntegrationDAO_java_chunk_1.json": "completed"
+  },
+  "DeleteMailIntegration": {
+    "src/net/jforum/dao/generic/GenericMailIntegrationDAO_java_chunk_1.json": "completed"
+  },
+  "FindMailIntegration": {
+    "src/net/jforum/dao/generic/GenericMailIntegrationDAO_java_chunk_1.json": "completed"
+  },
+  "FindAllMailIntegrations": {
+    "src/net/jforum/dao/generic/GenericMailIntegrationDAO_java_chunk_1.json": "completed"
+  },
+  "UpdateMailIntegration": {
+    "src/net/jforum/dao/generic/GenericMailIntegrationDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllModerationLogs": {
+    "src/net/jforum/dao/generic/GenericModerationLogDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/oracle/OracleModerationLogDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000ModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "CountTotalModerationLogs": {
+    "src/net/jforum/dao/generic/GenericModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewPoll": {
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "SelectPollById": {
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "CheckUserVoteStatus": {
+    "src/net/jforum/dao/generic/GenericPollDAO_java_chunk_2.json": "completed"
+  },
+  "SelectPostById": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerPostDAO_java_chunk_1.json": "completed"
+  },
+  "DeletePost": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/PostAction_java_chunk_6.json": "completed"
+  },
+  "DeletePostsByTopic": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "UpdatePost": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "CreatePost": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "GetPostsByTopic": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "GetPostsByTopicWithPagination": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserPostsWithPagination": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "CountUserPosts": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed"
+  },
+  "CountPreviousPosts": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_3.json": "completed"
+  },
+  "SelectLatestByForumForRSS": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/hsqldb/HsqldbPostDAO_java_chunk_1.json": "completed"
+  },
+  "SelectHotForRSS": {
+    "src/net/jforum/dao/generic/GenericPostDAO_java_chunk_3.json": "completed"
+  },
+  "DeletePrivateMessage": {
+    "src/net/jforum/dao/generic/GenericPrivateMessageDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_3.json": "completed"
+  },
+  "AddSmilie": {
+    "src/net/jforum/dao/generic/GenericSmilieDAO_java_chunk_1.json": "completed"
+  },
+  "FixFirstLastPostId": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "DeleteTopics": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "AddNewTopic": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "IncrementTotalViews": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "IncrementTotalReplies": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "DecrementTotalReplies": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "SetLastPostId": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "SelectAllTopicsByForum": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed"
+  },
+  "SelectTopicsByUserWithPagination": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_2.json": "completed",
+    "src/net/jforum/dao/hsqldb/HsqldbTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/oracle/OracleTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerTopicDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000TopicDAO_java_chunk_1.json": "completed"
+  },
+  "GetTotalPosts": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "SubscribeUsers": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "RemoveTopicSubscriptions": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "UpdateReadStatus": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "GetNewMessages": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed"
+  },
+  "FillTopicsData": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_3.json": "completed",
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "SetFirstPostId": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "GetMinPostId": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "SetModerationStatus": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "SetModerationStatusByTopic": {
+    "src/net/jforum/dao/generic/GenericTopicDAO_java_chunk_4.json": "completed"
+  },
+  "GetPendingActivations": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "GetUserByUsername": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "UpdateUserProfile": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "CreateUserWithSpecifiedId": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "DecrementUserPostCount": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "IncrementUserPostCount": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_2.json": "completed"
+  },
+  "GetAllUsers": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetPaginatedUsers": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetAllUsersWithKarma": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetPaginatedUsersWithKarma": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetUsersByGroup": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "GetTotalUsersByGroup": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "CheckUsernameAvailability": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "SaveNewUserPassword": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_3.json": "completed"
+  },
+  "WriteLostPasswordHash": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "FindUsersByName": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "ValidateActivationKeyHash": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "WriteUserActive": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "HasUsernameChanged": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "LoadKarma": {
+    "src/net/jforum/dao/generic/GenericUserDAO_java_chunk_4.json": "completed"
+  },
+  "SelectUserSessionById": {
+    "src/net/jforum/dao/generic/GenericUserSessionDAO_java_chunk_1.json": "completed"
+  },
+  "ExecuteAddRole": {
+    "src/net/jforum/dao/generic/security/SecurityCommon_java_chunk_1.json": "completed"
+  },
+  "GroupIdAsString": {
+    "src/net/jforum/dao/generic/security/SecurityCommon_java_chunk_1.json": "completed"
+  },
+  "SelectAllByTopicByLimit": {
+    "src/net/jforum/dao/hsqldb/HsqldbPostDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "SelectByUserByLimit": {
+    "src/net/jforum/dao/hsqldb/HsqldbPostDAO_java_chunk_1.json": "completed"
+  },
+  "CreatePostDAO": {
+    "src/net/jforum/dao/hsqldb/HsqldbDataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreateTopicDAO": {
+    "src/net/jforum/dao/hsqldb/HsqldbDataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreateUserDAO": {
+    "src/net/jforum/dao/hsqldb/HsqldbDataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "SelectAllUsersByGroup": {
+    "src/net/jforum/dao/hsqldb/HsqldbUserDAO_java_chunk_1.json": "completed"
+  },
+  "GetGroupSecurityDAO": {
+    "src/net/jforum/dao/mysql/MySQL323DataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "ReadPostTextFromResultSet": {
+    "src/net/jforum/dao/oracle/OracleLuceneDAO_java_chunk_1.json": "completed"
+  },
+  "GetPostTextFromResultSet": {
+    "src/net/jforum/dao/oracle/OracleModerationDAO_java_chunk_1.json": "completed"
+  },
+  "ReadModerationLogDescription": {
+    "src/net/jforum/dao/oracle/OracleModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "ReadModerationLogOriginalMessage": {
+    "src/net/jforum/dao/oracle/OracleModerationLogDAO_java_chunk_1.json": "completed"
+  },
+  "AddNewPostText": {
+    "src/net/jforum/dao/oracle/OraclePostDAO_java_chunk_1.json": "completed"
+  },
+  "UpdatePostText": {
+    "src/net/jforum/dao/oracle/OraclePostDAO_java_chunk_1.json": "completed"
+  },
+  "GetPostText": {
+    "src/net/jforum/dao/oracle/OraclePostDAO_java_chunk_1.json": "completed"
+  },
+  "SelectPostsByTopicWithPagination": {
+    "src/net/jforum/dao/oracle/OraclePostDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerPostDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000PostDAO_java_chunk_1.json": "completed"
+  },
+  "SelectPostsByUserWithPagination": {
+    "src/net/jforum/dao/oracle/OraclePostDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerPostDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000PostDAO_java_chunk_1.json": "completed"
+  },
+  "AddPrivateMessageText": {
+    "src/net/jforum/dao/oracle/OraclePrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "GetPrivateMessageText": {
+    "src/net/jforum/dao/oracle/OraclePrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllUsers": {
+    "src/net/jforum/dao/oracle/OracleUserDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver/SqlServerUserDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000UserDAO_java_chunk_1.json": "completed"
+  },
+  "ReadBlobUTF16BinaryStream": {
+    "src/net/jforum/dao/oracle/OracleUtils_java_chunk_1.json": "completed"
+  },
+  "WriteBlobUTF16BinaryStream": {
+    "src/net/jforum/dao/oracle/OracleUtils_java_chunk_1.json": "completed"
+  },
+  "CreatePostDataAccess": {
+    "src/net/jforum/dao/sqlserver/SqlServerDataAccessDriver_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000DataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreateTopicDataAccess": {
+    "src/net/jforum/dao/sqlserver/SqlServerDataAccessDriver_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000DataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreateUserDataAccess": {
+    "src/net/jforum/dao/sqlserver/SqlServerDataAccessDriver_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000DataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreatePrivateMessageDataAccess": {
+    "src/net/jforum/dao/sqlserver/SqlServerDataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "CreateKarmaDataAccess": {
+    "src/net/jforum/dao/sqlserver/SqlServerDataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "SelectPrivateMessageById": {
+    "src/net/jforum/dao/sqlserver/SqlServerPrivateMessageDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllTopicsByForumWithPagination": {
+    "src/net/jforum/dao/sqlserver/SqlServerTopicDAO_java_chunk_1.json": "completed"
+  },
+  "SelectUsersByGroup": {
+    "src/net/jforum/dao/sqlserver/SqlServerUserDAO_java_chunk_1.json": "completed"
+  },
+  "SelectAllUsersWithKarma": {
+    "src/net/jforum/dao/sqlserver/SqlServerUserDAO_java_chunk_1.json": "completed",
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000UserDAO_java_chunk_1.json": "completed"
+  },
+  "CreateModerationLogDataAccess": {
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000DataAccessDriver_java_chunk_1.json": "completed"
+  },
+  "SelectLatestForumPostsForRSS": {
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000PostDAO_java_chunk_1.json": "completed"
+  },
+  "SelectHotPostsForRSS": {
+    "src/net/jforum/dao/sqlserver2000/SqlServer2000PostDAO_java_chunk_1.json": "completed"
+  },
+  "CheckAttachmentThumbnail": {
+    "src/net/jforum/entities/Attachment_java_chunk_1.json": "completed"
+  },
+  "GetAttachmentThumbnailPath": {
+    "src/net/jforum/entities/Attachment_java_chunk_1.json": "completed"
+  },
+  "MatchBanlistEntry": {
+    "src/net/jforum/entities/Banlist_java_chunk_1.json": "completed"
+  },
+  "CompareIpAddresses": {
+    "src/net/jforum/entities/Banlist_java_chunk_1.json": "completed"
+  },
+  "CalculateTotalVotes": {
+    "src/net/jforum/entities/Poll_java_chunk_1.json": "completed"
+  },
+  "CheckPollStatus": {
+    "src/net/jforum/entities/Poll_java_chunk_1.json": "completed"
+  },
+  "ManagePollOptions": {
+    "src/net/jforum/entities/Poll_java_chunk_1.json": "completed"
+  },
+  "SearchForPollChanges": {
+    "src/net/jforum/entities/PollChanges_java_chunk_1.json": "completed"
+  },
+  "TrackPollOptionChanges": {
+    "src/net/jforum/entities/PollChanges_java_chunk_1.json": "completed"
+  },
+  "DetectDeletedPollOptions": {
+    "src/net/jforum/entities/PollChanges_java_chunk_1.json": "completed"
+  },
+  "IdentifyNewPollOptions": {
+    "src/net/jforum/entities/PollChanges_java_chunk_1.json": "completed"
+  },
+  "CheckQuotaExceeded": {
+    "src/net/jforum/entities/QuotaLimit_java_chunk_1.json": "completed"
+  },
+  "GetSizeInBytes": {
+    "src/net/jforum/entities/QuotaLimit_java_chunk_1.json": "completed"
+  },
+  "CompareTopicsByType": {
+    "src/net/jforum/entities/TopicTypeComparator_java_chunk_1.json": "completed"
+  },
+  "UpdateSessionTime": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "ValidateCaptchaResponse": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "CreateNewCaptcha": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "MakeAnonymous": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "RegisterBasicInfo": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "DataToUser": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "CheckModeratorStatus": {
+    "src/net/jforum/entities/UserSession_java_chunk_2.json": "completed"
+  },
+  "HandleExceptionData": {
+    "src/net/jforum/exceptions/ExceptionWriter_java_chunk_1.json": "completed"
+  },
+  "ExtractCurrentUrl": {
+    "src/net/jforum/exceptions/ExceptionWriter_java_chunk_1.json": "completed"
+  },
+  "GetBBCollection": {
+    "src/net/jforum/repository/BBCodeRepository_java_chunk_1.json": "completed"
+  },
+  "SetBBCollection": {
+    "src/net/jforum/repository/BBCodeRepository_java_chunk_1.json": "completed"
+  },
+  "FindBBCodeByName": {
+    "src/net/jforum/repository/BBCodeRepository_java_chunk_1.json": "completed",
+    "src/net/jforum/util/bbcode/BBCodeHandler_java_chunk_1.json": "completed"
+  },
+  "CheckBanStatus": {
+    "src/net/jforum/repository/BanlistRepository_java_chunk_1.json": "completed"
+  },
+  "AddBanEntry": {
+    "src/net/jforum/repository/BanlistRepository_java_chunk_1.json": "completed"
+  },
+  "RemoveBanEntry": {
+    "src/net/jforum/repository/BanlistRepository_java_chunk_1.json": "completed"
+  },
+  "LoadBanlist": {
+    "src/net/jforum/repository/BanlistRepository_java_chunk_1.json": "completed"
+  },
+  "GetCategory": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_2.json": "completed"
+  },
+  "GetAllCategories": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_2.json": "completed",
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "CheckCategoryAccessibility": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_2.json": "completed"
+  },
+  "ReloadCategory": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "RefreshCategory": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "RefreshForum": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "RemoveCategory": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "AddCategory": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "GetForum": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "IsForumAccessible": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "AddForum": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "RemoveForum": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "ReloadForum": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "UpdateForumStats": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "ClearModeratorList": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "SetLastRegisteredUser": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "GetTotalUsers": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "IncrementTotalUsers": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_3.json": "completed"
+  },
+  "IncrementTotalMessages": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_4.json": "completed"
+  },
+  "GetMostUsersEverOnline": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_4.json": "completed"
+  },
+  "UpdateMostUsersEverOnline": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_4.json": "completed"
+  },
+  "GetListAllowedForums": {
+    "src/net/jforum/repository/ForumRepository_java_chunk_4.json": "completed"
+  },
+  "RemovePost": {
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "AppendPost": {
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "ClearTopicCache": {
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed",
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "GetCachedTopics": {
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "GetCacheSize": {
+    "src/net/jforum/repository/PostRepository_java_chunk_1.json": "completed"
+  },
+  "InitModulesMapping": {
+    "src/net/jforum/repository/ModulesRepository_java_chunk_1.json": "completed"
+  },
+  "GetModuleClass": {
+    "src/net/jforum/repository/ModulesRepository_java_chunk_1.json": "completed"
+  },
+  "LoadRanks": {
+    "src/net/jforum/repository/RankingRepository_java_chunk_1.json": "completed"
+  },
+  "GetRankTitle": {
+    "src/net/jforum/repository/RankingRepository_java_chunk_1.json": "completed"
+  },
+  "GetRankingSize": {
+    "src/net/jforum/repository/RankingRepository_java_chunk_1.json": "completed"
+  },
+  "GetGroupRoles": {
+    "src/net/jforum/repository/RolesRepository_java_chunk_1.json": "completed"
+  },
+  "GetMergedGroupRoles": {
+    "src/net/jforum/repository/RolesRepository_java_chunk_1.json": "completed"
+  },
+  "AddGroupRoles": {
+    "src/net/jforum/repository/RolesRepository_java_chunk_1.json": "completed"
+  },
+  "ClearRolesCache": {
+    "src/net/jforum/repository/RolesRepository_java_chunk_1.json": "completed"
+  },
+  "LoadUserPermissions": {
+    "src/net/jforum/repository/SecurityRepository_java_chunk_1.json": "completed"
+  },
+  "CheckUserAccess": {
+    "src/net/jforum/repository/SecurityRepository_java_chunk_1.json": "completed"
+  },
+  "ManageSecurityCache": {
+    "src/net/jforum/repository/SecurityRepository_java_chunk_1.json": "completed"
+  },
+  "GetUserPermissionControl": {
+    "src/net/jforum/repository/SecurityRepository_java_chunk_1.json": "completed"
+  },
+  "LoadSmilies": {
+    "src/net/jforum/repository/SmiliesRepository_java_chunk_1.json": "completed"
+  },
+  "GetSmilies": {
+    "src/net/jforum/repository/SmiliesRepository_java_chunk_1.json": "completed"
+  },
+  "GetRecentTopics": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "GetHottestTopics": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "AddTopicToCache": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "UpdateCachedTopic": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "GetCachedTopic": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "GetForumTopics": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "ClearForumCache": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "LoadMostRecentTopics": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "LoadHottestTopics": {
+    "src/net/jforum/repository/TopicRepository_java_chunk_1.json": "completed"
+  },
+  "LoadTemplateConfiguration": {
+    "src/net/jforum/repository/Tpl_java_chunk_1.json": "completed"
+  },
+  "GetTemplateName": {
+    "src/net/jforum/repository/Tpl_java_chunk_1.json": "completed"
+  },
+  "PerformContentSearch": {
+    "src/net/jforum/search/ContentSearchOperation_java_chunk_1.json": "completed"
+  },
+  "PrepareSearchResultsForDisplay": {
+    "src/net/jforum/search/ContentSearchOperation_java_chunk_1.json": "completed"
+  },
+  "ExtractForumIdFromPost": {
+    "src/net/jforum/search/ContentSearchOperation_java_chunk_1.json": "completed"
+  },
+  "CollectSearchResults": {
+    "src/net/jforum/search/LuceneContentCollector_java_chunk_1.json": "completed"
+  },
+  "RetrievePostsWithHighlighting": {
+    "src/net/jforum/search/LuceneContentCollector_java_chunk_1.json": "completed"
+  },
+  "BatchCreatePostIndex": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed"
+  },
+  "CreatePostIndex": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed",
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed"
+  },
+  "UpdatePostIndex": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed",
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed"
+  },
+  "DeletePostIndex": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed",
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed"
+  },
+  "FlushRAMDirectory": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed"
+  },
+  "WatchNewDocumentAdded": {
+    "src/net/jforum/search/LuceneIndexer_java_chunk_1.json": "completed"
+  },
+  "InitializeSearchManager": {
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed"
+  },
+  "RemoveLuceneLockFile": {
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed"
+  },
+  "SearchPosts": {
+    "src/net/jforum/search/LuceneManager_java_chunk_1.json": "completed",
+    "src/net/jforum/search/SearchFacade_java_chunk_1.json": "completed",
+    "src/net/jforum/search/SearchManager_java_chunk_1.json": "completed"
+  },
+  "ReindexSearchContent": {
+    "src/net/jforum/search/LuceneReindexer_java_chunk_1.json": "completed"
+  },
+  "StartBackgroundIndexing": {
+    "src/net/jforum/search/LuceneReindexer_java_chunk_1.json": "completed"
+  },
+  "RecreateSearchIndex": {
+    "src/net/jforum/search/LuceneReindexer_java_chunk_1.json": "completed"
+  },
+  "SearchForumContent": {
+    "src/net/jforum/search/LuceneSearch_java_chunk_1.json": "completed"
+  },
+  "FindDocumentByPostId": {
+    "src/net/jforum/search/LuceneSearch_java_chunk_1.json": "completed"
+  },
+  "HandleNewDocumentAddition": {
+    "src/net/jforum/search/LuceneSearch_java_chunk_1.json": "completed"
+  },
+  "ConfigureLuceneRAMDirectory": {
+    "src/net/jforum/search/LuceneSettings_java_chunk_1.json": "completed"
+  },
+  "ConfigureLuceneFSDirectory": {
+    "src/net/jforum/search/LuceneSettings_java_chunk_1.json": "completed"
+  },
+  "CreateLuceneIndexDirectory": {
+    "src/net/jforum/search/LuceneSettings_java_chunk_1.json": "completed"
+  },
+  "FormatDateTimeForLucene": {
+    "src/net/jforum/search/LuceneSettings_java_chunk_1.json": "completed"
+  },
+  "PerformNewMessagesSearch": {
+    "src/net/jforum/search/NewMessagesSearchOperation_java_chunk_1.json": "completed"
+  },
+  "PrepareTopicsForDisplay": {
+    "src/net/jforum/search/NewMessagesSearchOperation_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "GetNewMessagesTemplate": {
+    "src/net/jforum/search/NewMessagesSearchOperation_java_chunk_1.json": "completed"
+  },
+  "ExtractForumIdFromTopic": {
+    "src/net/jforum/search/NewMessagesSearchOperation_java_chunk_1.json": "completed"
+  },
+  "ConfigureSearchParameters": {
+    "src/net/jforum/search/SearchArgs_java_chunk_1.json": "completed"
+  },
+  "ProcessSearchKeywords": {
+    "src/net/jforum/search/SearchArgs_java_chunk_1.json": "completed"
+  },
+  "ManageSearchPagination": {
+    "src/net/jforum/search/SearchArgs_java_chunk_1.json": "completed"
+  },
+  "InitSearchManager": {
+    "src/net/jforum/search/SearchFacade_java_chunk_1.json": "completed"
+  },
+  "CreateSearchIndex": {
+    "src/net/jforum/search/SearchFacade_java_chunk_1.json": "completed",
+    "src/net/jforum/search/SearchManager_java_chunk_1.json": "completed"
+  },
+  "UpdateSearchIndex": {
+    "src/net/jforum/search/SearchFacade_java_chunk_1.json": "completed",
+    "src/net/jforum/search/SearchManager_java_chunk_1.json": "completed"
+  },
+  "DeleteSearchIndex": {
+    "src/net/jforum/search/SearchFacade_java_chunk_1.json": "completed"
+  },
+  "InitializeSearch": {
+    "src/net/jforum/search/SearchManager_java_chunk_1.json": "completed"
+  },
+  "DeleteFromSearchIndex": {
+    "src/net/jforum/search/SearchManager_java_chunk_1.json": "completed"
+  },
+  "PerformSearch": {
+    "src/net/jforum/search/SearchOperation_java_chunk_1.json": "completed"
+  },
+  "FilterSearchResults": {
+    "src/net/jforum/search/SearchOperation_java_chunk_1.json": "completed"
+  },
+  "ManageRolePermissions": {
+    "src/net/jforum/security/PermissionControl_java_chunk_1.json": "completed"
+  },
+  "CheckAccessPermission": {
+    "src/net/jforum/security/PermissionControl_java_chunk_1.json": "completed"
+  },
+  "ValidateRoleValueAccess": {
+    "src/net/jforum/security/PermissionControl_java_chunk_1.json": "completed"
+  },
+  "AddSecurityRole": {
+    "src/net/jforum/security/PermissionControl_java_chunk_1.json": "completed"
+  },
+  "AddPermission": {
+    "src/net/jforum/security/PermissionSection_java_chunk_1.json": "completed"
+  },
+  "GetPermissions": {
+    "src/net/jforum/security/PermissionSection_java_chunk_1.json": "completed"
+  },
+  "GetSectionId": {
+    "src/net/jforum/security/PermissionSection_java_chunk_1.json": "completed"
+  },
+  "GetSectionName": {
+    "src/net/jforum/security/PermissionSection_java_chunk_1.json": "completed"
+  },
+  "GetRole": {
+    "src/net/jforum/security/RoleCollection_java_chunk_1.json": "completed"
+  },
+  "DisplayRoles": {
+    "src/net/jforum/security/RoleCollection_java_chunk_1.json": "completed"
+  },
+  "GetRoleValueByName": {
+    "src/net/jforum/security/RoleValueCollection_java_chunk_1.json": "completed"
+  },
+  "AddMultipleRoleValues": {
+    "src/net/jforum/security/RoleValueCollection_java_chunk_1.json": "completed"
+  },
+  "LoadPermissionConfigurations": {
+    "src/net/jforum/security/XMLPermissionControl_java_chunk_1.json": "completed"
+  },
+  "ParsePermissionSections": {
+    "src/net/jforum/security/XMLPermissionControl_java_chunk_1.json": "completed"
+  },
+  "RetrieveRoleBasedPermissions": {
+    "src/net/jforum/security/XMLPermissionControl_java_chunk_1.json": "completed"
+  },
+  "ValidateLDAPLogin": {
+    "src/net/jforum/sso/LDAPAuthenticator_java_chunk_1.json": "completed"
+  },
+  "RegisterLDAPUser": {
+    "src/net/jforum/sso/LDAPAuthenticator_java_chunk_1.json": "completed"
+  },
+  "AuthenticateRemoteUser": {
+    "src/net/jforum/sso/RemoteUserSSO_java_chunk_1.json": "completed"
+  },
+  "ValidateUserSession": {
+    "src/net/jforum/sso/RemoteUserSSO_java_chunk_1.json": "completed"
+  },
+  "CheckUserExists": {
+    "src/net/jforum/sso/SSOUtils_java_chunk_1.json": "completed"
+  },
+  "RegisterSsoUser": {
+    "src/net/jforum/sso/SSOUtils_java_chunk_1.json": "completed"
+  },
+  "GetSsoUser": {
+    "src/net/jforum/sso/SSOUtils_java_chunk_1.json": "completed"
+  },
+  "ExecuteSummaryJob": {
+    "src/net/jforum/summary/SummaryJob_java_chunk_1.json": "completed"
+  },
+  "SendPostsSummary": {
+    "src/net/jforum/summary/SummaryModel_java_chunk_1.json": "completed"
+  },
+  "ListPosts": {
+    "src/net/jforum/summary/SummaryModel_java_chunk_1.json": "completed"
+  },
+  "GenerateCaptchaImage": {
+    "src/net/jforum/util/Captcha_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/CaptchaAction_java_chunk_1.json": "completed"
+  },
+  "WriteCaptchaImage": {
+    "src/net/jforum/util/Captcha_java_chunk_1.json": "completed"
+  },
+  "CompareCategoryOrder": {
+    "src/net/jforum/util/CategoryOrderComparator_java_chunk_1.json": "completed"
+  },
+  "CloseResultSetAndStatement": {
+    "src/net/jforum/util/DbUtils_java_chunk_1.json": "completed"
+  },
+  "CloseResultSet": {
+    "src/net/jforum/util/DbUtils_java_chunk_1.json": "completed"
+  },
+  "CloseStatement": {
+    "src/net/jforum/util/DbUtils_java_chunk_1.json": "completed"
+  },
+  "FileChangeNotification": {
+    "src/net/jforum/util/FileChangeListener_java_chunk_1.json": "completed"
+  },
+  "MonitorFileChanges": {
+    "src/net/jforum/util/FileMonitor_java_chunk_1.json": "completed"
+  },
+  "AddFileChangeListener": {
+    "src/net/jforum/util/FileMonitor_java_chunk_1.json": "completed"
+  },
+  "RemoveFileChangeListener": {
+    "src/net/jforum/util/FileMonitor_java_chunk_1.json": "completed"
+  },
+  "CompareForum": {
+    "src/net/jforum/util/ForumOrderComparator_java_chunk_1.json": "completed"
+  },
+  "ManageFormFieldSelection": {
+    "src/net/jforum/util/FormSelectedData_java_chunk_1.json": "completed"
+  },
+  "ManageGroupHierarchy": {
+    "src/net/jforum/util/GroupNode_java_chunk_1.json": "completed"
+  },
+  "AddGroupNode": {
+    "src/net/jforum/util/GroupNode_java_chunk_1.json": "completed"
+  },
+  "RetrieveGroupNode": {
+    "src/net/jforum/util/GroupNode_java_chunk_1.json": "completed"
+  },
+  "LoadInternationalizationResources": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "GetLocalizedMessage": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "ChangeBoardDefaultLanguage": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "CheckLanguageAvailability": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "GetUserLanguagePreference": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "MonitorLanguageFileChanges": {
+    "src/net/jforum/util/I18n_java_chunk_2.json": "completed"
+  },
+  "EncryptStringWithMD5": {
+    "src/net/jforum/util/MD5_java_chunk_1.json": "completed"
+  },
+  "MakeSafeHtml": {
+    "src/net/jforum/util/SafeHtml_java_chunk_1.json": "completed"
+  },
+  "EnsureAllAttributesAreSafe": {
+    "src/net/jforum/util/SafeHtml_java_chunk_1.json": "completed"
+  },
+  "ValidateHrefLinks": {
+    "src/net/jforum/util/SafeHtml_java_chunk_1.json": "completed"
+  },
+  "GetGroupHierarchy": {
+    "src/net/jforum/util/TreeGroup_java_chunk_1.json": "completed"
+  },
+  "ProcessSubgroups": {
+    "src/net/jforum/util/TreeGroup_java_chunk_1.json": "completed"
+  },
+  "NormalizeUrl": {
+    "src/net/jforum/util/URLNormalizer_java_chunk_1.json": "completed"
+  },
+  "NormalizeUrlWithLimits": {
+    "src/net/jforum/util/URLNormalizer_java_chunk_1.json": "completed"
+  },
+  "CreateBBCode": {
+    "src/net/jforum/util/bbcode/BBCode_java_chunk_1.json": "completed"
+  },
+  "ConfigureBBCodeProcessing": {
+    "src/net/jforum/util/bbcode/BBCode_java_chunk_1.json": "completed"
+  },
+  "ParseBBCodeConfiguration": {
+    "src/net/jforum/util/bbcode/BBCodeHandler_java_chunk_1.json": "completed"
+  },
+  "ManageBBCodeTags": {
+    "src/net/jforum/util/bbcode/BBCodeHandler_java_chunk_1.json": "completed"
+  },
+  "ExecuteAsyncTask": {
+    "src/net/jforum/util/concurrent/Executor_java_chunk_1.json": "completed"
+  },
+  "ResizeImage": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "SaveImage": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "SaveCompressedImage": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "CreateHeadlessBufferedImage": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "CreateHeadlessSmoothBufferedImage": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "DetectImageTransparency": {
+    "src/net/jforum/util/image/ImageUtils_java_chunk_2.json": "completed"
+  },
+  "FilterClickstreamRequests": {
+    "src/net/jforum/util/legacy/clickstream/ClickstreamFilter_java_chunk_1.json": "completed"
+  },
+  "ManageBotAgents": {
+    "src/net/jforum/util/legacy/clickstream/config/ClickstreamConfig_java_chunk_1.json": "completed"
+  },
+  "ManageBotHosts": {
+    "src/net/jforum/util/legacy/clickstream/config/ClickstreamConfig_java_chunk_1.json": "completed"
+  },
+  "LoadClickstreamConfig": {
+    "src/net/jforum/util/legacy/clickstream/config/ConfigLoader_java_chunk_1.json": "completed"
+  },
+  "DetectMultipartContent": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_2.json": "completed"
+  },
+  "ParseMultipartRequest": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_2.json": "completed",
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletFileUpload_java_chunk_1.json": "completed"
+  },
+  "ConfigureUploadSizeLimit": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_2.json": "completed"
+  },
+  "ConfigureHeaderEncoding": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_2.json": "completed",
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_2.json": "completed"
+  },
+  "ProcessMultipartFormData": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_3.json": "completed"
+  },
+  "ParseMultipartBoundaries": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_3.json": "completed"
+  },
+  "ExtractFileAttachments": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_3.json": "completed"
+  },
+  "ParseContentHeaders": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_3.json": "completed"
+  },
+  "CreateFileItems": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_3.json": "completed"
+  },
+  "GetHeaderFromMap": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadBase_java_chunk_4.json": "completed"
+  },
+  "GetFileItemFactory": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUpload_java_chunk_1.json": "completed"
+  },
+  "SetFileItemFactory": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUpload_java_chunk_1.json": "completed"
+  },
+  "HandleFileUploadErrors": {
+    "src/net/jforum/util/legacy/commons/fileupload/FileUploadException_java_chunk_1.json": "completed"
+  },
+  "ReadMultipartStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_2.json": "completed"
+  },
+  "ReadBoundary": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_2.json": "completed"
+  },
+  "SetBoundary": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_2.json": "completed"
+  },
+  "ReadHeadersFromMultipartStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_3.json": "completed"
+  },
+  "ReadBodyDataFromMultipartStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_3.json": "completed"
+  },
+  "DiscardBodyData": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_3.json": "completed"
+  },
+  "SkipPreamble": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_3.json": "completed"
+  },
+  "FindSeparator": {
+    "src/net/jforum/util/legacy/commons/fileupload/MultipartStream_java_chunk_3.json": "completed"
+  },
+  "ParseParameterString": {
+    "src/net/jforum/util/legacy/commons/fileupload/ParameterParser_java_chunk_1.json": "completed"
+  },
+  "ParseParameterCharArray": {
+    "src/net/jforum/util/legacy/commons/fileupload/ParameterParser_java_chunk_1.json": "completed"
+  },
+  "ConfigureCaseConversion": {
+    "src/net/jforum/util/legacy/commons/fileupload/ParameterParser_java_chunk_1.json": "completed"
+  },
+  "GetFileInputStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileContentType": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileCharSet": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileName": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "CheckFileInMemory": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileSize": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileBytes": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed"
+  },
+  "GetFileContentAsString": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_2.json": "completed",
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "WriteUploadedFileToLocation": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "DeleteTemporaryStorage": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "ManageFormFieldProperties": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "GetFileOutputStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "GetFileStoreLocation": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "CreateTemporaryFile": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItem_java_chunk_3.json": "completed"
+  },
+  "CreateFileItem": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItemFactory_java_chunk_1.json": "completed"
+  },
+  "ConfigureFileStorage": {
+    "src/net/jforum/util/legacy/commons/fileupload/disk/DiskFileItemFactory_java_chunk_1.json": "completed"
+  },
+  "CreateFileUpload": {
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletFileUpload_java_chunk_1.json": "completed"
+  },
+  "GetRequestContentType": {
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletRequestContext_java_chunk_1.json": "completed"
+  },
+  "GetRequestContentLength": {
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletRequestContext_java_chunk_1.json": "completed"
+  },
+  "GetRequestInputStream": {
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletRequestContext_java_chunk_1.json": "completed"
+  },
+  "FormatRequestContext": {
+    "src/net/jforum/util/legacy/commons/fileupload/servlet/ServletRequestContext_java_chunk_1.json": "completed"
+  },
+  "SendActivationEmail": {
+    "src/net/jforum/util/mail/ActivationKeySpammer_java_chunk_1.json": "completed"
+  },
+  "DispatchEmailMessages": {
+    "src/net/jforum/util/mail/EmailSenderTask_java_chunk_1.json": "completed"
+  },
+  "SendNewTopicNotifications": {
+    "src/net/jforum/util/mail/ForumNewTopicSpammer_java_chunk_1.json": "completed"
+  },
+  "GenerateTopicEmailContent": {
+    "src/net/jforum/util/mail/ForumNewTopicSpammer_java_chunk_1.json": "completed"
+  },
+  "CreateUnwatchForumLink": {
+    "src/net/jforum/util/mail/ForumNewTopicSpammer_java_chunk_1.json": "completed"
+  },
+  "SetCustomMessageId": {
+    "src/net/jforum/util/mail/IdentifiableMimeMessage_java_chunk_1.json": "completed"
+  },
+  "UpdateMessageID": {
+    "src/net/jforum/util/mail/IdentifiableMimeMessage_java_chunk_1.json": "completed"
+  },
+  "SendLostPasswordEmail": {
+    "src/net/jforum/util/mail/LostPasswordSpammer_java_chunk_1.json": "completed"
+  },
+  "SendPrivateMessageNotification": {
+    "src/net/jforum/util/mail/PrivateMessageSpammer_java_chunk_1.json": "completed"
+  },
+  "SendCustomizedEmails": {
+    "src/net/jforum/util/mail/Spammer_java_chunk_2.json": "completed"
+  },
+  "DispatchMessages": {
+    "src/net/jforum/util/mail/Spammer_java_chunk_2.json": "completed"
+  },
+  "PrepareEmailMessage": {
+    "src/net/jforum/util/mail/Spammer_java_chunk_2.json": "completed"
+  },
+  "ProcessEmailTemplate": {
+    "src/net/jforum/util/mail/Spammer_java_chunk_2.json": "completed"
+  },
+  "NotifyTopicReplies": {
+    "src/net/jforum/util/mail/TopicReplySpammer_java_chunk_1.json": "completed"
+  },
+  "GenerateUnwatchLink": {
+    "src/net/jforum/util/mail/TopicReplySpammer_java_chunk_1.json": "completed"
+  },
+  "GenerateMessageLink": {
+    "src/net/jforum/util/mail/TopicReplySpammer_java_chunk_1.json": "completed"
+  },
+  "ReloadQueriesFile": {
+    "src/net/jforum/util/preferences/QueriesFileListener_java_chunk_1.json": "completed"
+  },
+  "LoadSystemConfiguration": {
+    "src/net/jforum/util/preferences/SystemGlobals_java_chunk_2.json": "completed"
+  },
+  "ManageConfigurationValues": {
+    "src/net/jforum/util/preferences/SystemGlobals_java_chunk_2.json": "completed"
+  },
+  "SaveInstallationSettings": {
+    "src/net/jforum/util/preferences/SystemGlobals_java_chunk_2.json": "completed"
+  },
+  "LoadSqlQueries": {
+    "src/net/jforum/util/preferences/SystemGlobals_java_chunk_2.json": "completed"
+  },
+  "ExpandConfigurationVariables": {
+    "src/net/jforum/util/preferences/SystemGlobals_java_chunk_2.json": "completed"
+  },
+  "ReloadSystemConfiguration": {
+    "src/net/jforum/util/preferences/SystemGlobalsListener_java_chunk_1.json": "completed"
+  },
+  "ExpandVariables": {
+    "src/net/jforum/util/preferences/VariableExpander_java_chunk_1.json": "completed"
+  },
+  "ClearCache": {
+    "src/net/jforum/util/preferences/VariableExpander_java_chunk_1.json": "completed"
+  },
+  "CreateRSS": {
+    "src/net/jforum/util/rss/GenericRSS_java_chunk_1.json": "completed"
+  },
+  "CreateRssDocument": {
+    "src/net/jforum/util/rss/RSS_java_chunk_1.json": "completed"
+  },
+  "AddRssItem": {
+    "src/net/jforum/util/rss/RSS_java_chunk_1.json": "completed"
+  },
+  "RetrieveRssItems": {
+    "src/net/jforum/util/rss/RSS_java_chunk_1.json": "completed"
+  },
+  "GetRssDocumentProperties": {
+    "src/net/jforum/util/rss/RSS_java_chunk_1.json": "completed"
+  },
+  "ManageRssItemContent": {
+    "src/net/jforum/util/rss/RSSItem_java_chunk_1.json": "completed"
+  },
+  "AddRssItemCategory": {
+    "src/net/jforum/util/rss/RSSItem_java_chunk_1.json": "completed"
+  },
+  "FormatDateToRSS": {
+    "src/net/jforum/util/rss/RSSUtils_java_chunk_1.json": "completed"
+  },
+  "FormatStringDateToRSS": {
+    "src/net/jforum/util/rss/RSSUtils_java_chunk_1.json": "completed"
+  },
+  "GenerateRecentTopicsRSS": {
+    "src/net/jforum/util/rss/RecentTopicsRSS_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/RSSAction_java_chunk_1.json": "completed"
+  },
+  "GenerateTopicPostsRSS": {
+    "src/net/jforum/util/rss/TopicPostsRSS_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/RSSAction_java_chunk_1.json": "completed"
+  },
+  "GenerateTopicRSS": {
+    "src/net/jforum/util/rss/TopicRSS_java_chunk_1.json": "completed"
+  },
+  "PrepareRSSContent": {
+    "src/net/jforum/util/rss/TopicRSS_java_chunk_1.json": "completed"
+  },
+  "AdminLogin": {
+    "src/net/jforum/view/admin/AdminAction_java_chunk_1.json": "completed"
+  },
+  "DisplayAdminMenu": {
+    "src/net/jforum/view/admin/AdminAction_java_chunk_1.json": "completed"
+  },
+  "DisplayAdminDashboard": {
+    "src/net/jforum/view/admin/AdminAction_java_chunk_1.json": "completed"
+  },
+  "CheckBoardVersion": {
+    "src/net/jforum/view/admin/AdminAction_java_chunk_1.json": "completed"
+  },
+  "FetchMailManually": {
+    "src/net/jforum/view/admin/AdminAction_java_chunk_1.json": "completed"
+  },
+  "AdminAccessControl": {
+    "src/net/jforum/view/admin/AdminCommand_java_chunk_1.json": "completed"
+  },
+  "ConfigureAttachmentSettings": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "SaveAttachmentConfigurations": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "CreateQuotaLimit": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "UpdateQuotaLimits": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "CreateExtensionGroup": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "UpdateExtensionGroups": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "CreateExtension": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "UpdateExtensions": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "SaveGroupQuotas": {
+    "src/net/jforum/view/admin/AttachmentsAction_java_chunk_1.json": "completed"
+  },
+  "ListBanItems": {
+    "src/net/jforum/view/admin/BanlistAction_java_chunk_1.json": "completed"
+  },
+  "InsertBanItem": {
+    "src/net/jforum/view/admin/BanlistAction_java_chunk_1.json": "completed"
+  },
+  "SaveBanItem": {
+    "src/net/jforum/view/admin/BanlistAction_java_chunk_1.json": "completed"
+  },
+  "DeleteBanItems": {
+    "src/net/jforum/view/admin/BanlistAction_java_chunk_1.json": "completed"
+  },
+  "ListBanners": {
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "InsertBanner": {
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "SaveNewBanner": {
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "EditBanner": {
+    "src/net/jforum/view/admin/BannerAction_java_chunk_1.json": "completed"
+  },
+  "ListCacheStatus": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ReloadBBCodeCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ClearSessionCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ReloadModulesCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ReloadSmiliesCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ReloadRankingCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ViewTopicCacheDetails": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ViewPostCacheDetails": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ClearPostCache": {
+    "src/net/jforum/view/admin/CacheAction_java_chunk_1.json": "completed"
+  },
+  "ListSystemConfiguration": {
+    "src/net/jforum/view/admin/ConfigAction_java_chunk_1.json": "completed"
+  },
+  "SaveSystemConfiguration": {
+    "src/net/jforum/view/admin/ConfigAction_java_chunk_1.json": "completed"
+  },
+  "ListCategories": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "InsertCategory": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "SaveNewCategory": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "EditCategory": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "DeleteCategories": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "ChangeCategoryOrder": {
+    "src/net/jforum/view/admin/CategoryAction_java_chunk_1.json": "completed"
+  },
+  "ListForums": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "InsertForumForm": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "EditForumForm": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "SaveForumChanges": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "MoveForumUp": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "MoveForumDown": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "DeleteForums": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "CreateNewForum": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ManageMailIntegration": {
+    "src/net/jforum/view/admin/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ListGroups": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "InsertGroup": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "EditGroup": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "SaveGroupChanges": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "DeleteGroups": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "ManageGroupPermissions": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "SaveGroupPermissions": {
+    "src/net/jforum/view/admin/GroupAction_java_chunk_1.json": "completed"
+  },
+  "ListLuceneStats": {
+    "src/net/jforum/view/admin/LuceneStatsAction_java_chunk_1.json": "completed"
+  },
+  "CreateIndexDirectory": {
+    "src/net/jforum/view/admin/LuceneStatsAction_java_chunk_1.json": "completed"
+  },
+  "ReconstructSearchIndex": {
+    "src/net/jforum/view/admin/LuceneStatsAction_java_chunk_1.json": "completed"
+  },
+  "CancelIndexing": {
+    "src/net/jforum/view/admin/LuceneStatsAction_java_chunk_1.json": "completed"
+  },
+  "ListPendingModerationItems": {
+    "src/net/jforum/view/admin/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "ViewForumModerationQueue": {
+    "src/net/jforum/view/admin/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "ApproveModeratedPosts": {
+    "src/net/jforum/view/admin/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "RejectModeratedPosts": {
+    "src/net/jforum/view/admin/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "SaveModerationDecisions": {
+    "src/net/jforum/view/admin/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "ProcessPermissionData": {
+    "src/net/jforum/view/admin/PermissionProcessHelper_java_chunk_1.json": "completed"
+  },
+  "InitializePermissions": {
+    "src/net/jforum/view/admin/PermissionProcessHelper_java_chunk_1.json": "completed"
+  },
+  "ListRankings": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "InsertRanking": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "EditRanking": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "SaveRankingChanges": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "DeleteRankings": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "CreateNewRanking": {
+    "src/net/jforum/view/admin/RankingAction_java_chunk_1.json": "completed"
+  },
+  "ListSmilies": {
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/PostAction_java_chunk_6.json": "completed"
+  },
+  "InsertSmilie": {
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed"
+  },
+  "SaveNewSmilie": {
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed"
+  },
+  "EditSmilie": {
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed"
+  },
+  "DeleteSmilies": {
+    "src/net/jforum/view/admin/SmiliesAction_java_chunk_1.json": "completed"
+  },
+  "SetForumsModerationStatus": {
+    "src/net/jforum/view/admin/common/ModerationCommon_java_chunk_1.json": "completed"
+  },
+  "ViewPendingActivations": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "ActivateUserAccounts": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "SearchUsersByGroup": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "SearchUsersByUsername": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "EditUserProfile": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "SaveUserProfile": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/common/UserCommon_java_chunk_1.json": "completed"
+  },
+  "DeleteOrUndeleteUsers": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "ManageUserGroups": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "SaveUserGroupAssignments": {
+    "src/net/jforum/view/admin/UserAction_java_chunk_1.json": "completed"
+  },
+  "SendTestMail": {
+    "src/net/jforum/view/forum/AjaxAction_java_chunk_1.json": "completed"
+  },
+  "IsPostIndexed": {
+    "src/net/jforum/view/forum/AjaxAction_java_chunk_1.json": "completed"
+  },
+  "LoadPostContents": {
+    "src/net/jforum/view/forum/AjaxAction_java_chunk_1.json": "completed"
+  },
+  "SavePost": {
+    "src/net/jforum/view/forum/AjaxAction_java_chunk_1.json": "completed"
+  },
+  "PreviewPost": {
+    "src/net/jforum/view/forum/AjaxAction_java_chunk_1.json": "completed"
+  },
+  "RedirectBannerClick": {
+    "src/net/jforum/view/forum/BannerAction_java_chunk_1.json": "completed"
+  },
+  "InsertBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "AddForumBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "AddTopicBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "AddUserBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "SaveBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "EditBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "DeleteBookmark": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "ListBookmarks": {
+    "src/net/jforum/view/forum/BookmarkAction_java_chunk_1.json": "completed"
+  },
+  "ShowForumTopics": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ModerationView": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "MarkTopicsAsRead": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ViewNewMessages": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ApproveMessages": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "WatchForum": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "UnwatchForum": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ShowBannedMessage": {
+    "src/net/jforum/view/forum/ForumAction_java_chunk_2.json": "completed"
+  },
+  "ListHottestTopics": {
+    "src/net/jforum/view/forum/HottestTopicsAction_java_chunk_1.json": "completed"
+  },
+  "ShowTopicsByUser": {
+    "src/net/jforum/view/forum/HottestTopicsAction_java_chunk_1.json": "completed",
+    "src/net/jforum/view/forum/RecentTopicsAction_java_chunk_1.json": "completed"
+  },
+  "LoadJavaScriptFile": {
+    "src/net/jforum/view/forum/JSAction_java_chunk_1.json": "completed"
+  },
+  "InsertKarma": {
+    "src/net/jforum/view/forum/KarmaAction_java_chunk_1.json": "completed"
+  },
+  "ListKarma": {
+    "src/net/jforum/view/forum/KarmaAction_java_chunk_1.json": "completed"
+  },
+  "ShowActivityLog": {
+    "src/net/jforum/view/forum/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "DoModeration": {
+    "src/net/jforum/view/forum/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "MoveTopic": {
+    "src/net/jforum/view/forum/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "ModerationDone": {
+    "src/net/jforum/view/forum/ModerationAction_java_chunk_1.json": "completed"
+  },
+  "ModerateForum": {
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "RemoveTopics": {
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "MoveTopicsSave": {
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "SaveModerationLog": {
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "BuildModerationLogFromRequest": {
+    "src/net/jforum/view/forum/ModerationHelper_java_chunk_2.json": "completed"
+  },
+  "ListTopicPosts": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_2.json": "completed"
+  },
+  "NavigateToSpecificPost": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_2.json": "completed"
+  },
+  "ListUserPosts": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/forum/PostAction_java_chunk_3.json": "completed"
+  },
+  "ReviewTopicPosts": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_3.json": "completed"
+  },
+  "ReplyToTopic": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_3.json": "completed"
+  },
+  "CreateNewPost": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_3.json": "completed"
+  },
+  "EditPost": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_3.json": "completed",
+    "src/net/jforum/view/forum/PostAction_java_chunk_4.json": "completed"
+  },
+  "QuotePost": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_4.json": "completed"
+  },
+  "EditSavePost": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_4.json": "completed"
+  },
+  "InsertSave": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_5.json": "completed"
+  },
+  "WaitingModeration": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_5.json": "completed"
+  },
+  "NotModeratedYet": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_5.json": "completed"
+  },
+  "EnsurePollMinimumOptions": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_5.json": "completed"
+  },
+  "WatchTopic": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_6.json": "completed"
+  },
+  "UnwatchTopic": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_6.json": "completed"
+  },
+  "DownloadAttachment": {
+    "src/net/jforum/view/forum/PostAction_java_chunk_6.json": "completed"
+  },
+  "ViewPrivateMessageInbox": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "ViewPrivateMessageSentbox": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "ComposePrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "SendPrivateMessageToUser": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "SavePrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "FindUserForPrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "ReadPrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_2.json": "completed"
+  },
+  "ReviewPrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_3.json": "completed"
+  },
+  "ReplyToPrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_3.json": "completed"
+  },
+  "QuotePrivateMessage": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_3.json": "completed"
+  },
+  "ListPrivateMessages": {
+    "src/net/jforum/view/forum/PrivateMessageAction_java_chunk_3.json": "completed"
+  },
+  "GenerateForumTopicsRSS": {
+    "src/net/jforum/view/forum/RSSAction_java_chunk_1.json": "completed"
+  },
+  "ProcessRSSRequest": {
+    "src/net/jforum/view/forum/RSSAction_java_chunk_1.json": "completed"
+  },
+  "ListRecentTopics": {
+    "src/net/jforum/view/forum/RecentTopicsAction_java_chunk_1.json": "completed"
+  },
+  "FilterSearch": {
+    "src/net/jforum/view/forum/SearchAction_java_chunk_1.json": "completed"
+  },
+  "SearchNewMessages": {
+    "src/net/jforum/view/forum/SearchAction_java_chunk_1.json": "completed"
+  },
+  "SearchContent": {
+    "src/net/jforum/view/forum/SearchAction_java_chunk_1.json": "completed"
+  },
+  "ListSearchFilters": {
+    "src/net/jforum/view/forum/SearchAction_java_chunk_1.json": "completed"
+  },
+  "CheckBannerDisplayEligibility": {
+    "src/net/jforum/view/forum/common/BannerCommon_java_chunk_1.json": "completed"
+  },
+  "CheckActiveBannerExistence": {
+    "src/net/jforum/view/forum/common/BannerCommon_java_chunk_1.json": "completed"
+  },
+  "SelectBannerByWeight": {
+    "src/net/jforum/view/forum/common/BannerCommon_java_chunk_1.json": "completed"
+  },
+  "RegisterNewUser": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "SaveNewUser": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "DisplayUserAgreement": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "AcceptUserAgreement": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "RequestManualActivation": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "CompleteRegistration": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_2.json": "completed"
+  },
+  "CompleteUserRegistration": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "ViewUserProfile": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "LogoutUser": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "ShowLoginForm": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "HandleLostPassword": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "ProcessBasicAuthentication": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_3.json": "completed"
+  },
+  "LostPassword": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "PrepareLostPassword": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "LostPasswordSend": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "RecoverPassword": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "RecoverPasswordValidate": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "ListGroupUsers": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "SearchKarma": {
+    "src/net/jforum/view/forum/UserAction_java_chunk_4.json": "completed"
+  },
+  "ProcessAttachmentUploads": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "InsertAttachmentsToPost": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "CreateThumbnailImages": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "EditPostAttachments": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "DeletePostAttachments": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "CheckAttachmentQuota": {
+    "src/net/jforum/view/forum/common/AttachmentCommon_java_chunk_2.json": "completed"
+  },
+  "CheckUnreadPosts": {
+    "src/net/jforum/view/forum/common/ForumCommon_java_chunk_1.json": "completed"
+  },
+  "GetAllCategoriesAndForums": {
+    "src/net/jforum/view/forum/common/ForumCommon_java_chunk_1.json": "completed"
+  },
+  "FillPollFromRequest": {
+    "src/net/jforum/view/forum/common/PollCommon_java_chunk_1.json": "completed"
+  },
+  "PreparePostForDisplay": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "ProcessTextWithCodeBlocks": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "ParseCode": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "ProcessSmilies": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "FillPostFromRequest": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "CheckPostEditPermission": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "RetrieveTopicPosts": {
+    "src/net/jforum/view/forum/common/PostCommon_java_chunk_2.json": "completed"
+  },
+  "SetupTopicListingContext": {
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "CheckTopicAccessibility": {
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "NotifySubscribedUsers": {
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "UpdateBoardStatus": {
+    "src/net/jforum/view/forum/common/TopicsCommon_java_chunk_2.json": "completed"
+  },
+  "SaveUploadedFile": {
+    "src/net/jforum/view/forum/common/UploadUtils_java_chunk_1.json": "completed"
+  },
+  "GetFileExtension": {
+    "src/net/jforum/view/forum/common/UploadUtils_java_chunk_1.json": "completed"
+  },
+  "HandleAvatarUpload": {
+    "src/net/jforum/view/forum/common/UserCommon_java_chunk_1.json": "completed"
+  },
+  "ContextToPagination": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "ContextToLogin": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "GetStartPage": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "GetForumLink": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "ToUtf8String": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "FormatDate": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "EscapeHtml": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "ReplaceAll": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "PrepareUserSignature": {
+    "src/net/jforum/view/forum/common/ViewCommon_java_chunk_1.json": "completed"
+  },
+  "WelcomeInstallation": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/install/InstallAction_java_chunk_4.json": "completed"
+  },
+  "CheckLanguage": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "DoInstall": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "ConfigureDatabase": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "CreateTables": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "ImportTablesData": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "UpdateAdminPassword": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed",
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "FinishInstallation": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "ConfigureSystemGlobals": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "FixModulesMapping": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_2.json": "completed"
+  },
+  "ExecuteDatabaseStructureCreation": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "DropOracleOrPostgreSQLTables": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "CheckForWritableDirectories": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "ConfigureJDBCConnection": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_3.json": "completed"
+  },
+  "CheckInstallationInformation": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_4.json": "completed"
+  },
+  "StoreSupportProjectMessage": {
+    "src/net/jforum/view/install/InstallAction_java_chunk_4.json": "completed"
+  },
+  "ParseDatabaseDumpFile": {
+    "src/net/jforum/view/install/ParseDBDumpFile_java_chunk_1.json": "completed"
+  },
+  "ParseDatabaseStructureFile": {
+    "src/net/jforum/view/install/ParseDBStructFile_java_chunk_1.json": "completed"
+  },
+  "ImportPhpbbToJforum": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "ImportUsers": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "ImportPosts": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "ImportPrivateMessages": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "ImportForumStructure": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "SetupPermissions": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "CleanTables": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "FormatPostContent": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_2.json": "completed"
+  },
+  "MigratePHPBBToJForum": {
+    "tools/phpbb2jforum/src/net/jforum/tools/phpbb2jforum/Main_java_chunk_3.json": "completed"
+  },
+  "LoadEnvironment": {
+    "tests/core/net/jforum/TestCaseUtils_java_chunk_1.json": "completed"
+  },
+  "InitDatabaseImplementation": {
+    "tests/core/net/jforum/TestCaseUtils_java_chunk_1.json": "completed"
+  },
+  "GetRootDir": {
+    "tests/core/net/jforum/TestCaseUtils_java_chunk_1.json": "completed"
+  },
+  "ListPOPMessages": {
+    "tests/core/net/jforum/api/integration/mail/pop/POPConnectorMock_java_chunk_1.json": "completed"
+  },
+  "OpenPOPConnection": {
+    "tests/core/net/jforum/api/integration/mail/pop/POPConnectorMock_java_chunk_1.json": "completed"
+  },
+  "ClosePOPConnection": {
+    "tests/core/net/jforum/api/integration/mail/pop/POPConnectorMock_java_chunk_1.json": "completed"
+  },
+  "MatchBanlistEntries": {
+    "tests/core/net/jforum/entities/BanlistTestCase_java_chunk_1.json": "completed"
+  },
+  "DetectPollChanges": {
+    "tests/core/net/jforum/entities/PoolChangesTest_java_chunk_1.json": "completed"
+  },
+  "TrackChangedPollOptions": {
+    "tests/core/net/jforum/entities/PoolChangesTest_java_chunk_1.json": "completed"
+  },
+  "TrackNewPollOptions": {
+    "tests/core/net/jforum/entities/PoolChangesTest_java_chunk_1.json": "completed"
+  },
+  "TrackDeletedPollOptions": {
+    "tests/core/net/jforum/entities/PoolChangesTest_java_chunk_1.json": "completed"
+  },
+  "ManageHttpSessionAttributes": {
+    "tests/core/net/jforum/http/FakeHttpSession_java_chunk_1.json": "completed"
+  },
+  "GetSessionIdentification": {
+    "tests/core/net/jforum/http/FakeHttpSession_java_chunk_1.json": "completed"
+  },
+  "TestSummaryScheduler": {
+    "tests/core/net/jforum/summary/SummaryTest_java_chunk_1.json": "completed"
+  },
+  "TestLoadRecipients": {
+    "tests/core/net/jforum/summary/SummaryTest_java_chunk_1.json": "completed"
+  },
+  "TestSendMails": {
+    "tests/core/net/jforum/summary/SummaryTest_java_chunk_1.json": "completed"
+  },
+  "TestListPosts": {
+    "tests/core/net/jforum/summary/SummaryTest_java_chunk_1.json": "completed"
+  },
+  "TestURLNormalization": {
+    "tests/core/net/jforum/util/URLNormalizerTest_java_chunk_1.json": "completed"
+  }
+}

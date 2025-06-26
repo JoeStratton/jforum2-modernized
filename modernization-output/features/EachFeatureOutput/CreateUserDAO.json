@@ -1,0 +1,34 @@
+{
+  "featureName": "CreateUserDAO",
+  "description": "Creates and returns a database-specific implementation of the User Data Access Object for data operations.",
+  "inputValues": [
+    "databaseType-string-Database"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database type information (mandatory)\n   - System will use existing configuration settings (system-generated)\n\n2. Data Validation:\n   - Validate database type parameter:\n      * Check if database type is not empty\n      * Verify database type is supported by the system\n      * IF database type is not supported THEN prepare error message\n   - Validate system configuration:\n      * Verify database connection parameters are available\n      * Check if required database drivers are registered\n      * IF configuration is invalid THEN prepare system configuration error\n\n3. Business Rule Processing:\n   - Determine appropriate User DAO implementation:\n      * IF database type matches current system database type THEN use cached instance\n      * IF database type is different THEN prepare to create new instance\n   - Verify DAO implementation availability:\n      * Check if implementation class for specified database exists\n      * IF implementation not found THEN fall back to generic implementation\n      * Verify implementation supports all required operations\n\n4. Core Operation Execution:\n   - Create User DAO instance:\n      * IF cached instance exists and is valid THEN retrieve cached instance\n      * IF new instance needed THEN instantiate appropriate database-specific implementation\n      * Initialize DAO with necessary dependencies\n      * Register instance in system registry if caching is enabled\n   - Configure created DAO:\n      * Apply any database-specific settings\n      * Set up connection parameters\n      * Initialize prepared statement templates if needed\n\n5. Response Generation:\n   - Return User DAO instance:\n      * Include reference to created DAO object\n      * Include information about database type used\n   - Error response (if applicable):\n      * Include specific error details if creation failed\n      * Provide guidance on resolving configuration issues\n      * Log detailed error information for system administrators",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Database type must be supported by the system",
+    "Database connection parameters must be valid",
+    "User DAO implementation must support all required user operations",
+    "System must have appropriate access rights to user data tables"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserDAO": {
+      "type": "object",
+      "properties": {
+        "databaseType": {
+          "type": "string",
+          "description": "The type of database for which the DAO is created"
+        },
+        "implementation": {
+          "type": "string",
+          "description": "The specific implementation class used for the DAO"
+        }
+      }
+    }
+  }
+}

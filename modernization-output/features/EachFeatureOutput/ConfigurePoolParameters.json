@@ -1,0 +1,54 @@
+{
+  "featureName": "ConfigurePoolParameters",
+  "description": "Applies custom configuration parameters to the connection pool.",
+  "inputValues": [
+    "extraParams-string-ConnectionPool",
+    "poolConfiguration-object-PoolConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - extraParams (string): Semi-colon separated list of key-value pairs in format \"property=value;property2=value2\"\n     - poolConfiguration (object): Object containing predefined pool configuration settings\n     - System configuration values (system-generated): Retrieved from system configuration store\n   \n2. Data Validation:\n   - Validate extraParams format:\n     - IF extraParams is provided THEN\n       - Verify it follows the pattern of \"property=value;property2=value2\"\n       - Ensure each property name is non-empty\n       - Ensure each property has a corresponding value\n     - END IF\n   - Validate poolConfiguration object:\n     - Verify minimum pool size is a positive integer\n     - Verify maximum pool size is greater than or equal to minimum pool size\n     - Verify connection test period is a non-negative integer\n     - IF any validation fails THEN\n       - Generate appropriate error message\n       - Abort configuration process\n     - END IF\n\n3. Business Rule Processing:\n   - Check system state:\n     - Verify connection pool is in a configurable state\n     - Ensure database driver is available\n     - Validate connection string format\n   - Process configuration constraints:\n     - Ensure minimum pool size does not exceed system-defined threshold\n     - Ensure maximum pool size does not exceed system-defined threshold\n     - Verify idle connection test period is within acceptable range\n     - IF any constraint is violated THEN\n       - Log warning or error based on severity\n       - Apply default or adjusted values as appropriate\n     - END IF\n\n4. Core Operation Execution:\n   - Initialize connection pool with base configuration:\n     - Set database driver class\n     - Configure connection URL\n     - Set minimum and maximum pool sizes\n     - Set idle connection test period\n   - Process extra parameters:\n     - IF extraParams is provided and valid THEN\n       - Split parameter string by semicolon delimiter\n       - FOR EACH parameter pair:\n         - Split into key and value\n         - IF key and value are properly formatted THEN\n           - Determine appropriate data type for the parameter\n           - Convert value to appropriate type (string, integer, boolean)\n           - Apply parameter to connection pool configuration\n         - ELSE\n           - Log warning about skipping malformed parameter\n           - Continue to next parameter\n         - END IF\n       - END FOR\n     - END IF\n   - Finalize pool configuration:\n     - Apply any remaining system defaults not explicitly set\n     - Initialize connection pool with complete configuration\n     - Test connection to verify configuration success\n\n5. Response Generation:\n   - IF configuration process completes successfully THEN\n     - Return success status\n     - Include summary of applied configuration parameters\n     - Include connection pool statistics (current size, available connections)\n   - ELSE\n     - Return error status\n     - Include detailed error information\n     - Provide troubleshooting suggestions\n     - Include system support contact information\n   - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Extra parameters must follow the format 'property=value;property2=value2'",
+    "Property names must be non-empty strings",
+    "Minimum pool size must be a positive integer",
+    "Maximum pool size must be greater than or equal to minimum pool size",
+    "Idle connection test period must be a non-negative integer",
+    "Database driver must be available in the system",
+    "Connection string must be properly formatted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PoolConfig": {
+      "type": "object",
+      "properties": {
+        "minPoolSize": {
+          "type": "integer",
+          "description": "Minimum number of connections to maintain in the pool"
+        },
+        "maxPoolSize": {
+          "type": "integer",
+          "description": "Maximum number of connections allowed in the pool"
+        },
+        "idleConnectionTestPeriod": {
+          "type": "integer",
+          "description": "Period in seconds between tests of idle connections"
+        },
+        "driverClass": {
+          "type": "string",
+          "description": "Database driver class name"
+        },
+        "jdbcUrl": {
+          "type": "string",
+          "description": "Database connection URL"
+        }
+      },
+      "required": [
+        "minPoolSize",
+        "maxPoolSize",
+        "idleConnectionTestPeriod",
+        "driverClass",
+        "jdbcUrl"
+      ]
+    }
+  }
+}

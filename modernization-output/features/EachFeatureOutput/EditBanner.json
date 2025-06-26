@@ -1,0 +1,55 @@
+{
+  "featureName": "EditBanner",
+  "description": "Displays form for editing an existing banner and saves the updated information.",
+  "inputValues": [
+    "banner_id-number-Banner",
+    "comment-string-Banner",
+    "active-number-Banner",
+    "type-number-Banner",
+    "name-string-Banner",
+    "description-string-Banner",
+    "width-number-Banner",
+    "height-number-Banner",
+    "url-string-Banner",
+    "placement-number-Banner",
+    "weight-number-Banner",
+    "views-number-Banner",
+    "clicks-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the banner ID from the request\n   - Retrieve the existing banner data using the ID\n   - Display the edit form with pre-populated banner data\n   - Required fields include:\n     * banner_id (system-generated, mandatory)\n     * name (mandatory)\n     * description (mandatory)\n     * type (mandatory)\n     * active status (mandatory, default: 1 for active)\n     * width (mandatory)\n     * height (mandatory)\n     * url (mandatory)\n     * placement (mandatory)\n     * weight (mandatory, default: 1)\n     * views (mandatory, default: 0)\n     * clicks (mandatory, default: 0)\n     * comment (optional)\n\n2. Data Validation:\n   - Validate banner ID:\n     * Must be a positive integer\n     * Must correspond to an existing banner in the system\n     * Error message if banner not found: \"Banner not found\"\n   - Validate name:\n     * Must not be empty\n     * Maximum length check (255 characters)\n     * Error message: \"Banner name is required and cannot exceed 255 characters\"\n   - Validate description:\n     * Must not be empty\n     * Error message: \"Banner description is required\"\n   - Validate dimensions:\n     * Width must be a positive integer\n     * Height must be a positive integer\n     * Error message: \"Width and height must be positive numbers\"\n   - Validate URL:\n     * Must not be empty\n     * Must be a valid URL format\n     * Error message: \"Valid URL is required\"\n   - Validate type:\n     * Must be a valid banner type value\n     * Error message: \"Invalid banner type\"\n   - Validate placement:\n     * Must be a valid placement value\n     * Error message: \"Invalid placement value\"\n\n3. Business Rule Processing:\n   - Check if user has administrative permissions\n     * IF user does not have admin permissions THEN\n       - Display error message: \"Insufficient permissions\"\n       - Return to banner list\n   - Check if banner exists\n     * IF banner with provided ID does not exist THEN\n       - Display error message: \"Banner not found\"\n       - Return to banner list\n   - Check if banner is currently in use\n     * IF banner is in use and critical fields are being modified THEN\n       - Display warning: \"Modifying this banner may affect its display on active pages\"\n\n4. Core Operation Execution:\n   - Create a Banner object with the updated information\n   - Set all properties from the form inputs:\n     * comment\n     * active status\n     * type\n     * name\n     * description\n     * width\n     * height\n     * url\n     * placement\n     * weight\n     * views\n     * clicks\n   - Update the banner record in the database\n   - IF update fails THEN\n     * Display error message: \"Failed to update banner\"\n     * Maintain form with entered values\n   - IF update succeeds THEN\n     * Record the update action in the system log\n     * Proceed to success response\n\n5. Response Generation:\n   - Upon successful update:\n     * Display success message: \"Banner updated successfully\"\n     * Return to the banner list view showing all banners including the updated one\n   - Upon failure:\n     * Display appropriate error message based on the failure reason\n     * Return to the edit form with previously entered values preserved\n     * Highlight fields with errors",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner ID must be a positive integer",
+    "Banner name must not be empty",
+    "Banner description must not be empty",
+    "Width must be a positive integer",
+    "Height must be a positive integer",
+    "URL must not be empty and must be valid",
+    "Type must be a valid banner type value",
+    "Placement must be a valid placement value",
+    "Active status must be either 0 or 1",
+    "Weight must be a positive integer",
+    "Views must be a non-negative integer",
+    "Clicks must be a non-negative integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "comment": "string",
+      "active": "boolean",
+      "type": "number",
+      "width": "number",
+      "height": "number",
+      "url": "string",
+      "placement": "number",
+      "weight": "number",
+      "views": "number",
+      "clicks": "number"
+    }
+  }
+}

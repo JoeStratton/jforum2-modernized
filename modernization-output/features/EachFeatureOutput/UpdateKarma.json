@@ -1,0 +1,88 @@
+{
+  "featureName": "UpdateKarma",
+  "description": "Updates an existing karma record in the system.",
+  "inputValues": [
+    "karmaId-number-Karma",
+    "points-number-Karma"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - karmaId: Unique identifier of the karma record to update (mandatory)\n       - points: New karma rating value (mandatory)\n\n2. Data Validation:\n   2.1. Validate karmaId:\n       - IF karmaId is not provided or not a positive integer, THEN\n         - Return error: \"Invalid karma identifier provided\"\n   2.2. Validate points:\n       - IF points is not a number, THEN\n         - Return error: \"Karma points must be a valid number\"\n       - IF points is not within the allowed range for karma ratings, THEN\n         - Return error: \"Karma points must be within the valid range\"\n\n3. Business Rule Processing:\n   3.1. Check if karma record exists:\n       - IF no karma record exists with the provided karmaId, THEN\n         - Return error: \"Karma record not found\"\n   3.2. Verify user permissions:\n       - IF current user is not the original karma giver and not an administrator, THEN\n         - Return error: \"User not authorized to update this karma record\"\n   3.3. Check for rating time restrictions:\n       - IF system has time restrictions on karma updates AND the time limit has passed, THEN\n         - Return error: \"Time limit for updating karma has expired\"\n\n4. Core Operation Execution:\n   4.1. Retrieve the existing karma record:\n       - Load the karma record using karmaId\n       - Store original values for potential rollback\n   4.2. Update the karma record:\n       - Update the points value with the new rating\n       - Save the updated karma record\n   4.3. Update user karma status:\n       - Retrieve all karma points received by the user\n       - Calculate total points and number of votes\n       - Compute average karma points (total points / total votes)\n       - If no votes exist, set karma points to zero\n       - Update the user's karma status in the user record\n   4.4. Handle failures:\n       - IF any update operation fails, THEN\n         - Rollback all changes to maintain data consistency\n         - Log the failure details\n         - Return error: \"Failed to update karma record\"\n\n5. Response Generation:\n   5.1. For successful update:\n       - Generate success response with updated karma details\n       - Include the new karma points value\n       - Include the updated user karma total\n       - Include timestamp of the update\n   5.2. For failed update:\n       - Generate error response with specific failure reason\n       - Include guidance on how to resolve the issue\n       - Provide support reference if applicable",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Karma ID must exist in the system",
+    "Karma points must be a valid number",
+    "Karma points must be within the valid range",
+    "Only the original karma giver or an administrator can update a karma record"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Karma": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the karma record"
+        },
+        "postId": {
+          "type": "number",
+          "description": "Identifier of the post receiving karma"
+        },
+        "postUserId": {
+          "type": "number",
+          "description": "Identifier of the user receiving karma"
+        },
+        "fromUserId": {
+          "type": "number",
+          "description": "Identifier of the user giving karma"
+        },
+        "points": {
+          "type": "number",
+          "description": "Karma rating value"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "Identifier of the topic containing the post"
+        },
+        "ratingDate": {
+          "type": "date",
+          "description": "Date when the rating was given or updated"
+        }
+      },
+      "required": [
+        "id",
+        "postId",
+        "postUserId",
+        "fromUserId",
+        "points",
+        "topicId",
+        "ratingDate"
+      ]
+    },
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "karmaPoints": {
+          "type": "number",
+          "description": "Average karma points for a user"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Total karma points received"
+        },
+        "votesReceived": {
+          "type": "number",
+          "description": "Number of karma votes received"
+        },
+        "votesGiven": {
+          "type": "number",
+          "description": "Number of karma votes given by the user"
+        }
+      },
+      "required": [
+        "karmaPoints"
+      ]
+    }
+  }
+}

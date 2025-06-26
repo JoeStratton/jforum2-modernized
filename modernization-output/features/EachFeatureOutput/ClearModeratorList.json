@@ -1,0 +1,18 @@
+{
+  "featureName": "ClearModeratorList",
+  "description": "Clears the cached moderator list from the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required\n   - System identifies the moderator cache to be cleared\n\n2. Data Validation:\n   - Verify current user has appropriate permissions to clear moderator cache\n   - IF user does not have required permissions THEN\n     - Generate access denied error\n     - Terminate operation\n   - END IF\n\n3. Business Rule Processing:\n   - Check if system is in a state where cache clearing is allowed\n   - IF system is currently processing critical moderator-related operations THEN\n     - Queue the clear request for later execution\n     - Notify user that request is queued\n     - Terminate operation\n   - END IF\n\n4. Core Operation Execution:\n   - Identify the moderator cache storage location\n   - Remove all entries from the moderator cache\n   - Release any resources associated with the cache\n   - IF cache clearing fails THEN\n     - Log the failure reason\n     - Attempt alternative cache clearing method if available\n     - IF alternative method fails THEN\n       - Generate system error\n       - Terminate operation\n     - END IF\n   - END IF\n\n5. Response Generation:\n   - Generate success notification indicating moderator cache was cleared\n   - Include timestamp of when cache was cleared\n   - Provide information about when new moderator data will be loaded\n   - Return success status to caller",
+  "databaseEntities": [
+    "jforum_moderator_groups",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to clear moderator cache",
+    "System must not be in maintenance mode when clearing cache",
+    "Cache clearing operation must complete within system timeout limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

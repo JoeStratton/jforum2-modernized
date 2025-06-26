@@ -1,0 +1,19 @@
+{
+  "featureName": "GetMinPostId",
+  "description": "Retrieves the minimum (earliest) post ID for a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (number, mandatory)\n   - No optional fields or default values required\n   - System will use the topicId to query the database\n\n2. Data Validation:\n   - Validate topicId:\n     a. Check if topicId is provided\n     b. Verify topicId is a positive integer\n     c. Return error if topicId is missing or invalid\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if the provided topicId exists in the system\n     b. If topic does not exist, return appropriate error message\n     c. If topic exists, proceed to next step\n\n4. Core Operation Execution:\n   - Retrieve minimum post ID:\n     a. Query the posts associated with the specified topic\n     b. Find the minimum post ID value among all posts in the topic\n     c. If no posts are found for the topic, set minimum post ID to -1\n     d. Store the minimum post ID for return\n\n5. Response Generation:\n   - Success response:\n     a. Return the minimum post ID value\n     b. If no posts were found, return -1 indicating no posts exist\n   - Error response:\n     a. Return appropriate error message if topic does not exist\n     b. Return system error message if database operation fails",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be provided",
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

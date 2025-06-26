@@ -1,0 +1,51 @@
+{
+  "featureName": "CreateFileUpload",
+  "description": "Creates a file upload processor with optional FileItemFactory configuration.",
+  "inputValues": [
+    "fileItemFactory-object-FileItemFactory",
+    "request-object-HttpServletRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following inputs:\n       - request (mandatory): The HTTP request containing multipart form data\n       - fileItemFactory (optional): Factory for creating file items\n   1.2. If fileItemFactory is not provided, system will use default implementation\n\n2. Data Validation:\n   2.1. Validate request object:\n       - IF request is null THEN\n           - Generate error: \"Request cannot be null\"\n       - END IF\n   2.2. Validate request content type:\n       - IF request method is not \"POST\" THEN\n           - Return false for multipart content check\n       - END IF\n       - IF content type does not contain \"multipart/form-data\" THEN\n           - Return false for multipart content check\n       - END IF\n   2.3. Validate fileItemFactory if provided:\n       - IF fileItemFactory is provided and not properly initialized THEN\n           - Generate error: \"Invalid FileItemFactory configuration\"\n       - END IF\n\n3. Business Rule Processing:\n   3.1. Check system resources:\n       - Verify system has sufficient disk space for temporary file storage\n       - Verify memory allocation is sufficient for processing\n   3.2. Check upload constraints:\n       - Determine maximum allowed file size\n       - Determine allowed file types if restrictions apply\n       - IF any constraints cannot be satisfied THEN\n           - Generate appropriate error message\n       - END IF\n\n4. Core Operation Execution:\n   4.1. Initialize file upload processor:\n       - IF fileItemFactory was provided THEN\n           - Create file upload processor with provided factory\n       - ELSE\n           - Create file upload processor with default factory\n       - END IF\n   4.2. Configure upload parameters:\n       - Set maximum file size if applicable\n       - Set maximum request size if applicable\n       - Set memory threshold if applicable\n   4.3. Process the multipart request:\n       - Parse the request content\n       - Extract all file items from the request\n       - FOR each file item in the request:\n           - Process the item according to its type (form field or uploaded file)\n           - Store file data using the configured FileItemFactory\n       - END FOR\n   4.4. Handle processing errors:\n       - IF any errors occur during processing THEN\n           - Clean up any temporary resources\n           - Generate appropriate error message\n       - END IF\n\n5. Response Generation:\n   5.1. Prepare response data:\n       - Create list of processed file items\n       - Include metadata for each file item (name, size, content type)\n   5.2. Generate success response:\n       - Return the list of file items in the order they were transmitted\n   5.3. In case of errors:\n       - Return appropriate error information\n       - Include guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Request must not be null",
+    "Request method must be POST for multipart content",
+    "Content type must contain multipart/form-data",
+    "FileItemFactory must be properly initialized if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItemFactory": {
+      "type": "object",
+      "properties": {
+        "sizeThreshold": {
+          "type": "number",
+          "description": "The threshold above which files will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The location where files will be stored"
+        }
+      }
+    },
+    "HttpServletRequest": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "HTTP method of the request"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Content type of the request"
+        },
+        "content": {
+          "type": "object",
+          "description": "The multipart form data content"
+        }
+      }
+    }
+  }
+}

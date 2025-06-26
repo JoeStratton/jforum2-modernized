@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "AdminLogin",
+    "description": "Handles administrator login and authentication verification for admin access"
+  },
+  {
+    "featureName": "DisplayAdminMenu",
+    "description": "Shows the administration menu for authenticated administrators"
+  },
+  {
+    "featureName": "DisplayAdminDashboard",
+    "description": "Shows the main administration dashboard with forum statistics and system status"
+  },
+  {
+    "featureName": "CheckBoardVersion",
+    "description": "Verifies if the forum software is up-to-date by comparing with latest version"
+  },
+  {
+    "featureName": "FetchMailManually",
+    "description": "Triggers manual execution of the POP3 mail fetching process"
+  }
+]

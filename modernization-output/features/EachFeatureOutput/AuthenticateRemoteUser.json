@@ -1,0 +1,45 @@
+{
+  "featureName": "AuthenticateRemoteUser",
+  "description": "Authenticates users by verifying their identity through remote user information and validates active sessions.",
+  "inputValues": [
+    "request-object-RequestContext",
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the RequestContext object which contains user request information\n   - Collect the UserSession object for session validation (optional, used only for session validation)\n   - System will retrieve anonymous user ID from system configuration\n\n2. Data Validation:\n   - Verify the RequestContext object is not null\n     * IF RequestContext is null THEN return authentication failure\n   - For session validation, verify UserSession object is not null\n     * IF UserSession is null AND session validation is requested THEN return session invalid\n\n3. Business Rule Processing:\n   3.1. For user authentication:\n     - Extract remote user information from the request\n     - No additional processing required for the remote user value\n   \n   3.2. For session validation:\n     - Extract remote user information from the request\n     - Retrieve current user ID from the session\n     - Retrieve anonymous user ID from system configuration\n     - Compare the following conditions:\n       * IF remote user is null AND current user is not anonymous THEN\n         - User has logged out since session creation\n         - Session is invalid\n       * ELSE IF remote user is not null AND current user is anonymous THEN\n         - User has logged in since session creation\n         - Session is invalid\n       * ELSE IF remote user is not null AND remote user does not match session username THEN\n         - User identity has changed\n         - Session is invalid\n       * ELSE\n         - Session is valid\n\n4. Core Operation Execution:\n   4.1. For user authentication:\n     - Return the extracted remote user identifier\n     - No data modifications are performed\n   \n   4.2. For session validation:\n     - Return boolean result indicating if the session is valid\n     - No data modifications are performed\n\n5. Response Generation:\n   5.1. For user authentication:\n     - Return username string if authentication successful\n     - Return null if no remote user is found\n   \n   5.2. For session validation:\n     - Return true if session is valid\n     - Return false if session is invalid",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Request context must not be null",
+    "User session must not be null for session validation",
+    "Session is invalid if remote user is null but session user is not anonymous",
+    "Session is invalid if remote user exists but session user is anonymous",
+    "Session is invalid if remote user exists but doesn't match session username"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "remoteUser": {
+          "type": "string",
+          "description": "The remote user identifier"
+        }
+      }
+    },
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The user identifier"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username associated with the session"
+        }
+      }
+    }
+  }
+}

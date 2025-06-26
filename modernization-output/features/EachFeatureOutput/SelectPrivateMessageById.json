@@ -1,0 +1,38 @@
+{
+  "featureName": "SelectPrivateMessageById",
+  "description": "Retrieves a private message by its unique identifier.",
+  "inputValues": [
+    "messageId-number-PrivateMessage"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the private message ID (messageId) from the user request\n   - The messageId is mandatory and must be a positive integer\n   - No default value is provided; the user must specify a valid ID\n\n2. Data Validation\n   - Validate the messageId:\n     a. Verify that messageId is not null or empty\n     b. Confirm messageId is a valid positive integer\n     c. Check that messageId is within the acceptable range for database IDs\n   - IF any validation fails, THEN:\n     a. Generate appropriate error message indicating invalid message ID\n     b. Return error response to the user\n\n3. Business Rule Processing\n   - Verify system state and user permissions:\n     a. Check if the current user has permission to view the requested message\n     b. Verify if the message exists in the system\n     c. Determine if the user is either the sender or recipient of the message\n   - IF user lacks permission or message doesn't exist, THEN:\n     a. Generate appropriate error message about access restriction or non-existent message\n     b. Return error response to the user\n\n4. Core Operation Execution\n   - Retrieve the private message:\n     a. Search for the message with the specified ID in the message repository\n     b. Retrieve all associated message data including sender, recipient, subject, text content, and metadata\n     c. IF message is found, THEN format the message data for presentation\n     d. IF message is not found, THEN prepare a not-found response\n   - Update message status if needed:\n     a. IF message is unread AND current user is the recipient, THEN mark as read\n     b. Update the last access timestamp for the message\n\n5. Response Generation\n   - For successful retrieval:\n     a. Format the complete message details including sender information, timestamp, subject, and content\n     b. Include metadata such as read status, priority, and any attachments\n     c. Return the formatted message to the user\n   - For failed retrieval:\n     a. Generate appropriate error message explaining why retrieval failed\n     b. Include suggestions for troubleshooting if applicable\n     c. Return the error response to the user",
+  "databaseEntities": [
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Message ID must be a positive integer",
+    "Message must exist in the database",
+    "User must have permission to view the requested message",
+    "User must be either the sender or recipient of the message"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object",
+      "toUser": "object",
+      "subject": "string",
+      "text": "string",
+      "sendDate": "date",
+      "readDate": "date",
+      "isRead": "boolean",
+      "type": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

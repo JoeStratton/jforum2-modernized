@@ -1,0 +1,35 @@
+{
+  "featureName": "EnsurePollMinimumOptions",
+  "description": "Validates that polls have at least two options before allowing submission.",
+  "inputValues": [
+    "post-object-Post",
+    "poll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Post object containing message content and metadata\n   - Collect the Poll object containing poll options\n   - System retrieves current request context\n\n2. Data Validation:\n   - Validate Poll Structure:\n     a. Check if poll object exists\n     b. Verify poll options collection is accessible\n     c. Count the number of poll options\n     d. IF number of options is less than 2, THEN validation fails\n\n3. Business Rule Processing:\n   - IF validation fails (less than 2 options):\n     a. Mark transaction for rollback to prevent partial data persistence\n     b. Preserve user's entered message text\n     c. Reset post ID to 0 to indicate non-persisted state\n     d. Prepare error message indicating more poll options are needed\n     e. Add post object to context for form repopulation\n     f. Add poll object to context for form repopulation\n     g. Redirect user back to edit form\n     h. RETURN false to indicate validation failure\n   - ELSE (validation passes):\n     a. RETURN true to indicate validation success and allow post submission\n\n4. Core Operation Execution:\n   - No direct data operations in this validation feature\n   - Function returns boolean result indicating validation status\n   - Calling process will use result to determine whether to proceed with post creation\n\n5. Response Generation:\n   - For validation failure:\n     a. Error message is prepared for display\n     b. User is returned to edit form with their data preserved\n     c. Form is populated with previously entered information\n   - For validation success:\n     a. No direct response - control returns to calling process\n     b. Post submission continues normally",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Poll must have at least two options to be valid",
+    "Post content must be preserved if poll validation fails",
+    "Error message must clearly indicate the need for more poll options"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "text": "string",
+      "subject": "string",
+      "time": "date"
+    },
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "options": "array"
+    }
+  }
+}

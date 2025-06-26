@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "GetSessionAttribute",
+    "description": "Retrieves a stored attribute from the session context by name"
+  },
+  {
+    "featureName": "GetSessionAttributeNames",
+    "description": "Retrieves all attribute names stored in the session context"
+  },
+  {
+    "featureName": "GetSessionId",
+    "description": "Retrieves the unique identifier for the current session"
+  },
+  {
+    "featureName": "InvalidateSession",
+    "description": "Clears all session data and generates a new session identifier"
+  },
+  {
+    "featureName": "RemoveSessionAttribute",
+    "description": "Removes a specific attribute from the session context"
+  },
+  {
+    "featureName": "SetSessionAttribute",
+    "description": "Stores or updates an attribute in the session context"
+  }
+]

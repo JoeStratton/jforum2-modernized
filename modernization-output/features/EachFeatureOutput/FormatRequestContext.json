@@ -1,0 +1,34 @@
+{
+  "featureName": "FormatRequestContext",
+  "description": "Formats request context information showing content length and type.",
+  "inputValues": [
+    "request-object-HttpServletRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect HttpServletRequest object\n     1.1. Verify the request object is not null\n     1.2. Ensure the request contains necessary headers\n\n2. Data Validation:\n   - Validate request object integrity\n     2.1. Check if the request object is properly initialized\n     2.2. Verify the request contains content type information\n     2.3. Verify the request contains content length information\n     2.4. IF any validation fails, THEN prepare appropriate error message\n\n3. Business Rule Processing:\n   - Process request context information\n     3.1. Extract content type from the request\n     3.2. Extract content length from the request\n     3.3. Verify extracted information is valid\n        3.3.1. IF content type is null, THEN use default type or empty string\n        3.3.2. IF content length is negative, THEN set to 0 or default value\n\n4. Core Operation Execution:\n   - Format the request context information\n     4.1. Create a formatted string representation\n        4.1.1. Add \"ContentLength=\" prefix followed by the content length value\n        4.1.2. Add \", ContentType=\" separator\n        4.1.3. Append the content type value\n     4.2. Ensure proper string encoding for special characters if needed\n\n5. Response Generation:\n   - Return the formatted context information\n     5.1. Return the formatted string containing content length and type\n     5.2. IF any errors occurred during processing, THEN include error information\n     5.3. Ensure the response is properly formatted for display or logging purposes",
+  "databaseEntities": [],
+  "validationRules": [
+    "HttpServletRequest object must not be null",
+    "Content type information must be accessible from the request",
+    "Content length information must be accessible from the request"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpServletRequest": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the request"
+        },
+        "contentLength": {
+          "type": "integer",
+          "description": "The content length of the request in bytes"
+        },
+        "inputStream": {
+          "type": "object",
+          "description": "The input stream for the request data"
+        }
+      }
+    }
+  }
+}

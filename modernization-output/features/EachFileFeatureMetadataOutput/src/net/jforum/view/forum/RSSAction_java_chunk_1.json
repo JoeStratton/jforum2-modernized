@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "GenerateForumTopicsRSS",
+    "description": "Generates RSS feed for the latest topics in a specified forum"
+  },
+  {
+    "featureName": "GenerateTopicPostsRSS",
+    "description": "Generates RSS feed for all posts within a specific topic"
+  },
+  {
+    "featureName": "GenerateRecentTopicsRSS",
+    "description": "Generates RSS feed for recent hot topics across the forum"
+  },
+  {
+    "featureName": "ProcessRSSRequest",
+    "description": "Processes RSS requests with proper authentication and content type handling"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "featureName": "GetUsernameByEmail",
+  "description": "Retrieves a username associated with an email address.",
+  "inputValues": [
+    "email-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect email address (string, mandatory)\n   - No default values\n   - No system-generated fields\n\n2. Data Validation:\n   - Validate email address:\n     a. Check if email is not null or empty\n     b. Verify email format contains '@' character and proper domain structure\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check system availability\n   - Verify user database access permissions\n   - IF email contains special characters that could be used for injection attacks, THEN sanitize the input\n\n4. Core Operation Execution:\n   - Search for user record in the system using the provided email address\n   - IF user record is found:\n     a. Extract the username from the user record\n     b. Prepare success response with the username\n   - ELSE IF user record is not found:\n     a. Prepare response indicating no matching user was found\n     b. Log the failed lookup attempt\n\n5. Response Generation:\n   - IF operation was successful:\n     a. Return the username as a string\n     b. Include operation status (success)\n   - ELSE:\n     a. Return empty string or null value\n     b. Include operation status (failed)\n     c. Include appropriate error message\n     d. Provide guidance on next steps (e.g., \"Check if email is registered\")",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Email must not be empty",
+    "Email must be in valid format",
+    "Email must be properly sanitized to prevent injection attacks"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

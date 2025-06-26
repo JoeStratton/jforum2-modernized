@@ -1,0 +1,44 @@
+{
+  "featureName": "InvalidateSession",
+  "description": "Clears all session data and generates a new session identifier.",
+  "inputValues": [
+    "sessionContext-object-SessionContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Receive the current session context object\n   - No additional user inputs required as this is a system operation\n\n2. Data Validation:\n   - Verify session context exists\n     - IF session context is null THEN\n       - Generate error: \"Invalid session context\"\n       - Exit process\n     - END IF\n   - Verify session context is active\n     - IF session context has already been invalidated THEN\n       - Log warning: \"Attempting to invalidate an already invalidated session\"\n       - Continue with process anyway for idempotency\n     - END IF\n\n3. Business Rule Processing:\n   - Check for any critical operations in progress\n     - IF any critical operations are in progress THEN\n       - Generate warning: \"Session invalidation may interrupt current operations\"\n       - Proceed with user confirmation or based on system policy\n     - END IF\n   - Determine if any resources need cleanup before invalidation\n     - FOR each resource associated with the session\n       - Prepare resource for cleanup\n     - END FOR\n   - Check if session contains authentication information\n     - IF user is authenticated THEN\n       - Note that invalidation will require re-authentication\n     - END IF\n\n4. Core Operation Execution:\n   - Clear all session data\n     - Retrieve all attribute names from the session\n     - FOR each attribute name in the session\n       - Remove the attribute from the session\n     - END FOR\n     - Release any resources exclusively held by the session\n   - Invalidate the underlying session\n     - Call the platform's session invalidation mechanism\n     - This will automatically generate a new session identifier when needed\n   - Reset session state\n     - Initialize any required default session attributes\n     - Reset session creation timestamp\n\n5. Response Generation:\n   - Return success indicator\n   - Include the new session identifier in the response if applicable\n   - Provide guidance on next steps (e.g., re-authentication may be required)\n   - Log session invalidation event for audit purposes",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session context must exist",
+    "New session identifier must be unique",
+    "New session identifier must be cryptographically secure",
+    "All previous session data must be completely removed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionContext": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of session attributes stored as key-value pairs"
+        },
+        "creationTime": {
+          "type": "date",
+          "description": "Timestamp when the session was created"
+        },
+        "lastAccessTime": {
+          "type": "date",
+          "description": "Timestamp when the session was last accessed"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

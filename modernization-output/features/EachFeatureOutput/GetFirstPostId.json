@@ -1,0 +1,16 @@
+{
+  "featureName": "GetFirstPostId",
+  "description": "Retrieves the ID of the first post in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will handle the operation internally\n\n2. Data Validation:\n   - Verify database connection is available\n   - IF connection is not available THEN\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify post table exists and is accessible\n   - IF table does not exist or is not accessible THEN\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n   - Verify user has appropriate permissions to access post data\n   - IF user lacks required permissions THEN\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n\n4. Core Operation Execution:\n   - Initialize post ID variable to 0\n   - Prepare query to find the first post ID in the system\n   - Execute query against the database\n   - IF query execution fails THEN\n     - Handle database exception\n     - Log error details\n     - Exit process with error status\n   - END IF\n   - IF result set contains data THEN\n     - Extract post ID from the first row\n     - Store post ID in the initialized variable\n   - ELSE\n     - Keep post ID as 0 (indicating no posts found)\n   - END IF\n   - Release database resources\n\n5. Response Generation:\n   - IF post ID is greater than 0 THEN\n     - Return the post ID to the caller\n     - Operation successful\n   - ELSE\n     - Return 0 indicating no posts exist in the system\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Database connection must be available",
+    "Post table must exist and be accessible",
+    "User must have appropriate permissions to access post data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

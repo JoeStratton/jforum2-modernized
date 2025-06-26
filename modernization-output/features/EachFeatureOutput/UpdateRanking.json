@@ -1,0 +1,33 @@
+{
+  "featureName": "UpdateRanking",
+  "description": "Updates an existing ranking's information in the system.",
+  "inputValues": [
+    "rankingId-number-Ranking",
+    "title-string-Ranking",
+    "image-string-Ranking",
+    "minPosts-number-Ranking",
+    "isSpecial-boolean-Ranking"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following inputs:\n       - rankingId (mandatory): Unique identifier of the ranking to update\n       - title (mandatory): New title for the ranking\n       - image (optional): Path or name of the image associated with the ranking\n       - minPosts (mandatory for non-special rankings): Minimum number of posts required to achieve this ranking\n       - isSpecial (mandatory): Flag indicating if this is a special ranking\n   1.2. System retrieves the current ranking data using the provided rankingId\n\n2. Data Validation\n   2.1. Validate rankingId\n       2.1.1. Check if rankingId is provided\n       2.1.2. Verify rankingId is a positive integer\n       2.1.3. IF validation fails, THEN return error message \"Invalid ranking ID format\"\n   2.2. Validate title\n       2.2.1. Check if title is provided\n       2.2.2. Verify title is not empty\n       2.2.3. Verify title length is between 1 and 100 characters\n       2.2.4. IF validation fails, THEN return error message \"Title must be between 1 and 100 characters\"\n   2.3. Validate image (if provided)\n       2.3.1. Verify image path/name is valid\n       2.3.2. IF validation fails, THEN return error message \"Invalid image format or path\"\n   2.4. Validate minPosts\n       2.4.1. IF isSpecial is false, THEN verify minPosts is provided\n       2.4.2. Verify minPosts is a non-negative integer\n       2.4.3. IF validation fails, THEN return error message \"Minimum posts must be a non-negative number\"\n   2.5. Validate isSpecial\n       2.5.1. Verify isSpecial is a boolean value\n       2.5.2. IF validation fails, THEN return error message \"Special status must be true or false\"\n\n3. Business Rule Processing\n   3.1. Check if ranking exists\n       3.1.1. Verify that a ranking with the provided rankingId exists in the system\n       3.1.2. IF ranking does not exist, THEN return error message \"Ranking not found\"\n   3.2. Check for duplicate titles\n       3.2.1. Verify that no other ranking (except the current one) has the same title\n       3.2.2. IF duplicate title found, THEN return error message \"A ranking with this title already exists\"\n   3.3. Validate ranking type consistency\n       3.3.1. IF changing from regular to special ranking, THEN verify system impact\n       3.3.2. IF changing from special to regular ranking, THEN verify minPosts is properly set\n\n4. Core Operation Execution\n   4.1. Prepare ranking data for update\n       4.1.1. Create updated ranking object with new values\n       4.1.2. Preserve any fields not being updated\n   4.2. Update ranking record\n       4.2.1. Update the ranking information in the system\n       4.2.2. IF update operation fails, THEN log error details and return error message\n   4.3. Handle related data\n       4.3.1. IF ranking type changed (special/regular), THEN update any dependent records\n       4.3.2. IF update affects user rankings, THEN flag for recalculation\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Include confirmation message \"Ranking updated successfully\"\n       5.1.2. Include updated ranking details\n   5.2. Generate error response (if needed)\n       5.2.1. Include specific error message explaining the failure\n       5.2.2. Include guidance on how to resolve the issue",
+  "databaseEntities": [
+    "Ranking"
+  ],
+  "validationRules": [
+    "Ranking ID must exist in the system",
+    "Ranking title must not be empty",
+    "Ranking title must be between 1 and 100 characters",
+    "Ranking title must be unique across all rankings",
+    "Minimum posts must be a non-negative number for regular rankings",
+    "Special rankings must be properly flagged"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "image": "string",
+      "minPosts": "number",
+      "isSpecial": "boolean"
+    }
+  }
+}

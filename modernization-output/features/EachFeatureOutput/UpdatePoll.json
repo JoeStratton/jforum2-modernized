@@ -1,0 +1,62 @@
+{
+  "featureName": "UpdatePoll",
+  "description": "Modifies an existing poll's information.",
+  "inputValues": [
+    "pollId-number-Poll",
+    "pollTitle-string-Poll",
+    "pollLength-number-Poll",
+    "pollOptions-object-PollOptions",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. pollId (mandatory): Numeric identifier of the poll to update\n     1.2. pollTitle (mandatory): String containing the new title for the poll\n     1.3. pollLength (mandatory): Numeric value representing the duration of the poll in days\n     1.4. pollOptions (mandatory): Collection of poll option objects\n     1.5. userId (mandatory): Numeric identifier of the user performing the update\n\n2. Data Validation:\n   2.1. Validate Poll Existence:\n      - Check if pollId corresponds to an existing poll\n      - IF poll does not exist, THEN\n        - Generate error: \"Poll not found\"\n        - Terminate process\n   2.2. Validate Poll Title:\n      - Check if pollTitle is not empty\n      - Check if pollTitle length is within acceptable range (5-100 characters)\n      - IF validation fails, THEN\n        - Generate error: \"Poll title must be between 5 and 100 characters\"\n        - Terminate process\n   2.3. Validate Poll Length:\n      - Check if pollLength is a positive number\n      - Check if pollLength is within acceptable range (1-365 days)\n      - IF validation fails, THEN\n        - Generate error: \"Poll length must be between 1 and 365 days\"\n        - Terminate process\n   2.4. Validate Poll Options:\n      - Check if at least 2 options are provided\n      - Check if each option has non-empty text\n      - Check if each option text is within acceptable length (1-255 characters)\n      - Identify new options (those without optionId)\n      - Identify modified options (those with optionId and changed text)\n      - Identify deleted options (those in original poll but not in update list)\n      - IF validation fails, THEN\n        - Generate appropriate error message\n        - Terminate process\n\n3. Business Rule Processing:\n   3.1. Check User Authorization:\n      - Verify if the user has permission to update this poll\n      - IF user is not the poll creator or a moderator/administrator, THEN\n        - Generate error: \"Insufficient permissions to update this poll\"\n        - Terminate process\n   3.2. Check Poll Status:\n      - Verify if the poll has already received votes\n      - IF poll has votes AND option structure is being changed (options added/removed), THEN\n        - Generate warning: \"Changing poll options after voting has started may affect poll integrity\"\n        - Request confirmation to proceed\n   3.3. Verify Poll Constraints:\n      - Check if the poll is associated with an active topic\n      - IF associated topic is locked or deleted, THEN\n        - Generate error: \"Cannot update poll for locked or deleted topic\"\n        - Terminate process\n   3.4. Analyze Option Changes:\n      - Create three separate lists:\n        - New options to be added\n        - Existing options to be updated\n        - Existing options to be deleted\n      - IF any options with votes are being deleted, THEN\n        - Generate warning: \"Deleting options with votes will remove those votes from the poll results\"\n        - Request confirmation to proceed\n\n4. Core Operation Execution:\n   4.1. Update Poll Record:\n      - Update the poll title in the database\n      - Update poll length setting\n      - Record the modification timestamp\n   4.2. Process Poll Options:\n      - For each option in the update list:\n        - IF option is new (no optionId), THEN add as new poll option\n        - IF option exists (has optionId), THEN update its text\n      - For each option marked for deletion:\n        - Remove the option from the poll\n        - IF option had votes, THEN handle vote removal according to system policy\n   4.3. Handle Option Changes:\n      - For deleted options with votes:\n        - Remove associated votes from the system\n        - Update vote counts and statistics\n      - For new options:\n        - Initialize with zero votes\n        - Assign appropriate option identifiers\n   4.4. Update Related Records:\n      - Update any related topic records to reflect poll changes\n      - Update modification timestamp on parent topic\n\n5. Response Generation:\n   5.1. Success Response:\n      - Return success status\n      - Include updated poll information with:\n        - Poll ID\n        - Updated title\n        - Updated length\n        - Complete list of current options\n        - Vote counts (if any)\n      - Include summary of changes made (options added, modified, removed)\n   5.2. Error Response:\n      - Return failure status\n      - Include specific error message\n      - Include guidance for resolution\n      - Provide information on which validation failed\n   5.3. Notification:\n      - Notify relevant users about poll update if required by system settings\n      - Log the poll update activity for audit purposes",
+  "databaseEntities": [
+    "Poll",
+    "PollOption",
+    "PollVote",
+    "User",
+    "Topic"
+  ],
+  "validationRules": [
+    "Poll must exist in the system",
+    "Poll title must not be empty",
+    "Poll title must be between 5 and 100 characters",
+    "Poll length must be a positive number",
+    "Poll length must be between 1 and 365 days",
+    "Poll must have at least 2 options",
+    "Each poll option must have non-empty text",
+    "Each poll option text must be between 1 and 255 characters",
+    "User must have permission to update the poll",
+    "Associated topic must not be locked or deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PollOptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "optionId": {
+            "type": "number",
+            "description": "Identifier for existing options, null for new options"
+          },
+          "text": {
+            "type": "string",
+            "description": "The text of the poll option"
+          },
+          "displayOrder": {
+            "type": "number",
+            "description": "The display order of the option"
+          },
+          "voteCount": {
+            "type": "number",
+            "description": "The number of votes for this option",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    }
+  }
+}

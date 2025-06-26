@@ -1,0 +1,19 @@
+{
+  "featureName": "GetTotalTopics",
+  "description": "Retrieves the total count of topics for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory, number) to identify the forum\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Verify forum exists:\n     a. Check if the provided forumId corresponds to an existing forum\n     b. If forum doesn't exist, prepare error response\n   - Verify user has access rights to the forum:\n     a. Check if the current user has permission to view the forum\n     b. If access is denied, prepare permission error response\n\n4. Core Operation Execution:\n   - Retrieve topic count:\n     a. Access forum data storage\n     b. Count all topics associated with the specified forumId\n     c. IF any error occurs during retrieval:\n        i. Log the error details\n        ii. Prepare system error response\n     d. Store the count value for response\n\n5. Response Generation:\n   - IF operation was successful:\n     a. Format response with total topic count\n     b. Include forum identifier in response\n     c. Return success status with count data\n   - ELSE IF operation failed:\n     a. Include appropriate error message\n     b. Include error code based on failure reason\n     c. Return error status",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "User must have permission to view the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

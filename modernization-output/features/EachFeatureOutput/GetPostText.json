@@ -1,0 +1,26 @@
+{
+  "featureName": "GetPostText",
+  "description": "Retrieves the text content of a forum post from the database.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post ID (mandatory, numeric)\n   - System will determine database connection from current context\n\n2. Data Validation:\n   - Validate post ID:\n     a. Check if post ID is provided\n     b. Verify post ID is a positive integer\n     c. IF validation fails, THEN prepare error message indicating invalid post ID\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify current user has permission to view the requested post\n     b. IF user lacks permission, THEN prepare access denied error\n   - Verify post existence:\n     a. Check if post with provided ID exists in the system\n     b. IF post does not exist, THEN prepare not found error\n\n4. Core Operation Execution:\n   - Retrieve post data:\n     a. Locate post record using the provided post ID\n     b. Access the post text content from the posts_text table\n     c. Read the binary text data and convert to appropriate character encoding\n     d. IF data retrieval fails, THEN prepare database error message\n\n5. Response Generation:\n   - Success response:\n     a. Format the retrieved post text content\n     b. Include post subject if available\n     c. Return the formatted post content to the caller\n   - Error response:\n     a. Include specific error message based on failure condition\n     b. Provide appropriate error code\n     c. Include guidance for resolving the issue if applicable",
+  "databaseEntities": [
+    "Post",
+    "PostText"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Post must exist in the database",
+    "User must have permission to view the post",
+    "Post text content must be properly decoded from binary format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string"
+    }
+  }
+}

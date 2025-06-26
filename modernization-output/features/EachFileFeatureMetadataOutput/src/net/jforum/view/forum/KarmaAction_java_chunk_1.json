@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "InsertKarma",
+    "description": "Allows users to vote on posts by adding karma points with validation for permissions and voting rules"
+  },
+  {
+    "featureName": "ListKarma",
+    "description": "Displays karma information with an invalid action message"
+  }
+]

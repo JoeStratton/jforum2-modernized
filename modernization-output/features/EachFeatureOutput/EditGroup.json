@@ -1,0 +1,32 @@
+{
+  "featureName": "EditGroup",
+  "description": "Allows modification of an existing user group's details.",
+  "inputValues": [
+    "group_id-number-Group",
+    "group_name-string-Group",
+    "group_description-string-Group",
+    "parent_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. group_id (mandatory): Unique identifier of the group to be edited\n     b. group_name (mandatory): New name for the group\n     c. group_description (mandatory): New description for the group\n     d. parent_id (optional): Identifier of the parent group, if hierarchical structure is used\n\n2. Data Validation:\n   - Validate group_id:\n     a. Verify that group_id is a positive integer\n     b. Verify that group_id corresponds to an existing group in the system\n     c. IF group_id is invalid or not found, THEN display an error message and abort operation\n   - Validate group_name:\n     a. Verify that group_name is not empty\n     b. Verify that group_name does not exceed the maximum allowed length\n     c. IF group_name is invalid, THEN display an error message\n   - Validate group_description:\n     a. Verify that group_description is not empty\n     b. Verify that group_description does not exceed the maximum allowed length\n     c. IF group_description is invalid, THEN display an error message\n   - Validate parent_id:\n     a. IF parent_id is provided, THEN verify it corresponds to an existing group\n     b. Verify that parent_id is not equal to group_id (a group cannot be its own parent)\n     c. IF parent_id equals group_id, THEN set parent_id to 0 (no parent)\n     d. IF parent_id is invalid, THEN display an error message\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify that the current user has administrative rights to edit groups\n     b. IF user lacks necessary permissions, THEN display an access denied message and abort operation\n   - Check group dependencies:\n     a. Determine if changing the group's parent would create circular references in the hierarchy\n     b. IF circular reference would be created, THEN display an error message and prevent the change\n\n4. Core Operation Execution:\n   - Retrieve the existing group record using group_id\n   - Update the group record with new values:\n     a. Set the group name to the provided group_name\n     b. Set the group description to the provided group_description\n     c. Set the parent group ID to the provided parent_id (or 0 if no valid parent)\n   - Save the updated group record to the database\n   - IF any database operation fails:\n     a. Roll back any partial changes\n     b. Log the error details\n     c. Display an appropriate error message to the user\n\n5. Response Generation:\n   - IF update is successful:\n     a. Display a success message indicating the group was updated successfully\n     b. Refresh the group listing to show the updated information\n     c. Provide options to further edit the group, manage group permissions, or return to group list\n   - IF update fails:\n     a. Display an error message with details about the failure\n     b. Maintain the form with the user's input values for correction\n     c. Provide guidance on how to resolve any issues",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must correspond to an existing group",
+    "Group name must not be empty",
+    "Group description must not be empty",
+    "Parent group ID must correspond to an existing group if provided",
+    "A group cannot be its own parent",
+    "Group hierarchy must not contain circular references"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number"
+    }
+  }
+}

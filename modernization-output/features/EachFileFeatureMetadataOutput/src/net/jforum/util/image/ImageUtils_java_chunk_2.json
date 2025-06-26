@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "ResizeImage",
+    "description": "Resizes an image to specified dimensions while maintaining aspect ratio"
+  },
+  {
+    "featureName": "SaveImage",
+    "description": "Saves an image to disk in specified format (JPEG or PNG)"
+  },
+  {
+    "featureName": "SaveCompressedImage",
+    "description": "Compresses and saves JPEG images with specified quality settings"
+  },
+  {
+    "featureName": "CreateHeadlessBufferedImage",
+    "description": "Creates a BufferedImage using nearest neighbor approximation for headless systems"
+  },
+  {
+    "featureName": "CreateHeadlessSmoothBufferedImage",
+    "description": "Creates a smoothly scaled BufferedImage using bilinear filtering for headless systems"
+  },
+  {
+    "featureName": "DetectImageTransparency",
+    "description": "Determines if an image contains transparent pixels"
+  }
+]

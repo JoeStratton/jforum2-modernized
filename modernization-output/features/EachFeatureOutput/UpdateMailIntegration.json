@@ -1,0 +1,38 @@
+{
+  "featureName": "UpdateMailIntegration",
+  "description": "Updates an existing mail integration configuration for a forum.",
+  "inputValues": [
+    "forumId-number-MailIntegration",
+    "forumEmail-string-MailIntegration",
+    "popHost-string-MailIntegration",
+    "popUsername-string-MailIntegration",
+    "popPassword-string-MailIntegration",
+    "popPort-number-MailIntegration",
+    "ssl-boolean-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     1.1. forumId (number, mandatory): The unique identifier of the forum\n     1.2. forumEmail (string, mandatory): The email address associated with the forum\n     1.3. popHost (string, mandatory): The POP server hostname\n     1.4. popUsername (string, mandatory): Username for POP server authentication\n     1.5. popPassword (string, mandatory): Password for POP server authentication\n     1.6. popPort (number, mandatory): Port number for the POP server\n     1.7. ssl (boolean, mandatory): Flag indicating whether SSL should be used\n\n2. Data Validation:\n   2.1. Validate forumId:\n      - Ensure forumId is a positive integer\n      - Verify that forumId corresponds to an existing forum\n      - IF forumId is invalid or not found, THEN return an error message\n   2.2. Validate forumEmail:\n      - Ensure forumEmail is not empty\n      - Verify forumEmail follows valid email format (contains @ and domain)\n      - IF forumEmail is invalid, THEN return an error message\n   2.3. Validate popHost:\n      - Ensure popHost is not empty\n      - Verify popHost contains valid hostname format\n      - IF popHost is invalid, THEN return an error message\n   2.4. Validate popUsername:\n      - Ensure popUsername is not empty\n      - IF popUsername is empty, THEN return an error message\n   2.5. Validate popPassword:\n      - Ensure popPassword is not empty\n      - IF popPassword is empty, THEN return an error message\n   2.6. Validate popPort:\n      - Ensure popPort is a positive integer\n      - Verify popPort is within valid range (1-65535)\n      - IF popPort is invalid, THEN return an error message\n   2.7. Validate ssl:\n      - Ensure ssl is a boolean value\n      - IF ssl is not a boolean, THEN return an error message\n\n3. Business Rule Processing:\n   3.1. Check if mail integration exists for the forum:\n      - Verify that a mail integration record exists for the specified forumId\n      - IF no record exists, THEN return an error message indicating that the mail integration must be created first\n   3.2. Check forum permissions:\n      - Verify that the current user has permission to update mail integration settings\n      - IF user lacks permission, THEN return an access denied error\n   3.3. Validate POP server connection details:\n      - Check if the combination of popHost, popPort, and ssl flag represents a valid configuration\n      - IF the configuration appears invalid, THEN generate a warning message\n\n4. Core Operation Execution:\n   4.1. Prepare mail integration data:\n      - Create a mail integration object with the provided input values\n      - Format the data according to system requirements\n   4.2. Update the mail integration record:\n      - Update the existing mail integration record for the specified forum\n      - Set all fields with the new values (forumEmail, popHost, popUsername, popPassword, popPort, ssl)\n      - IF update operation fails, THEN:\n        * Roll back any partial changes\n        * Log the error details\n        * Return an error message\n   4.3. Record the update event:\n      - Log the successful update of mail integration settings\n      - Include timestamp and user who performed the update\n\n5. Response Generation:\n   5.1. For successful update:\n      - Generate a success message indicating the mail integration was updated\n      - Include the forum name in the success message\n      - Provide a summary of the updated configuration (excluding sensitive data like password)\n   5.2. For failed update:\n      - Generate an appropriate error message based on the failure reason\n      - Include troubleshooting information if applicable\n      - Suggest next steps to resolve the issue",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must exist in the system",
+    "Forum email must be in valid email format",
+    "POP host must not be empty",
+    "POP username must not be empty",
+    "POP password must not be empty",
+    "POP port must be a positive integer between 1 and 65535",
+    "SSL flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "forumId": "number",
+      "forumEmail": "string",
+      "popHost": "string",
+      "popUsername": "string",
+      "popPassword": "string",
+      "popPort": "number",
+      "ssl": "boolean"
+    }
+  }
+}

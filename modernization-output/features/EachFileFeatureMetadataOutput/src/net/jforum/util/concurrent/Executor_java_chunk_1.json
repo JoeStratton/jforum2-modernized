@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ExecuteAsyncTask",
+    "description": "Executes tasks asynchronously using a thread pool with configurable parameters"
+  }
+]

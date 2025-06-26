@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GenerateCaptchaImage",
+    "description": "Creates and outputs a CAPTCHA image for user verification"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "featureName": "CreateNewCaptcha",
+  "description": "Generates a new image captcha challenge for the user.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will generate the captcha internally\n\n2. Data Validation:\n   - Check if captcha functionality is enabled in system settings\n     - IF captcha is disabled for both registration and posts, THEN skip captcha generation\n   - Verify user session exists and is valid\n     - IF session is invalid or expired, THEN return error\n\n3. Business Rule Processing:\n   - Check system configuration for captcha settings\n     - Determine if captcha is required based on current context (registration or posting)\n     - Retrieve captcha complexity settings from system configuration\n   - Prepare system resources for captcha generation\n     - Ensure image generation capabilities are available\n     - Verify memory allocation for image creation\n\n4. Core Operation Execution:\n   - Destroy any existing captcha in the user session\n     - Release resources associated with previous captcha\n     - Clear previous captcha validation state\n   - Request a new captcha instance from the captcha service\n     - Generate random challenge text according to complexity rules\n     - Create image representation of the challenge text\n     - Apply visual distortion techniques to prevent automated recognition\n   - Store the new captcha in the user session\n     - Associate captcha with current user session\n     - Set captcha creation timestamp\n\n5. Response Generation:\n   - Prepare success response\n     - Include status indicating captcha was successfully created\n     - Do not include actual captcha solution in response\n   - Provide information on how to display the captcha\n     - Include reference to how the client can retrieve the captcha image\n     - Include any necessary display instructions\n   - Return success status",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User session must be valid and active",
+    "Previous captcha must be properly destroyed before creating a new one",
+    "System must have captcha functionality enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

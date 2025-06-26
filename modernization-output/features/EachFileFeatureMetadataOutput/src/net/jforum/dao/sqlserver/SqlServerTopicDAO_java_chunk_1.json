@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SelectAllTopicsByForumWithPagination",
+    "description": "Retrieves paginated forum topics with specified limit and offset"
+  },
+  {
+    "featureName": "SelectRecentTopics",
+    "description": "Retrieves a limited number of the most recent forum topics"
+  },
+  {
+    "featureName": "SelectTopicsByUserWithPagination",
+    "description": "Retrieves paginated topics created by a specific user with access control"
+  }
+]

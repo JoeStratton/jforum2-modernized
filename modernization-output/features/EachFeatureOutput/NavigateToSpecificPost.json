@@ -1,0 +1,28 @@
+{
+  "featureName": "NavigateToSpecificPost",
+  "description": "Redirects user to the correct page containing a specific post within a topic.",
+  "inputValues": [
+    "post_id-number-Post",
+    "topic_id-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post_id (mandatory): The unique identifier of the post to navigate to\n   - Collect topic_id (optional): The identifier of the topic containing the post\n\n2. Data Validation:\n   - Validate post_id:\n     a. Ensure post_id is provided\n     b. Verify post_id is a valid number\n     c. If validation fails, display appropriate error message\n   - Validate topic_id (if provided):\n     a. Verify topic_id is a valid number\n     b. If validation fails, display appropriate error message\n\n3. Business Rule Processing:\n   - IF topic_id is not provided THEN:\n     a. Retrieve the post information using post_id\n     b. Extract the topic_id from the retrieved post\n   - Calculate the position of the post within the topic:\n     a. Count the number of posts that appear before the specified post in the topic\n     b. Determine the posts per page setting from system configuration\n   - Determine the correct page number:\n     a. IF count of previous posts is greater than posts per page THEN:\n        i. Calculate the page number using formula: posts_per_page * ((count - 1) / posts_per_page)\n     b. ELSE:\n        i. Set page number to empty (first page)\n\n4. Core Operation Execution:\n   - Construct the destination URL:\n     a. Combine base path with posts/list/\n     b. Append page number and slash if not on first page\n     c. Append topic_id\n     d. Append system extension\n     e. Append fragment identifier with post_id to ensure browser scrolls to the specific post\n   - Set the system to redirect to the constructed URL\n\n5. Response Generation:\n   - Redirect the user to the constructed URL\n   - If any errors occurred during processing:\n     a. Display appropriate error message\n     b. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post ID must be a valid number",
+    "Post ID must exist in the database",
+    "Topic ID (if provided) must be a valid number"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number"
+    },
+    "Topic": {
+      "id": "number"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "featureName": "ShowActivityLog",
+  "description": "Displays moderation activity logs with pagination and access control.",
+  "inputValues": [
+    "startPage-number-Pagination",
+    "recordsPerPage-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pagination parameters:\n     a. startPage: The starting page number for pagination (system-generated if not provided)\n     b. recordsPerPage: Number of records to display per page (system-generated from system configuration if not provided)\n\n2. Data Validation:\n   - Validate user access permissions:\n     a. Check if current user has moderation log access permission\n     b. IF user lacks required permission THEN\n        i. Generate access denied message\n        ii. Return access denied view\n        iii. STOP PROCESSING\n     c. ELSE continue to next step\n   - Validate pagination parameters:\n     a. Ensure startPage is a positive integer\n     b. Ensure recordsPerPage is a positive integer within system limits\n\n3. Business Rule Processing:\n   - Determine user's permission level:\n     a. Check if user has full moderation log access permission\n     b. Store permission level for later use in filtering displayed information\n   - Calculate pagination values:\n     a. Determine start record index based on startPage and recordsPerPage\n     b. Calculate total pages based on total records and recordsPerPage\n\n4. Core Operation Execution:\n   - Retrieve moderation log entries:\n     a. Fetch log entries from database based on pagination parameters\n     b. For each log entry:\n        i. IF entry references a post THEN\n           - Retrieve associated post information\n           - IF post's forum no longer exists THEN\n             * Remove entry from results\n             * CONTINUE to next entry\n        ii. IF entry references a topic THEN\n           - Retrieve associated topic information\n           - IF topic's forum no longer exists THEN\n             * Remove entry from results\n             * CONTINUE to next entry\n        iii. IF entry contains original message AND user has full moderation access THEN\n           - Format original message for display\n        iv. ELSE IF entry contains original message AND user lacks full access THEN\n           - Hide original message content\n   - Prepare pagination information:\n     a. Calculate total number of pages\n     b. Determine previous and next page numbers if applicable\n     c. Generate page navigation links\n\n5. Response Generation:\n   - Prepare activity log display:\n     a. Format each log entry for display including:\n        i. Action performed\n        ii. User who performed the action\n        iii. Date and time of action\n        iv. Affected content (post/topic) information\n        v. Original message content (if user has full access permission)\n     b. Include pagination controls:\n        i. Current page indicator\n        ii. Previous/next page links\n        iii. Total pages information\n   - Return formatted activity log view with:\n     a. List of moderation activities\n     b. Pagination controls\n     c. Access level indicator",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User must have moderation log access permission",
+    "Pagination start page must be a positive integer",
+    "Records per page must be a positive integer within system limits",
+    "Original message content is only visible to users with full moderation log access"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationLog": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "actionTime": {
+          "type": "date"
+        },
+        "actionType": {
+          "type": "string"
+        },
+        "postId": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "originalMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "startPage": {
+          "type": "number"
+        },
+        "recordsPerPage": {
+          "type": "number"
+        },
+        "totalRecords": {
+          "type": "number"
+        },
+        "totalPages": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

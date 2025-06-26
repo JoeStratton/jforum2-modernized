@@ -1,0 +1,24 @@
+{
+  "featureName": "AddCookie",
+  "description": "Adds or updates a cookie in the current response.",
+  "inputValues": [
+    "name-string-Cookie",
+    "value-string-Cookie"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the cookie name (string) to be added or updated\n     - The cookie name is mandatory\n     - No default value is provided\n   - Collect the cookie value (string) to be stored\n     - The cookie value is optional\n     - If not provided, an empty string will be used\n\n2. Data Validation:\n   - Validate cookie name:\n     2.1. Check if cookie name is not null\n     2.2. Check if cookie name is not empty\n     2.3. If validation fails, abort the operation\n   - Validate cookie value:\n     2.4. No specific validation for value as null is handled in processing\n\n3. Business Rule Processing:\n   - Verify response context availability:\n     3.1. Check if the current response context is accessible\n     3.2. If response context is not available, abort the operation\n   - Determine cookie expiration:\n     3.3. IF cookie value is null, THEN\n          3.3.1. Set cookie max age to 0 (expire immediately)\n          3.3.2. Set cookie value to empty string\n     3.4. ELSE\n          3.4.1. Set cookie max age to 3600 * 24 * 365 (one year in seconds)\n\n4. Core Operation Execution:\n   - Create cookie object:\n     4.1. Create a new cookie with the provided name and value\n     4.2. Set the cookie's max age based on the determination in step 3\n     4.3. Set the cookie's path to root (\"/\")\n   - Add cookie to response:\n     4.4. Add the created cookie to the current response\n     4.5. If adding to response fails, abort the operation\n\n5. Response Generation:\n   - No explicit response is generated\n   - The cookie is added to the HTTP response\n   - The operation completes silently\n   - No confirmation or error message is returned to the caller",
+  "databaseEntities": [],
+  "validationRules": [
+    "Cookie name must not be null",
+    "Cookie name must not be empty",
+    "Response context must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Cookie": {
+      "name": "string",
+      "value": "string",
+      "maxAge": "number",
+      "path": "string"
+    }
+  }
+}

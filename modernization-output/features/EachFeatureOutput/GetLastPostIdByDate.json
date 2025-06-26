@@ -1,0 +1,19 @@
+{
+  "featureName": "GetLastPostIdByDate",
+  "description": "Finds the ID of the last post created before a specific date.",
+  "inputValues": [
+    "targetDate-date-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect targetDate (date): The date before which to find the last post\n   - Validate that targetDate is provided and is a valid date format\n   - System will use this date as a cutoff point for the search\n\n2. Data Validation:\n   - Validate targetDate format:\n     a. Ensure targetDate is not null\n     b. Verify targetDate is a valid date format\n     c. IF targetDate is invalid THEN generate appropriate error message\n   - Validate targetDate value:\n     a. Ensure targetDate is not in the future\n     b. IF targetDate is in the future THEN generate error message indicating invalid date range\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the post repository is accessible\n     b. IF repository is not accessible THEN generate system error message\n   - Verify post data exists:\n     a. Check if any posts exist in the system\n     b. IF no posts exist THEN return appropriate message indicating no posts found\n\n4. Core Operation Execution:\n   - Search for posts with creation date earlier than targetDate:\n     a. Query the post repository for posts with timestamp less than or equal to targetDate\n     b. Order results by post date in descending order (newest first)\n     c. Limit results to retrieve only the top record\n   - Extract post information:\n     a. IF matching post found THEN extract the post ID\n     b. IF no matching post found THEN set post ID to 0 or appropriate null value\n   - Handle potential errors:\n     a. IF database error occurs during query THEN capture error details\n     b. Prepare for appropriate error response\n\n5. Response Generation:\n   - Success response:\n     a. IF post found THEN return the post ID\n     b. Include timestamp of the found post for verification purposes\n   - Error response:\n     a. IF no post found THEN return appropriate indicator (0 or null)\n     b. IF system error occurred THEN return error details\n     c. Include appropriate message explaining the result",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Target date must be a valid date format",
+    "Target date should not be in the future",
+    "System must have access to post repository",
+    "Return value must be an integer representing post ID or 0 if not found"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

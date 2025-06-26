@@ -1,0 +1,41 @@
+{
+  "featureName": "SaveForumChanges",
+  "description": "Updates an existing forum with new details and handles moderation status changes.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "forum_name-string-Forum",
+    "description-string-Forum",
+    "categories_id-number-Category",
+    "moderate-string-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. forum_id (mandatory): Unique identifier of the forum to update\n     b. forum_name (mandatory): New name for the forum\n     c. description (mandatory): Updated description for the forum\n     d. categories_id (mandatory): Category identifier to which the forum belongs\n     e. moderate (optional): Flag indicating if forum should be moderated ('1' for yes, otherwise no)\n\n2. Data Validation:\n   - Validate forum_id:\n     a. Verify forum_id is provided\n     b. Verify forum_id is a valid number\n     c. Verify forum_id corresponds to an existing forum\n     d. IF forum does not exist, THEN display error message and terminate process\n   - Validate forum_name:\n     a. Verify forum_name is provided\n     b. Verify forum_name is not empty\n     c. Verify forum_name length is within acceptable limits\n     d. IF validation fails, THEN display appropriate error message\n   - Validate description:\n     a. Verify description is provided\n     b. Verify description length is within acceptable limits\n     c. IF validation fails, THEN display appropriate error message\n   - Validate categories_id:\n     a. Verify categories_id is provided\n     b. Verify categories_id is a valid number\n     c. Verify categories_id corresponds to an existing category\n     d. IF category does not exist, THEN display error message\n\n3. Business Rule Processing:\n   - Check system state:\n     a. Verify the user has permission to modify forums\n     b. IF user lacks permission, THEN display access denied message and terminate process\n   - Check forum state:\n     a. Retrieve current forum data using forum_id\n     b. Store current moderation status for later comparison\n     c. Store current category ID for later comparison\n     d. IF forum cannot be retrieved, THEN display error message and terminate process\n\n4. Core Operation Execution:\n   - Update forum details:\n     a. Set forum name to the provided forum_name\n     b. Set forum description to the provided description\n     c. Set forum category ID to the provided categories_id\n     d. Set forum moderation status based on the moderate input ('1' means moderated)\n     e. Save updated forum information to the database\n   - Handle moderation status changes:\n     a. Compare previous moderation status with new status\n     b. IF moderation status has changed, THEN:\n        i. Update moderation status for all topics in the forum\n        ii. Apply appropriate moderation rules to existing topics\n   - Handle category changes:\n     a. Compare previous category ID with new category ID\n     b. IF category has changed, THEN:\n        i. Remove forum from old category\n        ii. Add forum to new category\n        iii. Update forum repository to reflect the change\n     c. ELSE:\n        i. Reload forum data in the repository to reflect other changes\n\n5. Response Generation:\n   - Success response:\n     a. Display confirmation message that forum has been updated successfully\n     b. Refresh the forum listing to show updated information\n     c. Show updated forum in its proper category and order\n   - Error response:\n     a. Display specific error message based on the failure point\n     b. Maintain user input to allow corrections\n     c. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must correspond to an existing forum",
+    "Forum name must not be empty",
+    "Category ID must correspond to an existing category",
+    "User must have permission to modify forums",
+    "Moderation status must be either '1' (moderated) or not provided (unmoderated)"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "isModerated": "boolean",
+      "order": "number"
+    },
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    }
+  }
+}

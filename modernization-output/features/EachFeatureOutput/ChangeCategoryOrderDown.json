@@ -1,0 +1,41 @@
+{
+  "featureName": "ChangeCategoryOrderDown",
+  "description": "Moves a category down in the display order.",
+  "inputValues": [
+    "categoryId-number-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect categoryId (mandatory, number) - The identifier of the category to move down\n   - System will determine current display order of categories\n\n2. Data Validation:\n   - Validate categoryId:\n     a. Check if categoryId is provided and is a valid number\n     b. Verify categoryId exists in the system\n     c. If validation fails, generate appropriate error message\n   - Validate category position:\n     a. Check if the category is not already at the bottom of the list\n     b. If category is already at the bottom, generate message indicating no change possible\n\n3. Business Rule Processing:\n   - Identify the category to move down (current category)\n   - Identify the category immediately below the current category (next category)\n   - Verify both categories exist and are valid for order change\n   - IF current category is the last in order:\n     a. No change is possible, prepare appropriate message\n     b. Exit the process\n\n4. Core Operation Execution:\n   - Retrieve the current display order value of both categories\n   - Swap the display order values between the current category and the next category:\n     a. Temporarily store the current category's display order\n     b. Set current category's display order to next category's display order\n     c. Set next category's display order to the stored value\n   - Update both category records with their new display order values\n   - IF any update operation fails:\n     a. Rollback any changes made\n     b. Generate appropriate error message\n\n5. Response Generation:\n   - IF operation successful:\n     a. Generate success message indicating the category was moved down\n     b. Include updated category information in response\n     c. Include refreshed category list with new order\n   - IF operation failed:\n     a. Generate appropriate error message\n     b. Include error details and possible resolution steps",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Category ID must exist in the system",
+    "Category must not already be at the bottom of the list",
+    "Category display order must be a positive integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "Position of the category in the display sequence"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "displayOrder"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "featureName": "CheckUnreadTopics",
+  "description": "Identifies unread topics in a forum based on user's last visit timestamp.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "lastVisit-date-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. forumId (mandatory): Numeric identifier of the forum to check\n     b. lastVisit (mandatory): Timestamp of user's last visit to the forum\n\n2. Data Validation\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF forumId is invalid or missing, THEN return error message \"Invalid forum identifier\"\n   - Validate lastVisit timestamp:\n     a. Check if lastVisit is provided\n     b. Verify lastVisit is a valid date format\n     c. IF lastVisit is invalid or missing, THEN return error message \"Invalid last visit timestamp\"\n\n3. Business Rule Processing\n   - Verify forum existence:\n     a. Check if the specified forum exists in the system\n     b. IF forum does not exist, THEN return error message \"Forum not found\"\n   - Verify user access permissions:\n     a. Check if the current user has permission to view the specified forum\n     b. IF user lacks permission, THEN return error message \"Access denied to this forum\"\n\n4. Core Operation Execution\n   - Retrieve unread topics:\n     a. Query for all topics in the specified forum\n     b. Filter topics where the last post time is greater than the user's last visit timestamp\n     c. For each matching topic:\n        i. Create a topic object with topic identifier and timestamp\n        ii. Add the topic to the results list\n   - Process results:\n     a. IF no unread topics are found, THEN prepare empty result list\n     b. IF system error occurs during retrieval, THEN prepare for error handling\n\n5. Response Generation\n   - Format the response:\n     a. Create a list of unread topics with their identifiers and timestamps\n     b. IF operation was successful, THEN return the list of unread topics\n     c. IF operation failed, THEN return appropriate error message with details\n   - Provide additional information:\n     a. Include total count of unread topics\n     b. Include forum information for context",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Last visit timestamp must be a valid date",
+    "User must have permission to access the forum",
+    "Forum must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

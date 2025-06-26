@@ -1,0 +1,44 @@
+{
+  "featureName": "URLNormalization",
+  "description": "Normalizes URLs by replacing spaces, removing special characters, and enforcing character limits.",
+  "inputValues": [
+    "inputString-string-Text",
+    "characterLimit-number-Configuration",
+    "friendlyMode-boolean-Configuration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - inputString (string, mandatory): The text to be normalized\n     - characterLimit (number, optional): Maximum length for the normalized string, defaults to system-defined limit\n     - friendlyMode (boolean, optional): Determines how the character limit is applied, defaults to true\n\n2. Data Validation:\n   - Validate inputString:\n     - IF inputString is null or empty THEN\n       - Return empty string\n     - END IF\n   - Validate characterLimit:\n     - IF characterLimit is provided THEN\n       - Ensure characterLimit is a positive integer\n       - IF characterLimit is negative or zero THEN\n         - Use system default limit\n       - END IF\n     - ELSE\n       - Use system default limit\n     - END IF\n\n3. Business Rule Processing:\n   - Determine normalization rules based on system configuration:\n     - Space replacement character (default: underscore)\n     - Characters to be removed (special characters, parentheses, etc.)\n     - Word separators to be replaced\n     - Case transformation rules (if any)\n\n4. Core Operation Execution:\n   - Process the input string according to normalization rules:\n     - Replace all spaces with the designated replacement character\n     - Remove all special characters (!, @, #, $, %, ^, &, *, etc.)\n     - Remove parentheses and their contents or replace with appropriate text\n     - Replace plus signs with the designated replacement character\n     - Apply any additional character transformations\n   - Apply character limit:\n     - IF friendlyMode is true THEN\n       - Trim at the last complete word within the character limit\n       - Ensure no partial words remain at the end of the string\n     - ELSE\n       - Trim exactly at the character limit regardless of word boundaries\n     - END IF\n   - Perform final cleanup:\n     - Remove any trailing special characters or separators\n     - Ensure consistent formatting\n\n5. Response Generation:\n   - Return the normalized string\n   - IF normalization process encountered issues THEN\n     - Log warnings about potential information loss\n   - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input string must not be null",
+    "Character limit must be a positive integer if provided",
+    "Normalized string must not contain spaces",
+    "Normalized string must not contain special characters",
+    "Normalized string must respect the character limit",
+    "In friendly mode, string must be trimmed at word boundaries"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Text": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The text content to be normalized"
+        }
+      }
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "number",
+          "description": "Maximum character length for normalized strings"
+        },
+        "friendly": {
+          "type": "boolean",
+          "description": "Whether to use word-boundary-aware trimming"
+        }
+      }
+    }
+  }
+}

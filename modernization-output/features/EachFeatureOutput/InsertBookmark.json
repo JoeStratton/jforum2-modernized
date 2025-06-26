@@ -1,0 +1,38 @@
+{
+  "featureName": "InsertBookmark",
+  "description": "Creates a new bookmark based on relation type (forum, topic, or user).",
+  "inputValues": [
+    "relation_type-number-Bookmark",
+    "relation_id-number-Bookmark",
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "visible-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. relation_type (mandatory): Numeric identifier for the bookmark type (forum, topic, or user)\n     b. relation_id (mandatory): Numeric identifier of the entity to bookmark\n     c. title (optional): Custom title for the bookmark\n     d. description (optional): Custom description for the bookmark\n     e. visible (optional): Boolean flag indicating if the bookmark is publicly visible\n\n2. Data Validation:\n   - Validate relation_type:\n     a. IF relation_type is not provided or invalid, THEN generate error message \"Invalid bookmark type\"\n     b. IF relation_type is not one of the allowed values (forum, topic, user), THEN generate error message \"Invalid bookmark type\"\n   - Validate relation_id:\n     a. IF relation_id is not provided, THEN generate error message \"Missing entity identifier\"\n     b. IF relation_id is not a positive integer, THEN generate error message \"Invalid entity identifier\"\n   - Validate title:\n     a. IF title is provided and exceeds maximum length, THEN truncate or generate error message\n     b. Sanitize title input to prevent security issues\n   - Validate description:\n     a. IF description is provided and exceeds maximum length, THEN truncate or generate error message\n     b. Sanitize description input to prevent security issues\n\n3. Business Rule Processing:\n   - Check user authentication:\n     a. IF user is not logged in, THEN generate error message \"Anonymous users cannot create bookmarks\"\n   - Check feature availability:\n     a. IF bookmarks feature is disabled, THEN generate error message \"Bookmark feature is disabled\"\n   - Check entity existence based on relation_type:\n     a. IF relation_type is forum:\n        i. Check if forum with relation_id exists\n        ii. IF forum does not exist, THEN generate error message \"Forum not found\"\n     b. IF relation_type is topic:\n        i. Check if topic with relation_id exists\n        ii. IF topic does not exist, THEN generate error message \"Topic not found\"\n     c. IF relation_type is user:\n        i. Check if user with relation_id exists\n        ii. IF user does not exist, THEN generate error message \"User not found\"\n   - Check for existing bookmark:\n     a. Search for existing bookmark with same relation_type, relation_id, and user_id\n     b. IF bookmark exists, THEN prepare for update instead of insert\n\n4. Core Operation Execution:\n   - Prepare bookmark data:\n     a. IF relation_type is forum:\n        i. IF no custom title provided, THEN use forum name as default title\n        ii. IF no custom description provided, THEN use forum description as default\n     b. IF relation_type is topic:\n        i. IF no custom title provided, THEN use topic title as default title\n     c. IF relation_type is user:\n        i. IF no custom title provided, THEN use username as default title\n   - Create bookmark record:\n     a. Set bookmark title to provided or default title\n     b. Set bookmark description to provided or default description\n     c. Set public visibility flag based on visible input\n     d. Set relation_id to the provided entity identifier\n     e. Set relation_type to the provided type identifier\n     f. Set user_id to current user's identifier\n   - Save bookmark:\n     a. IF existing bookmark found, THEN update existing record\n     b. ELSE create new bookmark record\n     c. IF save operation fails, THEN generate error message \"Failed to save bookmark\"\n\n5. Response Generation:\n   - Success response:\n     a. Generate confirmation message \"Bookmark successfully created\"\n     b. Provide bookmark details including title and type\n     c. Offer navigation options to view all bookmarks\n   - Error response:\n     a. Display specific error message from validation or processing steps\n     b. Provide guidance on how to correct the issue\n     c. Offer option to retry or cancel operation",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Relation type must be one of the valid types (forum, topic, or user)",
+    "Relation ID must be a valid positive integer",
+    "User must be authenticated to create bookmarks",
+    "Bookmarks feature must be enabled",
+    "Referenced entity (forum, topic, or user) must exist",
+    "Title and description must be sanitized to prevent security issues"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean"
+    }
+  }
+}

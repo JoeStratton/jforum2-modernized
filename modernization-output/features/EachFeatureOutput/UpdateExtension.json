@@ -1,0 +1,38 @@
+{
+  "featureName": "UpdateExtension",
+  "description": "Updates an existing attachment extension's properties and settings.",
+  "inputValues": [
+    "extensionId-number-AttachmentExtension",
+    "extensionGroupId-number-AttachmentExtension",
+    "extension-string-AttachmentExtension",
+    "comment-string-AttachmentExtension",
+    "uploadIcon-string-AttachmentExtension",
+    "allow-boolean-AttachmentExtension"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a) extensionId (mandatory): Unique identifier for the extension to update\n     b) extensionGroupId (mandatory): Group identifier the extension belongs to\n     c) extension (mandatory): File extension string (e.g., \"pdf\", \"jpg\")\n     d) comment (optional): Description of the extension\n     e) uploadIcon (optional): Icon associated with the extension\n     f) allow (mandatory): Boolean flag indicating if the extension is allowed\n\n2. Data Validation:\n   a) Extension ID Validation:\n      - Verify extensionId is provided and is a positive integer\n      - IF extensionId is missing or invalid THEN\n        - Generate error message: \"Valid extension ID is required\"\n      - Verify extension with provided ID exists in the system\n      - IF extension does not exist THEN\n        - Generate error message: \"Extension with specified ID does not exist\"\n   \n   b) Extension String Validation:\n      - Verify extension string is provided and not empty\n      - IF extension string is empty THEN\n        - Generate error message: \"Extension string cannot be empty\"\n      - Verify extension string contains only valid characters (letters, numbers, no spaces)\n      - IF extension contains invalid characters THEN\n        - Generate error message: \"Extension can only contain letters and numbers\"\n      - Convert extension string to lowercase for consistency\n   \n   c) Extension Group Validation:\n      - Verify extensionGroupId is a positive integer\n      - IF extensionGroupId is invalid THEN\n        - Generate error message: \"Valid extension group ID is required\"\n      - Verify the specified extension group exists in the system\n      - IF extension group does not exist THEN\n        - Generate error message: \"Specified extension group does not exist\"\n\n3. Business Rule Processing:\n   a) Extension Uniqueness Check:\n      - Check if another extension with the same name already exists (excluding current extension)\n      - IF duplicate extension exists THEN\n        - Generate error message: \"Another extension with this name already exists\"\n   \n   b) Extension Group Compatibility:\n      - Verify the extension is compatible with the selected extension group\n      - IF extension is incompatible with group THEN\n        - Generate error message: \"This extension type is not compatible with the selected group\"\n   \n   c) System State Validation:\n      - Check if the extension is currently in use by any attachments\n      - IF extension is in use AND allow is being set to false THEN\n        - Generate warning message: \"This extension is currently in use. Disabling it may affect existing attachments\"\n\n4. Core Operation Execution:\n   a) Prepare Extension Update:\n      - Create updated extension object with the following properties:\n        - ID: extensionId\n        - Extension Group ID: extensionGroupId\n        - Extension: lowercase extension string\n        - Comment: provided comment\n        - Upload Icon: provided uploadIcon\n        - Allow: provided allow boolean value\n   \n   b) Update Extension Record:\n      - Update the extension record in the database\n      - IF update operation fails THEN\n        - Generate error message: \"Failed to update extension\"\n        - Log detailed error information\n        - Abort operation\n   \n   c) Update Related Records:\n      - IF extension name has changed THEN\n        - Update any references to this extension in the system\n\n5. Response Generation:\n   a) Success Response:\n      - Generate success message: \"Extension updated successfully\"\n      - Include updated extension details in the response\n   \n   b) Error Response:\n      - IF any errors occurred during the process THEN\n        - Return appropriate error message from validation or execution steps\n        - Include information about which fields need correction",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension ID must be a positive integer",
+    "Extension ID must reference an existing extension",
+    "Extension string must not be empty",
+    "Extension string must contain only valid characters",
+    "Extension group ID must be a positive integer",
+    "Extension group ID must reference an existing extension group",
+    "Extension name must be unique across the system",
+    "Extension must be compatible with the selected extension group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtension": {
+      "id": "number",
+      "extensionGroupId": "number",
+      "extension": "string",
+      "comment": "string",
+      "uploadIcon": "string",
+      "allow": "boolean"
+    }
+  }
+}

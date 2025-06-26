@@ -1,0 +1,19 @@
+{
+  "featureName": "GetTotalPosts",
+  "description": "Counts the total number of posts within a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory, number) to identify the target topic\n\n2. Data Validation:\n   - Validate topicId:\n     a. Ensure topicId is provided\n     b. Verify topicId is a positive integer\n     c. Return error message if validation fails\n\n3. Business Rule Processing:\n   - Verify topic existence:\n     a. Check if topic with given topicId exists in the system\n     b. IF topic does not exist THEN\n        i. Generate appropriate error message\n        ii. Return error response\n     c. IF topic exists THEN\n        i. Proceed to next step\n\n4. Core Operation Execution:\n   - Count posts for the specified topic:\n     a. Initialize counter for total posts\n     b. Retrieve all posts associated with the given topicId\n     c. Count the number of posts found\n     d. Store the count as total posts\n\n5. Response Generation:\n   - Prepare response with post count:\n     a. IF operation successful THEN\n        i. Include total post count in response\n        ii. Include topic information (title, creation date) for reference\n     b. IF operation failed THEN\n        i. Include error details\n        ii. Include suggestions for troubleshooting",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to view the topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

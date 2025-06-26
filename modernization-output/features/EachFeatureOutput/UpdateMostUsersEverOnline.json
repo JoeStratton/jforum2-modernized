@@ -1,0 +1,37 @@
+{
+  "featureName": "UpdateMostUsersEverOnline",
+  "description": "Updates the record for highest number of concurrent online users.",
+  "inputValues": [
+    "totalUsers-number-MostUsersEverOnline",
+    "timeInMillis-number-MostUsersEverOnline"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. totalUsers (number, mandatory): The new count of concurrent online users\n     1.2. timeInMillis (number, mandatory): The timestamp when this count was recorded\n\n2. Data Validation\n   2.1. Validate totalUsers input\n       - Check if totalUsers is provided\n       - Verify totalUsers is a positive integer\n       - IF totalUsers is missing or invalid THEN\n         - Generate error message: \"Total users count must be a positive integer\"\n         - Abort operation\n   2.2. Validate timeInMillis input\n       - Check if timeInMillis is provided\n       - Verify timeInMillis is a valid timestamp (positive long value)\n       - IF timeInMillis is missing or invalid THEN\n         - Generate error message: \"Timestamp must be a valid date/time value\"\n         - Abort operation\n\n3. Business Rule Processing\n   3.1. Retrieve current record of most users ever online\n       - Get the existing record from the system\n       - IF no existing record exists THEN\n         - Set comparison value to 0\n       - ELSE\n         - Set comparison value to the current record's total users count\n   3.2. Compare new value with existing record\n       - IF new totalUsers is less than or equal to comparison value THEN\n         - Generate message: \"New value is not greater than the current record\"\n         - Abort operation\n       - ELSE\n         - Continue to next step\n\n4. Core Operation Execution\n   4.1. Create record object\n       - Create a new MostUsersEverOnline object with provided values\n       - Set the total users count to the new value\n       - Set the timestamp to the provided timeInMillis\n   4.2. Persist the record\n       - IF no existing record exists THEN\n         - Create new configuration entries for total users and timestamp\n       - ELSE\n         - Update existing configuration entries with new values\n   4.3. Update cache\n       - Store the updated record in the system cache\n       - Ensure the cached value reflects the new record\n\n5. Response Generation\n   5.1. Generate success response\n       - Include the new total users count in the response\n       - Include the timestamp when the record was set\n       - Include a message indicating successful update\n   5.2. Handle potential errors\n       - IF any database operation fails THEN\n         - Generate appropriate error message\n         - Include details about the failure\n         - Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Total users count must be a positive integer",
+    "Timestamp must be a valid date/time value",
+    "New total users count must be greater than the current record"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MostUsersEverOnline": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "The total number of concurrent users online"
+        },
+        "timeInMillis": {
+          "type": "number",
+          "description": "The timestamp when the record was set"
+        }
+      },
+      "required": [
+        "total",
+        "timeInMillis"
+      ]
+    }
+  }
+}

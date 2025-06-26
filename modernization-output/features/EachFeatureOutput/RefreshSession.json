@@ -1,0 +1,73 @@
+{
+  "featureName": "RefreshSession",
+  "description": "Updates user session data including last visit time and authentication status.",
+  "inputValues": [
+    "userSession-object-UserSession",
+    "request-object-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve the current user session\n   - Obtain the request context\n   - Determine authentication type from system configuration\n\n2. Data Validation:\n   - Check if user session exists\n     - IF user session is null THEN create a new session\n     - IF user session exists THEN validate according to authentication type\n   - Verify session ID validity\n   - Check IP address information\n\n3. Business Rule Processing:\n   - IF session is new:\n     - Register basic session information\n     - Set session ID from request context\n     - Record user's IP address\n     - Mark session as not logged in\n     - Check if current request is from a bot\n       - IF not a bot THEN proceed with authentication checks\n   - IF using standard authentication:\n     - Check if auto-login is enabled in system configuration\n       - IF auto-login enabled THEN attempt auto-login using cookies\n       - IF auto-login disabled THEN make session anonymous\n   - IF using SSO authentication:\n     - Validate user through SSO implementation\n     - IF SSO validation fails THEN make session anonymous\n     - IF SSO validation succeeds THEN configure user session with user data\n   - IF existing session with SSO authentication:\n     - Verify if the SSO session is still valid\n     - IF SSO session invalid THEN remove current session and restart refresh process\n     - IF SSO session valid THEN continue\n\n4. Core Operation Execution:\n   - For new authenticated sessions:\n     - Configure user data in session\n     - Check for existing session data for this user\n     - IF user has existing session:\n       - Store previous session data to database\n       - Retrieve user session data\n       - Remove old session\n     - ELSE:\n       - Attempt to retrieve previous session data from database\n     - Update last visit timestamp:\n       - IF no previous session found THEN set last visit to current time\n       - IF previous session found THEN calculate last visit based on previous session data\n     - Mark session as auto-login if applicable\n     - Mark session as logged in\n     - Load user's language preference\n   - For existing sessions:\n     - Update session timestamp to record activity\n\n5. Response Generation:\n   - Return updated user session\n   - No explicit response needed as session state is maintained in the system",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session must have a valid session ID",
+    "User authentication must be verified before session is marked as logged in",
+    "SSO sessions must be validated on each refresh",
+    "Last visit time must be updated based on session history",
+    "IP address must be recorded for new sessions",
+    "Bot requests should be identified and handled appropriately"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "lastVisit": {
+          "type": "date"
+        },
+        "startTime": {
+          "type": "date"
+        },
+        "sessionTime": {
+          "type": "integer"
+        },
+        "autoLogin": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "sessionContext": {
+          "type": "object"
+        },
+        "remoteAddr": {
+          "type": "string"
+        },
+        "cookies": {
+          "type": "array"
+        },
+        "contextPath": {
+          "type": "string"
+        },
+        "serverName": {
+          "type": "string"
+        },
+        "serverPort": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

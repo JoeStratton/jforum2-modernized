@@ -1,0 +1,67 @@
+{
+  "featureName": "InsertForumPostFromEmail",
+  "description": "Creates forum posts from email content with proper user attribution.",
+  "inputValues": [
+    "senderEmail-string-User",
+    "subject-string-Post",
+    "messageContent-string-Post",
+    "listEmail-string-Forum",
+    "inReplyTo-string-Message"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. senderEmail (mandatory): Email address of the sender\n     b. subject (mandatory): Subject line of the email\n     c. messageContent (mandatory): Body content of the email\n     d. listEmail (mandatory): Target forum email address\n     e. inReplyTo (optional): Reference to previous message if this is a reply\n\n2. Data Validation:\n   - Validate sender email:\n     a. Check if email format is valid\n     b. Verify email exists in the system\n     c. IF email is invalid or not found, log warning and abort processing\n   - Validate forum email address:\n     a. Check if the listEmail corresponds to a valid forum\n     b. IF no matching forum is found, abort processing\n   - Validate message content:\n     a. Ensure subject is not empty\n     b. Ensure message body is not empty\n     c. IF either is empty, abort processing\n\n3. Business Rule Processing:\n   - User authentication and authorization:\n     a. Find user account associated with sender email\n     b. Verify user has permission to post in the target forum\n     c. IF user not found or lacks permission, log warning and abort processing\n   - Determine post context:\n     a. IF inReplyTo reference exists, extract topic ID from reference\n     b. Verify topic exists and is open for replies\n     c. IF topic not found or closed, treat as new topic instead\n\n4. Core Operation Execution:\n   - Session preparation:\n     a. Create temporary user session for the email sender\n     b. Set appropriate user preferences (BBCode, HTML, smilies settings)\n   - Forum identification:\n     a. Determine target forum ID based on listEmail\n   - Post creation:\n     a. IF inReplyTo contains valid topic reference, create reply to existing topic\n     b. ELSE create new topic with the email subject as topic title\n     c. Use email message body as post content\n     d. Apply user's formatting preferences to the content\n     e. Associate post with the sender's user account\n     f. Record post creation timestamp\n   - Cleanup:\n     a. Remove temporary user session\n     b. Release any system resources\n\n5. Response Generation:\n   - Success handling:\n     a. Log successful post creation with forum ID and topic ID\n     b. Record message processing completion\n   - Error handling:\n     a. Log detailed error information for failed processing attempts\n     b. Include sender email and reason for failure\n     c. Ensure partial processing doesn't leave inconsistent data",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Sender email must exist in the system",
+    "Sender email must be associated with a valid user account",
+    "Forum email address must correspond to an existing forum",
+    "Email subject must not be empty",
+    "Email message content must not be empty",
+    "If replying to a topic, the topic must exist and be open for replies",
+    "User must have permission to post in the target forum"
+  ],
+  "dbSeedingOperations": [
+    "Ensure at least one forum has an email address configured",
+    "Ensure user accounts have email addresses that match potential senders"
+  ],
+  "schema": {
+    "User": {
+      "id": "number",
+      "email": "string",
+      "username": "string",
+      "isBbCodeEnabled": "boolean",
+      "isHtmlEnabled": "boolean",
+      "isSmiliesEnabled": "boolean"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "email": "string"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "type": "number"
+    },
+    "Post": {
+      "topicId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean"
+    },
+    "Message": {
+      "topicId": "number",
+      "messageId": "string"
+    }
+  }
+}

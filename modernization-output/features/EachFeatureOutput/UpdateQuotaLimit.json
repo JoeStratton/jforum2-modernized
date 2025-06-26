@@ -1,0 +1,31 @@
+{
+  "featureName": "UpdateQuotaLimit",
+  "description": "Updates an existing quota limit with new description, size and type.",
+  "inputValues": [
+    "id-number-QuotaLimit",
+    "description-string-QuotaLimit",
+    "size-number-QuotaLimit",
+    "type-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a) id (mandatory): Unique identifier for the quota limit to be updated\n     b) description (mandatory): New description for the quota limit\n     c) size (mandatory): New size value for the quota limit\n     d) type (mandatory): New type value for the quota limit\n\n2. Data Validation\n   - Validate quota limit ID:\n     a) Verify that ID is a positive integer\n     b) IF ID is missing or invalid THEN\n        - Return error message \"Invalid quota limit ID provided\"\n   - Validate description:\n     a) Verify description is not empty\n     b) Verify description length is within acceptable limits (1-255 characters)\n     c) IF description is invalid THEN\n        - Return error message \"Description must be provided and within 1-255 characters\"\n   - Validate size:\n     a) Verify size is a positive integer\n     b) Verify size is within acceptable range\n     c) IF size is invalid THEN\n        - Return error message \"Size must be a positive number within acceptable range\"\n   - Validate type:\n     a) Verify type is a valid integer representing a supported quota type\n     b) Verify type exists in the system's predefined quota types\n     c) IF type is invalid THEN\n        - Return error message \"Invalid quota type provided\"\n\n3. Business Rule Processing\n   - Verify quota limit existence:\n     a) Check if a quota limit with the provided ID exists in the system\n     b) IF quota limit does not exist THEN\n        - Return error message \"Quota limit with specified ID does not exist\"\n   - Verify system constraints:\n     a) Check if updating this quota limit would conflict with system constraints\n     b) Verify that the quota limit is not currently in use in a way that would make updates problematic\n     c) IF any constraints are violated THEN\n        - Return appropriate error message detailing the constraint violation\n\n4. Core Operation Execution\n   - Update quota limit record:\n     a) Locate the quota limit record using the provided ID\n     b) Update the description field with the new value\n     c) Update the size field with the new value\n     d) Update the type field with the new value\n     e) Save the updated record to the database\n     f) IF update operation fails THEN\n        - Revert any partial changes\n        - Return error message \"Failed to update quota limit\"\n\n5. Response Generation\n   - Generate success response:\n     a) Include confirmation message \"Quota limit updated successfully\"\n     b) Include the updated quota limit details (ID, description, size, type)\n   - Return response to the caller",
+  "databaseEntities": [
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Quota limit ID must be a positive integer",
+    "Quota limit description must not be empty",
+    "Quota limit description must be within 1-255 characters",
+    "Quota limit size must be a positive integer",
+    "Quota limit type must be a valid quota type identifier",
+    "Quota limit with specified ID must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

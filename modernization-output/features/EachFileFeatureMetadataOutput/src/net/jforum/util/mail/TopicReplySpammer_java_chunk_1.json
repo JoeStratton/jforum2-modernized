@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "NotifyTopicReplies",
+    "description": "Sends email notifications to users when new replies are posted to forum topics they follow"
+  },
+  {
+    "featureName": "GenerateUnwatchLink",
+    "description": "Creates personalized links allowing users to unsubscribe from topic notifications"
+  },
+  {
+    "featureName": "GenerateMessageLink",
+    "description": "Creates direct links to specific posts within forum topics with proper pagination"
+  }
+]

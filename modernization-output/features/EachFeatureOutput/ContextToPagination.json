@@ -1,0 +1,41 @@
+{
+  "featureName": "ContextToPagination",
+  "description": "Prepares user context for data pagination with page counts and navigation variables.",
+  "inputValues": [
+    "start-number-Pagination",
+    "totalRecords-number-Pagination",
+    "recordsPerPage-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. start (number): The starting record index (zero-based)\n     b. totalRecords (number): The total number of records available\n     c. recordsPerPage (number): The number of records to display per page\n\n2. Data Validation:\n   - Validate start parameter:\n     a. IF start is negative THEN\n        i. Set start to 0\n     b. ENDIF\n   - Validate totalRecords parameter:\n     a. IF totalRecords is negative THEN\n        i. Set totalRecords to 0\n     b. ENDIF\n   - Validate recordsPerPage parameter:\n     a. IF recordsPerPage is less than or equal to 0 THEN\n        i. Set recordsPerPage to a default value (e.g., 10)\n     b. ENDIF\n\n3. Business Rule Processing:\n   - Calculate pagination variables:\n     a. Calculate total number of pages:\n        i. totalPages = CEILING(totalRecords / recordsPerPage)\n     b. Calculate current page number:\n        i. thisPage = CEILING((start + 1) / recordsPerPage)\n     c. Ensure calculated values are valid:\n        i. IF totalPages is less than 1 THEN\n           1. Set totalPages to 1\n        ii. ENDIF\n        iii. IF thisPage is greater than totalPages THEN\n           1. Set thisPage to totalPages\n        iv. ENDIF\n        v. IF thisPage is less than 1 THEN\n           1. Set thisPage to 1\n        vi. ENDIF\n\n4. Core Operation Execution:\n   - Prepare context variables for pagination:\n     a. Set totalPages variable in context\n     b. Set recordsPerPage variable in context\n     c. Set totalRecords variable in context\n     d. Set thisPage variable in context\n     e. Set start variable in context\n\n5. Response Generation:\n   - Return the updated context with all pagination variables:\n     a. totalPages: The total number of pages available\n     b. recordsPerPage: The number of records shown per page\n     c. totalRecords: The total number of records found\n     d. thisPage: The current page being shown\n     e. start: The starting record index",
+  "databaseEntities": [],
+  "validationRules": [
+    "Start parameter must be a non-negative integer",
+    "Total records must be a non-negative integer",
+    "Records per page must be a positive integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "number",
+          "description": "Starting record index (zero-based)"
+        },
+        "totalRecords": {
+          "type": "number",
+          "description": "Total number of records available"
+        },
+        "recordsPerPage": {
+          "type": "number",
+          "description": "Number of records to display per page"
+        }
+      },
+      "required": [
+        "start",
+        "totalRecords",
+        "recordsPerPage"
+      ]
+    }
+  }
+}

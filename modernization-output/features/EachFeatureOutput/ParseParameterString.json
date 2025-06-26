@@ -1,0 +1,50 @@
+{
+  "featureName": "ParseParameterString",
+  "description": "Extracts name/value pairs from a string using specified separator character.",
+  "inputValues": [
+    "inputString-string-ParameterString",
+    "separator-string-Separator",
+    "lowerCaseNames-boolean-NameCaseOption"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect inputString (string): The string containing name/value pairs to parse\n   - Collect separator (string): Single character that separates name/value pairs\n   - Collect lowerCaseNames (boolean): Flag indicating whether parameter names should be converted to lowercase\n   - System will prepare an empty result collection to store parsed parameters\n\n2. Data Validation:\n   - Validate inputString:\n     - IF inputString is null or empty THEN\n       - Return empty result collection\n     - END IF\n   - Validate separator:\n     - IF separator is not provided THEN\n       - Use default separator (typically semicolon or comma)\n     - END IF\n     - IF separator is more than one character THEN\n       - Use only the first character\n     - END IF\n   - Validate lowerCaseNames:\n     - IF lowerCaseNames is not provided THEN\n       - Set lowerCaseNames to false (default)\n     - END IF\n\n3. Business Rule Processing:\n   - Initialize parsing position to the beginning of the string\n   - Initialize maximum position to the length of the string\n   - WHILE there are characters left to parse DO\n     - Extract parameter name:\n       - Skip any leading whitespace\n       - Read characters until encountering '=' or separator\n       - Trim trailing whitespace from parameter name\n     - Extract parameter value (if present):\n       - IF next character is '=' THEN\n         - Skip the '=' character\n         - Parse parameter value considering quotation marks:\n           - IF value starts with a quote THEN\n             - Read until matching end quote, handling escaped quotes\n             - Remove surrounding quotes from final value\n           - ELSE\n             - Read until separator\n             - Trim whitespace from value\n           - END IF\n       - ELSE\n         - Set parameter value to null (parameter without value)\n       - END IF\n     - IF next character is separator THEN\n       - Skip the separator character\n     - END IF\n     - Process the parameter:\n       - IF parameter name is not empty THEN\n         - IF lowerCaseNames is true THEN\n           - Convert parameter name to lowercase\n         - END IF\n         - Add parameter name and value to result collection\n       - END IF\n   - END WHILE\n\n4. Core Operation Execution:\n   - Ensure all parameters have been extracted according to the parsing rules\n   - Handle special cases:\n     - Parameters without values are stored with null values\n     - Empty parameter names are ignored\n     - Duplicate parameter names will overwrite previous values\n   - Maintain the order of parameters as they appear in the input string\n\n5. Response Generation:\n   - Return the collection of parameter name/value pairs\n   - Ensure the collection maintains the expected structure (typically a Map or Dictionary)\n   - IF no valid parameters were found THEN\n     - Return empty collection\n   - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input string may be null or empty, which should return an empty result",
+    "Parameter names must be unique in the result collection",
+    "Parameter names can be optionally converted to lowercase",
+    "Parameter values are optional and can be null",
+    "Parameter values enclosed in quotes must have matching start and end quotes",
+    "Escaped quotes within parameter values must be handled correctly",
+    "Empty parameter names should be ignored"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ParameterString": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "String containing name/value pairs to be parsed"
+        }
+      }
+    },
+    "Separator": {
+      "type": "object",
+      "properties": {
+        "character": {
+          "type": "string",
+          "description": "Character that separates name/value pairs in the input string"
+        }
+      }
+    },
+    "NameCaseOption": {
+      "type": "object",
+      "properties": {
+        "toLowerCase": {
+          "type": "boolean",
+          "description": "Flag indicating whether parameter names should be converted to lowercase"
+        }
+      }
+    }
+  }
+}

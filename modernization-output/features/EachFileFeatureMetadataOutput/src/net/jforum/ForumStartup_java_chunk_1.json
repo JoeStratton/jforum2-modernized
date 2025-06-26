@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "StartDatabase",
+    "description": "Initializes the database connection and verifies connectivity"
+  },
+  {
+    "featureName": "StartForumRepository",
+    "description": "Initializes the cache control system for forums and categories"
+  }
+]

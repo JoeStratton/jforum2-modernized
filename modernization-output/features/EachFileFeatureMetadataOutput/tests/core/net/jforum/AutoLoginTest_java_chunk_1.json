@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "CheckAutoLogin",
+    "description": "Tests the auto login feature by validating cookie-based authentication"
+  }
+]

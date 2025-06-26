@@ -1,0 +1,46 @@
+{
+  "featureName": "DeletePollByTopicId",
+  "description": "Removes a poll associated with a specific forum topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the topic ID (mandatory) from the user request\n   - System must have access to current user session information\n\n2. Data Validation:\n   - Validate that topicId is provided\n     - IF topicId is missing or null THEN\n       - Return error: \"Topic ID is required\"\n     - END IF\n   - Validate that topicId is a positive integer\n     - IF topicId is not a positive integer THEN\n       - Return error: \"Invalid Topic ID format\"\n     - END IF\n   - Validate that the topic exists in the system\n     - IF topic does not exist THEN\n       - Return error: \"Topic not found\"\n     - END IF\n   - Validate that a poll exists for the specified topic\n     - IF no poll exists for the topic THEN\n       - Return error: \"No poll found for this topic\"\n     - END IF\n\n3. Business Rule Processing:\n   - Check user permissions\n     - IF current user is not authorized to delete polls THEN\n       - Return error: \"Insufficient permissions to delete poll\"\n     - END IF\n   - Check if the topic is locked\n     - IF topic is locked THEN\n       - Return error: \"Cannot delete poll from a locked topic\"\n     - END IF\n   - Check if votes have already been cast on the poll\n     - IF votes exist for this poll THEN\n       - Determine if votes should be preserved in logs or completely removed\n     - END IF\n\n4. Core Operation Execution:\n   - Begin transaction\n     - Retrieve poll information associated with the topic ID\n       - Query the database to find the poll ID using the topic ID\n       - IF poll ID is found THEN\n         - Store the poll ID for deletion operations\n       - ELSE\n         - End process as no poll exists\n       - END IF\n     - Delete all votes cast on the poll\n       - Remove all voter records associated with the poll ID\n     - Delete all poll options related to the poll\n       - Remove all option records associated with the poll ID\n     - Delete the poll record itself\n       - Remove the main poll record using the poll ID\n     - Update the topic to indicate it no longer has an associated poll\n     - IF any operation fails THEN\n       - Rollback all changes\n       - Return error: \"Failed to delete poll\"\n     - END IF\n   - Commit transaction\n\n5. Response Generation:\n   - IF deletion is successful THEN\n     - Return success response with message: \"Poll successfully deleted\"\n     - Include topic ID in the response\n   - ELSE\n     - Return error response with appropriate error message\n     - Include error details for troubleshooting\n   - END IF",
+  "databaseEntities": [
+    "Topic",
+    "Poll",
+    "PollOption",
+    "PollVote",
+    "User"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Poll must exist for the specified topic",
+    "User must have permission to delete polls",
+    "Topic must not be locked"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "label": "string",
+      "length": "number",
+      "startTime": "date",
+      "options": "array"
+    },
+    "PollOption": {
+      "id": "number",
+      "pollId": "number",
+      "text": "string",
+      "voteCount": "number"
+    },
+    "PollVote": {
+      "pollId": "number",
+      "optionId": "number",
+      "userId": "number",
+      "ipAddress": "string",
+      "voteDate": "date"
+    }
+  }
+}

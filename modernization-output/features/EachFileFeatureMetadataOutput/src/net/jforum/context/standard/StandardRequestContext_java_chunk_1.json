@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ManageRequestParameters",
+    "description": "Adds, replaces, and retrieves parameters from the request context"
+  },
+  {
+    "featureName": "AccessRequestAttributes",
+    "description": "Gets and sets attributes in the request context"
+  },
+  {
+    "featureName": "ManageSessionContext",
+    "description": "Creates and provides access to the session context"
+  }
+]

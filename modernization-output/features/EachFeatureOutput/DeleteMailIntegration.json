@@ -1,0 +1,18 @@
+{
+  "featureName": "DeleteMailIntegration",
+  "description": "Removes mail integration configuration for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following input:\n     1.1. forumId (number, mandatory): The unique identifier of the forum whose mail integration will be deleted\n\n2. Data Validation\n   - Validate all input data:\n     2.1. Validate forumId\n         2.1.1. Check if forumId is provided\n         2.1.2. Verify forumId is a positive integer\n         2.1.3. IF forumId is missing or invalid, THEN\n               - Generate appropriate error message\n               - Terminate the process\n\n3. Business Rule Processing\n   - Verify system state and dependencies:\n     3.1. Check if forum exists\n         3.1.1. Verify that a forum with the provided forumId exists in the system\n         3.1.2. IF forum does not exist, THEN\n               - Generate error message indicating forum not found\n               - Terminate the process\n     3.2. Check if mail integration exists for the forum\n         3.2.1. Verify that mail integration configuration exists for the specified forum\n         3.2.2. IF mail integration does not exist, THEN\n               - Generate notification that no mail integration exists for this forum\n               - Terminate the process as successful (nothing to delete)\n\n4. Core Operation Execution\n   - Execute the deletion process:\n     4.1. Remove mail integration configuration\n         4.1.1. Delete the mail integration record associated with the specified forumId\n         4.1.2. IF deletion fails due to system error, THEN\n               - Log the error details\n               - Attempt to rollback any partial changes\n               - Generate error message about deletion failure\n               - Terminate the process\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. For successful deletion\n         5.1.1. Create success message indicating mail integration was successfully removed\n         5.1.2. Include the forumId in the success message for reference\n     5.2. For unsuccessful deletion\n         5.2.1. Include specific error message explaining the failure reason\n         5.2.2. Provide guidance on how to resolve the issue if applicable",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Mail integration configuration must exist for the specified forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

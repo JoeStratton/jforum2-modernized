@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SendPrivateMessageNotification",
+    "description": "Sends email notifications to users when they receive new private messages"
+  }
+]

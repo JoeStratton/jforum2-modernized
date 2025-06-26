@@ -1,0 +1,69 @@
+{
+  "featureName": "InsertSave",
+  "description": "Creates new posts or topics with validation, attachments, polls, and notification handling.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "topic_id-number-Topic",
+    "subject-string-Post",
+    "message-string-Post",
+    "topic_type-number-Topic",
+    "notify-boolean-Subscription",
+    "attach_sig-boolean-User",
+    "quick-boolean-Post",
+    "captcha_anwser-string-Security",
+    "preview-boolean-Post",
+    "poll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forum ID (mandatory)\n   - Collect topic ID (optional - if not provided, a new topic will be created)\n   - Collect post message (mandatory)\n   - Collect post subject (mandatory for new topics, optional for replies)\n   - Collect topic type (optional - normal, sticky, or announcement)\n   - Collect notification preference (optional)\n   - Collect signature attachment preference (optional)\n   - Collect poll information (optional)\n   - Collect captcha answer (conditional - if system requires it)\n   - Collect preview flag (optional)\n\n2. Data Validation:\n   2.1. User Authentication Validation:\n      - IF user is not logged in AND anonymous posting is not allowed for the forum THEN\n         - Return error message about required login\n         - Redirect to login page\n      - END IF\n\n   2.2. Forum Access Validation:\n      - IF forum is not accessible to current user THEN\n         - Return access denied error\n         - Abort operation\n      - END IF\n\n   2.3. Forum Status Validation:\n      - IF forum is read-only AND this is a new topic THEN\n         - Return error message about read-only status\n         - Abort operation\n      - END IF\n      - IF forum is reply-only AND this is a new topic THEN\n         - Return error message about reply-only status\n         - Abort operation\n      - END IF\n\n   2.4. Topic Status Validation (for replies):\n      - IF topic exists THEN\n         - Verify topic ID is valid\n         - IF topic is locked THEN\n            - Return error message about locked topic\n            - Abort operation\n         - END IF\n      - END IF\n\n   2.5. Content Validation:\n      - IF post message is empty THEN\n         - Return error message about required content\n         - Redisplay form with entered data\n         - Abort operation\n      - END IF\n      - IF new topic AND subject is empty THEN\n         - Return error message about required subject\n         - Redisplay form with entered data\n         - Abort operation\n      - END IF\n\n   2.6. Poll Validation (if provided):\n      - IF poll is included AND poll has fewer than 2 options THEN\n         - Return error message about minimum poll options\n         - Redisplay form with entered data\n         - Abort operation\n      - END IF\n\n   2.7. Captcha Validation (if enabled):\n      - IF captcha is required AND captcha answer is incorrect THEN\n         - Return error message about invalid captcha\n         - Redisplay form with entered data\n         - Abort operation\n      - END IF\n\n   2.8. Post Timing Validation:\n      - IF minimum delay between posts is configured THEN\n         - Check time since user's last post\n         - IF elapsed time is less than required delay THEN\n            - Return error message about posting too soon\n            - Redisplay form with entered data\n            - Abort operation\n         - END IF\n      - END IF\n\n3. Business Rule Processing:\n   3.1. Preview Processing:\n      - IF preview flag is set THEN\n         - Prepare post for preview display\n         - Show preview along with form for editing\n         - Abort further processing\n      - END IF\n\n   3.2. Attachment Processing:\n      - IF attachments are included THEN\n         - Validate attachment sizes and types\n         - IF any attachment validation fails THEN\n            - Return error message about invalid attachment\n            - Redisplay form with entered data\n            - Abort operation\n         - END IF\n      - END IF\n\n   3.3. Moderation Status Determination:\n      - Set moderation flag to FALSE\n      - IF forum is moderated AND user does not have moderation exemption THEN\n         - Set moderation flag to TRUE\n      - END IF\n      - IF this is a reply AND user has permission to reply without moderation THEN\n         - Set moderation flag to FALSE\n      - END IF\n\n4. Core Operation Execution:\n   4.1. Topic Creation (if new topic):\n      - Create new topic record with:\n         - Forum ID\n         - Title (from subject input)\n         - Creation time (current time)\n         - Moderation status\n         - Posted by user information\n      - Save topic to database and get topic ID\n\n   4.2. Poll Creation (if applicable):\n      - IF poll is included AND this is a new topic THEN\n         - Create poll record with topic ID\n         - Save poll options\n         - Update topic with poll ID\n      - END IF\n\n   4.3. Post Creation:\n      - Create post record with:\n         - Topic ID\n         - Forum ID\n         - User ID\n         - Post content\n         - Post time\n         - Subject\n         - Moderation status\n      - Save post to database and get post ID\n\n   4.4. Topic Update:\n      - IF new topic THEN\n         - Update topic with first post ID\n      - END IF\n      - IF post is not moderated THEN\n         - Update topic with last post information\n      - END IF\n\n   4.5. Attachment Processing:\n      - IF attachments are included THEN\n         - Save attachments associated with the post\n      - END IF\n\n   4.6. Subscription Handling:\n      - IF notification requested THEN\n         - Add user to topic notification list\n      - ELSE\n         - Remove user from topic notification list if previously subscribed\n      - END IF\n\n   4.7. Statistics Update (if post not moderated):\n      - Increment user post count\n      - Update topic reply count (if reply)\n      - Update topic view count\n      - Update forum statistics\n      - Update board status\n\n5. Response Generation:\n   5.1. For Moderated Posts:\n      - Redirect to waiting moderation page\n      - Display message about post requiring moderation\n\n   5.2. For Non-Moderated Posts:\n      - Determine correct page number for viewing the post\n      - Generate redirect URL to the post\n      - IF new topic THEN\n         - Notify users subscribed to forum about new topic\n      - ELSE\n         - Notify users subscribed to topic about new reply\n      - END IF\n      - Update session with last post time\n      - Update topics read time for user",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must have permission to post in the forum",
+    "Forum must not be read-only for new topics",
+    "Topic must not be locked for replies",
+    "Post message must not be empty",
+    "New topics must have a subject",
+    "Polls must have at least 2 options",
+    "Captcha answer must be correct if captcha is enabled",
+    "Minimum time between posts must be respected",
+    "Attachments must meet size and type requirements",
+    "User must have permission to create sticky/announcement topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "options": "array",
+      "length": "number"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number",
+      "type": "number",
+      "firstPostId": "number",
+      "lastPostId": "number",
+      "time": "date",
+      "moderated": "boolean"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "text": "string",
+      "subject": "string",
+      "time": "date",
+      "moderate": "boolean"
+    }
+  }
+}

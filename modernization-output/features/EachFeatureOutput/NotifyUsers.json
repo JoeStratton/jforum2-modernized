@@ -1,0 +1,122 @@
+{
+  "featureName": "NotifyUsers",
+  "description": "Gets list of users to notify about forum updates.",
+  "inputValues": [
+    "forum-object-Forum",
+    "topic-object-Topic",
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the Forum object containing forum information\n   - Collect the Topic object containing topic information\n   - Collect the Post object containing the new message details\n   - System retrieves notification configuration setting from system preferences\n\n2. Data Validation\n   - Validate that the provided Forum object is not null\n   - Validate that the provided Topic object is not null\n   - Validate that the provided Post object is not null\n   - Verify that the Forum ID is valid (positive integer)\n   - Verify that the Topic ID is valid (positive integer)\n   - Verify that the Post ID is valid (positive integer)\n   - Check if mail notification for answers is enabled in system configuration\n     - IF notification setting is disabled, exit the process\n\n3. Business Rule Processing\n   - Verify that the forum allows notifications\n   - Check if there are any system-wide notification restrictions in place\n   - Determine if the current operation should trigger notifications\n   - Verify that the post contains valid content for notification\n\n4. Core Operation Execution\n   - Retrieve data access object for forum operations\n   - Query the database for all users who have subscribed to the forum\n     - Exclude users who have opted out of notifications\n     - Exclude users without valid email addresses\n   - IF no users are subscribed to the forum:\n     - Log information that no notifications are needed\n     - Exit the process without sending notifications\n   - IF users are found for notification:\n     - Create a notification task with the following information:\n       * Forum details (name, ID, description)\n       * Topic details (title, ID, content)\n       * Post details (content, author, timestamp)\n       * List of users to notify with their contact information\n     - Submit the notification task to the system's task executor\n     - Ensure the task runs asynchronously to avoid blocking the main process\n   - IF any errors occur during the notification process:\n     - Log the error details for system administrators\n     - Continue normal operation without notification\n     - Ensure the error doesn't affect the main forum functionality\n\n5. Response Generation\n   - No direct response is returned as this is an asynchronous notification process\n   - System logs successful submission of the notification task\n   - IF an error occurred during processing:\n     - System logs appropriate warning message with error details",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Forum object must not be null",
+    "Topic object must not be null",
+    "Post object must not be null",
+    "Forum ID must be a positive integer",
+    "Topic ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Mail notification setting must be enabled in system configuration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the forum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "lastPostInfo": {
+          "type": "object",
+          "description": "Information about the last post in this forum"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "ID of the forum this topic belongs to"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "ID of the user who created the post"
+        },
+        "time": {
+          "type": "date",
+          "description": "Timestamp when the post was created"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the user"
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language preference of the user"
+        },
+        "notifyText": {
+          "type": "boolean",
+          "description": "Flag indicating if the user prefers text notifications"
+        }
+      }
+    }
+  }
+}

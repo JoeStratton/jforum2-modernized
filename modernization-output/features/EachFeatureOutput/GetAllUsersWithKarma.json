@@ -1,0 +1,36 @@
+{
+  "featureName": "GetAllUsersWithKarma",
+  "description": "Retrieves all users with their karma information from the system.",
+  "inputValues": [
+    "startFrom-number-User",
+    "count-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - startFrom (number): Starting index for pagination (optional, defaults to 0)\n     - count (number): Maximum number of users to retrieve (optional, defaults to 0 which means all users)\n\n2. Data Validation\n   - Validate input parameters:\n     - IF startFrom is provided, THEN ensure it is a non-negative integer\n     - IF count is provided, THEN ensure it is a non-negative integer\n     - IF invalid parameters are detected, THEN prepare appropriate error message\n\n3. Business Rule Processing\n   - Check system state:\n     - Verify that the user database is accessible\n     - Verify that the karma system is enabled\n     - IF system is in maintenance mode, THEN abort operation and return appropriate message\n\n4. Core Operation Execution\n   - Retrieve users from the system:\n     - IF both startFrom and count parameters are provided and valid:\n       - Retrieve limited set of users starting from the specified index\n     - ELSE:\n       - Retrieve all users from the system\n   - For each retrieved user:\n     - Load basic user information (id, username, email, registration date, post count, etc.)\n     - Load associated karma information\n     - Combine user and karma data into a unified user object\n   - Organize retrieved users into a structured list\n   - IF no users are found, THEN prepare empty result list\n\n5. Response Generation\n   - Prepare response with the following information:\n     - List of user objects with their karma information\n     - Total count of users retrieved\n     - Pagination information if applicable\n     - IF an error occurred during processing, THEN include appropriate error details\n     - Return the complete response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Start index must be a non-negative integer",
+    "Count must be a non-negative integer",
+    "User database must be accessible",
+    "Karma system must be enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "totalPosts": "number",
+      "deleted": "number",
+      "from": "string",
+      "webSite": "string",
+      "viewEmailEnabled": "boolean",
+      "karma": {
+        "karmaPoints": "number"
+      }
+    }
+  }
+}

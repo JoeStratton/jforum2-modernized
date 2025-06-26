@@ -1,0 +1,62 @@
+{
+  "featureName": "ManageBBCodeTags",
+  "description": "Manages BB code tags with their regex patterns and replacement templates.",
+  "inputValues": [
+    "tagName-string-BBCode",
+    "regex-string-BBCode",
+    "replacement-string-BBCode",
+    "removeQuotes-boolean-BBCode",
+    "alwaysProcess-boolean-BBCode",
+    "bbCodeConfig-object-BBCodeConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. tagName (string, mandatory): The name of the BB code tag\n     b. regex (string, mandatory): The regular expression pattern to match the tag\n     c. replacement (string, mandatory): The template to replace the matched pattern\n     d. removeQuotes (boolean, optional): Flag indicating whether to remove quotes, defaults to false\n     e. alwaysProcess (boolean, optional): Flag indicating whether to always process this tag, defaults to false\n     f. bbCodeConfig (object, optional): Configuration file path, defaults to system configuration\n\n2. Data Validation:\n   - Validate tagName:\n     a. IF tagName is empty or null THEN\n        i. Generate error message: \"Tag name cannot be empty\"\n     b. IF tagName contains invalid characters THEN\n        i. Generate error message: \"Tag name contains invalid characters\"\n   - Validate regex:\n     a. IF regex is empty or null THEN\n        i. Generate error message: \"Regular expression pattern cannot be empty\"\n     b. IF regex is not a valid pattern THEN\n        i. Generate error message: \"Invalid regular expression pattern\"\n   - Validate replacement:\n     a. IF replacement is empty or null THEN\n        i. Generate error message: \"Replacement template cannot be empty\"\n\n3. Business Rule Processing:\n   - Check for tag name uniqueness:\n     a. IF a BB code with the same tagName already exists THEN\n        i. Generate warning message: \"A BB code with this tag name already exists and will be overwritten\"\n   - Verify configuration accessibility:\n     a. IF bbCodeConfig is provided THEN\n        i. Verify the configuration file exists\n        ii. IF configuration file does not exist THEN\n           1. Generate error message: \"Configuration file not found\"\n     b. ELSE\n        i. Use default system configuration path\n        ii. Verify the default configuration file exists\n        iii. IF default configuration file does not exist THEN\n           1. Generate error message: \"Default configuration file not found\"\n\n4. Core Operation Execution:\n   - Create a new BBCode object:\n     a. Set the tagName property\n     b. Set the regex pattern property\n     c. Set the replacement template property\n     d. IF removeQuotes is true THEN\n        i. Enable the remove quotes feature\n     e. IF alwaysProcess is true THEN\n        i. Enable the always process feature\n   - Add the BBCode to the appropriate collection:\n     a. IF alwaysProcess is true THEN\n        i. Add to the alwaysProcessMap collection\n     b. ELSE\n        i. Add to the bbMap collection\n   - Update the configuration:\n     a. IF adding a new BB code THEN\n        i. Add the new BB code to the configuration\n     b. IF updating an existing BB code THEN\n        i. Update the existing BB code in the configuration\n     c. Save the updated configuration\n\n5. Response Generation:\n   - For successful operation:\n     a. Generate success message: \"BB code tag successfully managed\"\n     b. Return the created/updated BBCode object\n     c. Include the total count of BB codes in the system\n   - For failed operation:\n     a. Generate appropriate error message based on the failure reason\n     b. Include suggestions for resolving the issue\n     c. Provide information about the current BB code configuration",
+  "databaseEntities": [],
+  "validationRules": [
+    "Tag name must not be empty",
+    "Regular expression pattern must not be empty",
+    "Replacement template must not be empty",
+    "Tag name must be unique within the system",
+    "Configuration file must exist and be accessible",
+    "Regular expression pattern must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCodeConfig": {
+      "type": "object",
+      "properties": {
+        "configPath": {
+          "type": "string",
+          "description": "Path to the BB code configuration file"
+        },
+        "defaultTags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the default BB code tag"
+              },
+              "regex": {
+                "type": "string",
+                "description": "Default regular expression pattern"
+              },
+              "replacement": {
+                "type": "string",
+                "description": "Default replacement template"
+              },
+              "removeQuotes": {
+                "type": "boolean",
+                "description": "Whether to remove quotes for this tag"
+              },
+              "alwaysProcess": {
+                "type": "boolean",
+                "description": "Whether to always process this tag"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

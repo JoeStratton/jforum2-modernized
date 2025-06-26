@@ -1,0 +1,97 @@
+{
+  "featureName": "AddKarma",
+  "description": "Inserts a new karma record for a user.",
+  "inputValues": [
+    "postId-number-Post",
+    "postUserId-number-User",
+    "fromUserId-number-User",
+    "points-number-Karma",
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - postId: The ID of the post being rated (mandatory)\n       - postUserId: The ID of the user receiving karma (mandatory)\n       - fromUserId: The ID of the user giving karma (mandatory)\n       - points: The karma points being assigned (mandatory)\n       - topicId: The ID of the topic containing the post (mandatory)\n\n2. Data Validation:\n   2.1. Validate postId:\n       - IF postId is null or not a positive integer THEN\n           - Return error: \"Post ID must be a valid positive integer\"\n   2.2. Validate postUserId:\n       - IF postUserId is null or not a positive integer THEN\n           - Return error: \"Post user ID must be a valid positive integer\"\n   2.3. Validate fromUserId:\n       - IF fromUserId is null or not a positive integer THEN\n           - Return error: \"From user ID must be a valid positive integer\"\n       - IF fromUserId equals postUserId THEN\n           - Return error: \"Users cannot give karma to themselves\"\n   2.4. Validate points:\n       - IF points is null THEN\n           - Return error: \"Karma points must be provided\"\n       - IF points is not within the allowed range THEN\n           - Return error: \"Karma points must be within the allowed range\"\n   2.5. Validate topicId:\n       - IF topicId is null or not a positive integer THEN\n           - Return error: \"Topic ID must be a valid positive integer\"\n\n3. Business Rule Processing:\n   3.1. Check if giving user exists:\n       - IF giving user does not exist THEN\n           - Return error: \"Giving user does not exist\"\n   3.2. Check if receiving user exists:\n       - IF receiving user does not exist THEN\n           - Return error: \"Receiving user does not exist\"\n   3.3. Check if post exists:\n       - IF post does not exist THEN\n           - Return error: \"Post does not exist\"\n       - IF post does not belong to the specified topic THEN\n           - Return error: \"Post does not belong to the specified topic\"\n       - IF post does not belong to the receiving user THEN\n           - Return error: \"Post does not belong to the receiving user\"\n   3.4. Check if user can add karma:\n       - IF user has already given karma to this post THEN\n           - Return error: \"User has already given karma to this post\"\n\n4. Core Operation Execution:\n   4.1. Create new karma record:\n       - Create a new karma entry with the following attributes:\n           - Post ID\n           - Post User ID (receiving user)\n           - From User ID (giving user)\n           - Points\n           - Topic ID\n           - Current timestamp\n   4.2. Store the karma record:\n       - Save the new karma record to the database\n   4.3. Update user karma status:\n       - Calculate the user's karma points using the following steps:\n           - Retrieve all karma records for the user\n           - For each karma record, calculate the average points (points/votes)\n           - Sum all average points\n           - Divide by the total number of records to get overall karma\n           - If no records exist, set karma to 0\n       - Update the receiving user's karma status in the database\n\n5. Response Generation:\n   5.1. For successful karma addition:\n       - Return success status\n       - Include the updated karma total for the receiving user\n   5.2. For failed karma addition:\n       - Return failure status\n       - Include specific error message explaining the failure reason",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Post ID must be a valid positive integer",
+    "Post user ID must be a valid positive integer",
+    "From user ID must be a valid positive integer",
+    "Users cannot give karma to themselves",
+    "Karma points must be within the allowed range",
+    "Topic ID must be a valid positive integer",
+    "Giving user must exist in the system",
+    "Receiving user must exist in the system",
+    "Post must exist in the system",
+    "Post must belong to the specified topic",
+    "Post must belong to the receiving user",
+    "User cannot give karma to the same post more than once"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Karma": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the karma record"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post being rated"
+        },
+        "postUserId": {
+          "type": "number",
+          "description": "ID of the user receiving karma"
+        },
+        "fromUserId": {
+          "type": "number",
+          "description": "ID of the user giving karma"
+        },
+        "points": {
+          "type": "number",
+          "description": "Karma points being assigned"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic containing the post"
+        },
+        "ratingDate": {
+          "type": "date",
+          "description": "Date when the karma was given"
+        }
+      },
+      "required": [
+        "postId",
+        "postUserId",
+        "fromUserId",
+        "points",
+        "topicId",
+        "ratingDate"
+      ]
+    },
+    "KarmaStatus": {
+      "type": "object",
+      "properties": {
+        "karmaPoints": {
+          "type": "number",
+          "description": "Total karma points for a user or post"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Sum of all karma points received"
+        },
+        "votesReceived": {
+          "type": "number",
+          "description": "Number of karma votes received"
+        },
+        "votesGiven": {
+          "type": "number",
+          "description": "Number of karma votes given by a user"
+        }
+      }
+    }
+  }
+}

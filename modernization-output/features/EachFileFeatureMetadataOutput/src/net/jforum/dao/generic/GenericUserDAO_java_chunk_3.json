@@ -1,0 +1,78 @@
+[
+  {
+    "featureName": "IncrementUserPosts",
+    "description": "Increments the post count for a specific user"
+  },
+  {
+    "featureName": "SetUserRanking",
+    "description": "Updates a user's ranking to a specified ranking ID"
+  },
+  {
+    "featureName": "SetUserActiveStatus",
+    "description": "Activates or deactivates a user account"
+  },
+  {
+    "featureName": "UndeleteUser",
+    "description": "Restores a previously deleted user account"
+  },
+  {
+    "featureName": "GetAllUsers",
+    "description": "Retrieves a list of all users in the system"
+  },
+  {
+    "featureName": "GetPaginatedUsers",
+    "description": "Retrieves a paginated list of users with specified start and count"
+  },
+  {
+    "featureName": "GetAllUsersWithKarma",
+    "description": "Retrieves all users with their karma information"
+  },
+  {
+    "featureName": "GetPaginatedUsersWithKarma",
+    "description": "Retrieves a paginated list of users with their karma information"
+  },
+  {
+    "featureName": "GetUsersByGroup",
+    "description": "Retrieves users belonging to a specific group with pagination"
+  },
+  {
+    "featureName": "GetLastRegisteredUser",
+    "description": "Retrieves information about the most recently registered user"
+  },
+  {
+    "featureName": "GetTotalUserCount",
+    "description": "Counts the total number of users in the system"
+  },
+  {
+    "featureName": "GetTotalUsersByGroup",
+    "description": "Counts the total number of users in a specific group"
+  },
+  {
+    "featureName": "CheckUserDeletionStatus",
+    "description": "Checks if a specific user has been marked as deleted"
+  },
+  {
+    "featureName": "CheckUsernameAvailability",
+    "description": "Verifies if a username is already registered in the system"
+  },
+  {
+    "featureName": "ValidateUserLogin",
+    "description": "Authenticates a user by validating username and password"
+  },
+  {
+    "featureName": "AddUserToGroups",
+    "description": "Assigns a user to one or more groups"
+  },
+  {
+    "featureName": "RemoveUserFromGroups",
+    "description": "Removes a user from one or more groups"
+  },
+  {
+    "featureName": "SaveNewUserPassword",
+    "description": "Updates a user's password using their email address"
+  },
+  {
+    "featureName": "ValidateLostPasswordHash",
+    "description": "Validates a password recovery hash for a user's email address"
+  }
+]

@@ -1,0 +1,72 @@
+{
+  "featureName": "QuotePost",
+  "description": "Creates a reply to a post with quoted content after validating access permissions.",
+  "inputValues": [
+    "post_id-number-Post",
+    "message-string-Post",
+    "subject-string-Post",
+    "notify-boolean-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post_id (mandatory): The ID of the post being quoted\n   - Collect message (mandatory): The reply text content\n   - Collect subject (mandatory): The subject line for the reply\n   - Collect notify (optional): Boolean indicating if user wants notifications\n   - System generates: current user ID, current timestamp\n\n2. Data Validation:\n   - Validate post_id:\n      * Verify post_id exists in the system\n      * Check if post requires moderation\n      * IF post requires moderation THEN\n        - Return error: \"Post not moderated yet\"\n      * END IF\n   - Validate message:\n      * Verify message is not empty\n      * Check message length against system limits\n   - Validate subject:\n      * Verify subject is not empty\n      * Check subject length against system limits\n\n3. Business Rule Processing:\n   - Check user permissions:\n      * Verify if anonymous posting is allowed in the forum\n      * IF anonymous posting not allowed AND user not logged in THEN\n        - Return error: \"Login required to post\"\n      * END IF\n   - Retrieve topic information:\n      * Get topic details using the post's topic ID\n      * IF topic not found THEN\n        - Return error: \"Topic not found\"\n      * END IF\n   - Check topic accessibility:\n      * Verify user has access to the forum where topic exists\n      * IF user does not have access THEN\n        - Return error: \"Access denied\"\n      * END IF\n   - Check topic status:\n      * IF topic is locked AND user is not a moderator THEN\n        - Return error: \"Topic is locked\"\n      * END IF\n   - Check attachment permissions:\n      * Verify if attachments are enabled for the forum\n      * Calculate attachment size limits based on user quota\n   - Check HTML permissions:\n      * Determine if HTML is allowed in posts for this forum\n\n4. Core Operation Execution:\n   - Prepare quoted content:\n      * Retrieve original post content\n      * Retrieve original post author username\n      * Format quoted content with author attribution\n   - Create new post record:\n      * Set post subject (typically \"Re: [Original Subject]\")\n      * Set post message with quoted content\n      * Set post creation time\n      * Set user ID of poster\n      * Set topic ID\n      * Set forum ID\n   - Process attachments if present:\n      * Validate attachment sizes against quota\n      * Validate attachment types\n      * Store attachment metadata\n      * Store attachment files\n   - Handle notification preferences:\n      * IF notify is selected THEN\n        - Add user to topic notification list\n      * ELSE\n        - Remove user from topic notification list if present\n      * END IF\n   - Update topic statistics:\n      * Increment reply count\n      * Update last post information\n      * Update last post time\n\n5. Response Generation:\n   - On success:\n      * Return confirmation message: \"Reply posted successfully\"\n      * Provide link to view the new post\n      * Update topic view with new post included\n   - On error:\n      * Return specific error message based on validation failure\n      * Preserve user input for correction\n      * Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Post ID must exist in the system",
+    "Post must not require moderation",
+    "Topic must not be locked unless user is a moderator",
+    "User must have access permissions to the forum",
+    "Message content cannot be empty",
+    "Subject cannot be empty",
+    "Attachments must not exceed user quota limits",
+    "Attachments must be of allowed file types"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "userId": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "subject": "string",
+      "text": "string",
+      "creationTime": "date",
+      "hasAttachments": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number",
+      "firstPostId": "number",
+      "lastPostId": "number",
+      "type": "number",
+      "isVote": "boolean",
+      "voteId": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "notifyOnMessagesEnabled": "boolean"
+    },
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "userId": "number",
+      "fileName": "string",
+      "fileSize": "number",
+      "contentType": "string"
+    }
+  }
+}

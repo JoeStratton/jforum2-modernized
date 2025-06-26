@@ -1,0 +1,34 @@
+{
+  "featureName": "SearchKarma",
+  "description": "Displays paginated list of users with their karma information.",
+  "inputValues": [
+    "pageNumber-number-Pagination",
+    "usersPerPage-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pageNumber (optional, defaults to 1)\n   - Collect usersPerPage (optional, uses system configuration value)\n   - System will generate pagination parameters based on these inputs\n\n2. Data Validation:\n   - Validate pageNumber:\n     * IF pageNumber is provided, THEN verify it is a positive integer\n     * IF pageNumber is not provided or invalid, THEN default to 1\n   - Validate usersPerPage:\n     * IF usersPerPage is provided, THEN verify it is a positive integer\n     * IF usersPerPage is not provided or invalid, THEN use system configuration value\n\n3. Business Rule Processing:\n   - Calculate pagination parameters:\n     * Determine start index based on pageNumber and usersPerPage\n     * Calculate total number of users in the system\n     * Determine total pages based on total users and usersPerPage\n   - Verify access permissions:\n     * Check if current user has permission to view karma information\n     * IF user lacks permission, THEN display appropriate error message\n\n4. Core Operation Execution:\n   - Retrieve total user count from the system\n   - Calculate pagination start index based on current page number\n   - Retrieve paginated list of users with their karma information:\n     * Fetch user records with associated karma data\n     * Sort users according to system default sorting (typically by username)\n     * Limit results based on pagination parameters\n   - Prepare pagination navigation data:\n     * Calculate previous page number (if applicable)\n     * Calculate next page number (if applicable)\n     * Generate list of available page numbers for navigation\n\n5. Response Generation:\n   - Prepare user list display:\n     * Format each user's information for display\n     * Include username, registration date, and karma score for each user\n   - Generate pagination controls:\n     * Include links to first, previous, next, and last pages as appropriate\n     * Display current page indicator\n   - Display the complete list with appropriate headings and formatting\n   - IF no users are found, THEN display appropriate message",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Page number must be a positive integer",
+    "Users per page must be a positive integer",
+    "User must have permission to view karma information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "number",
+          "description": "Current page number"
+        },
+        "usersPerPage": {
+          "type": "number",
+          "description": "Number of users to display per page"
+        }
+      }
+    }
+  }
+}

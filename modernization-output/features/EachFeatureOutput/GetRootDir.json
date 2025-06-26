@@ -1,0 +1,15 @@
+{
+  "featureName": "GetRootDir",
+  "description": "Retrieves the application's root directory path for configuration and resource loading.",
+  "inputValues": [],
+  "businessLogic": "1. Root Directory Path Determination\n   1.1. IF root directory path is not already cached\n       1.1.1. Get the current class's resource path using the class loader\n       1.1.2. Extract the base path by removing the test-specific portion\n       1.1.3. Store the calculated path in the cache for future use\n   1.2. ELSE use the cached root directory path\n   1.3. Return the root directory path\n\n2. Data Validation\n   2.1. Verify the returned path is not null\n   2.2. Verify the returned path is a valid directory path\n   2.3. IF validation fails\n       2.3.1. Generate appropriate error message\n       2.3.2. Return error status\n\n3. Business Rule Processing\n   3.1. Check if the returned path has proper access permissions\n   3.2. Verify the path contains expected application structure\n   3.3. IF any business rule fails\n       3.3.1. Log the validation failure\n       3.3.2. Return error status\n\n4. Core Operation Execution\n   4.1. Format the path according to system requirements\n   4.2. Ensure path uses correct directory separators for the current operating system\n   4.3. Return the properly formatted root directory path\n\n5. Response Generation\n   5.1. Return the validated and formatted root directory path\n   5.2. IF any errors occurred during processing\n       5.2.1. Include error details in the response\n       5.2.2. Provide guidance on resolving path issues",
+  "databaseEntities": [],
+  "validationRules": [
+    "Root directory path must not be null",
+    "Root directory path must be a valid directory",
+    "Root directory path must have read permissions",
+    "Root directory path must contain expected application structure"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

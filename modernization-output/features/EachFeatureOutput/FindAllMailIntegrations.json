@@ -1,0 +1,26 @@
+{
+  "featureName": "FindAllMailIntegrations",
+  "description": "Retrieves all mail integration configurations in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection\n   - No user inputs required for this feature\n   - System will retrieve all mail integration configurations\n\n2. Data Validation\n   - No input validation required as there are no user inputs\n   - System will validate database connection availability\n     - IF database connection is unavailable THEN\n       - Generate appropriate error message\n       - Terminate process\n\n3. Business Rule Processing\n   - Verify user has appropriate permissions to view mail integration configurations\n     - IF user does not have required permissions THEN\n       - Generate access denied error\n       - Log unauthorized access attempt\n       - Terminate process\n   - Check system state for any maintenance activities\n     - IF system is in maintenance mode THEN\n       - Notify user of temporary unavailability\n       - Terminate process\n\n4. Core Operation Execution\n   - Retrieve all mail integration records from the database\n     - Prepare query to select all mail integration configurations\n     - Execute query against the database\n     - FOR each record found in the database DO\n       - Create a mail integration object\n       - Populate object with data from database record:\n         - Forum ID\n         - Forum email address\n         - POP host server address\n         - POP username\n         - POP password (secured)\n         - POP port number\n         - SSL flag status\n       - Add populated object to result collection\n     - IF no records are found THEN\n       - Return empty collection\n       - Note: Empty result is not considered an error condition\n\n5. Response Generation\n   - Prepare response with collection of mail integration configurations\n     - Format each configuration with appropriate structure\n     - Ensure sensitive data (like passwords) is properly secured/masked\n   - Return the complete collection to the caller\n   - IF any exceptions occurred during processing THEN\n     - Generate appropriate error response\n     - Include error details for troubleshooting\n     - Log the error in system logs",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must have appropriate permissions to view mail integration configurations",
+    "Database connection must be available",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "forumId": "number",
+      "forumEmail": "string",
+      "popHost": "string",
+      "popUsername": "string",
+      "popPassword": "string",
+      "popPort": "number",
+      "ssl": "boolean"
+    }
+  }
+}

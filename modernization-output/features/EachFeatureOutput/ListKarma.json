@@ -1,0 +1,16 @@
+{
+  "featureName": "ListKarma",
+  "description": "Displays karma information with an invalid action message.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs are required for this feature\n   - System automatically processes the request\n\n2. Data Validation:\n   - No input validation required as this is an informational display\n\n3. Business Rule Processing:\n   3.1. Check if user has permission to view karma information\n      IF user does not have permission to view karma THEN\n         Display appropriate error message\n         Exit process\n\n4. Core Operation Execution:\n   4.1. Prepare display context\n      Set the appropriate template for karma list display\n      Create message context with \"invalid action\" notification\n   4.2. Format karma information\n      Retrieve localized message for invalid action\n      Add message to display context\n\n5. Response Generation:\n   5.1. Generate response with karma list template\n      Display the invalid action message\n      Render the karma list template with the prepared context",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User must have permission to view karma information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

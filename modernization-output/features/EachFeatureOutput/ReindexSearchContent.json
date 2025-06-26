@@ -1,0 +1,71 @@
+{
+  "featureName": "ReindexSearchContent",
+  "description": "Reindexes forum content in the search engine with options for full or incremental updates.",
+  "inputValues": [
+    "fromDate-date-ReindexCriteria",
+    "toDate-date-ReindexCriteria",
+    "firstPostId-number-ReindexCriteria",
+    "lastPostId-number-ReindexCriteria",
+    "filterByMessage-boolean-ReindexCriteria",
+    "avoidDuplicatedRecords-boolean-ReindexCriteria",
+    "recreateIndex-boolean-ReindexCriteria",
+    "backgroundProcess-boolean-ReindexCriteria"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect reindexing criteria:\n     a. fromDate (optional): The starting date for content to be reindexed\n     b. toDate (optional): The ending date for content to be reindexed\n     c. firstPostId (optional): The starting post ID for reindexing\n     d. lastPostId (optional): The ending post ID for reindexing\n     e. filterByMessage (mandatory): Flag to determine if filtering by post ID range\n     f. avoidDuplicatedRecords (mandatory): Flag to prevent reindexing already indexed content\n     g. recreateIndex (mandatory): Flag to determine if the index should be recreated from scratch\n     h. backgroundProcess (mandatory): Flag to determine if the process should run in the background\n\n2. Data Validation:\n   - Validate date range if provided:\n     a. IF fromDate is provided, ensure it is a valid date format\n     b. IF toDate is provided, ensure it is a valid date format\n     c. IF both fromDate and toDate are provided, ensure fromDate is before toDate\n   - Validate post ID range if provided:\n     a. IF firstPostId is provided, ensure it is a positive integer\n     b. IF lastPostId is provided, ensure it is a positive integer\n     c. IF both firstPostId and lastPostId are provided, ensure firstPostId is less than lastPostId\n   - Validate boolean flags:\n     a. Ensure filterByMessage is a boolean value\n     b. Ensure avoidDuplicatedRecords is a boolean value\n     c. Ensure recreateIndex is a boolean value\n     d. Ensure backgroundProcess is a boolean value\n\n3. Business Rule Processing:\n   - Check system state for reindexing:\n     a. IF another indexing process is already running, display warning message and abort\n     b. IF recreateIndex is true, verify write permissions to the index directory\n     c. Check available disk space for index creation\n   - Determine reindexing scope:\n     a. IF filterByMessage is true, use firstPostId and lastPostId to determine scope\n     b. IF filterByMessage is false, use fromDate and toDate to determine scope\n     c. IF no filters are provided, prepare for full reindexing of all content\n\n4. Core Operation Execution:\n   - Initialize reindexing process:\n     a. IF recreateIndex is true, create new empty index directory\n     b. Set up batch processing parameters (fetch count, etc.)\n     c. Set indexing status flag to indicate process is running\n   - Determine post range for processing:\n     a. IF filterByMessage is true, use provided firstPostId and lastPostId\n     b. ELSE determine firstPostId and lastPostId based on fromDate and toDate\n     c. Adjust firstPostId if it's less than the actual first post ID in the database\n   - Process posts in batches:\n     a. WHILE there are more posts to process:\n       i. Fetch next batch of posts within the current ID range\n       ii. FOR each post in the batch:\n           1. IF avoidDuplicatedRecords is true, check if post is already indexed\n           2. IF post is not already indexed or avoidDuplicatedRecords is false, index the post\n           3. Increment counter for processed posts\n       iii. Update firstPostId for next batch\n       iv. IF user cancels operation, set hasMorePosts to false and break loop\n   - Finalize indexing:\n     a. Flush any remaining documents in memory to the index\n     b. Set indexing status flag to indicate process is complete\n     c. Record performance metrics (total time, documents indexed)\n\n5. Response Generation:\n   - Generate success response:\n     a. Total number of documents indexed\n     b. Time taken for indexing process\n     c. Index status information\n   - Generate error response if applicable:\n     a. Error details and reason for failure\n     b. Suggestions for resolving the issue\n     c. Current state of the index",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "If filtering by date, fromDate must be before toDate",
+    "If filtering by post ID, firstPostId must be less than lastPostId",
+    "Post IDs must be positive integers",
+    "Date values must be in valid format",
+    "Boolean flags must have valid boolean values",
+    "System must not already be performing an indexing operation",
+    "Sufficient disk space must be available for index creation",
+    "Write permissions must exist for the index directory"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ReindexCriteria": {
+      "type": "object",
+      "properties": {
+        "fromDate": {
+          "type": "date",
+          "description": "Starting date for content to be reindexed"
+        },
+        "toDate": {
+          "type": "date",
+          "description": "Ending date for content to be reindexed"
+        },
+        "firstPostId": {
+          "type": "number",
+          "description": "Starting post ID for reindexing"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "Ending post ID for reindexing"
+        },
+        "filterByMessage": {
+          "type": "boolean",
+          "description": "Flag to determine if filtering by post ID range"
+        },
+        "avoidDuplicatedRecords": {
+          "type": "boolean",
+          "description": "Flag to prevent reindexing already indexed content"
+        },
+        "recreateIndex": {
+          "type": "boolean",
+          "description": "Flag to determine if the index should be recreated from scratch"
+        },
+        "backgroundProcess": {
+          "type": "boolean",
+          "description": "Flag to determine if the process should run in the background"
+        }
+      }
+    }
+  }
+}

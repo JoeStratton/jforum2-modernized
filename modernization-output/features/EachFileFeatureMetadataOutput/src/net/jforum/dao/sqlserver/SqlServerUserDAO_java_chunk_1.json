@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "SelectAllUsers",
+    "description": "Retrieves all users with optional pagination support"
+  },
+  {
+    "featureName": "SelectUsersByGroup",
+    "description": "Retrieves users belonging to a specific group with pagination"
+  },
+  {
+    "featureName": "SelectAllUsersWithKarma",
+    "description": "Retrieves users with their karma information and pagination support"
+  }
+]

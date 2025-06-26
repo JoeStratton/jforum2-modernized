@@ -1,0 +1,48 @@
+{
+  "featureName": "AppendPost",
+  "description": "Adds a new post to a topic in the cache if it doesn't already exist.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. topicId (number, mandatory): The identifier of the topic to which the post will be added\n     1.2. post (object, mandatory): The post object to be added to the topic\n         1.2.1. Must contain at minimum an id property\n         1.2.2. Must contain all required post content and metadata\n\n2. Data Validation\n   - Validate all input parameters:\n     2.1. Validate topicId:\n         2.1.1. Ensure topicId is provided\n         2.1.2. Ensure topicId is a positive integer\n         2.1.3. IF topicId is invalid, THEN return an error message indicating invalid topic identifier\n     2.2. Validate post object:\n         2.2.1. Ensure post object is provided\n         2.2.2. Ensure post has a valid id property\n         2.2.3. Ensure post contains all required content fields\n         2.2.4. IF post object is invalid, THEN return an error message indicating invalid post data\n\n3. Business Rule Processing\n   - Process business rules related to post addition:\n     3.1. Check if the topic exists in the system\n         3.1.1. IF topic does not exist, THEN return an error message indicating topic not found\n     3.2. Convert topicId to string format for cache operations\n     3.3. Retrieve the current list of posts for the specified topic from cache\n         3.3.1. IF posts list is null, THEN no action is needed (cache miss scenario)\n     3.4. Check if the post already exists in the topic's post list\n         3.4.1. Use post's id to determine if it already exists in the list\n         3.4.2. IF post already exists in the list, THEN no action is needed\n\n4. Core Operation Execution\n   - Execute the post addition operation:\n     4.1. IF the post list exists for the topic AND the post is not already in the list:\n         4.1.1. Add the post to the topic's post list\n         4.1.2. Update the cache with the modified post list\n         4.1.3. Ensure the post is properly prepared for display if needed\n     4.2. IF any error occurs during the addition process:\n         4.2.1. Log the error details\n         4.2.2. Return appropriate error message\n\n5. Response Generation\n   - Generate appropriate response:\n     5.1. IF post was successfully added to cache:\n         5.1.1. Return success status\n         5.1.2. Include confirmation that post was added to the topic cache\n     5.2. IF post was not added (already exists):\n         5.2.1. Return neutral status indicating no action was taken\n         5.2.2. Include information that post already exists in cache\n     5.3. IF operation failed due to errors:\n         5.3.1. Return error status\n         5.3.2. Include detailed error information\n         5.3.3. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post object must contain a valid ID",
+    "Post must not already exist in the topic's post list",
+    "Topic must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the post was created"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

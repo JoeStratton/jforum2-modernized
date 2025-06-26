@@ -1,0 +1,33 @@
+{
+  "featureName": "ExpandVariables",
+  "description": "Replaces variable placeholders in text with their actual values from a variable store.",
+  "inputValues": [
+    "source-string-Text",
+    "variables-object-VariableStore",
+    "pre-string-Prefix",
+    "post-string-Suffix"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. source (string): The text containing variable placeholders to be expanded\n     b. variables (object): A variable store containing key-value pairs\n     c. pre (string): The prefix that marks the beginning of a variable placeholder\n     d. post (string): The suffix that marks the end of a variable placeholder\n   - System will use an internal cache to store previously processed texts\n\n2. Data Validation:\n   - Validate source text:\n     a. IF source is null THEN\n        i. Return null as there is nothing to process\n     b. Check if source exists in cache:\n        i. IF source exists in cache THEN\n           1. Return cached result immediately\n   - Validate variable markers:\n     a. Ensure pre and post are non-empty strings\n     b. Ensure variables store is properly initialized\n\n3. Business Rule Processing:\n   - Check for variable placeholders:\n     a. Search for the first occurrence of prefix in the source text\n     b. IF no prefix is found THEN\n        i. Return the original source text unchanged\n\n4. Core Operation Execution:\n   - Initialize a string buffer with the source text\n   - WHILE prefix is found in the text:\n     a. Find the position of the next suffix\n     b. Extract the variable name between prefix and suffix\n     c. IF prefix is at position 0 THEN\n        i. Handle special case for start of string\n        ii. Extract variable name accounting for position\n     d. ELSE\n        i. Extract variable name normally\n     e. Retrieve the variable value from the variable store\n     f. Replace the entire placeholder (prefix + name + suffix) with the variable value\n     g. Search for the next prefix occurrence\n   - Convert the modified buffer back to a string\n   - Store the result in the cache using the original source as key\n\n5. Response Generation:\n   - Return the processed text with all variables expanded\n   - IF any variable names are not found in the store THEN\n     a. The system should use whatever default behavior is defined in the variable store\n   - Ensure the cache is maintained for future lookups",
+  "databaseEntities": [],
+  "validationRules": [
+    "Source text may be null, which returns null result",
+    "If no variable placeholders exist, return original text unchanged",
+    "Variable names must exist between prefix and suffix markers",
+    "Variable store must contain values for all referenced variables"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "VariableStore": {
+      "type": "object",
+      "properties": {
+        "getVariableValue": {
+          "type": "function",
+          "description": "Retrieves the value for a given variable name"
+        }
+      },
+      "required": [
+        "getVariableValue"
+      ]
+    }
+  }
+}

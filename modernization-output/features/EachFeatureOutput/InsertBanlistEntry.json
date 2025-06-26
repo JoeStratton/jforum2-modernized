@@ -1,0 +1,33 @@
+{
+  "featureName": "InsertBanlistEntry",
+  "description": "Creates a new entry in the banlist system.",
+  "inputValues": [
+    "userId-number-Banlist",
+    "email-string-Banlist",
+    "ip-string-Banlist"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following inputs:\n       1.1.1. userId: The ID of the user to be banned (optional)\n       1.1.2. email: The email address to be banned (optional)\n       1.1.3. ip: The IP address to be banned (optional)\n   1.2. Note on input requirements:\n       1.2.1. At least one of the three inputs must be provided\n       1.2.2. Multiple inputs can be provided simultaneously\n\n2. Data Validation\n   2.1. Validate input presence\n       2.1.1. IF userId is empty AND email is empty AND ip is empty THEN\n           2.1.1.1. Return error: \"At least one ban criterion (userId, email, or IP) must be provided.\"\n   2.2. Validate userId format\n       2.2.1. IF userId is provided THEN\n           2.2.1.1. Verify userId is a positive integer\n           2.2.1.2. IF userId is invalid THEN\n               2.2.1.2.1. Return error: \"User ID must be a valid positive number.\"\n           2.2.1.3. Verify userId exists in the system\n           2.2.1.4. IF userId does not exist THEN\n               2.2.1.4.1. Return error: \"The specified user ID does not exist in the system.\"\n   2.3. Validate email format\n       2.3.1. IF email is provided THEN\n           2.3.1.1. Verify email follows valid email format\n           2.3.1.2. IF email format is invalid THEN\n               2.3.1.2.1. Return error: \"Invalid email format.\"\n   2.4. Validate IP address format\n       2.4.1. IF ip is provided THEN\n           2.4.1.1. Verify IP follows valid IP address format\n           2.4.1.2. IF IP format is invalid THEN\n               2.4.1.2.1. Return error: \"Invalid IP address format.\"\n   2.5. Check for duplicate entries\n       2.5.1. Query existing banlist entries\n       2.5.2. IF an entry with the same userId, email, or IP already exists THEN\n           2.5.2.1. Return error: \"A ban with these criteria already exists in the system.\"\n\n3. Business Rule Processing\n   3.1. Check user permissions\n       3.1.1. Verify the current user has administrator privileges\n       3.1.2. IF user does not have administrator privileges THEN\n           3.1.2.1. Return error: \"Insufficient permissions to create ban entries.\"\n   3.2. Validate ban scope\n       3.2.1. IF ip is provided THEN\n           3.2.1.1. Check if IP range is too broad\n           3.2.1.2. IF IP range would ban too many users THEN\n               3.2.1.2.1. Return warning: \"This IP range may affect many users.\"\n   3.3. Check system constraints\n       3.3.1. Ensure the banlist system is enabled\n       3.3.2. IF banlist system is disabled THEN\n           3.3.2.1. Return error: \"The banlist system is currently disabled.\"\n\n4. Core Operation Execution\n   4.1. Create new banlist entry\n       4.1.1. Initialize a new Banlist object\n       4.1.2. Set the userId field (if provided)\n       4.1.3. Set the email field (if provided)\n       4.1.4. Set the ip field (if provided)\n       4.1.5. Record the current timestamp as creation date\n       4.1.6. Record the administrator who created the ban\n   4.2. Store the ban entry\n       4.2.1. Generate SQL statement for inserting the ban entry\n       4.2.2. Execute the database operation\n       4.2.3. Retrieve and store the generated unique identifier\n       4.2.4. IF storage fails THEN\n           4.2.4.1. Log the error details\n           4.2.4.2. Return error: \"Failed to create ban entry. Please try again.\"\n   4.3. Update related records\n       4.3.1. IF userId is provided THEN\n           4.3.1.1. Update user status to indicate they are banned\n       4.3.2. Log the ban action in the system audit log\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Include the ban entry ID\n       5.1.2. Include confirmation message: \"Ban entry successfully created.\"\n       5.1.3. Include the ban details (userId, email, ip)\n   5.2. Generate notification\n       5.2.1. Notify administrators about the new ban entry\n       5.2.2. Update the system ban cache if applicable\n       5.2.3. Provide options for further actions (edit ban, remove ban, view all bans)",
+  "databaseEntities": [
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "At least one ban criterion (userId, email, or IP) must be provided",
+    "User ID must be a valid positive number if provided",
+    "Email format must be valid if provided",
+    "IP address format must be valid if provided",
+    "Duplicate ban entries are not allowed",
+    "Only administrators can create ban entries",
+    "The specified user ID must exist in the system if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "id": "number",
+      "userId": "number",
+      "email": "string",
+      "ip": "string",
+      "creationDate": "date",
+      "createdBy": "number"
+    }
+  }
+}

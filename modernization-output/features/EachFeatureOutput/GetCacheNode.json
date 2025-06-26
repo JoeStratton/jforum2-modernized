@@ -1,0 +1,31 @@
+{
+  "featureName": "GetCacheNode",
+  "description": "Retrieves an entire cache node using fully qualified name.",
+  "inputValues": [
+    "fqn-string-CacheNode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the fully qualified name (fqn) of the cache node to retrieve\n   - The fqn is a mandatory string parameter\n   - No default value is provided for fqn\n\n2. Data Validation:\n   - Validate the fqn parameter:\n     a. Check if fqn is not null\n     b. Check if fqn is not an empty string\n     c. IF validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if the cache system is initialized:\n     a. IF cache system is not initialized, prepare system not ready error\n     b. IF cache system is initialized, continue processing\n   - Check if the requested cache node exists:\n     a. IF cache node does not exist, prepare node not found notification\n     b. IF cache node exists, continue processing\n\n4. Core Operation Execution:\n   - Locate the cache node using the provided fully qualified name\n   - Retrieve the entire node structure with all its contained elements\n   - IF retrieval operation fails:\n     a. Log the failure reason\n     b. Prepare operation failed notification\n   - IF retrieval operation succeeds:\n     a. Prepare the node data for return\n\n5. Response Generation:\n   - IF any errors occurred during processing:\n     a. Return error information with appropriate message\n     b. Include any relevant troubleshooting information\n   - IF operation was successful:\n     a. Return the complete cache node data\n     b. Include metadata about the node (if available)",
+  "databaseEntities": [],
+  "validationRules": [
+    "Fully qualified name (fqn) must not be null",
+    "Fully qualified name (fqn) must not be empty",
+    "Cache system must be initialized before retrieving nodes",
+    "Requested cache node must exist in the cache system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CacheNode": {
+      "type": "object",
+      "properties": {
+        "fqn": {
+          "type": "string",
+          "description": "Fully qualified name of the cache node"
+        },
+        "contents": {
+          "type": "object",
+          "description": "The contents of the cache node"
+        }
+      }
+    }
+  }
+}

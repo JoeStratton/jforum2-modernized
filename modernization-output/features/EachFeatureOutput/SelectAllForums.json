@@ -1,0 +1,61 @@
+{
+  "featureName": "SelectAllForums",
+  "description": "Retrieves all forums with their complete details.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all forum records without filtering\n\n2. Data Validation:\n   - Verify database connection is available\n   - Verify user has appropriate permissions to view forums\n   - IF connection is unavailable THEN\n     - Generate appropriate error message\n     - Terminate process\n   - IF user lacks permissions THEN\n     - Generate access denied message\n     - Terminate process\n\n3. Business Rule Processing:\n   - Check system state to ensure forum data can be accessed\n   - Verify forum table exists and is accessible\n   - IF system is in maintenance mode THEN\n     - Generate maintenance notification\n     - Terminate process\n   - IF forum table is inaccessible THEN\n     - Log database access error\n     - Generate system error message\n     - Terminate process\n\n4. Core Operation Execution:\n   - Retrieve all forum records from the database\n   - FOR each forum record DO\n     - Extract basic forum information (ID, name, description, etc.)\n     - Calculate and include total post count for the forum\n     - Determine if forum is moderated\n     - Include category association information\n     - Include forum ordering information\n     - Include last post information\n   - END FOR\n   - Organize forums in the correct display order\n   - IF no forums exist THEN\n     - Prepare empty result set\n\n5. Response Generation:\n   - Compile complete list of forums with all details\n   - Format response according to system requirements\n   - Include total count of forums retrieved\n   - Return formatted forum list to caller\n   - IF any errors occurred during processing THEN\n     - Include error details in response\n     - Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must have permission to view forums",
+    "Database connection must be available",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the forum"
+        },
+        "categoryId": {
+          "type": "number",
+          "description": "ID of the category this forum belongs to"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order of the forum"
+        },
+        "totalTopics": {
+          "type": "number",
+          "description": "Total number of topics in the forum"
+        },
+        "totalPosts": {
+          "type": "number",
+          "description": "Total number of posts in the forum"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in the forum"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the forum is moderated"
+        }
+      }
+    }
+  }
+}

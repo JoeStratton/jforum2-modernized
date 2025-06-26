@@ -1,0 +1,8 @@
+{
+  "pageContent": "File Path: tests/core/net/jforum/util/preferences/VariableExpanderTest.java\n\n Original Content: /*\n * Created on 28/08/2005 22:23:41\n */\npackage net.jforum.util.preferences;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\nimport junit.framework.TestCase;\n\n/**\n * @author Rafael Steil\n * @version $Id: VariableExpanderTest.java,v 1.1 2005/08/29 02:13:23 rafaelsteil Exp $\n */\npublic class VariableExpanderTest extends TestCase\n{\n\tprivate static class MyStore implements VariableStore\n\t{\n\t\tprivate Map data = new HashMap();\n\t\t\n\t\tpublic MyStore()\n\t\t{\n\t\t\tthis.fill();\n\t\t}\n\t\t\n\t\tprivate void fill()\n\t\t{\n\t\t\tthis.data.put(\"config.dir\", \"/config\");\n\t\t\tthis.data.put(\"database.driver.name\", \"mysql\");\n\t\t}\n\t\t\n\t\tpublic String getVariableValue(String variableName)\n\t\t{\n\t\t\treturn (String)this.data.get(variableName);\n\t\t}\n\t}\n\t\n\tprivate VariableExpander extapnder;\n\t\n\tprivate String test = \"${config.dir}/database/${database.driver.name}/${database.driver.name}.properties\";\n\t\n\t/**\n\t * @see junit.framework.TestCase#setUp()\n\t */\n\tprotected void setUp() throws Exception\n\t{\n\t\tthis.extapnder = new VariableExpander(new MyStore(), \"${\", \"}\");\n\t}\n\t\n\tpublic void testExpand()\n\t{\n\t\tString result = this.extapnder.expandVariables(this.test);\n\t\tassertEquals(\"/config/database/mysql/mysql.properties\", result);\n\t}\n}",
+  "metadata": {
+    "fileId": "VariableExpanderTest_java_chunk_1",
+    "fileName": "VariableExpanderTest.java",
+    "filePath": "tests/core/net/jforum/util/preferences/VariableExpanderTest.java"
+  }
+}

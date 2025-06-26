@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ManageBotAgents",
+    "description": "Manages the list of bot agents for clickstream tracking and filtering"
+  },
+  {
+    "featureName": "ManageBotHosts",
+    "description": "Manages the list of bot hosts for clickstream tracking and filtering"
+  }
+]

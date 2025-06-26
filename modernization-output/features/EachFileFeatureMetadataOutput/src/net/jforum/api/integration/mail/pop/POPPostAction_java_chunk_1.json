@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "InsertMessagesFromPOP",
+    "description": "Processes email messages from POP server and posts them to forum topics"
+  },
+  {
+    "featureName": "InsertForumPostFromEmail",
+    "description": "Creates forum posts from email content with proper user attribution"
+  },
+  {
+    "featureName": "DiscoverForumIdFromEmail",
+    "description": "Maps email addresses to corresponding forum IDs for message routing"
+  },
+  {
+    "featureName": "ExtractTopicRelationships",
+    "description": "Identifies reply relationships between emails to maintain conversation threads"
+  }
+]

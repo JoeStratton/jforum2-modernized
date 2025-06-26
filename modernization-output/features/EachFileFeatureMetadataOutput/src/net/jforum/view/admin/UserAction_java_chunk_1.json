@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "ListUsers",
+    "description": "Displays paginated list of users with common data for administration"
+  },
+  {
+    "featureName": "ViewPendingActivations",
+    "description": "Shows list of users with pending account activations"
+  },
+  {
+    "featureName": "ActivateUserAccounts",
+    "description": "Activates selected user accounts from the pending activations list"
+  },
+  {
+    "featureName": "SearchUsersByGroup",
+    "description": "Searches and displays users filtered by their group membership"
+  },
+  {
+    "featureName": "SearchUsersByUsername",
+    "description": "Searches and displays users by matching username pattern"
+  },
+  {
+    "featureName": "EditUserProfile",
+    "description": "Displays form for editing user profile information"
+  },
+  {
+    "featureName": "SaveUserProfile",
+    "description": "Saves changes to user profile information"
+  },
+  {
+    "featureName": "DeleteOrUndeleteUsers",
+    "description": "Deletes or undeletes selected users based on their current status"
+  },
+  {
+    "featureName": "ManageUserGroups",
+    "description": "Displays groups associated with a specific user"
+  },
+  {
+    "featureName": "SaveUserGroupAssignments",
+    "description": "Updates group memberships for a specific user"
+  }
+]

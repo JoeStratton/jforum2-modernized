@@ -1,0 +1,63 @@
+{
+  "featureName": "GetPostsByTopicWithPagination",
+  "description": "Retrieves posts for a specific topic with pagination support to display content in manageable chunks.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId (number): Identifier of the topic to retrieve posts from\n     b. startFrom (number): Starting position for pagination (zero-based index)\n     c. count (number): Maximum number of posts to retrieve\n   - All fields are mandatory\n   - System will use default values if not specified:\n     a. startFrom: 0 (first post)\n     b. count: Maximum allowed value\n\n2. Data Validation\n   - Validate topicId:\n     a. Check if topicId is a positive integer\n     b. IF topicId is missing or invalid, THEN return error message \"Valid topic identifier required\"\n   - Validate pagination parameters:\n     a. Check if startFrom is a non-negative integer\n     b. Check if count is a positive integer\n     c. IF startFrom is negative, THEN set to 0\n     d. IF count is negative or zero, THEN set to default maximum value\n\n3. Business Rule Processing\n   - Check topic existence and access permissions:\n     a. Verify that the topic with the given topicId exists\n     b. IF topic does not exist, THEN return error message \"Topic not found\"\n     c. Verify that the current user has permission to view the topic\n     d. IF user lacks permission, THEN return error message \"Insufficient permissions to view this topic\"\n   - Check forum status:\n     a. Verify that the forum containing the topic is not locked or disabled\n     b. IF forum is locked or disabled, THEN return error message \"Forum is currently unavailable\"\n\n4. Core Operation Execution\n   - Retrieve posts for the specified topic:\n     a. Query the database for posts matching the topicId\n     b. Apply pagination parameters (startFrom and count) to limit results\n     c. For each post retrieved:\n        i. Load the post content and metadata\n        ii. Format timestamps according to system settings\n        iii. Check if post has attachments\n        iv. Load user information for the post author\n        v. Apply any content formatting rules (BBCode, HTML, smilies)\n     d. IF no posts are found, THEN return an empty collection\n     e. IF database error occurs during retrieval, THEN log error and return error message \"Unable to retrieve posts at this time\"\n\n5. Response Generation\n   - Prepare the paginated posts response:\n     a. Create a collection of formatted post objects\n     b. Include pagination metadata:\n        i. Total number of posts in the topic\n        ii. Current page information\n        iii. Whether more posts are available\n     c. Include topic information:\n        i. Topic title\n        ii. Forum identifier\n        iii. Category information\n     d. Return the formatted response with posts and pagination details\n     e. IF any errors occurred during processing, THEN return appropriate error message with error details",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must have permission to view the topic",
+    "Topic must exist in the system",
+    "Forum containing the topic must be active and accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "time": "date",
+      "userIp": "string",
+      "bbCodeEnabled": "boolean",
+      "htmlEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "signatureEnabled": "boolean",
+      "editCount": "number",
+      "editTime": "date",
+      "subject": "string",
+      "text": "string",
+      "postUsername": "string",
+      "hasAttachments": "boolean",
+      "isModerated": "boolean",
+      "formattedTime": "string",
+      "karma": "number"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "totalPosts": "number",
+      "status": "string"
+    },
+    "Pagination": {
+      "startFrom": "number",
+      "count": "number",
+      "totalItems": "number",
+      "hasMore": "boolean"
+    }
+  }
+}

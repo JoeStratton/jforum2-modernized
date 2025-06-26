@@ -1,0 +1,21 @@
+{
+  "featureName": "GetUserCountByGroup",
+  "description": "Counts the total number of users in a specific group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the required input:\n     1.1. groupId (number, mandatory): The unique identifier of the group to count users from\n\n2. Data Validation:\n   - Validate the input parameters:\n     2.1. Check if groupId is provided\n        IF groupId is null or undefined THEN\n           Return error message \"Group ID is required\"\n     2.2. Verify groupId is a positive integer\n        IF groupId is not a positive integer THEN\n           Return error message \"Group ID must be a positive integer\"\n     2.3. Verify the group exists\n        IF group with groupId does not exist THEN\n           Return error message \"Group not found\"\n\n3. Business Rule Processing:\n   - Check system state and permissions:\n     3.1. Verify the user has permission to view group information\n        IF user does not have permission THEN\n           Return error message \"Insufficient permissions to view group information\"\n     3.2. Verify the group is active\n        IF group is not active THEN\n           Return error message \"Cannot retrieve user count for inactive groups\"\n\n4. Core Operation Execution:\n   - Perform the count operation:\n     4.1. Access the user-group relationship records\n     4.2. Count all distinct users associated with the specified group\n     4.3. Store the count result\n     4.4. IF any error occurs during counting THEN\n           Log the error details\n           Return error message \"Unable to retrieve user count\"\n\n5. Response Generation:\n   - Prepare and return the response:\n     5.1. Format the success response with:\n        - Total count of users in the group\n        - Group identifier\n        - Group name (if available)\n     5.2. Return the formatted response to the caller",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be provided",
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "User must have permission to view group information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

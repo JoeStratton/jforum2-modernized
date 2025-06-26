@@ -1,0 +1,51 @@
+{
+  "featureName": "GetMostRatedUsers",
+  "description": "Retrieves users with highest karma ratings within a specified date range.",
+  "inputValues": [
+    "startDate-date-Date",
+    "endDate-date-Date",
+    "startIndex-number-Integer",
+    "orderField-string-String"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect startDate (mandatory): The beginning date of the period to analyze\n   - Collect endDate (mandatory): The ending date of the period to analyze\n   - Collect startIndex (mandatory): The starting position for pagination\n   - Collect orderField (optional): Field to sort results by, defaults to total karma points\n\n2. Data Validation:\n   - Validate startDate:\n     * Must be a valid date format\n     * Cannot be null or empty\n     * Error message if invalid: \"Start date must be a valid date\"\n   - Validate endDate:\n     * Must be a valid date format\n     * Cannot be null or empty\n     * Must be greater than or equal to startDate\n     * Error message if invalid: \"End date must be a valid date and not before start date\"\n   - Validate startIndex:\n     * Must be a non-negative integer\n     * Error message if invalid: \"Start index must be a non-negative number\"\n   - Validate orderField:\n     * If provided, must be one of the allowed sorting fields\n     * Error message if invalid: \"Invalid order field specified\"\n\n3. Business Rule Processing:\n   - Check system state:\n     * Verify karma rating system is enabled in the system\n     * IF karma system is disabled, THEN return appropriate message\n   - Verify date range validity:\n     * IF date range exceeds maximum allowed period, THEN adjust or return error\n     * IF date range is in the future, THEN return appropriate message\n   - Check access permissions:\n     * Verify current user has permission to view karma statistics\n     * IF user lacks permission, THEN return access denied message\n\n4. Core Operation Execution:\n   - Retrieve karma data:\n     * Query karma records within the specified date range\n     * Group karma points by recipient user\n     * Calculate total karma points for each user\n     * Apply pagination using startIndex parameter\n     * Sort results according to orderField parameter\n   - Process user information:\n     * For each user in results, retrieve relevant profile information\n     * Calculate karma statistics (average rating, total votes received)\n     * Format data for presentation\n   - Handle edge cases:\n     * IF no karma records exist in date range, THEN prepare empty result set\n     * IF system error occurs during retrieval, THEN prepare error message\n\n5. Response Generation:\n   - Prepare success response:\n     * Format list of users with their karma statistics\n     * Include total count of users with karma in the period\n     * Include pagination information (current page, total pages)\n     * Include date range information in response\n   - Handle potential errors:\n     * Return appropriate error messages for any failures\n     * Include suggestions for corrective action if applicable\n   - Provide additional information:\n     * Include system-wide karma statistics for the period if relevant",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "Start date must be a valid date format",
+    "End date must be a valid date format",
+    "End date must not be before start date",
+    "Start index must be a non-negative integer",
+    "Order field must be a valid sorting option if specified",
+    "User must have permission to view karma statistics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserKarmaRating": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "description": "Unique identifier of the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Display name of the user"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Total karma points received in the period"
+        },
+        "votesReceived": {
+          "type": "integer",
+          "description": "Number of karma votes received in the period"
+        },
+        "averageRating": {
+          "type": "number",
+          "description": "Average karma rating in the period"
+        }
+      }
+    }
+  }
+}

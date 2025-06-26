@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "GenerateRecentTopicsRSS",
+    "description": "Creates an RSS feed for recent forum topics with title, description, and links"
+  }
+]

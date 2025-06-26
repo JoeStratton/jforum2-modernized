@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "ExecuteDatabaseStructureCreation",
+    "description": "Creates database tables by executing SQL statements from structure files"
+  },
+  {
+    "featureName": "DropOracleOrPostgreSQLTables",
+    "description": "Removes existing database tables for Oracle or PostgreSQL database types"
+  },
+  {
+    "featureName": "CheckForWritableDirectories",
+    "description": "Validates write permissions for WebInf and Lucene index directories"
+  },
+  {
+    "featureName": "ConfigureJDBCConnection",
+    "description": "Sets up database connection properties based on user configuration"
+  },
+  {
+    "featureName": "ConfigureDatabase",
+    "description": "Establishes database connection using configured parameters"
+  },
+  {
+    "featureName": "UpdateAdminPassword",
+    "description": "Changes the administrator password in the database"
+  }
+]

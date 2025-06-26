@@ -1,0 +1,53 @@
+{
+  "featureName": "ValidateUserLogin",
+  "description": "Authenticates a user based on username and password.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "autologin-boolean-User",
+    "returnPath-string-User",
+    "extraParams-object-ExtraParams"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. username (string, mandatory): The user's login identifier\n     b. password (string, mandatory): The user's authentication credential\n     c. autologin (boolean, optional): Flag indicating if user wants to be remembered\n     d. returnPath (string, optional): Path to redirect user after successful login\n     e. extraParams (object, optional): Additional parameters that might be needed for authentication\n\n2. Data Validation:\n   - Validate username input:\n     a. Check if username is not empty\n     b. Check if username is properly formatted\n     c. IF username is invalid THEN prepare error message indicating invalid username format\n   - Validate password input:\n     a. Check if password is not empty\n     b. Check if password meets minimum length requirements\n     c. IF password is invalid THEN prepare error message indicating invalid password format\n   - Determine authentication method:\n     a. Check if basic authentication header is present\n     b. IF basic authentication is present THEN extract username and password from header\n     c. ELSE use standard form parameters for username and password\n\n3. Business Rule Processing:\n   - Check system availability:\n     a. Verify authentication system is operational\n     b. IF system is unavailable THEN prepare system unavailable error message\n   - Check account restrictions:\n     a. Verify if login attempts are within allowed limits\n     b. IF too many failed attempts detected THEN prepare account locked error message\n   - Verify authentication configuration:\n     a. Check if the system allows the requested authentication method\n     b. IF authentication method not allowed THEN prepare appropriate error message\n\n4. Core Operation Execution:\n   - Perform user lookup and authentication:\n     a. Search for user record matching the provided username and password\n     b. IF no matching record found THEN mark login as invalid\n     c. IF matching record found THEN:\n        i. Create a new user session\n        ii. Remove any existing guest session\n        iii. Associate user data with the session\n   - Handle existing user session:\n     a. Check if user already has an active session\n     b. IF existing session found THEN:\n        i. Store existing session data\n        ii. Remove old session\n        iii. Transfer relevant data to new session\n   - Process autologin request:\n     a. IF autologin is requested and system allows it THEN:\n        i. Generate a unique user hash\n        ii. Store the hash in the user record\n        iii. Set autologin cookies with appropriate expiration\n     b. ELSE remove any existing autologin cookies\n   - Update user's last visit information:\n     a. IF this is a new session THEN set last visit to current time\n     b. ELSE calculate last visit based on previous session data\n   - Finalize session setup:\n     a. Add the user session to the session repository\n     b. Initialize user's topic read tracking\n     c. Set user identification cookie\n     d. Load user security permissions\n\n5. Response Generation:\n   - For successful authentication:\n     a. Determine appropriate redirect location:\n        i. IF custom return path specified THEN use it\n        ii. ELSE redirect to default location (forums list)\n     b. Set session as logged in\n     c. Prepare success indicators\n   - For failed authentication:\n     a. Set invalid login indicator\n     b. Prepare login template with error message\n     c. Preserve return path if specified\n     d. Allow user to retry authentication",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups",
+    "jforum_groups",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Password must not be empty",
+    "User account must exist in the system",
+    "User account must be active",
+    "User account must not be deleted",
+    "Password must match the stored password for the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "active": "boolean",
+      "deleted": "boolean",
+      "activationKey": "string",
+      "groups": "array",
+      "lang": "string",
+      "lastVisit": "date"
+    },
+    "ExtraParams": {
+      "properties": "object"
+    },
+    "UserSession": {
+      "sessionId": "string",
+      "userId": "number",
+      "username": "string",
+      "startTime": "date",
+      "lastVisit": "date",
+      "sessionTime": "number",
+      "autoLogin": "boolean"
+    }
+  }
+}

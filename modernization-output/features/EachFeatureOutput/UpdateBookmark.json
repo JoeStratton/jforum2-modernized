@@ -1,0 +1,38 @@
+{
+  "featureName": "UpdateBookmark",
+  "description": "Updates an existing bookmark's visibility, title and description.",
+  "inputValues": [
+    "bookmarkId-number-Bookmark",
+    "isPublicVisible-boolean-Bookmark",
+    "title-string-Bookmark",
+    "description-string-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. bookmarkId (mandatory): Unique identifier of the bookmark to update\n     b. isPublicVisible (mandatory): Boolean flag indicating if bookmark should be visible to other users\n     c. title (mandatory): New title for the bookmark\n     d. description (optional): New description for the bookmark\n\n2. Data Validation:\n   - Validate bookmarkId:\n     a. Check if bookmarkId is provided\n     b. Verify bookmarkId is a positive integer\n     c. IF validation fails, THEN return error message \"Invalid bookmark identifier\"\n   - Validate isPublicVisible:\n     a. Ensure isPublicVisible is a boolean value\n     b. IF validation fails, THEN return error message \"Visibility setting must be true or false\"\n   - Validate title:\n     a. Check if title is provided\n     b. IF title is not provided, THEN return error message \"Title is required\"\n     c. Check title doesn't exceed maximum allowed length\n     d. IF validation fails, THEN return error message \"Title exceeds maximum length\"\n   - Validate description:\n     a. IF description is provided, THEN check it doesn't exceed maximum allowed length\n     b. IF validation fails, THEN return error message \"Description exceeds maximum length\"\n\n3. Business Rule Processing:\n   - Verify bookmark exists:\n     a. Check if a bookmark with the provided bookmarkId exists in the system\n     b. IF bookmark doesn't exist, THEN return error message \"Bookmark not found\"\n   - Verify user permissions:\n     a. Retrieve the user ID associated with the bookmark\n     b. Compare with the ID of the current user\n     c. IF current user is not the owner of the bookmark, THEN return error message \"Not authorized to update this bookmark\"\n   - Check system state:\n     a. Verify the bookmarks feature is enabled in the system\n     b. Verify the user is not anonymous (guest user)\n     c. IF bookmarks feature is disabled, THEN return error message \"Bookmark feature is currently disabled\"\n     d. IF user is anonymous, THEN return error message \"Anonymous users cannot update bookmarks\"\n\n4. Core Operation Execution:\n   - Retrieve the existing bookmark:\n     a. Load the current bookmark data using the bookmarkId\n     b. Verify the bookmark belongs to the current user\n   - Prepare update operation:\n     a. Create update parameters with the provided values\n     b. Sanitize the title and description inputs to prevent security issues\n   - Execute bookmark update:\n     a. Update the bookmark record with new values\n     b. Set public visibility flag based on isPublicVisible input\n     c. Update title with the sanitized title input\n     d. Update description with the sanitized description input\n   - Handle potential failures:\n     a. IF update operation fails, THEN log error details\n     b. Roll back any partial changes\n     c. Return error message \"Failed to update bookmark\"\n\n5. Response Generation:\n   - For successful update:\n     a. Generate success response with confirmation message\n     b. Include updated bookmark details in the response\n     c. Return success message \"Bookmark updated successfully\"\n   - For failed update:\n     a. Include specific error details in the response\n     b. Provide guidance on how to resolve the issue\n     c. Return appropriate error message",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Bookmark ID must be a positive integer",
+    "Bookmark must exist in the system",
+    "User must be the owner of the bookmark",
+    "Public visibility must be a boolean value",
+    "Title must not be empty",
+    "Title must not exceed maximum allowed length",
+    "Description must not exceed maximum allowed length",
+    "User must be logged in (not anonymous)",
+    "Bookmarks feature must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "relationId": "number",
+      "relationType": "number",
+      "isPublicVisible": "boolean",
+      "title": "string",
+      "description": "string"
+    }
+  }
+}

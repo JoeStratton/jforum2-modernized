@@ -1,0 +1,42 @@
+{
+  "featureName": "ManageContentType",
+  "description": "Controls HTTP response content type settings for different forum outputs.",
+  "inputValues": [
+    "contentType-string-ResponseSettings",
+    "isCustomContent-boolean-ResponseSettings",
+    "enableRollback-boolean-TransactionSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. contentType (string, mandatory): The MIME type to set for the HTTP response\n     b. isCustomContent (boolean, optional): Flag to indicate if response contains custom/binary content\n     c. enableRollback (boolean, optional): Flag to control transaction behavior\n\n2. Data Validation:\n   - Validate contentType input:\n     a. IF contentType is null or empty THEN\n        i. Generate error message: \"Content type must be specified\"\n     b. ELSE\n        i. Verify contentType follows valid MIME type format\n        ii. IF invalid format THEN generate error: \"Invalid content type format\"\n   - Validate isCustomContent input:\n     a. IF isCustomContent is null THEN\n        i. Set default value to false\n   - Validate enableRollback input:\n     a. IF enableRollback is null THEN\n        i. Set default value to false\n\n3. Business Rule Processing:\n   - Check current system state:\n     a. Verify execution context exists\n        i. IF execution context does not exist THEN\n           1. Create new execution context\n           2. Set it as current context\n   - Check content type compatibility:\n     a. IF isCustomContent is true THEN\n        i. Verify contentType is appropriate for binary data\n        ii. IF incompatible THEN generate warning: \"Content type may be incompatible with binary data\"\n   - Check transaction state:\n     a. IF enableRollback is true THEN\n        i. Verify database connection supports transactions\n        ii. IF transactions not supported THEN generate warning: \"Rollback requested but transactions not supported\"\n\n4. Core Operation Execution:\n   - Set content type in execution context:\n     a. Store contentType value in current execution context\n   - Configure custom content flag:\n     a. Set isCustomContent flag in current execution context\n   - Configure transaction behavior:\n     a. IF enableRollback is true THEN\n        i. Mark current transaction for rollback\n   - Apply content type to HTTP response:\n     a. Get current response object from execution context\n     b. Set content type on response object\n     c. IF operation fails THEN\n        i. Log error: \"Failed to set content type on response\"\n        ii. Generate appropriate error response\n\n5. Response Generation:\n   - For successful operation:\n     a. Return success status\n     b. Include confirmation that content type was set\n     c. Include current content type value\n   - For failed operation:\n     a. Return error status\n     b. Include specific error message\n     c. Include guidance for resolving the issue\n     d. Log detailed error information for system administrators",
+  "databaseEntities": [],
+  "validationRules": [
+    "Content type must not be empty",
+    "Content type must follow valid MIME type format",
+    "Custom content flag must be a boolean value",
+    "Rollback flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ResponseSettings": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "MIME type for the HTTP response"
+        },
+        "isCustomContent": {
+          "type": "boolean",
+          "description": "Flag indicating if response contains custom/binary content"
+        }
+      }
+    },
+    "TransactionSettings": {
+      "type": "object",
+      "properties": {
+        "enableRollback": {
+          "type": "boolean",
+          "description": "Flag to control transaction behavior"
+        }
+      }
+    }
+  }
+}

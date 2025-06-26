@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "LoadInternationalizationResources",
+    "description": "Loads internationalization resource files for language support"
+  },
+  {
+    "featureName": "GetLocalizedMessage",
+    "description": "Retrieves internationalized messages with optional parameter formatting"
+  },
+  {
+    "featureName": "ChangeBoardDefaultLanguage",
+    "description": "Updates the default language used throughout the forum"
+  },
+  {
+    "featureName": "CheckLanguageAvailability",
+    "description": "Verifies if a specific language is loaded or exists in the system"
+  },
+  {
+    "featureName": "GetUserLanguagePreference",
+    "description": "Determines the appropriate language based on user session settings"
+  },
+  {
+    "featureName": "MonitorLanguageFileChanges",
+    "description": "Watches for changes in language files and reloads them automatically"
+  }
+]

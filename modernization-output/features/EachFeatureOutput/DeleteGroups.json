@@ -1,0 +1,21 @@
+{
+  "featureName": "DeleteGroups",
+  "description": "Removes selected user groups with validation to prevent deletion of essential groups.",
+  "inputValues": [
+    "group_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect group_id values from the selection list\n   - System identifies which groups are selected for deletion\n   - All selected group IDs are gathered as an array of values\n\n2. Data Validation:\n   - Verify that at least one group is selected for deletion\n     * IF no groups are selected THEN\n       - Skip deletion process\n       - Return to group listing view\n     * END IF\n   - For each selected group, validate deletion eligibility:\n     * Check if the group is an essential system group\n     * Verify the group is not currently assigned to users\n     * Confirm the group doesn't have special permissions that cannot be removed\n\n3. Business Rule Processing:\n   - Create a list to track any errors during the deletion process\n   - For each group ID in the selection:\n     * Verify if the group can be safely deleted\n       - Check if group has dependent relationships\n       - Ensure group is not required by the system\n     * IF group cannot be deleted THEN\n       - Add error message to the error list with group identifier\n       - Continue to next group in selection\n     * END IF\n\n4. Core Operation Execution:\n   - For each group that passed validation:\n     * Remove group permissions and security settings\n     * Delete group associations with users\n     * Remove group from the system\n     * Update any related caches or repositories\n   - IF any errors occurred during deletion THEN\n     * Store error messages for display\n   * END IF\n\n5. Response Generation:\n   - IF errors exist THEN\n     * Display list of groups that could not be deleted with reasons\n   * END IF\n   - Refresh and display the updated group listing\n   - Provide confirmation of successfully deleted groups",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_moderator_groups"
+  ],
+  "validationRules": [
+    "At least one group must be selected for deletion",
+    "Essential system groups cannot be deleted",
+    "Groups with active user assignments cannot be deleted",
+    "Groups with special permissions may be restricted from deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

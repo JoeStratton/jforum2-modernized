@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "ListGroups",
+    "description": "Displays a list of all user groups in a tree structure"
+  },
+  {
+    "featureName": "InsertGroup",
+    "description": "Provides interface for creating a new user group"
+  },
+  {
+    "featureName": "EditGroup",
+    "description": "Allows modification of an existing user group's details"
+  },
+  {
+    "featureName": "SaveGroupChanges",
+    "description": "Persists changes to an existing user group"
+  },
+  {
+    "featureName": "DeleteGroups",
+    "description": "Removes selected user groups with validation to prevent deletion of essential groups"
+  },
+  {
+    "featureName": "CreateNewGroup",
+    "description": "Saves a newly created user group to the database"
+  },
+  {
+    "featureName": "ManageGroupPermissions",
+    "description": "Displays and configures security permissions for a specific user group"
+  },
+  {
+    "featureName": "SaveGroupPermissions",
+    "description": "Persists permission changes for a user group and refreshes security repositories"
+  }
+]

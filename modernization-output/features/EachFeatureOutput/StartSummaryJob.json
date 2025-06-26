@@ -1,0 +1,102 @@
+{
+  "featureName": "StartSummaryJob",
+  "description": "Initializes scheduled job for sending post summary emails to users.",
+  "inputValues": [
+    "summaryFrequency-string-ScheduleConfig",
+    "summaryTimeOfDay-string-ScheduleConfig",
+    "summaryEnabled-boolean-ScheduleConfig",
+    "summaryRecipients-object-RecipientConfig",
+    "cronExpression-string-ScheduleConfig",
+    "quartzConfigFile-string-SystemConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following configuration parameters:\n     1.1. summaryFrequency (mandatory): Frequency for sending summary emails (daily, weekly, monthly)\n     1.2. summaryTimeOfDay (mandatory): Time of day to send the summary (HH:MM format)\n     1.3. summaryEnabled (mandatory): Flag indicating if summary job should be active\n     1.4. summaryRecipientConfig (mandatory): Configuration for determining which users receive summaries\n     1.5. cronExpression (optional): Custom scheduling expression for advanced timing control\n     1.6. quartzConfigFile (optional): Path to scheduler configuration file\n   - System will use default values if specific parameters are not provided\n\n2. Data Validation:\n   2.1. Validate summaryFrequency:\n      - MUST be one of the allowed values: \"daily\", \"weekly\", or \"monthly\"\n      - IF invalid, set to default \"daily\" and log warning\n   2.2. Validate summaryTimeOfDay:\n      - MUST follow HH:MM format (24-hour)\n      - Hours MUST be between 00-23\n      - Minutes MUST be between 00-59\n      - IF invalid, set to default \"00:00\" and log warning\n   2.3. Validate summaryEnabled:\n      - MUST be boolean type\n      - IF not specified, default to false\n   2.4. Validate summaryRecipientConfig:\n      - MUST contain valid selection criteria for users\n      - MUST specify at least one recipient group or selection method\n      - IF invalid, use system default (all active users) and log warning\n   2.5. Validate cronExpression (if provided):\n      - MUST follow proper cron expression format\n      - MUST represent a valid schedule\n      - IF invalid, log error and use standard schedule based on frequency/time\n   2.6. Validate quartzConfigFile (if provided):\n      - MUST be a valid file path\n      - File MUST exist and be readable\n      - IF invalid, use system default configuration file\n\n3. Business Rule Processing:\n   3.1. Check system readiness:\n      - Verify email functionality is properly configured\n      - Verify database connection is available\n      - Verify scheduler framework is available\n      - IF any check fails, log error and abort job initialization\n   3.2. Check for existing summary job:\n      - IF job already exists:\n        - Determine if reconfiguration is needed\n        - IF reconfiguration needed, stop existing job\n        - ELSE exit with success status\n   3.3. Verify user notification preferences are accessible\n      - Ensure user preference tables are available\n      - IF not available, log warning and continue with default settings\n   3.4. Check for job scheduling conflicts:\n      - Verify the requested schedule doesn't conflict with other critical system jobs\n      - IF conflict detected, adjust timing slightly and log warning\n\n4. Core Operation Execution:\n   4.1. Create summary job scheduler:\n      - Initialize scheduler component using configuration file\n      - Configure scheduler with provided frequency and time parameters\n      - IF custom cronExpression provided, use it instead of standard schedule\n      - Set up error handling and retry mechanisms\n   4.2. Register summary job with the system:\n      - Create job definition with all required parameters\n      - Associate job with the scheduler\n      - Configure job to use the recipient configuration\n      - Assign unique identifier to the job\n   4.3. Activate the scheduler:\n      - IF summaryEnabled is true:\n        - Start the scheduler immediately\n        - Schedule first execution based on configuration\n        - Log successful activation with next execution time\n      - ELSE:\n        - Register the job but keep it in inactive state\n        - Log that job is registered but inactive\n   4.4. Store configuration:\n      - Save all job configuration to persistent storage\n      - Ensure configuration survives system restarts\n      - Record last start time and status\n\n5. Response Generation:\n   5.1. Generate success response:\n      - Include job identifier\n      - Include first scheduled execution time\n      - Include summary of configuration parameters\n      - Include status (active/inactive)\n   5.2. Handle potential errors:\n      - For configuration errors: return specific validation messages\n      - For system errors: return appropriate error code and message\n      - Include troubleshooting information when needed\n      - Provide suggestions for resolving configuration issues\n   5.3. Log job initialization:\n      - Record detailed information about job configuration\n      - Log success or failure status\n      - Include performance metrics of initialization process",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Summary frequency must be one of: daily, weekly, or monthly",
+    "Summary time must be in valid HH:MM format (24-hour)",
+    "Summary enabled flag must be a boolean value",
+    "Summary recipient configuration must specify at least one valid selection method",
+    "Email functionality must be properly configured before enabling summary job",
+    "Database connection must be available to initialize the job",
+    "Cron expression must follow valid format if provided",
+    "Scheduler configuration file must exist and be readable if specified",
+    "Summary job must not already be running when starting a new instance",
+    "System must have sufficient resources to run the scheduled job"
+  ],
+  "dbSeedingOperations": [
+    "Insert default summary job configuration if not present",
+    "Create default scheduler entry in system configuration table"
+  ],
+  "schema": {
+    "RecipientConfig": {
+      "type": "object",
+      "properties": {
+        "userGroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of user groups to receive summaries"
+        },
+        "activityThreshold": {
+          "type": "object",
+          "properties": {
+            "minDays": {
+              "type": "number",
+              "description": "Minimum days of user activity to qualify for summary"
+            },
+            "maxDays": {
+              "type": "number",
+              "description": "Maximum days of user inactivity to still receive summary"
+            }
+          }
+        },
+        "includeAllUsers": {
+          "type": "boolean",
+          "description": "Flag to include all active users regardless of other criteria"
+        },
+        "excludedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of users explicitly excluded from receiving summaries"
+        }
+      }
+    },
+    "ScheduleConfig": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "description": "How often the summary should be sent"
+        },
+        "timeOfDay": {
+          "type": "string",
+          "pattern": "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "Time of day to send in HH:MM format"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the summary job is active"
+        },
+        "cronExpression": {
+          "type": "string",
+          "description": "Custom cron expression for advanced scheduling"
+        }
+      }
+    }
+  }
+}

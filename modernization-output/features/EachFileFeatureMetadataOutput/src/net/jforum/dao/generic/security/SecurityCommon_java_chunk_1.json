@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ExecuteAddRole",
+    "description": "Executes role addition for users or groups with associated role values"
+  },
+  {
+    "featureName": "LoadRoles",
+    "description": "Processes database results into a structured collection of roles with their values"
+  },
+  {
+    "featureName": "GroupIdAsString",
+    "description": "Converts an array of group IDs into a comma-separated string representation"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "featureName": "SubscribeUsers",
+  "description": "Subscribes multiple users to a topic for notifications.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "users-object-UserList"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the topic ID (required, numeric identifier)\n   - Collect the list of users to subscribe (required, list of user objects)\n   - Each user object must contain at minimum a user ID\n\n2. Data Validation\n   - Validate topic ID\n     - Verify topic ID is a positive integer\n     - Verify topic ID exists in the system\n     - IF topic ID is invalid or not found, THEN generate an error message\n   - Validate user list\n     - Verify user list is not empty\n     - Verify each user in the list has a valid user ID\n     - IF user list is empty, THEN generate an error message\n     - IF any user ID is invalid, THEN generate an error message\n\n3. Business Rule Processing\n   - Check topic status\n     - Verify the topic is active and not locked\n     - IF topic is locked or inactive, THEN generate an error message\n   - Check user permissions\n     - Verify each user has permission to subscribe to topics\n     - IF any user lacks permission, THEN exclude that user and log a warning\n   - Check for existing subscriptions\n     - For each user, check if they are already subscribed to the topic\n     - IF user is already subscribed, THEN skip that user and continue with others\n\n4. Core Operation Execution\n   - Create subscription records\n     - FOR each valid user in the list:\n       - IF user is not already subscribed to the topic, THEN:\n         - Create a new subscription record linking the user to the topic\n         - Set the initial read status for the subscription\n         - Record the subscription timestamp\n   - Update notification preferences\n     - FOR each successfully subscribed user:\n       - Update the user's notification settings for this topic if specified\n       - Set default notification method based on user preferences\n\n5. Response Generation\n   - Generate success response\n     - Include the number of users successfully subscribed\n     - Include the topic information (ID, title)\n     - Include list of users that were already subscribed (if any)\n   - Generate error response (if needed)\n     - Include specific error messages for validation failures\n     - Include list of users that could not be subscribed with reasons\n     - Provide guidance on how to resolve the issues",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Topic ID must reference an existing topic",
+    "User list must not be empty",
+    "Each user ID must be a positive integer",
+    "Each user ID must reference an existing user",
+    "Topic must be active and not locked",
+    "Users must have permission to subscribe to topics"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "User identifier"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "featureName": "NotModeratedYetNotification",
+  "description": "Shows notification that content has not been moderated yet.",
+  "inputValues": [
+    "postId-number-Post",
+    "topicId-number-Topic",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (number): Identifier of the post being viewed\n   - Collect topicId (number): Identifier of the topic containing the post\n   - Collect forumId (number): Identifier of the forum containing the topic\n   - System will determine current user session information\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided and is a valid number\n     b. If invalid, display appropriate error message\n   - Validate topicId:\n     a. Check if topicId is provided and is a valid number\n     b. If invalid, display appropriate error message\n   - Validate forumId:\n     a. Check if forumId is provided and is a valid number\n     b. If invalid, display appropriate error message\n   - Validate user permissions:\n     a. Check if current user has permission to view the specified forum\n     b. If not authorized, display access denied message\n\n3. Business Rule Processing:\n   - Check moderation status:\n     a. Retrieve post information from database\n     b. Check if post requires moderation\n     c. IF post is marked for moderation AND post has not been approved yet:\n        i. Proceed to notification display\n     d. ELSE:\n        i. Redirect to normal post view\n   - Check user role:\n     a. Determine if current user is a moderator or administrator\n     b. IF user is moderator or administrator:\n        i. Include additional context information about moderation options\n\n4. Core Operation Execution:\n   - Prepare notification message:\n     a. Generate appropriate message indicating content awaits moderation\n     b. Include any relevant timestamps or status information\n   - Set template for display:\n     a. Select the not-moderated-yet template\n     b. Populate template with notification message\n   - Record view activity:\n     a. Log that user has viewed the moderation notification\n     b. Update any relevant tracking metrics\n\n5. Response Generation:\n   - Display notification page:\n     a. Show message explaining that content has not been moderated yet\n     b. IF user is original content creator:\n        i. Include estimated wait time for moderation if available\n     c. Provide navigation options:\n        i. Return to forum view\n        ii. Return to topic list\n   - Include appropriate next steps:\n     a. For regular users: options to browse other content\n     b. For moderators: link to moderation queue if applicable",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Post ID must be a valid number if provided",
+    "Topic ID must be a valid number if provided",
+    "Forum ID must be a valid number if provided",
+    "User must have permission to view the specified forum",
+    "Post must exist in the database",
+    "Post must be marked for moderation to show this notification"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "time": "date",
+      "isModerated": "boolean",
+      "isApproved": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number",
+      "isModerated": "boolean",
+      "lastPostId": "number",
+      "firstPostId": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "isModerated": "boolean"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "LoadRoles",
+    "description": "Loads security roles for specified group IDs with MySQL 3.23 compatibility"
+  },
+  {
+    "featureName": "DeleteAllRoles",
+    "description": "Removes all security roles associated with a specific group ID"
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "featureName": "ReadBodyDataFromMultipartStream",
+  "description": "Reads body data from current encapsulation and writes contents to output stream.",
+  "inputValues": [
+    "outputStream-object-OutputStream",
+    "buffer-object-ByteArray",
+    "head-number-Integer",
+    "tail-number-Integer",
+    "keepRegion-number-Integer",
+    "boundary-object-ByteArray",
+    "boundaryLength-number-Integer",
+    "input-object-InputStream"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the output stream where data will be written\n   - Access the internal buffer containing data\n   - Use current head and tail positions in the buffer\n   - Access boundary information for detecting end of data\n   - All inputs are required for operation\n\n2. Data Validation:\n   - Validate that output stream is not null\n     * IF output stream is null THEN abort operation\n   - Validate that buffer is properly initialized\n     * IF buffer is null or empty THEN abort operation\n   - Validate that head and tail positions are valid\n     * IF head is negative THEN abort operation\n     * IF tail is less than head THEN abort operation\n     * IF tail exceeds buffer length THEN abort operation\n\n3. Business Rule Processing:\n   - Initialize tracking variables:\n     * Set 'done' flag to false\n     * Set 'total' bytes counter to zero\n   - Verify boundary information is valid\n     * IF boundary is null or empty THEN abort operation\n     * IF boundaryLength is invalid THEN abort operation\n\n4. Core Operation Execution:\n   - WHILE not done:\n     * Search for boundary separator in current buffer\n     * IF separator found THEN:\n       - Calculate remaining data before boundary\n       - Write remaining data to output stream\n       - Update total bytes counter\n       - Update head position to separator position\n       - Set done flag to true\n     * ELSE (no separator found):\n       - Determine padding amount to keep in buffer\n       - Write data from head to (tail - padding) to output stream\n       - Update total bytes counter\n       - Move remaining padding data to beginning of buffer\n       - Refill buffer with new data from input stream\n       - IF end of input stream reached unexpectedly THEN:\n         + Write remaining padding data to output stream\n         + Update total bytes counter\n         + Throw malformed stream exception\n   - Flush output stream to ensure all data is written\n\n5. Response Generation:\n   - Return total number of bytes written to output stream\n   - IF any errors occurred during processing THEN:\n     * Throw appropriate exception with descriptive message\n     * For unexpected end of stream, throw MalformedStreamException\n     * For I/O errors, propagate IOException",
+  "databaseEntities": [],
+  "validationRules": [
+    "Output stream must not be null",
+    "Buffer must be properly initialized",
+    "Head position must be non-negative",
+    "Tail position must be greater than or equal to head position",
+    "Tail position must not exceed buffer length",
+    "Boundary information must be valid"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "OutputStream": {
+      "type": "object",
+      "description": "Stream where data will be written",
+      "methods": [
+        "write",
+        "flush"
+      ]
+    },
+    "ByteArray": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      },
+      "description": "Array of bytes"
+    },
+    "InputStream": {
+      "type": "object",
+      "description": "Stream from which data is read",
+      "methods": [
+        "read"
+      ]
+    }
+  }
+}

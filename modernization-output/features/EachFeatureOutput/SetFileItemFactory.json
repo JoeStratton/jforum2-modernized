@@ -1,0 +1,31 @@
+{
+  "featureName": "SetFileItemFactory",
+  "description": "Sets the factory class to use when creating file items for file uploads.",
+  "inputValues": [
+    "factory-object-FileItemFactory"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the FileItemFactory object to be set\n     - factory: The factory class for creating new file items\n     - This input is mandatory and must be provided by the caller\n\n2. Data Validation:\n   - Validate the factory input\n     - Check if the factory object is not null\n     - IF factory is null THEN\n       - Generate an error indicating that a valid factory must be provided\n       - Abort the operation and return appropriate error message\n     - END IF\n     - Verify that the factory object is of the correct type\n     - IF factory is not of the correct type THEN\n       - Generate a type mismatch error\n       - Abort the operation and return appropriate error message\n     - END IF\n\n3. Business Rule Processing:\n   - Check system state for factory assignment\n     - Determine if a factory is already set\n     - IF a factory is already set THEN\n       - Prepare for replacement of the existing factory\n     - ELSE\n       - Prepare for initial assignment of the factory\n     - END IF\n     - Verify that the system is in a state where changing the factory is allowed\n     - IF system state does not allow factory change THEN\n       - Generate an error indicating that factory cannot be changed in the current state\n       - Abort the operation and return appropriate error message\n     - END IF\n\n4. Core Operation Execution:\n   - Assign the provided factory to the file upload system\n     - Store the factory reference in the appropriate system variable\n     - Update any dependent components that need to be aware of the factory change\n     - IF any errors occur during assignment THEN\n       - Revert to the previous factory if one existed\n       - Generate an error indicating the failure reason\n       - Abort the operation and return appropriate error message\n     - END IF\n\n5. Response Generation:\n   - Generate success response\n     - Indicate that the factory was successfully set\n     - Include confirmation that the system is now using the new factory\n     - Return success status to the caller\n   - IF operation was not successful THEN\n     - Include detailed error information in the response\n     - Provide guidance on how to resolve the issue\n     - Return error status to the caller\n   - END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Factory object must not be null",
+    "Factory object must be of the correct type",
+    "System must be in a state where changing the factory is allowed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItemFactory": {
+      "type": "object",
+      "description": "Factory interface for creating file items",
+      "properties": {
+        "factoryType": {
+          "type": "string",
+          "description": "Type of factory implementation"
+        },
+        "configuration": {
+          "type": "object",
+          "description": "Configuration settings for the factory"
+        }
+      }
+    }
+  }
+}

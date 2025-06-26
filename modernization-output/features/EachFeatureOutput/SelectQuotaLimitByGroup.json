@@ -1,0 +1,42 @@
+{
+  "featureName": "SelectQuotaLimitByGroup",
+  "description": "Retrieves the quota limit associated with a specific group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. groupId (number, mandatory): The unique identifier of the group\n\n2. Data Validation\n   - Validate the groupId input:\n     a. Check if groupId is provided\n        IF groupId is missing or null THEN\n           Generate an error message: \"Group ID is required\"\n           Exit process\n     b. Verify groupId is a positive integer\n        IF groupId is not a positive integer THEN\n           Generate an error message: \"Group ID must be a positive integer\"\n           Exit process\n\n3. Business Rule Processing\n   - Verify system state requirements:\n     a. Check if the quota limit system is active\n        IF quota limit system is not active THEN\n           Generate a message: \"Quota limit system is not active\"\n           Exit process\n     b. Verify the group exists\n        IF group with provided groupId does not exist THEN\n           Generate an error message: \"Group not found\"\n           Exit process\n\n4. Core Operation Execution\n   - Retrieve quota limit information:\n     a. Search for quota limit record associated with the specified group ID\n     b. IF quota limit record is found THEN\n          Extract quota limit details including:\n          - Quota limit ID\n          - Description\n          - Size limit\n          - Quota type\n     c. IF no quota limit record is found THEN\n          Set quota limit result to null/empty\n\n5. Response Generation\n   - Prepare the response:\n     a. IF quota limit was found THEN\n          Return quota limit information including:\n          - Quota limit ID\n          - Description\n          - Size limit\n          - Quota type\n     b. IF quota limit was not found THEN\n          Return appropriate indication that no quota limit exists for the group\n     c. IF any errors occurred during processing THEN\n          Return error details with appropriate message",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Group ID must be provided",
+    "Group ID must be a positive integer",
+    "Group must exist in the system",
+    "Quota limit system must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the quota limit"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the quota limit"
+        },
+        "size": {
+          "type": "integer",
+          "description": "Size limit value"
+        },
+        "type": {
+          "type": "integer",
+          "description": "Type of quota limit"
+        }
+      }
+    }
+  }
+}

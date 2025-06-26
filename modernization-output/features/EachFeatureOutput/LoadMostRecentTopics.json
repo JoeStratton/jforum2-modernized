@@ -1,0 +1,56 @@
+{
+  "featureName": "LoadMostRecentTopics",
+  "description": "Loads the most recent topics from the database and adds them to the cache.",
+  "inputValues": [
+    "limit-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Retrieve system configuration for topic cache settings\n     - Determine if topic caching is enabled\n     - Get the configured limit for recent topics\n   - No user inputs required as this is a system operation\n\n2. Data Validation\n   - Validate system configuration\n     - IF topic cache is disabled THEN exit the process\n     - IF limit value is not a positive integer THEN use default value\n   - Check cache state\n     - IF cache engine is not initialized THEN report system error\n\n3. Business Rule Processing\n   - Determine cache refresh conditions\n     - IF cache is empty OR cache does not exist THEN proceed with loading\n     - IF forced refresh is requested THEN proceed regardless of current cache state\n   - Verify data access permissions\n     - Ensure system has proper access to topic data\n     - Verify cache write permissions\n\n4. Core Operation Execution\n   - Connect to data source\n     - Obtain data access object for topics\n     - Prepare query parameters including limit value\n   - Retrieve most recent topics\n     - Query database for topics ordered by creation date\n     - Limit results to configured maximum number\n   - Process retrieved topics\n     - Create a new linked list to store the topics\n     - Add all retrieved topics to the list\n   - Update cache\n     - Store the linked list in the cache under appropriate key\n     - Set cache expiration according to system configuration\n   - Handle any failures\n     - IF database connection fails THEN log error and return empty list\n     - IF cache update fails THEN log warning but return retrieved data\n\n5. Response Generation\n   - Prepare response\n     - Return the list of most recent topics\n     - Include metadata about cache status\n   - Log operation completion\n     - Record number of topics loaded\n     - Record timestamp of cache refresh",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic cache must be enabled in system configuration",
+    "Recent topics limit must be a positive integer",
+    "Cache engine must be properly initialized",
+    "Data access objects must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Identifier of the forum this topic belongs to"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the topic was created"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date of the last post in this topic"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type classification of the topic"
+        }
+      },
+      "required": [
+        "id",
+        "forumId",
+        "title",
+        "creationDate"
+      ]
+    }
+  }
+}

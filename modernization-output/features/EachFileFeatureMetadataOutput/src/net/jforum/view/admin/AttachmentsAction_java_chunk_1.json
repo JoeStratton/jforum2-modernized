@@ -1,0 +1,50 @@
+[
+  {
+    "featureName": "ConfigureAttachmentSettings",
+    "description": "Displays and manages attachment configuration settings for the forum"
+  },
+  {
+    "featureName": "SaveAttachmentConfigurations",
+    "description": "Saves updated attachment configuration settings"
+  },
+  {
+    "featureName": "ManageQuotaLimits",
+    "description": "Displays and manages attachment quota limits for user groups"
+  },
+  {
+    "featureName": "CreateQuotaLimit",
+    "description": "Creates a new quota limit for file attachments"
+  },
+  {
+    "featureName": "UpdateQuotaLimits",
+    "description": "Updates or deletes existing quota limits for attachments"
+  },
+  {
+    "featureName": "ManageExtensionGroups",
+    "description": "Displays and manages attachment extension groups"
+  },
+  {
+    "featureName": "CreateExtensionGroup",
+    "description": "Creates a new extension group for file attachments"
+  },
+  {
+    "featureName": "UpdateExtensionGroups",
+    "description": "Updates or deletes existing attachment extension groups"
+  },
+  {
+    "featureName": "ManageExtensions",
+    "description": "Displays and manages individual file extensions for attachments"
+  },
+  {
+    "featureName": "CreateExtension",
+    "description": "Creates a new file extension entry for attachments"
+  },
+  {
+    "featureName": "UpdateExtensions",
+    "description": "Updates or deletes existing file extension entries"
+  },
+  {
+    "featureName": "SaveGroupQuotas",
+    "description": "Assigns quota limits to specific user groups"
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "featureName": "ListUsersByGroup",
+  "description": "Retrieves users belonging to a specific group with pagination.",
+  "inputValues": [
+    "groupId-number-Group",
+    "startIndex-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. groupId (number): The identifier of the group to retrieve users from\n     b. startIndex (number): The position to start retrieving users from\n     c. count (number): The maximum number of users to retrieve\n\n2. Data Validation:\n   - Validate groupId:\n     a. IF groupId is null or undefined THEN\n        i. Return error: \"Group ID is required\"\n     b. IF groupId is not a positive integer THEN\n        i. Return error: \"Group ID must be a positive integer\"\n   - Validate pagination parameters:\n     a. IF startIndex is null or undefined THEN\n        i. Set startIndex to default value (0)\n     b. IF startIndex is not a non-negative integer THEN\n        i. Return error: \"Start index must be a non-negative integer\"\n     c. IF count is null or undefined THEN\n        i. Set count to default value (10)\n     d. IF count is not a positive integer THEN\n        i. Return error: \"Count must be a positive integer\"\n     e. IF count exceeds maximum allowed page size THEN\n        i. Set count to maximum allowed page size\n\n3. Business Rule Processing:\n   - Verify group existence:\n     a. Check if the specified group exists\n     b. IF group does not exist THEN\n        i. Return error: \"Group not found\"\n   - Verify user access permissions:\n     a. Check if the current user has permission to view users in this group\n     b. IF user does not have permission THEN\n        i. Return error: \"Insufficient permissions to view users in this group\"\n\n4. Core Operation Execution:\n   - Retrieve total count of users in the group:\n     a. Query the total number of users belonging to the specified group\n     b. Store this count for pagination metadata\n   - Retrieve paginated user list:\n     a. Query users belonging to the specified group\n     b. Apply pagination using startIndex and count parameters\n     c. For each user retrieved:\n        i. Include basic user information (id, username, registration date)\n        ii. Exclude sensitive information (password, email, etc.)\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include list of users with their information\n     b. Include pagination metadata:\n        i. Total number of users in the group\n        ii. Current page information\n        iii. Whether more users are available\n     c. Include group information summary\n   - Handle empty results:\n     a. IF no users found in the group THEN\n        i. Return empty list with appropriate metadata\n        ii. Include message: \"No users found in the specified group\"",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a positive integer",
+    "Start index must be a non-negative integer",
+    "Count must be a positive integer",
+    "Group must exist in the system",
+    "User must have permission to view users in the specified group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "registrationDate": {
+          "type": "date"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "totalUsers": {
+          "type": "number"
+        },
+        "startIndex": {
+          "type": "number"
+        },
+        "count": {
+          "type": "number"
+        },
+        "hasMore": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

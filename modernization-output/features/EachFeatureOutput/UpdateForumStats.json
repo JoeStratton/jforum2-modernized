@@ -1,0 +1,65 @@
+{
+  "featureName": "UpdateForumStats",
+  "description": "Updates forum statistics when a new post is added to a topic.",
+  "inputValues": [
+    "topic-object-Topic",
+    "user-object-User",
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Topic object with forum ID and topic details\n   - Collect User object with user information\n   - Collect Post object with post content and timestamp\n   - System will use the current date/time format from system configuration\n\n2. Data Validation:\n   - Validate Topic object:\n      * Ensure topic ID is valid and greater than zero\n      * Verify forum ID exists and is greater than zero\n      * Confirm topic replies count is valid and not negative\n   - Validate User object:\n      * Ensure user ID is valid and greater than zero\n      * Verify username is not empty\n   - Validate Post object:\n      * Ensure post ID is valid and greater than zero\n      * Verify post timestamp is valid and not null\n   - IF any validation fails, THEN:\n      * Generate appropriate error message\n      * Abort the update process\n\n3. Business Rule Processing:\n   - Verify forum exists in the system:\n      * Retrieve forum using topic's forum ID\n      * IF forum not found, THEN abort operation with error message\n   - Check user permissions:\n      * Verify user has permission to post in the specified forum\n      * IF user lacks permission, THEN abort operation with error message\n   - Verify category accessibility:\n      * Check if the forum's category is accessible\n      * IF category not accessible, THEN abort operation with error message\n\n4. Core Operation Execution:\n   - Retrieve current forum information:\n      * Get forum by ID from the topic\n      * Retrieve the forum's last post information\n   - Create or update last post information:\n      * IF last post info doesn't exist, THEN create new last post info object\n      * Set post ID, post date, and post timestamp\n      * Set topic ID and topic replies count\n      * Set user ID and username\n   - Update forum statistics:\n      * IF topic replies count is zero (new topic), THEN:\n         > Increment forum's total topics count by 1\n      * Increment forum's total posts count by 1\n   - Update category information:\n      * Retrieve the category containing the forum\n      * Update the forum within the category\n      * Refresh the category data\n\n5. Response Generation:\n   - Success response:\n      * Confirmation that forum statistics were updated successfully\n      * Updated forum information including new post counts and last post details\n   - Error response:\n      * Specific error message indicating what validation or business rule failed\n      * Suggestion for corrective action if applicable",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Topic ID must be greater than zero",
+    "Forum ID must be greater than zero",
+    "User ID must be greater than zero",
+    "Post ID must be greater than zero",
+    "Username must not be empty",
+    "Post timestamp must be valid",
+    "Topic replies count must not be negative",
+    "Forum must exist in the system",
+    "User must have permission to post in the forum",
+    "Forum's category must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "totalReplies": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "Post": {
+      "id": "number",
+      "time": "date"
+    },
+    "LastPostInfo": {
+      "postId": "number",
+      "postDate": "string",
+      "postTimeMillis": "number",
+      "topicId": "number",
+      "topicReplies": "number",
+      "userId": "number",
+      "username": "string"
+    },
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostInfo": "object"
+    },
+    "Category": {
+      "id": "number",
+      "forums": "array"
+    }
+  }
+}

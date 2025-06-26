@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SelectPrivateMessageById",
+    "description": "Retrieves a private message by its ID with database-specific implementation for SQL Server"
+  }
+]

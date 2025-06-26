@@ -1,0 +1,70 @@
+{
+  "featureName": "VoteOnPoll",
+  "description": "Records a user's vote on a specific poll option.",
+  "inputValues": [
+    "pollId-number-Poll",
+    "optionId-number-PollOption",
+    "userId-number-User",
+    "ipAddress-string-User",
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect pollId (mandatory): Unique identifier for the poll\n   - Collect optionId (mandatory): Identifier for the selected poll option\n   - Collect userId (mandatory): Identifier of the user casting the vote\n   - Collect ipAddress (mandatory): IP address of the user casting the vote\n   - Collect topicId (mandatory): Identifier of the topic containing the poll\n\n2. Data Validation:\n   - Validate pollId:\n     a. Check if pollId is a positive integer\n     b. Verify poll exists in the system\n     c. Generate error if poll not found\n   - Validate optionId:\n     a. Check if optionId is a positive integer\n     b. Verify option belongs to the specified poll\n     c. Generate error if option not found or not associated with poll\n   - Validate userId:\n     a. Check if userId is a positive integer\n     b. Verify user exists in the system\n     c. Generate error if user not found\n   - Validate ipAddress:\n     a. Check if ipAddress is in valid format\n     b. Generate error if format is invalid\n   - Validate topicId:\n     a. Check if topicId is a positive integer\n     b. Verify topic exists in the system\n     c. Verify topic has an associated poll\n     d. Generate error if topic not found or has no poll\n\n3. Business Rule Processing:\n   - Check user authentication status:\n     a. IF user is not logged in THEN\n        i. Generate error indicating authentication required\n   - Check user permissions:\n     a. Verify user has permission to vote on polls\n     b. IF user lacks voting permission THEN\n        i. Generate error indicating insufficient privileges\n   - Check topic status:\n     a. Retrieve topic information using topicId\n     b. IF topic is locked (status = LOCKED) THEN\n        i. Generate error indicating voting not allowed on locked topics\n   - Check voting eligibility:\n     a. IF poll is closed or expired THEN\n        i. Generate error indicating voting is no longer allowed\n     b. IF poll allows only one vote per user THEN\n        i. Check if user has already voted using hasUserVotedOnPoll(pollId, userId)\n        ii. IF user has already voted THEN\n            1. Generate error indicating duplicate vote not allowed\n     c. IF poll restricts votes from same IP address THEN\n        i. Check if IP has already been used for voting using hasUserVotedOnPoll(pollId, ipAddress)\n        ii. IF IP has already been used THEN\n            1. Generate error indicating duplicate vote not allowed from same IP\n\n4. Core Operation Execution:\n   - Record the vote:\n     a. Increment vote count for the selected option in the poll\n     b. Record voting activity with user information:\n        i. Store pollId, optionId, userId, and ipAddress\n        ii. Store timestamp of when vote was cast\n     c. IF any failure occurs during vote recording THEN\n        i. Rollback any partial changes\n        ii. Generate appropriate error message\n\n5. Response Generation:\n   - On successful vote:\n     a. Return confirmation that vote was recorded successfully\n     b. Include updated poll statistics (optional)\n     c. Include information about total votes cast\n     d. Redirect user to the topic page to view updated poll results\n   - On failure:\n     a. Return specific error message explaining why vote could not be recorded\n     b. Include guidance on how to resolve the issue if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_polls",
+    "jforum_poll_options",
+    "jforum_poll_votes",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Poll ID must exist in the system",
+    "Option ID must exist and belong to the specified poll",
+    "User ID must exist in the system",
+    "IP address must be in valid format",
+    "User must not have already voted on this poll if duplicate votes are not allowed",
+    "IP address must not have been used to vote on this poll if IP restriction is enabled",
+    "Poll must be active and not expired",
+    "Topic must not be locked",
+    "User must be logged in to vote",
+    "User must have permission to vote on polls"
+  ],
+  "dbSeedingOperations": [
+    "Ensure poll status types are defined (active, closed, expired)",
+    "Ensure poll configuration options exist (allow multiple votes, restrict by IP)",
+    "Ensure security permissions for poll voting are configured"
+  ],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "topicId": "number",
+      "question": "string",
+      "options": "array",
+      "isActive": "boolean",
+      "expirationDate": "date",
+      "allowMultipleVotes": "boolean",
+      "restrictByIp": "boolean"
+    },
+    "PollOption": {
+      "id": "number",
+      "pollId": "number",
+      "text": "string",
+      "voteCount": "number"
+    },
+    "PollVote": {
+      "pollId": "number",
+      "optionId": "number",
+      "userId": "number",
+      "ipAddress": "string",
+      "voteDate": "date"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number",
+      "voteId": "number",
+      "isVote": "boolean"
+    }
+  }
+}

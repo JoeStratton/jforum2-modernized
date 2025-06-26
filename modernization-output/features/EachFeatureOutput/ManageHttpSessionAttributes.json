@@ -1,0 +1,57 @@
+{
+  "featureName": "ManageHttpSessionAttributes",
+  "description": "Provides session attribute management with get, set and remove operations.",
+  "inputValues": [
+    "attributeName-string-SessionAttribute",
+    "attributeValue-object-AttributeValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - attributeName (string, mandatory): The name identifier for the session attribute\n   - attributeValue (object, optional for get/remove operations): The value to be stored in the session\n   - operationType (string, mandatory): Type of operation to perform (GET, SET, REMOVE)\n\n2. Data Validation:\n   - Validate attributeName:\n     a. Check if attributeName is not null or empty\n     b. Verify attributeName is a valid string format\n     c. Return error if validation fails: \"Attribute name must be provided\"\n   - Validate operationType:\n     a. Verify operationType is one of the allowed values: GET, SET, REMOVE\n     b. Return error if validation fails: \"Invalid operation type specified\"\n   - For SET operation:\n     a. Verify attributeValue is provided\n     b. Return error if validation fails: \"Attribute value must be provided for SET operation\"\n\n3. Business Rule Processing:\n   - Verify session exists and is valid:\n     a. Check if the current session is active and not expired\n     b. IF session is invalid or expired THEN\n        i. Return error: \"Invalid or expired session\"\n     c. ELSE continue processing\n   - Check access permissions:\n     a. Verify current user has permission to access/modify the requested attribute\n     b. IF permission check fails THEN\n        i. Return error: \"Insufficient permissions to access this attribute\"\n     c. ELSE continue processing\n\n4. Core Operation Execution:\n   - SWITCH based on operationType:\n     a. CASE GET:\n        i. Retrieve the attribute value from the session using attributeName\n        ii. IF attribute does not exist THEN\n            - Return null or appropriate default value\n        iii. ELSE return the retrieved attribute value\n     b. CASE SET:\n        i. Store the attributeValue in the session with attributeName as key\n        ii. IF previous value existed THEN\n            - Overwrite the previous value\n        iii. Return confirmation of successful operation\n     c. CASE REMOVE:\n        i. Remove the attribute identified by attributeName from the session\n        ii. IF attribute did not exist THEN\n            - Return notification that no attribute was removed\n        iii. ELSE return confirmation of successful removal\n\n5. Response Generation:\n   - For successful operations:\n     a. GET: Return the retrieved attribute value or null if not found\n     b. SET: Return confirmation message \"Attribute successfully set\"\n     c. REMOVE: Return confirmation message \"Attribute successfully removed\"\n   - For failed operations:\n     a. Include specific error message describing the failure reason\n     b. Include error code for programmatic handling\n     c. Include suggestions for resolving the issue where applicable",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Attribute name must not be null or empty",
+    "Operation type must be one of: GET, SET, REMOVE",
+    "For SET operations, attribute value must be provided",
+    "Session must be valid and not expired",
+    "User must have permission to access the requested attribute"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttributeValue": {
+      "type": "object",
+      "description": "Represents any type of value that can be stored in a session",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The data type of the stored value"
+        },
+        "value": {
+          "type": "object",
+          "description": "The actual value being stored"
+        }
+      }
+    },
+    "SessionAttribute": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the session attribute"
+        },
+        "value": {
+          "type": "object",
+          "description": "Value of the session attribute"
+        },
+        "creationTime": {
+          "type": "number",
+          "description": "Timestamp when the attribute was created"
+        },
+        "lastAccessedTime": {
+          "type": "number",
+          "description": "Timestamp when the attribute was last accessed"
+        }
+      }
+    }
+  }
+}

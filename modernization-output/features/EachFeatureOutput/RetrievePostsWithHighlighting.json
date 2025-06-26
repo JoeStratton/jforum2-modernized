@@ -1,0 +1,43 @@
+{
+  "featureName": "RetrievePostsWithHighlighting",
+  "description": "Retrieves post data from database and applies text highlighting to search matches in post content.",
+  "inputValues": [
+    "searchQuery-string-SearchQuery",
+    "searchArgs-object-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect search query string (mandatory)\n   - Collect search arguments (mandatory) containing:\n     - startFrom: starting position for pagination\n     - fetchCount: number of results to retrieve\n   - System will use search index to find matching posts\n\n2. Data Validation:\n   - Validate search query is not empty\n     - IF search query is empty THEN return error message \"Search query cannot be empty\"\n   - Validate search arguments\n     - IF startFrom is negative THEN set to default value 0\n     - IF fetchCount is less than 1 THEN set to default value 10\n     - IF fetchCount exceeds maximum allowed THEN limit to maximum value\n\n3. Business Rule Processing:\n   - Check user permissions for searching\n     - IF user does not have search permission THEN return error message \"Insufficient permissions to perform search\"\n   - Check system search availability\n     - IF search functionality is disabled THEN return error message \"Search is currently unavailable\"\n   - Determine search scope based on user access levels\n     - Restrict search to only forums the user has access to\n\n4. Core Operation Execution:\n   - Execute search query against search index\n     - Retrieve matching document hits from search index\n     - Limit results based on startFrom and fetchCount parameters\n     - Extract post IDs from search results\n   - Retrieve complete post data from database using extracted post IDs\n     - Fetch post content, author information, and metadata\n   - Apply text highlighting to each post's content\n     - For each post:\n       - Create a scorer based on the search query\n       - Create a highlighter using the scorer\n       - Tokenize the post content\n       - Generate highlighted text fragments containing search terms\n       - Replace original post content with highlighted version if fragments exist\n       - IF no fragments found THEN keep original post content\n\n5. Response Generation:\n   - Prepare response with highlighted post data\n     - Include post ID, title, content with highlighting, author information, and posting date\n     - Include total number of matching results found\n     - Include pagination information (current page, total pages)\n   - Return formatted post collection with highlighting\n     - IF no results found THEN return appropriate message \"No matching posts found\"\n     - IF error occurred during processing THEN return error details",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Search query must not be empty",
+    "Start position must be zero or positive",
+    "Fetch count must be greater than zero",
+    "User must have permission to search",
+    "Search must be performed only in forums accessible to the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "startFrom": {
+          "type": "number",
+          "description": "Starting position for pagination"
+        },
+        "fetchCount": {
+          "type": "number",
+          "description": "Number of results to retrieve"
+        }
+      },
+      "required": [
+        "startFrom",
+        "fetchCount"
+      ]
+    }
+  }
+}

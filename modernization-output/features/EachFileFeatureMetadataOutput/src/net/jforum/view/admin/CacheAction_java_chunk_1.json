@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "ListCacheStatus",
+    "description": "Displays the status of various system caches in the admin interface"
+  },
+  {
+    "featureName": "ReloadBBCodeCache",
+    "description": "Reloads BBCode definitions from storage into the system cache"
+  },
+  {
+    "featureName": "ClearSessionCache",
+    "description": "Clears all user session data from the cache"
+  },
+  {
+    "featureName": "ReloadModulesCache",
+    "description": "Reloads system modules configuration from the config directory"
+  },
+  {
+    "featureName": "ReloadSmiliesCache",
+    "description": "Reloads emoticon definitions into the system cache"
+  },
+  {
+    "featureName": "ReloadRankingCache",
+    "description": "Reloads user ranking definitions into the system cache"
+  },
+  {
+    "featureName": "ViewTopicCacheDetails",
+    "description": "Displays detailed information about cached forum topics"
+  },
+  {
+    "featureName": "ClearTopicCache",
+    "description": "Clears the cache for topics in a specific forum"
+  },
+  {
+    "featureName": "ViewPostCacheDetails",
+    "description": "Displays detailed information about cached forum posts"
+  },
+  {
+    "featureName": "ClearPostCache",
+    "description": "Clears the cache for posts in a specific topic"
+  }
+]

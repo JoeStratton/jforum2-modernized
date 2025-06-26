@@ -1,0 +1,36 @@
+{
+  "featureName": "ListSessionAttributes",
+  "description": "Provides enumeration of all attribute names stored in the current session.",
+  "inputValues": [
+    "sessionContext-object-SessionContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the SessionContext object\n     - This is a mandatory input representing the current user session\n     - No default values are applicable\n\n2. Data Validation:\n   - Validate SessionContext input\n     - IF SessionContext is null THEN\n       - Generate an error indicating invalid session context\n       - Return appropriate error response\n     - END IF\n     - IF SessionContext is not active or has been invalidated THEN\n       - Generate an error indicating session has expired\n       - Return appropriate error response\n     - END IF\n\n3. Business Rule Processing:\n   - Verify session access permissions\n     - IF current user does not have permission to view session attributes THEN\n       - Generate an access denied error\n       - Return appropriate error response\n     - END IF\n   - Check session state\n     - IF session is in an inconsistent state THEN\n       - Log warning about potential session corruption\n       - Attempt to proceed with available data\n     - END IF\n\n4. Core Operation Execution:\n   - Retrieve attribute names from session\n     - Request enumeration of all attribute names from the session context\n     - Create a collection to store the attribute names\n     - WHILE more attribute names exist in the enumeration DO\n       - Get next attribute name\n       - Add attribute name to the collection\n     - END WHILE\n   - Sort attribute names (optional)\n     - IF sorting is required THEN\n       - Sort the collection of attribute names alphabetically\n     - END IF\n\n5. Response Generation:\n   - Prepare the response\n     - Create a response structure containing:\n       - The collection of attribute names\n       - Total count of attributes found\n       - Session identifier (if permitted by security policy)\n     - Return the response to the caller\n   - Handle empty results\n     - IF no attributes were found THEN\n       - Include appropriate message indicating empty session\n     - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session context must not be null",
+    "Session must be active and not invalidated",
+    "User must have permission to view session attributes"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionContext": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of session attributes stored as key-value pairs"
+        }
+      },
+      "required": [
+        "id",
+        "attributes"
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "featureName": "MoveTopicsSave",
+  "description": "Executes the actual movement of topics between forums with permission validation.",
+  "inputValues": [
+    "topics-string-Topic",
+    "forum_id-number-Forum",
+    "to_forum-number-Forum",
+    "log_description-string-ModerationLog",
+    "log_original_message-string-ModerationLog",
+    "log_type-number-ModerationLog",
+    "successUrl-string-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. topics: Comma-separated list of topic IDs to be moved\n     b. forum_id: Source forum ID where topics currently reside\n     c. to_forum: Target forum ID where topics will be moved to\n     d. log_description: Description of the moderation action for logging\n     e. log_original_message: Original message content for logging\n     f. log_type: Type of moderation action being performed\n     g. successUrl: URL to redirect after successful operation\n\n2. Data Validation:\n   a. Permission Validation\n      - Verify user has topic movement moderation permission\n      - IF user lacks required permission THEN\n        - Set operation status to FAILURE\n        - Return with access denied message\n      - END IF\n   b. Input Validation\n      - Verify topics parameter is not null or empty\n      - Verify forum_id is a valid positive integer\n      - Verify to_forum is a valid positive integer\n      - Verify source and destination forums are different\n      - IF any validation fails THEN\n        - Set operation status to FAILURE\n        - Return with appropriate error message\n      - END IF\n\n3. Business Rule Processing:\n   a. Forum Access Verification\n      - Verify source forum exists and is accessible\n      - Verify destination forum exists and is accessible\n      - Verify user has access rights to both forums\n   b. Topic Ownership Verification\n      - Verify all topics exist in the source forum\n      - Verify topics are available for movement\n   c. Status Preparation\n      - Set initial operation status to SUCCESS\n\n4. Core Operation Execution:\n   a. Topic Movement\n      - Split the comma-separated topic list into individual topic IDs\n      - FOR each topic ID in the list:\n        - Convert string ID to integer\n        - Add to collection of topics to be moved\n      - END FOR\n      - Move all topics from source forum to destination forum\n   b. Moderation Logging\n      - Create new moderation log entry\n      - Set user ID to current user's ID\n      - Set log description from input\n      - Set log original message from input\n      - Set log type from input\n      - FOR each topic that was moved:\n        - Set topic ID in log\n        - Save moderation log entry\n      - END FOR\n   c. Cache Management\n      - Clear cache for source forum\n      - Clear cache for destination forum\n      - Reload forum data for source forum\n      - Reload forum data for destination forum\n      - Reload most recent topics list\n      - Reload hottest topics list\n\n5. Response Generation:\n   a. Status Handling\n      - IF operation status is FAILURE THEN\n        - Display access denied message\n      - ELSE\n        - Display moderation completed message\n        - Include success URL in the message\n      - END IF\n   b. Return Status\n      - Return the final operation status",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have topic movement moderation permission",
+    "Topics parameter must not be null or empty",
+    "Source forum ID must be a valid positive integer",
+    "Destination forum ID must be a valid positive integer",
+    "Source and destination forums must be different",
+    "All topics must exist in the source forum",
+    "Source forum must exist and be accessible",
+    "Destination forum must exist and be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "categoryId": "number"
+    },
+    "ModerationLog": {
+      "id": "number",
+      "userId": "number",
+      "topicId": "number",
+      "description": "string",
+      "originalMessage": "string",
+      "type": "number"
+    }
+  }
+}

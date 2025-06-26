@@ -1,0 +1,48 @@
+{
+  "featureName": "GetFileInputStream",
+  "description": "Retrieves file contents as an input stream from memory or disk storage.",
+  "inputValues": [
+    "fileItem-object-FileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the FileItem object that contains the file data\n   - System determines if the file is stored in memory or on disk\n   - No additional user inputs are required\n\n2. Data Validation:\n   - Verify the FileItem object is not null\n     * IF FileItem is null THEN return appropriate error\n   - Verify the file data exists and is accessible\n     * IF file data cannot be accessed THEN return appropriate error\n\n3. Business Rule Processing:\n   - Check the storage location of the file content\n     * Determine if the file is stored in memory or on disk based on internal thresholds\n     * Verify access permissions to the file storage location\n     * IF storage location is inaccessible THEN return appropriate error\n\n4. Core Operation Execution:\n   - IF file is stored on disk:\n     * Locate the physical file on the disk storage\n     * Create a file input stream from the disk file\n     * Return the file input stream\n   - ELSE IF file is stored in memory:\n     * Check if cached content exists\n       * IF cached content does not exist THEN retrieve data from deferred file output stream\n     * Create a byte array input stream from the cached content\n     * Return the byte array input stream\n   - Handle any I/O exceptions that may occur during stream creation\n     * IF exception occurs THEN log error details and return appropriate error\n\n5. Response Generation:\n   - Return the created input stream for success case\n   - For error cases, return appropriate error information:\n     * File not found error if file doesn't exist\n     * Access denied error if permissions are insufficient\n     * I/O error if stream cannot be created\n     * Include error details to assist with troubleshooting",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "FileItem object must not be null",
+    "File data must be accessible either in memory or on disk",
+    "File storage location must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type of the file"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "integer",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored"
+        }
+      }
+    }
+  }
+}

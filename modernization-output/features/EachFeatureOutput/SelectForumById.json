@@ -1,0 +1,33 @@
+{
+  "featureName": "SelectForumById",
+  "description": "Retrieves a forum by its ID with all associated details.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the forum ID (forumId) as a numeric identifier\n   - The forum ID must be provided and cannot be null\n   - No default values are applicable for this operation\n\n2. Data Validation:\n   - Validate forum ID:\n     a. Check if forum ID is provided\n     b. Verify forum ID is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the database connection is available\n     b. Verify the user has permission to view forum information\n   - Verify dependencies:\n     a. Ensure the forum data access components are properly initialized\n\n4. Core Operation Execution:\n   - Retrieve forum record:\n     a. Search for forum with matching ID in the forum repository\n     b. IF forum is found THEN:\n        i. Retrieve basic forum information (ID, name, description, etc.)\n        ii. Retrieve forum category association\n        iii. Retrieve forum statistics (total topics, total posts)\n        iv. Retrieve last post information\n        v. Determine if forum is moderated\n     c. IF forum is not found THEN:\n        i. Return an empty forum object\n   - Handle any exceptions during retrieval:\n     a. Log the error details\n     b. Prepare appropriate error response\n     c. Release any acquired resources\n\n5. Response Generation:\n   - Success response:\n     a. Return forum object with all populated details:\n        i. Forum ID\n        ii. Category ID\n        iii. Forum name\n        iv. Forum description\n        v. Forum order\n        vi. Total topics count\n        vii. Total posts count\n        viii. Last post ID\n        ix. Moderation status\n   - Error response:\n     a. Return appropriate error message\n     b. Include error code and description\n     c. Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum ID must exist in the database",
+    "User must have permission to view the forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "totalTopics": "number",
+      "totalPosts": "number",
+      "lastPostId": "number",
+      "moderated": "boolean"
+    }
+  }
+}

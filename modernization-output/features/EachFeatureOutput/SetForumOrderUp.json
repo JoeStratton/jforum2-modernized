@@ -1,0 +1,67 @@
+{
+  "featureName": "SetForumOrderUp",
+  "description": "Moves a forum up in the display order relative to another forum.",
+  "inputValues": [
+    "currentForum-object-Forum",
+    "relatedForum-object-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the current forum object with its ID and current order position\n   - Collect the related forum object with its ID and current order position\n   - Both forums must be valid and exist in the system\n\n2. Data Validation:\n   - Verify that currentForum is not null and has a valid ID\n     * IF currentForum is null or has invalid ID THEN return error message\n   - Verify that relatedForum is not null and has a valid ID\n     * IF relatedForum is null or has invalid ID THEN return error message\n   - Verify that both forums belong to the same category\n     * IF forums are in different categories THEN return error message\n   - Verify that the currentForum's order is higher than relatedForum's order (numerically larger value means lower position)\n     * IF currentForum's order is already lower than or equal to relatedForum's order THEN return error message\n\n3. Business Rule Processing:\n   - Verify that the system allows reordering of forums\n     * IF forum reordering is disabled THEN return error message\n   - Check if user has permission to modify forum order\n     * IF user lacks permission THEN return error message\n   - Verify that both forums are active and not marked for deletion\n     * IF either forum is inactive or pending deletion THEN return error message\n\n4. Core Operation Execution:\n   - Store the current order value of the relatedForum\n   - Update the relatedForum's order value to the currentForum's order value\n   - Update the currentForum's order value to the stored order value of relatedForum\n   - Save both forum changes to ensure persistence\n   - IF any update operation fails THEN:\n     * Revert any changes made\n     * Log the failure details\n     * Return error message\n\n5. Response Generation:\n   - Retrieve the updated currentForum with its new order position\n   - Return success message with the updated forum information\n   - Include the new display order of the forum\n   - Provide information about the related forum that was affected",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Current forum must exist in the system",
+    "Related forum must exist in the system",
+    "Both forums must belong to the same category",
+    "Current forum's order must be higher than related forum's order",
+    "User must have permission to modify forum order",
+    "Both forums must be active and not marked for deletion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the forum"
+        },
+        "categoryId": {
+          "type": "integer",
+          "description": "ID of the category this forum belongs to"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the forum"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the forum"
+        },
+        "order": {
+          "type": "integer",
+          "description": "Display order position of the forum"
+        },
+        "totalTopics": {
+          "type": "integer",
+          "description": "Total number of topics in the forum"
+        },
+        "lastPostId": {
+          "type": "integer",
+          "description": "ID of the last post in the forum"
+        },
+        "moderated": {
+          "type": "boolean",
+          "description": "Whether the forum is moderated"
+        }
+      },
+      "required": [
+        "id",
+        "categoryId",
+        "name",
+        "order"
+      ]
+    }
+  }
+}

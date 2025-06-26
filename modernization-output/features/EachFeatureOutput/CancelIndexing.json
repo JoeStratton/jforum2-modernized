@@ -1,0 +1,14 @@
+{
+  "featureName": "CancelIndexing",
+  "description": "Stops an ongoing Lucene indexing process.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs are required for this operation\n   - System identifies the current indexing process status\n\n2. Data Validation:\n   - Verify system state validation\n     2.1. Check if there is an active indexing process running\n     2.2. IF no active indexing process is running THEN\n          2.2.1. Generate appropriate message indicating no active process to cancel\n          2.2.2. END process\n\n3. Business Rule Processing:\n   - Verify system resources and state\n     3.1. Check if the user has administrative privileges\n        3.1.1. IF user does not have administrative privileges THEN\n               3.1.1.1. Generate access denied error message\n               3.1.1.2. END process\n     3.2. Check if the indexing process can be safely interrupted\n        3.2.1. Determine the current stage of indexing\n        3.2.2. Evaluate if interruption at current stage would cause data corruption\n        3.2.3. IF interruption would cause data corruption THEN\n               3.2.3.1. Generate warning message about potential data issues\n               3.2.3.2. Request confirmation before proceeding\n\n4. Core Operation Execution:\n   - Stop the indexing process\n     4.1. Update system flag to indicate indexing should stop\n     4.2. Signal the background indexing process to terminate\n     4.3. Release any locks held by the indexing process\n     4.4. Update system status to reflect indexing is no longer in progress\n     4.5. Record the cancellation event in the system log with timestamp and user information\n     4.6. IF any cleanup operations are needed THEN\n          4.6.1. Perform necessary cleanup of temporary files\n          4.6.2. Reset any counters or progress indicators\n\n5. Response Generation:\n   - Generate confirmation of cancellation\n     5.1. Create success message indicating indexing was successfully cancelled\n     5.2. Include information about the state of the index (complete, partial, or potentially corrupted)\n     5.3. Provide options for next steps (restart indexing, view index status)\n     5.4. Display the updated system status showing indexing is no longer in progress",
+  "databaseEntities": [],
+  "validationRules": [
+    "User must have administrative privileges to cancel indexing",
+    "An indexing process must be currently running to be cancelled",
+    "System must be in a state where cancellation won't corrupt data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

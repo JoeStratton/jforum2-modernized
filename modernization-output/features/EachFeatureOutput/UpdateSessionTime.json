@@ -1,0 +1,44 @@
+{
+  "featureName": "UpdateSessionTime",
+  "description": "Updates the user session time based on the current system time.",
+  "inputValues": [
+    "startTime-date-UserSession"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve the current user session object\n   - Verify the session has a valid startTime field (mandatory)\n   - System will use the current system time (automatically generated)\n\n2. Data Validation:\n   - Validate that startTime is not null\n     * IF startTime is null THEN\n       - Generate error message: \"Session start time is not initialized\"\n       - Abort operation\n     * END IF\n   - Validate that startTime is not in the future\n     * IF startTime is in the future THEN\n       - Generate error message: \"Invalid session start time\"\n       - Abort operation\n     * END IF\n\n3. Business Rule Processing:\n   - Verify the user session is active\n     * IF session is expired THEN\n       - Generate error message: \"Cannot update expired session\"\n       - Abort operation\n     * END IF\n   - Check if user has permission to update session time\n     * IF user does not have permission THEN\n       - Generate error message: \"Insufficient permissions to update session\"\n       - Abort operation\n     * END IF\n\n4. Core Operation Execution:\n   - Calculate the new session time:\n     * Compute the difference between current system time and session start time\n     * Formula: sessionTime = currentSystemTime - startTime\n   - Update the session time value in the user session object\n   - IF update fails THEN\n     * Log the error\n     * Revert to previous session time value\n     * Generate error message: \"Failed to update session time\"\n   * END IF\n\n5. Response Generation:\n   - IF operation is successful THEN\n     * Return success status\n     * Include updated session time value\n     * Include session last update timestamp\n   - ELSE\n     * Return error status\n     * Include error message\n     * Include support information\n   - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session start time must not be null",
+    "Session start time must not be in the future",
+    "User session must be active",
+    "User must have permission to update session time"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "sessionTime": {
+          "type": "number",
+          "description": "Duration of the session in milliseconds"
+        },
+        "startTime": {
+          "type": "date",
+          "description": "Time when the session started"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user associated with this session"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        }
+      },
+      "required": [
+        "startTime"
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "FillTopicsData",
+    "description": "Retrieves and populates topic data including user information for first and last posts"
+  },
+  {
+    "featureName": "SelectRecentTopics",
+    "description": "Retrieves a limited number of most recent forum topics"
+  },
+  {
+    "featureName": "SelectHottestTopics",
+    "description": "Retrieves a limited number of most popular forum topics"
+  },
+  {
+    "featureName": "SetFirstPostId",
+    "description": "Updates a topic with the ID of its first post"
+  },
+  {
+    "featureName": "GetMinPostId",
+    "description": "Retrieves the minimum (earliest) post ID for a specific topic"
+  },
+  {
+    "featureName": "SetModerationStatus",
+    "description": "Updates moderation status for all topics in a forum"
+  },
+  {
+    "featureName": "SetModerationStatusByTopic",
+    "description": "Updates moderation status for a specific topic"
+  },
+  {
+    "featureName": "SelectTopicTitlesByIds",
+    "description": "Retrieves topic titles for a collection of topic IDs"
+  },
+  {
+    "featureName": "GetTopicPosters",
+    "description": "Retrieves detailed user information for all posters in a specific topic"
+  }
+]

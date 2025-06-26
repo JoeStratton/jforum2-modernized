@@ -1,0 +1,28 @@
+{
+  "featureName": "GetRankTitle",
+  "description": "Retrieves the appropriate rank title based on user's rank ID or post count.",
+  "inputValues": [
+    "rankId-number-Ranking",
+    "total-number-PostCount"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect rankId (number, optional) - The specific rank identifier if user has a special rank\n   - Collect total (number, required) - The total number of posts made by the user\n   - Both inputs are used to determine the appropriate rank title\n\n2. Data Validation:\n   - Validate rankId:\n     * IF rankId is provided, ensure it is a positive integer\n     * IF rankId is not provided or is zero/negative, it will be ignored\n   - Validate total:\n     * Ensure total is a non-negative integer\n     * IF total is negative, treat as zero\n\n3. Business Rule Processing:\n   - Check if system has loaded rank information:\n     * IF rank information is not loaded in cache, load all ranks from data source\n     * Ensure ranks are sorted by minimum post requirements\n   - Determine rank retrieval method:\n     * IF rankId is greater than 0, attempt to retrieve rank by ID first\n     * IF rankId is 0 or negative, skip to post count based ranking\n\n4. Core Operation Execution:\n   - Special Rank Retrieval (if applicable):\n     * IF rankId is greater than 0:\n       - Search for rank with matching ID in the rank list\n       - IF found, store the rank title\n       - IF not found, set title to null\n   - Post-based Rank Retrieval:\n     * IF no special rank was found or rankId was not valid:\n       - Iterate through all ranks in the system\n       - Track the last valid rank encountered\n       - For each rank:\n         > IF total exactly matches rank's minimum post requirement AND rank is not special:\n           * Return this rank's title immediately\n         > IF total is between last rank's minimum and current rank's minimum:\n           * Return the last rank's title\n       - IF no matching rank found in iterations, return the last rank's title\n\n5. Response Generation:\n   - Return the determined rank title as a string\n   - IF no appropriate rank could be determined, return null\n   - The returned title represents the user's current rank in the system",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Rank ID must be a positive integer if provided",
+    "Post count must be a non-negative integer",
+    "System must have loaded rank information before retrieval"
+  ],
+  "dbSeedingOperations": [
+    "Ensure ranking data is loaded in the system cache"
+  ],
+  "schema": {
+    "Ranking": {
+      "id": "number",
+      "title": "string",
+      "min": "number",
+      "special": "boolean"
+    }
+  }
+}

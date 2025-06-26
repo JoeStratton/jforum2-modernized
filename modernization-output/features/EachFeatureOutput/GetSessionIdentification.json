@@ -1,0 +1,41 @@
+{
+  "featureName": "GetSessionIdentification",
+  "description": "Retrieves session identification information including ID and creation details.",
+  "inputValues": [
+    "sessionRequest-object-SessionRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect session request information:\n       - sessionRequest (mandatory): Contains the request for session identification\n       - System will determine if this is an existing or new session request\n\n2. Data Validation:\n   2.1. Validate session request:\n       - Verify the session request is properly formatted\n       - Check if session request contains required authentication parameters\n       - IF session request is invalid THEN prepare error response\n   2.2. Validate session existence:\n       - Check if the requested session exists in the system\n       - IF session does not exist THEN prepare new session creation parameters\n\n3. Business Rule Processing:\n   3.1. Check session access permissions:\n       - Verify the requester has appropriate permissions to access the session\n       - IF requester lacks permissions THEN deny access and log attempt\n   3.2. Check session status:\n       - Verify if session is active or expired\n       - IF session is expired THEN prepare session renewal process\n       - IF session is active THEN proceed with identification retrieval\n\n4. Core Operation Execution:\n   4.1. Retrieve session identification data:\n       - Extract session ID from the session store\n       - Retrieve session creation timestamp\n       - Collect session last accessed time\n       - Gather session maximum inactive interval\n       - Determine if session is new\n   4.2. Format session identification data:\n       - Organize retrieved data into structured format\n       - Include all relevant session metadata\n       - Prepare response with complete session identification\n\n5. Response Generation:\n   5.1. Generate success response:\n       - Include session ID\n       - Include creation time\n       - Include last accessed time\n       - Include session status (new or existing)\n       - Include maximum inactive interval\n   5.2. Handle error scenarios:\n       - IF session retrieval failed THEN include error details\n       - IF session expired THEN include expiration information\n       - Include guidance for session renewal if applicable",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session request must contain valid authentication parameters",
+    "Requester must have appropriate permissions to access session information",
+    "Session ID must be valid and exist in the system for existing sessions",
+    "Session must not be expired unless renewal is requested"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionRequest": {
+      "type": "object",
+      "properties": {
+        "requestType": {
+          "type": "string",
+          "description": "Type of session request (new, existing)"
+        },
+        "authenticationParameters": {
+          "type": "object",
+          "description": "Parameters used for authentication"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Optional session ID for existing sessions"
+        }
+      },
+      "required": [
+        "requestType",
+        "authenticationParameters"
+      ]
+    }
+  }
+}

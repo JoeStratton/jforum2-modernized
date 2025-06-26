@@ -1,0 +1,121 @@
+{
+  "featureName": "ConfigureDatabase",
+  "description": "Sets up database connection based on user configuration parameters.",
+  "inputValues": [
+    "database-string-Database",
+    "dbHost-string-Database",
+    "dbUser-string-Database",
+    "dbName-string-Database",
+    "dbPort-string-Database",
+    "dbPassword-string-Database",
+    "dbEncoding-string-Database",
+    "usePool-boolean-Database",
+    "dbdatasource-string-Database",
+    "adminPassword-string-User",
+    "db_connection_type-string-Database"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database configuration parameters:\n     1.1. Retrieve database type (required)\n     1.2. Retrieve database host address (required)\n     1.3. Retrieve database username (required)\n     1.4. Retrieve database name (required)\n     1.5. Retrieve database port (optional, system will use default if not provided)\n     1.6. Retrieve database password (required)\n     1.7. Retrieve database character encoding (optional)\n     1.8. Determine if connection pooling should be used (optional, default is false)\n     1.9. Retrieve data source name if applicable (optional)\n     1.10. Retrieve connection type (JDBC or datasource)\n     1.11. Retrieve administrator password for system setup\n\n2. Data Validation:\n   - Validate all database configuration parameters:\n     2.1. Verify database type is supported by the system\n        IF database type is not supported THEN\n          Display error message indicating unsupported database type\n          Return to configuration form\n        END IF\n     2.2. Verify database host is not empty\n        IF database host is empty THEN\n          Display error message for missing host\n          Return to configuration form\n        END IF\n     2.3. Verify database name is not empty\n        IF database name is empty THEN\n          Display error message for missing database name\n          Return to configuration form\n        END IF\n     2.4. Verify database username is not empty\n        IF database username is empty THEN\n          Display error message for missing username\n          Return to configuration form\n        END IF\n     2.5. Verify port number is valid if provided\n        IF port is provided AND port is not a valid number THEN\n          Display error message for invalid port\n          Return to configuration form\n        END IF\n     2.6. Verify administrator password is not empty\n        IF administrator password is empty THEN\n          Display error message for missing admin password\n          Return to configuration form\n        END IF\n\n3. Business Rule Processing:\n   - Process connection configuration based on user selections:\n     3.1. Determine connection type based on user preferences\n        IF connection type is JDBC THEN\n          IF usePool is true AND database is not hsqldb THEN\n            Set connection implementation to pooled connection\n          ELSE\n            Set connection implementation to simple connection\n          END IF\n        ELSE\n          Set connection implementation to datasource connection\n        END IF\n     3.2. Verify system has write permissions to configuration directories\n        IF system cannot write to configuration directory THEN\n          Display error message about insufficient permissions\n          Return to configuration form\n        END IF\n        IF system cannot write to search index directory THEN\n          Display error message about insufficient permissions\n          Return to configuration form\n        END IF\n\n4. Core Operation Execution:\n   - Establish and configure database connection:\n     4.1. Load database-specific properties file based on selected database type\n     4.2. Process port configuration\n        IF port is provided THEN\n          Update connection string to include port\n        ELSE\n          Remove port placeholder from connection string\n        END IF\n     4.3. Update database properties with user-provided values\n        4.3.1. Set database host\n        4.3.2. Set database username\n        4.3.3. Set database password\n        4.3.4. Set database name\n        4.3.5. Set database encoding\n        4.3.6. Set database port\n        4.3.7. Set database driver name\n     4.4. Save updated properties to configuration file\n     4.5. Update system settings with new database configuration\n     4.6. Save installation configuration\n     4.7. Attempt to establish database connection\n        IF connection fails THEN\n          Log connection failure details\n          Display error message about connection failure\n          Return to configuration form with error details\n        END IF\n     4.8. For PostgreSQL or Oracle databases\n        4.8.1. Execute table drop statements if needed\n     4.9. Execute database structure creation statements\n        FOR EACH SQL statement in database structure file\n          4.9.1. Execute statement\n          IF statement execution fails THEN\n            Log execution failure\n            Display error message with failed statement\n            Return to configuration form with error details\n          END IF\n        END FOR\n     4.10. Update administrator password\n        4.10.1. Hash the provided admin password\n        4.10.2. Update admin user record in database\n        IF password update fails THEN\n          Log update failure\n          Display error message about password update failure\n          Return to configuration form with error details\n        END IF\n\n5. Response Generation:\n   - Provide feedback on database configuration status:\n     5.1. IF all operations completed successfully THEN\n       5.1.1. Mark database configuration as completed\n       5.1.2. Display success message\n       5.1.3. Enable next installation step\n     5.2. ELSE\n       5.2.1. Display detailed error information\n       5.2.2. Provide troubleshooting suggestions\n       5.2.3. Allow user to modify configuration and retry",
+  "databaseEntities": [
+    "Database",
+    "Configuration",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Database type must be supported by the system",
+    "Database host must not be empty",
+    "Database name must not be empty",
+    "Database username must not be empty",
+    "Database port must be a valid number if provided",
+    "System must have write permissions to configuration directory",
+    "System must have write permissions to search index directory",
+    "Administrator password must not be empty"
+  ],
+  "dbSeedingOperations": [
+    "Execute database structure creation SQL statements from the appropriate database type file",
+    "Update the Admin user password with the provided password"
+  ],
+  "schema": {
+    "Database": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of database (e.g., mysql, postgresql, oracle)"
+        },
+        "host": {
+          "type": "string",
+          "description": "Database server hostname or IP address"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the database to connect to"
+        },
+        "user": {
+          "type": "string",
+          "description": "Username for database authentication"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password for database authentication"
+        },
+        "port": {
+          "type": "string",
+          "description": "Port number for database connection"
+        },
+        "encoding": {
+          "type": "string",
+          "description": "Character encoding for database connection"
+        },
+        "usePool": {
+          "type": "boolean",
+          "description": "Whether to use connection pooling"
+        },
+        "datasource": {
+          "type": "string",
+          "description": "Name of datasource if applicable"
+        },
+        "connectionType": {
+          "type": "string",
+          "description": "Type of connection (JDBC or datasource)"
+        }
+      },
+      "required": [
+        "type",
+        "host",
+        "name",
+        "user",
+        "password"
+      ]
+    },
+    "Configuration": {
+      "type": "object",
+      "properties": {
+        "connectionType": {
+          "type": "string",
+          "description": "Type of connection (simple, pooled, datasource)"
+        },
+        "configPath": {
+          "type": "string",
+          "description": "Path to configuration files"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of database configuration"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's password (stored as hash)"
+        }
+      }
+    }
+  }
+}

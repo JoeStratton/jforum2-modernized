@@ -1,0 +1,20 @@
+{
+  "featureName": "GetListAllowedForums",
+  "description": "Generates a comma-separated list of accessible forum IDs for the current user.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No explicit user inputs required\n   - System will use current user context from the session\n\n2. Data Validation:\n   - Verify current user session exists and is valid\n     - IF session is invalid or expired THEN\n       - Return error indicating authentication required\n     - END IF\n\n3. Business Rule Processing:\n   - Verify forum data is available\n     - IF forum repository is not initialized THEN\n       - Initialize forum repository\n     - END IF\n   - Check user permissions against forum access rules\n     - Retrieve user's group memberships\n     - Determine access permissions based on group memberships\n\n4. Core Operation Execution:\n   - Initialize empty result string and counter\n   - Retrieve all categories from the system\n   - FOR each category in the system:\n     - Retrieve all forums within the category\n     - FOR each forum in the category:\n       - Check if current user has access to the forum\n         - IF user has access to forum THEN\n           - IF counter is greater than zero THEN\n             - Append comma separator to result string\n           - END IF\n           - Append forum ID to result string\n           - Increment counter\n         - END IF\n     - END FOR\n   - END FOR\n   - IF no accessible forums were found (counter equals zero) THEN\n     - Set result string to \"-1\" to indicate no accessible forums\n   - END IF\n\n5. Response Generation:\n   - Return the comma-separated list of forum IDs\n   - IF no forums are accessible, return \"-1\"\n   - Format: \"1,2,5,8\" (example of accessible forum IDs)",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_user_groups",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User must have a valid session to access forum list",
+    "Forum access is determined by user group permissions",
+    "If no forums are accessible, return '-1' instead of empty string",
+    "Forum IDs must be separated by commas with no spaces"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

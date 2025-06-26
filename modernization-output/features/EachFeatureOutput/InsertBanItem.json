@@ -1,0 +1,51 @@
+{
+  "featureName": "InsertBanItem",
+  "description": "Displays and processes the form for adding a new ban entry to the system.",
+  "inputValues": [
+    "type-string-Banlist",
+    "value-string-Banlist"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     1.1. Ban type (type): A string indicating the type of ban (email, user, or IP)\n     1.2. Ban value (value): A string containing the actual value to be banned\n   - Both fields are mandatory for the operation to proceed\n\n2. Data Validation\n   2.1. Validate ban type input\n      - Check if the ban type is not empty\n      - Verify the ban type is one of the allowed values: \"email\", \"user\", or \"ip\"\n      - IF ban type is invalid or empty THEN\n         - Prepare error message indicating invalid ban type\n         - Return to the input form with the error message\n      - END IF\n\n   2.2. Validate ban value input\n      - Check if the ban value is not empty\n      - IF ban value is empty THEN\n         - Prepare error message indicating missing ban value\n         - Return to the input form with the error message\n      - END IF\n      - Perform type-specific validation:\n         - IF ban type is \"email\" THEN\n            - Validate email format\n         - ELSE IF ban type is \"user\" THEN\n            - Validate that value can be converted to a valid user ID\n            - Verify the user ID exists in the system\n         - ELSE IF ban type is \"ip\" THEN\n            - Validate IP address format\n         - END IF\n\n3. Business Rule Processing\n   3.1. Check for duplicate entries\n      - Query existing ban entries to check if the same type and value already exist\n      - IF duplicate entry found THEN\n         - Prepare error message indicating duplicate ban entry\n         - Return to the input form with the error message\n      - END IF\n\n   3.2. Verify system permissions\n      - Verify the current user has administrative privileges to add ban entries\n      - IF user lacks required permissions THEN\n         - Prepare error message indicating insufficient permissions\n         - Redirect to appropriate error page\n      - END IF\n\n4. Core Operation Execution\n   4.1. Create new ban entry\n      - Initialize a new ban entry object\n      - Based on the ban type:\n         - IF type is \"email\" THEN\n            - Set the email field of the ban entry\n         - ELSE IF type is \"user\" THEN\n            - Convert value to integer user ID\n            - Set the user ID field of the ban entry\n         - ELSE IF type is \"ip\" THEN\n            - Set the IP field of the ban entry\n         - END IF\n\n   4.2. Save the ban entry\n      - Store the new ban entry in the database\n      - Update the system's ban list repository with the new entry\n      - IF save operation fails THEN\n         - Prepare error message indicating save failure\n         - Return to the input form with the error message\n      - END IF\n\n5. Response Generation\n   5.1. On successful ban entry creation\n      - Generate success message indicating the ban was successfully added\n      - Redirect to the ban list page showing all current bans including the new entry\n\n   5.2. On failure\n      - Generate appropriate error message based on the failure reason\n      - Return to the ban entry form with error details\n      - Preserve previously entered values to avoid re-entry",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Ban type must not be empty",
+    "Ban type must be one of: email, user, or ip",
+    "Ban value must not be empty",
+    "If ban type is email, value must be a valid email format",
+    "If ban type is user, value must be a valid user ID",
+    "If ban type is ip, value must be a valid IP address format",
+    "User must have administrative privileges to add ban entries"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the ban entry"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "email",
+            "user",
+            "ip"
+          ],
+          "description": "Type of ban entry"
+        },
+        "value": {
+          "type": "string",
+          "description": "The actual value being banned (email address, user ID, or IP address)"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ]
+    }
+  }
+}

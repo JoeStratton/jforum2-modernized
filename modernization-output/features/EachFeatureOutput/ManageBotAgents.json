@@ -1,0 +1,42 @@
+{
+  "featureName": "ManageBotAgents",
+  "description": "Manages the list of bot agents for clickstream tracking and filtering.",
+  "inputValues": [
+    "botAgent-string-ClickstreamConfig",
+    "botHost-string-ClickstreamConfig"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect bot agent information\n       1.1.1. Obtain bot agent identifier string\n       1.1.2. Check if the bot agent identifier is provided\n       1.1.3. Determine if this is an add or remove operation\n   1.2. Collect bot host information\n       1.2.1. Obtain bot host identifier string\n       1.2.2. Check if the bot host identifier is provided\n       1.2.3. Determine if this is an add or remove operation\n\n2. Data Validation\n   2.1. Validate bot agent information\n       2.1.1. IF bot agent identifier is provided THEN\n           2.1.1.1. Verify the bot agent identifier is not empty\n           2.1.1.2. Verify the bot agent identifier is a valid string format\n           2.1.1.3. Check if the bot agent already exists in the system\n       2.1.2. ELSE skip bot agent validation\n   2.2. Validate bot host information\n       2.2.1. IF bot host identifier is provided THEN\n           2.2.1.1. Verify the bot host identifier is not empty\n           2.2.1.2. Verify the bot host identifier is a valid hostname format\n           2.2.1.3. Check if the bot host already exists in the system\n       2.2.2. ELSE skip bot host validation\n\n3. Business Rule Processing\n   3.1. Verify system state for bot management\n       3.1.1. Check if the clickstream tracking system is active\n       3.1.2. Verify user has permission to manage bot configurations\n   3.2. Process bot agent rules\n       3.2.1. IF adding a bot agent THEN\n           3.2.1.1. Check if maximum number of bot agents has been reached\n           3.2.1.2. Verify the bot agent pattern is valid for filtering\n       3.2.2. IF removing a bot agent THEN\n           3.2.2.1. Verify the bot agent exists in the current configuration\n   3.3. Process bot host rules\n       3.3.1. IF adding a bot host THEN\n           3.3.1.1. Check if maximum number of bot hosts has been reached\n           3.3.1.2. Verify the bot host pattern is valid for filtering\n       3.3.2. IF removing a bot host THEN\n           3.3.2.1. Verify the bot host exists in the current configuration\n\n4. Core Operation Execution\n   4.1. Manage bot agent list\n       4.1.1. IF adding a bot agent THEN\n           4.1.1.1. Add the bot agent to the configuration\n           4.1.1.2. Update the bot agent list in memory\n           4.1.1.3. Log the addition of the new bot agent\n       4.1.2. IF removing a bot agent THEN\n           4.1.2.1. Remove the bot agent from the configuration\n           4.1.2.2. Update the bot agent list in memory\n           4.1.2.3. Log the removal of the bot agent\n   4.2. Manage bot host list\n       4.2.1. IF adding a bot host THEN\n           4.2.1.1. Add the bot host to the configuration\n           4.2.1.2. Update the bot host list in memory\n           4.2.1.3. Log the addition of the new bot host\n       4.2.2. IF removing a bot host THEN\n           4.2.2.1. Remove the bot host from the configuration\n           4.2.2.2. Update the bot host list in memory\n           4.2.2.3. Log the removal of the bot host\n   4.3. Save configuration changes\n       4.3.1. Persist the updated configuration\n       4.3.2. Apply changes to the active clickstream tracking system\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Provide confirmation of the completed operation\n       5.1.2. Include summary of changes made to bot agent list\n       5.1.3. Include summary of changes made to bot host list\n       5.1.4. Return the current complete list of bot agents and hosts\n   5.2. Generate error response\n       5.2.1. Provide detailed error message if operation failed\n       5.2.2. Include suggestions for resolving the issue\n       5.2.3. Provide option to retry the operation",
+  "databaseEntities": [],
+  "validationRules": [
+    "Bot agent identifier must not be empty",
+    "Bot host identifier must not be empty",
+    "Bot agent must not already exist in the system when adding",
+    "Bot host must not already exist in the system when adding",
+    "Bot agent must exist in the system when removing",
+    "Bot host must exist in the system when removing",
+    "Bot host must be in valid hostname format",
+    "User must have permission to manage bot configurations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ClickstreamConfig": {
+      "type": "object",
+      "properties": {
+        "botAgents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of bot agent identifiers"
+        },
+        "botHosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of bot host identifiers"
+        }
+      }
+    }
+  }
+}

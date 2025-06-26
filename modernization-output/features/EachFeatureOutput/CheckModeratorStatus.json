@@ -1,0 +1,41 @@
+{
+  "featureName": "CheckModeratorStatus",
+  "description": "Verifies if the user has moderation rights for a specific forum.",
+  "inputValues": [
+    "userId-number-User",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory, number): The identifier of the user to check\n   - Collect forumId (mandatory, number): The identifier of the forum to check moderation rights for\n   - System will use existing security repository for permission verification\n\n2. Data Validation:\n   - Validate userId:\n      - Ensure userId is a positive integer\n      - Verify userId exists in the system\n      - IF userId is invalid or not found, THEN return error message\n   - Validate forumId:\n      - Ensure forumId is a positive integer\n      - Verify forumId exists in the system\n      - IF forumId is invalid or not found, THEN return error message\n\n3. Business Rule Processing:\n   - Check if user has general moderation permission:\n      - Retrieve user's permission control from security repository\n      - Verify if user has system-wide moderation rights\n      - IF user has system-wide moderation rights, THEN set hasModerationRights to true\n   - Check if user has forum-specific moderation permission:\n      - Retrieve forum-specific permissions for the user\n      - Verify if user has moderation rights specifically for the requested forum\n      - IF user has forum-specific moderation rights, THEN set hasModerationRights to true\n   - IF neither general nor forum-specific moderation rights exist, THEN set hasModerationRights to false\n\n4. Core Operation Execution:\n   - Combine the results of general and forum-specific permission checks:\n      - User must have general moderation permission AND forum-specific moderation permission\n      - Set final moderationStatus based on these combined checks\n   - Record the permission check in system logs (optional):\n      - Log userId, forumId, and result of moderation check\n      - Include timestamp of when check was performed\n\n5. Response Generation:\n   - Return moderationStatus result:\n      - IF moderationStatus is true, THEN return success response with moderator status confirmed\n      - IF moderationStatus is false, THEN return success response with moderator status denied\n      - Include userId and forumId in the response for reference\n   - IF any errors occurred during processing, THEN:\n      - Return appropriate error message\n      - Include error details for troubleshooting",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_moderator_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Forum ID must be a positive integer",
+    "User must exist in the system",
+    "Forum must exist in the system",
+    "User must have general moderation permission to be a moderator",
+    "User must have forum-specific moderation permission to moderate the specific forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "permissions": "object"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "moderators": "array"
+    },
+    "Permission": {
+      "userId": "number",
+      "permissionType": "string",
+      "forumId": "number"
+    }
+  }
+}

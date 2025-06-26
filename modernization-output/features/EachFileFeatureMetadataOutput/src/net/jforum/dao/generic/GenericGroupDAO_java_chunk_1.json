@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "SelectGroupById",
+    "description": "Retrieves a specific group by its ID from the database"
+  },
+  {
+    "featureName": "CheckGroupDeletionEligibility",
+    "description": "Verifies if a group can be safely deleted based on dependencies"
+  },
+  {
+    "featureName": "DeleteGroup",
+    "description": "Removes a group and its associated security roles from the system"
+  },
+  {
+    "featureName": "UpdateGroupInformation",
+    "description": "Modifies an existing group's name, parent, and description"
+  },
+  {
+    "featureName": "CreateNewGroup",
+    "description": "Adds a new user group to the system with specified attributes"
+  },
+  {
+    "featureName": "GetGroupMembers",
+    "description": "Retrieves the list of user IDs belonging to a specific group"
+  },
+  {
+    "featureName": "ListAllGroups",
+    "description": "Retrieves all user groups from the database"
+  }
+]

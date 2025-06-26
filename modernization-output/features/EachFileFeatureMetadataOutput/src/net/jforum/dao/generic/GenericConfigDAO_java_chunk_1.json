@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "InsertConfig",
+    "description": "Creates a new configuration entry with name and value in the database"
+  },
+  {
+    "featureName": "UpdateConfig",
+    "description": "Updates an existing configuration entry's value based on its name"
+  },
+  {
+    "featureName": "DeleteConfig",
+    "description": "Removes a configuration entry from the database by its ID"
+  },
+  {
+    "featureName": "SelectAllConfigs",
+    "description": "Retrieves all configuration entries from the database"
+  },
+  {
+    "featureName": "SelectConfigByName",
+    "description": "Retrieves a specific configuration entry by its name"
+  }
+]

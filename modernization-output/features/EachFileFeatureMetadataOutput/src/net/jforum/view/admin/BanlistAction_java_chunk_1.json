@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ListBanItems",
+    "description": "Retrieves and displays all banned items including emails, users, and IPs"
+  },
+  {
+    "featureName": "InsertBanItem",
+    "description": "Displays the form for adding a new ban entry"
+  },
+  {
+    "featureName": "SaveBanItem",
+    "description": "Creates a new ban entry for email, user, or IP address"
+  },
+  {
+    "featureName": "DeleteBanItems",
+    "description": "Removes selected ban entries from the system"
+  }
+]

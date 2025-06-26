@@ -1,0 +1,55 @@
+{
+  "featureName": "SelectGroups",
+  "description": "Retrieves a list of groups based on the specified parent ID.",
+  "inputValues": [
+    "parentId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect parentId (number, mandatory) to identify the parent group\n   - System will use this parentId to retrieve child groups\n\n2. Data Validation:\n   - Validate parentId:\n     a. Check if parentId is provided\n     b. Verify parentId is a valid number\n     c. Ensure parentId is not negative\n     d. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify system access permissions:\n     a. Check if current user has permission to view groups\n     b. Verify if the parent group exists in the system\n     c. IF parent group does not exist, THEN return appropriate error\n     d. IF user lacks permission, THEN return access denied error\n\n4. Core Operation Execution:\n   - Retrieve child groups:\n     a. Search for all groups where parent ID matches the provided parentId\n     b. Sort groups according to system-defined ordering (e.g., by name, by creation date)\n     c. Apply any system-defined filters to the results\n     d. IF no groups found, THEN prepare empty result list\n     e. IF error occurs during retrieval, THEN prepare error response\n     f. For each group found, create a GroupNode with name and ID information\n     g. Add each GroupNode to the result list\n\n5. Response Generation:\n   - Format group list response:\n     a. For each group found, include relevant group information (group ID and group name)\n     b. Include total count of groups found\n     c. IF operation successful, THEN return formatted group list\n     d. IF operation failed, THEN return error details with reason",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Parent ID must be a valid number",
+    "Parent ID must not be negative",
+    "User must have permission to view groups",
+    "Parent group must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        },
+        "parentId": {
+          "type": "number",
+          "description": "ID of the parent group"
+        }
+      }
+    },
+    "GroupNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        }
+      }
+    }
+  }
+}

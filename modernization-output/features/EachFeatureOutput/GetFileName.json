@@ -1,0 +1,51 @@
+{
+  "featureName": "GetFileName",
+  "description": "Retrieves the original filename from the client's filesystem.",
+  "inputValues": [
+    "fileItem-object-DiskFileItem"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Obtain a reference to the DiskFileItem object\n   - No additional inputs are required as the filename is already stored within the object\n   - The filename is a system-stored value that was captured during file upload\n\n2. Data Validation:\n   - Verify that the DiskFileItem object is not null\n     * IF DiskFileItem is null THEN\n       - Return an appropriate error message indicating invalid input\n     * END IF\n   - No additional validation is required as this is a retrieval operation\n\n3. Business Rule Processing:\n   - Check if the file information is available\n     * IF file information was not properly captured during upload THEN\n       - Return an empty or default filename value\n     * END IF\n   - No additional business rules apply to this retrieval operation\n\n4. Core Operation Execution:\n   - Access the stored filename property from the DiskFileItem object\n   - Return the filename value as stored during the upload process\n   - No modifications are made to the filename during retrieval\n   - No database operations are performed during this operation\n\n5. Response Generation:\n   - Return the original filename as a string value\n   - IF retrieval is successful THEN\n     * Return the filename string\n   - ELSE\n     * Return an appropriate error message\n   - END IF",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "DiskFileItem object must not be null",
+    "Filename may be null if not specified during upload"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DiskFileItem": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "description": "The name of the form field as provided by the browser"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "The content type passed by the browser, or null if not defined"
+        },
+        "isFormField": {
+          "type": "boolean",
+          "description": "Whether or not this item is a simple form field"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original filename in the user's filesystem"
+        },
+        "sizeThreshold": {
+          "type": "number",
+          "description": "The threshold above which uploads will be stored on disk"
+        },
+        "repository": {
+          "type": "object",
+          "description": "The directory in which uploaded files will be stored"
+        }
+      },
+      "required": [
+        "fieldName",
+        "isFormField"
+      ]
+    }
+  }
+}

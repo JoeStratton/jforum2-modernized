@@ -1,0 +1,272 @@
+{
+  "feature_name": "Attachment and File Management",
+  "description": "The Attachment and File Management system enables users to upload, store, and share files within forum posts, with controls for file types, sizes, and permissions.",
+  "business_logic": {
+    "upload_process": {
+      "description": "Process for uploading and attaching files to posts",
+      "workflow": [
+        "User selects file(s) for upload while creating/editing a post",
+        "System validates file against allowed types and size limits",
+        "File is uploaded to temporary storage",
+        "Upon post submission, file is moved to permanent storage",
+        "Attachment is linked to the post in the database"
+      ],
+      "validation_rules": [
+        "File type must be in allowed extensions list",
+        "File size must be within user's quota limit",
+        "Total attachments per post limited by configuration",
+        "Image dimensions may be restricted"
+      ]
+    },
+    "quota_management": {
+      "description": "Limits on attachment storage per user/group",
+      "rules": [
+        "Total storage space limit per user group",
+        "Maximum file size limit per attachment",
+        "Maximum attachments per post",
+        "Warning when approaching quota limit"
+      ]
+    },
+    "file_type_management": {
+      "description": "Configuration of allowed file types and their handling",
+      "extension_groups": [
+        "Images (jpg, png, gif, etc.)",
+        "Documents (pdf, doc, txt, etc.)",
+        "Archives (zip, rar, etc.)",
+        "Other configurable types"
+      ],
+      "security_measures": [
+        "Whitelist of allowed extensions",
+        "Content type verification",
+        "Optional virus scanning",
+        "Image resizing and thumbnail generation"
+      ]
+    },
+    "attachment_display": {
+      "description": "Methods for displaying attachments in posts",
+      "display_options": [
+        "Inline images with configurable size limits",
+        "Download links for other file types",
+        "Thumbnails for images",
+        "File information display (size, type, download count)"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "uploads": {
+      "upload": {
+        "path": "/api/uploads",
+        "method": "POST",
+        "request_body": {
+          "file": "binary",
+          "description": "string"
+        },
+        "responses": {
+          "201": "File uploaded successfully",
+          "400": "Invalid file type or size",
+          "413": "Quota exceeded"
+        }
+      },
+      "list": {
+        "path": "/api/uploads",
+        "method": "GET",
+        "query_params": {
+          "post_id": "integer"
+        },
+        "responses": {
+          "200": "List of uploaded files"
+        }
+      },
+      "get": {
+        "path": "/api/uploads/{attachmentId}",
+        "method": "GET",
+        "responses": {
+          "200": "File details",
+          "404": "File not found"
+        }
+      },
+      "delete": {
+        "path": "/api/uploads/{attachmentId}",
+        "method": "DELETE",
+        "responses": {
+          "204": "File deleted",
+          "403": "Permission denied",
+          "404": "File not found"
+        }
+      },
+      "download": {
+        "path": "/api/uploads/{attachmentId}/download",
+        "method": "GET",
+        "responses": {
+          "200": "File download",
+          "403": "Permission denied",
+          "404": "File not found"
+        }
+      }
+    },
+    "admin": {
+      "extensions": {
+        "list": {
+          "path": "/api/admin/attachments/extensions",
+          "method": "GET"
+        },
+        "create": {
+          "path": "/api/admin/attachments/extensions",
+          "method": "POST",
+          "request_body": {
+            "extension": "string",
+            "group_id": "integer",
+            "allow": "boolean",
+            "comment": "string"
+          }
+        },
+        "update": {
+          "path": "/api/admin/attachments/extensions/{extensionId}",
+          "method": "PUT",
+          "request_body": {
+            "group_id": "integer",
+            "allow": "boolean",
+            "comment": "string"
+          }
+        },
+        "delete": {
+          "path": "/api/admin/attachments/extensions/{extensionId}",
+          "method": "DELETE"
+        }
+      },
+      "extension_groups": {
+        "list": {
+          "path": "/api/admin/attachments/extension-groups",
+          "method": "GET"
+        },
+        "create": {
+          "path": "/api/admin/attachments/extension-groups",
+          "method": "POST",
+          "request_body": {
+            "name": "string",
+            "allow": "boolean",
+            "download_mode": "integer"
+          }
+        },
+        "update": {
+          "path": "/api/admin/attachments/extension-groups/{groupId}",
+          "method": "PUT",
+          "request_body": {
+            "name": "string",
+            "allow": "boolean",
+            "download_mode": "integer"
+          }
+        },
+        "delete": {
+          "path": "/api/admin/attachments/extension-groups/{groupId}",
+          "method": "DELETE"
+        }
+      },
+      "quotas": {
+        "list": {
+          "path": "/api/admin/attachments/quotas",
+          "method": "GET"
+        },
+        "update": {
+          "path": "/api/admin/attachments/quotas",
+          "method": "PUT",
+          "request_body": {
+            "group_quotas": "array"
+          }
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "attachments": {
+      "fields": [
+        {"name": "attach_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "post_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "attach_filename", "type": "VARCHAR(255)", "constraints": "NOT NULL"},
+        {"name": "attach_real_filename", "type": "VARCHAR(255)", "constraints": "NOT NULL"},
+        {"name": "attach_filesize", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "attach_content_type", "type": "VARCHAR(100)", "constraints": "NOT NULL"},
+        {"name": "attach_download_count", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "attachment_extension_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "attach_description", "type": "VARCHAR(255)"},
+        {"name": "attach_time", "type": "TIMESTAMP", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (post_id) REFERENCES posts(post_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)",
+        "FOREIGN KEY (attachment_extension_id) REFERENCES attachment_extensions(extension_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_attachments_post ON attachments(post_id)",
+        "CREATE INDEX idx_attachments_user ON attachments(user_id)"
+      ]
+    },
+    "attachment_extensions": {
+      "fields": [
+        {"name": "extension_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "extension_group_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "extension", "type": "VARCHAR(100)", "constraints": "NOT NULL UNIQUE"},
+        {"name": "allow", "type": "SMALLINT", "constraints": "DEFAULT 1"},
+        {"name": "comment", "type": "VARCHAR(255)"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (extension_group_id) REFERENCES attachment_extension_groups(extension_group_id)"
+      ]
+    },
+    "attachment_extension_groups": {
+      "fields": [
+        {"name": "extension_group_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "name", "type": "VARCHAR(100)", "constraints": "NOT NULL"},
+        {"name": "allow", "type": "SMALLINT", "constraints": "DEFAULT 1"},
+        {"name": "download_mode", "type": "SMALLINT", "constraints": "DEFAULT 0"},
+        {"name": "upload_icon", "type": "VARCHAR(100)"}
+      ]
+    },
+    "quota_limits": {
+      "fields": [
+        {"name": "quota_limit_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "quota_desc", "type": "VARCHAR(50)", "constraints": "NOT NULL"},
+        {"name": "quota_limit", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "quota_type", "type": "SMALLINT", "constraints": "DEFAULT 1"}
+      ]
+    },
+    "quota_limits_groups": {
+      "fields": [
+        {"name": "group_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "quota_limit_id", "type": "INTEGER", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "PRIMARY KEY (group_id, quota_limit_id)",
+        "FOREIGN KEY (group_id) REFERENCES groups(group_id)",
+        "FOREIGN KEY (quota_limit_id) REFERENCES quota_limits(quota_limit_id)"
+      ]
+    }
+  },
+  "security_considerations": {
+    "upload_security": [
+      "Strict validation of file types to prevent malicious uploads",
+      "Content-type verification beyond file extension",
+      "File storage outside web root or with access control",
+      "Random/unique filenames to prevent guessing",
+      "Optional virus scanning of uploads"
+    ],
+    "download_security": [
+      "Permission checks before allowing downloads",
+      "Proper Content-Disposition headers",
+      "Rate limiting to prevent abuse",
+      "Logging of download activity"
+    ],
+    "storage_security": [
+      "Regular cleanup of orphaned files",
+      "Backup procedures for attachment storage",
+      "Storage path configuration to prevent directory traversal"
+    ]
+  },
+  "integration_points": {
+    "post_system": "Attachments are linked to posts",
+    "user_management": "Upload permissions based on user groups",
+    "quota_system": "File size and count limits based on user groups",
+    "moderation_system": "Optional moderation of attachments"
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "PerformSearch",
+    "description": "Executes search operations based on provided search arguments"
+  },
+  {
+    "featureName": "FilterSearchResults",
+    "description": "Filters search results based on forum access permissions and enriches with forum data"
+  }
+]

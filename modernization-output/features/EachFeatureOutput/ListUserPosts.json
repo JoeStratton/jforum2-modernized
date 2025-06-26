@@ -1,0 +1,74 @@
+{
+  "featureName": "ListUserPosts",
+  "description": "Retrieves and displays posts made by a specific user with pagination.",
+  "inputValues": [
+    "userId-number-User",
+    "page-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Numeric identifier of the user whose posts will be displayed\n   - Collect page number (optional): Current page number for pagination\n   - Set postsPerPage (system-generated): Number of posts to display per page from system configuration\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. Return error if validation fails: \"Invalid user identifier provided\"\n   - Validate page number:\n     a. If not provided, default to page 1\n     b. Verify page is a positive integer\n     c. Return error if validation fails: \"Invalid page number\"\n\n3. Business Rule Processing:\n   - Verify user exists in the system:\n     a. Retrieve user information using userId\n     b. IF user not found, THEN\n        i. Prepare error message: \"User not found\"\n        ii. Display user not found page\n        iii. END process\n   - Calculate pagination parameters:\n     a. Calculate starting post index based on page number and posts per page\n     b. Calculate total pages based on total posts and posts per page\n   - Check permissions:\n     a. Determine if current user has access to view attachments\n     b. Determine if RSS functionality is enabled in the system\n\n4. Core Operation Execution:\n   - Retrieve user posts:\n     a. Query posts made by the specified user with pagination limits\n     b. Count total number of posts by the user for pagination calculation\n   - For each post retrieved:\n     a. Collect associated topic information\n     b. Collect associated forum information\n     c. Apply any content formatting rules\n     d. Check viewing permissions for each post\n     e. IF user doesn't have permission to view a forum, THEN\n        i. Remove the post from results\n        ii. Decrease total message count\n   - IF no posts found, THEN\n     a. Prepare message: \"No posts found for this user\"\n   - Prepare additional context information:\n     a. Gather forum categories for navigation\n     b. Retrieve karma configuration values\n     c. Determine if attachments are enabled and can be downloaded\n\n5. Response Generation:\n   - Prepare user information for display:\n     a. Include user profile details (username, join date, post count)\n     b. Include user avatar if available\n   - Prepare posts list for display:\n     a. Format each post with creation date, content, and topic reference\n     b. Include links to the original topics\n     c. Include forum information for each post\n     d. Include attachment information if available and permitted\n   - Prepare pagination controls:\n     a. Calculate previous and next page numbers\n     b. Generate page number links based on total pages\n     c. Include first and last page links if applicable\n   - Set page title to include username\n   - Display the complete user posts listing page",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_categories",
+    "jforum_attachments",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Page number must be a positive integer",
+    "User must have permission to view the posts",
+    "User must have permission to view the forums containing the posts",
+    "User must have permission to view attachments if present"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "totalPosts": "number",
+      "avatar": "string"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "subject": "string",
+      "text": "string",
+      "postDate": "date",
+      "hasAttachments": "boolean"
+    },
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "status": "number",
+      "type": "number"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "Pagination": {
+      "currentPage": "number",
+      "totalPages": "number",
+      "postsPerPage": "number",
+      "totalPosts": "number",
+      "startIndex": "number"
+    },
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "filename": "string",
+      "filesize": "number",
+      "contentType": "string"
+    }
+  }
+}

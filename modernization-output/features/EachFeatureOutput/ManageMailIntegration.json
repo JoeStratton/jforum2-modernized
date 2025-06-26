@@ -1,0 +1,47 @@
+{
+  "featureName": "ManageMailIntegration",
+  "description": "Configures email integration settings for forums.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "mailIntegrationEnabled-boolean-MailIntegration",
+    "forumEmail-string-MailIntegration",
+    "popHost-string-MailIntegration",
+    "popUsername-string-MailIntegration",
+    "popPassword-string-MailIntegration",
+    "popPort-number-MailIntegration",
+    "requiresSSL-boolean-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. forumId (mandatory): Identifier of the forum to configure mail integration for\n     b. mailIntegrationEnabled (mandatory): Boolean flag indicating if mail integration is enabled\n     c. forumEmail (required if enabled): Email address associated with the forum\n     d. popHost (required if enabled): POP server hostname\n     e. popUsername (required if enabled): Username for POP server authentication\n     f. popPassword (required if enabled): Password for POP server authentication\n     g. popPort (required if enabled): Port number for POP server connection\n     h. requiresSSL (optional): Boolean flag indicating if SSL is required, default is false\n\n2. Data Validation:\n   - Validate forumId:\n     a. Ensure forumId is a positive integer\n     b. Verify forum exists in the system\n     c. Display error message if forum not found\n   - IF mailIntegrationEnabled is true, THEN:\n     a. Validate forumEmail:\n        i. Ensure it is not empty\n        ii. Verify it follows valid email format\n        iii. Display error message for invalid email format\n     b. Validate popHost:\n        i. Ensure it is not empty\n        ii. Verify it is a valid hostname or IP address\n        iii. Display error message for invalid host format\n     c. Validate popUsername:\n        i. Ensure it is not empty\n        ii. Display error message for missing username\n     d. Validate popPassword:\n        i. Ensure it is not empty\n        ii. Display error message for missing password\n     e. Validate popPort:\n        i. Ensure it is a positive integer\n        ii. Verify it is within valid port range (1-65535)\n        iii. Display error message for invalid port number\n\n3. Business Rule Processing:\n   - Check if user has administrative permissions:\n     a. Verify current user has forum administration rights\n     b. Display error message if permission denied\n   - Check if forum is in valid state for mail integration:\n     a. Verify forum is active and not marked for deletion\n     b. Display error message if forum is in invalid state\n   - IF mailIntegrationEnabled is true, THEN:\n     a. Verify system can support mail integration functionality\n     b. Check if POP server connection can be established with provided details\n     c. Display warning if connection test fails\n\n4. Core Operation Execution:\n   - Retrieve existing mail integration configuration:\n     a. Query database for existing mail integration settings for the forum\n     b. Determine if this is an update or new configuration\n   - IF mailIntegrationEnabled is true, THEN:\n     a. Create mail integration object with all provided settings\n     b. IF existing configuration found, THEN:\n        i. Update the existing mail integration record\n     c. ELSE:\n        i. Create a new mail integration record\n   - ELSE (mail integration disabled):\n     a. IF existing configuration found, THEN:\n        i. Remove the mail integration configuration for the forum\n   - Update forum repository to reflect changes\n   - Log the configuration change with administrator information\n\n5. Response Generation:\n   - IF operation successful, THEN:\n     a. Generate success message indicating mail integration settings were saved\n     b. Include summary of configured settings if enabled\n     c. Provide information about when settings will take effect\n   - ELSE:\n     a. Generate error message with details about what went wrong\n     b. Include suggestions for resolving the issue\n     c. Provide option to retry the operation\n   - Return to forum management interface with updated status",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_mail_integration"
+  ],
+  "validationRules": [
+    "Forum ID must exist in the system",
+    "Forum email must be in valid email format if mail integration is enabled",
+    "POP host must not be empty if mail integration is enabled",
+    "POP username must not be empty if mail integration is enabled",
+    "POP password must not be empty if mail integration is enabled",
+    "POP port must be a valid port number (1-65535) if mail integration is enabled",
+    "User must have administrative permissions to configure mail integration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "forumId": "number",
+      "forumEmail": "string",
+      "popHost": "string",
+      "popUsername": "string",
+      "popPassword": "string",
+      "popPort": "number",
+      "requiresSSL": "boolean"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "isModerated": "boolean"
+    }
+  }
+}

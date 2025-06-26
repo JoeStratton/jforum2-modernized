@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "AdminAccessControl",
+    "description": "Validates administrative access permissions before processing admin commands"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "ApprovePost",
+    "description": "Approves a post for publication based on its ID"
+  },
+  {
+    "featureName": "GetTopicsByForum",
+    "description": "Retrieves all messages requiring moderation for a specific forum"
+  },
+  {
+    "featureName": "GetCategoryPendingModeration",
+    "description": "Retrieves information about categories and forums with posts awaiting moderation"
+  }
+]

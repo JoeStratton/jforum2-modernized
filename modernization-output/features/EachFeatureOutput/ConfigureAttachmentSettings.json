@@ -1,0 +1,69 @@
+{
+  "featureName": "ConfigureAttachmentSettings",
+  "description": "Displays and manages attachment configuration settings for the forum.",
+  "inputValues": [
+    "icon-string-AttachmentConfig",
+    "createThumb-boolean-AttachmentConfig",
+    "thumbHeight-number-AttachmentConfig",
+    "thumbWidth-number-AttachmentConfig",
+    "maxPostAttachments-number-AttachmentConfig",
+    "thumbBorder-boolean-AttachmentConfig",
+    "quotaDescription-string-QuotaLimit",
+    "maxFileSize-number-QuotaLimit",
+    "quotaType-number-QuotaLimit",
+    "extensionGroupName-string-ExtensionGroup",
+    "extensionGroupAllow-boolean-ExtensionGroup",
+    "downloadMode-number-ExtensionGroup",
+    "uploadIcon-string-ExtensionGroup",
+    "extension-string-Extension",
+    "extensionAllow-boolean-Extension",
+    "extensionComment-string-Extension",
+    "extensionGroupId-number-Extension",
+    "groupQuotaMapping-object-GroupQuotaMapping"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect attachment configuration settings:\n     - Icon path (string, mandatory)\n     - Create thumbnail option (boolean, mandatory, default: false)\n     - Thumbnail height (number, mandatory if create thumbnail is true)\n     - Thumbnail width (number, mandatory if create thumbnail is true)\n     - Maximum attachments per post (number, mandatory)\n     - Show thumbnail border (boolean, mandatory, default: false)\n   - For quota limits:\n     - Quota description (string, mandatory)\n     - Maximum file size (number, mandatory)\n     - Quota type (number, mandatory)\n   - For extension groups:\n     - Group name (string, mandatory)\n     - Allow flag (boolean, mandatory, default: false)\n     - Download mode (number, mandatory)\n     - Upload icon (string, optional)\n   - For extensions:\n     - Extension name (string, mandatory)\n     - Allow flag (boolean, mandatory, default: false)\n     - Comment (string, optional)\n     - Extension group ID (number, mandatory)\n     - Upload icon (string, optional)\n   - For group quota mappings:\n     - Group ID (number, mandatory)\n     - Quota limit ID (number, mandatory)\n\n2. Data Validation:\n   - Validate attachment configuration settings:\n     - Icon path must not be empty\n     - If create thumbnail is true, thumbnail height and width must be positive numbers\n     - Maximum attachments per post must be a positive number\n   - Validate quota limits:\n     - Quota description must not be empty\n     - Maximum file size must be a positive number\n     - Quota type must be a valid type identifier\n   - Validate extension groups:\n     - Group name must not be empty\n     - Download mode must be a valid mode identifier\n   - Validate extensions:\n     - Extension name must not be empty\n     - If extension starts with a period (.), remove it\n     - Extension group ID must correspond to an existing extension group\n   - Validate group quota mappings:\n     - Group ID must correspond to an existing group\n     - Quota limit ID must correspond to an existing quota limit\n   - For each validation failure, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check system state for attachment functionality:\n     - Verify attachment feature is enabled in the system\n     - Ensure storage directory for attachments exists and is writable\n   - For quota limits:\n     - Verify quota type is compatible with system capabilities\n   - For extension groups:\n     - Ensure download mode is supported by the system\n   - For extensions:\n     - Check if extension is already registered in the system\n     - Verify extension is compatible with assigned group\n   - For group quota mappings:\n     - Ensure no duplicate mappings exist for the same group\n\n4. Core Operation Execution:\n   - For general configuration:\n     - Save attachment configuration settings to system preferences\n   - For quota limits:\n     - IF operation is create: Add new quota limit to the system\n     - IF operation is update: Update existing quota limits\n     - IF operation is delete: Remove selected quota limits\n   - For extension groups:\n     - IF operation is create: Add new extension group to the system\n     - IF operation is update: Update existing extension groups\n     - IF operation is delete: Remove selected extension groups\n   - For extensions:\n     - IF operation is create: Add new extension to the system\n     - IF operation is update: Update existing extensions\n     - IF operation is delete: Remove selected extensions\n   - For group quota mappings:\n     - Clear existing group quota mappings\n     - Create new mappings based on input\n   - IF any operation fails:\n     - Roll back changes where possible\n     - Log error details\n\n5. Response Generation:\n   - For configuration display:\n     - Retrieve current attachment settings\n     - Format settings for display in the user interface\n   - For quota limits display:\n     - Retrieve all quota limits\n     - Retrieve all user groups\n     - Retrieve existing group quota mappings\n     - Format data for display\n   - For extension groups display:\n     - Retrieve all extension groups\n     - Format data for display\n   - For extensions display:\n     - Retrieve all extensions\n     - Retrieve all extension groups\n     - Format data for display\n   - For any operation:\n     - IF operation successful: Display success message and updated data\n     - IF operation failed: Display error message with details\n     - Provide navigation options for different attachment configuration sections",
+  "databaseEntities": [
+    "jforum_quota_limit",
+    "jforum_extension_groups",
+    "jforum_attachments",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "Icon path must not be empty",
+    "Thumbnail height and width must be positive numbers when thumbnails are enabled",
+    "Maximum attachments per post must be a positive number",
+    "Quota description must not be empty",
+    "Maximum file size must be a positive number",
+    "Quota type must be a valid type identifier",
+    "Extension group name must not be empty",
+    "Download mode must be a valid mode identifier",
+    "Extension name must not be empty",
+    "Extension group ID must correspond to an existing extension group",
+    "Group ID must correspond to an existing group",
+    "Quota limit ID must correspond to an existing quota limit"
+  ],
+  "dbSeedingOperations": [
+    "Insert default quota limits if none exist",
+    "Insert default extension groups if none exist",
+    "Insert common file extensions with appropriate groups if none exist"
+  ],
+  "schema": {
+    "GroupQuotaMapping": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "number",
+          "description": "ID of the user group"
+        },
+        "quotaLimitId": {
+          "type": "number",
+          "description": "ID of the quota limit to apply to the group"
+        }
+      },
+      "required": [
+        "groupId",
+        "quotaLimitId"
+      ]
+    }
+  }
+}

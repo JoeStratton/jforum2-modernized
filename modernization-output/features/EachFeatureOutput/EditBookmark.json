@@ -1,0 +1,34 @@
+{
+  "featureName": "EditBookmark",
+  "description": "Displays form for editing an existing bookmark and updates the bookmark with new information.",
+  "inputValues": [
+    "bookmark_id-number-Bookmark",
+    "title-string-Bookmark",
+    "description-string-Bookmark",
+    "visible-boolean-Bookmark"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. bookmark_id (mandatory): Unique identifier of the bookmark to edit\n     b. title (mandatory): New title for the bookmark\n     c. description (optional): New description for the bookmark\n     d. visible (optional): Boolean flag indicating if bookmark is publicly visible\n\n2. Data Validation:\n   - Validate bookmark_id:\n     a. Check if bookmark_id is provided\n     b. Verify bookmark_id is a positive integer\n     c. IF validation fails, THEN display error message \"Invalid bookmark identifier\"\n   - Validate title:\n     a. Check if title is provided\n     b. Verify title is not empty after trimming whitespace\n     c. IF validation fails, THEN display error message \"Bookmark title cannot be empty\"\n   - Validate description:\n     a. No specific validation required as description is optional\n   - Validate visible flag:\n     a. Convert to boolean value (true if present, false if absent)\n\n3. Business Rule Processing:\n   - Retrieve bookmark using bookmark_id\n     a. IF bookmark does not exist, THEN display error message \"Bookmark not found\"\n   - Verify current user is the owner of the bookmark\n     a. Compare bookmark's userId with current user's id\n     b. IF user is not the owner, THEN display error message \"You are not authorized to edit this bookmark\"\n   - Check if bookmarks feature is enabled in system\n     a. IF bookmarks feature is disabled, THEN display error message \"Bookmark feature is disabled\"\n   - Verify user is authenticated (not anonymous)\n     a. IF user is anonymous, THEN display error message \"Anonymous users cannot edit bookmarks\"\n\n4. Core Operation Execution:\n   - Prepare bookmark update:\n     a. Set new title value\n     b. Set new description value\n     c. Set new public visibility flag\n   - Sanitize input values to prevent security issues\n     a. Remove any potentially harmful HTML or script content from title\n     b. Remove any potentially harmful HTML or script content from description\n   - Update bookmark in storage\n     a. Save changes to bookmark record\n     b. IF update fails, THEN display error message \"Failed to update bookmark\"\n\n5. Response Generation:\n   - On successful update:\n     a. Display confirmation message \"Bookmark updated successfully\"\n     b. Provide option to view updated bookmark\n     c. Provide option to return to bookmarks list\n   - On failure:\n     a. Display appropriate error message\n     b. Retain entered values in form\n     c. Allow user to correct errors and resubmit",
+  "databaseEntities": [
+    "jforum_bookmarks",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Bookmark must exist in the system",
+    "Current user must be the owner of the bookmark",
+    "User must be authenticated (not anonymous)",
+    "Bookmarks feature must be enabled in the system",
+    "Bookmark title must not be empty"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Bookmark": {
+      "id": "number",
+      "userId": "number",
+      "title": "string",
+      "description": "string",
+      "publicVisible": "boolean",
+      "relationType": "number",
+      "relationId": "number"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "featureName": "FindBBCodeByName",
+  "description": "Locates a specific BBCode tag by its name from the cached collection.",
+  "inputValues": [
+    "tagName-string-BBCode"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the required input parameter:\n     a. tagName (string, mandatory): The name of the BBCode tag to find\n     b. No default values are provided\n     c. No system-generated fields are used\n\n2. Data Validation:\n   - Validate the tagName input:\n     a. Check if tagName is not null\n        i. IF tagName is null THEN\n           - Generate an error indicating that tag name is required\n           - Terminate the operation\n        ii. ELSE continue to next validation\n     b. Check if tagName is not empty\n        i. IF tagName is empty THEN\n           - Generate an error indicating that tag name cannot be empty\n           - Terminate the operation\n        ii. ELSE continue to next validation\n\n3. Business Rule Processing:\n   - Verify the BBCode collection availability:\n     a. Check if the BBCode collection cache exists\n        i. IF BBCode collection cache does not exist THEN\n           - Generate an error indicating that BBCode collection is not initialized\n           - Terminate the operation\n        ii. ELSE continue to next step\n     b. Determine which collection to search:\n        i. The system maintains two collections of BBCode tags:\n           - Regular BBCode tags (bbMap)\n           - Always-process BBCode tags (alwaysProcessMap)\n        ii. For this operation, only search in the regular BBCode tags collection\n\n4. Core Operation Execution:\n   - Retrieve the BBCode from the collection:\n     a. Access the regular BBCode collection (bbMap)\n     b. Perform direct lookup using the tagName as the key:\n        i. The collection is structured as a map with tag names as keys\n        ii. Retrieve the BBCode object associated with the provided tagName\n        iii. IF the key exists in the map THEN\n             - The corresponding BBCode object is retrieved\n        iv. IF the key does not exist in the map THEN\n            - The result will be null\n\n5. Response Generation:\n   - Generate the appropriate response:\n     a. IF a matching BBCode was found THEN\n        i. Return the BBCode object with its complete properties:\n           - Tag name\n           - Regular expression pattern\n           - Replacement text\n           - Processing flags (removeQuotes, alwaysProcess)\n     b. ELSE\n        i. Return null to indicate that no matching BBCode was found\n     c. No additional metadata is included in the response",
+  "databaseEntities": [],
+  "validationRules": [
+    "Tag name must not be null",
+    "Tag name must not be empty",
+    "BBCode collection must be initialized before searching"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BBCode": {
+      "type": "object",
+      "properties": {
+        "tagName": {
+          "type": "string",
+          "description": "The name of the BBCode tag"
+        },
+        "regex": {
+          "type": "string",
+          "description": "Regular expression pattern for the BBCode"
+        },
+        "replace": {
+          "type": "string",
+          "description": "Replacement pattern for the BBCode"
+        },
+        "removeQuotes": {
+          "type": "boolean",
+          "description": "Whether to remove quotes during processing"
+        },
+        "alwaysProcess": {
+          "type": "boolean",
+          "description": "Whether the BBCode should always be processed"
+        }
+      }
+    }
+  }
+}

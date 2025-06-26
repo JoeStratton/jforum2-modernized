@@ -1,0 +1,26 @@
+[
+  {
+    "featureName": "DeleteForumRoles",
+    "description": "Deletes all security roles related to a specific forum"
+  },
+  {
+    "featureName": "DeleteAllRoles",
+    "description": "Deletes all security roles from a specific user group"
+  },
+  {
+    "featureName": "AddRole",
+    "description": "Adds a new security role to a user group"
+  },
+  {
+    "featureName": "AddRoleValue",
+    "description": "Adds role values to a specific role for a group"
+  },
+  {
+    "featureName": "LoadRoles",
+    "description": "Retrieves all security roles associated with a specific group"
+  },
+  {
+    "featureName": "LoadRolesByUserGroups",
+    "description": "Retrieves all security roles associated with a user's groups"
+  }
+]

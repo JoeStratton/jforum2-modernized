@@ -1,0 +1,84 @@
+{
+  "featureName": "GetTopicsByForum",
+  "description": "Retrieves all topics for a specific forum with pagination support.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "startIndex-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forumId (number, mandatory) to identify the target forum\n   - Collect startIndex (number, mandatory) to determine the starting position for pagination\n\n2. Data Validation\n   - Validate forumId\n     - Check if forumId is provided\n     - Verify forumId is a positive integer\n     - Verify forumId corresponds to an existing forum\n     - IF validation fails, THEN generate appropriate error message\n   - Validate startIndex\n     - Check if startIndex is provided\n     - Verify startIndex is a non-negative integer\n     - IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing\n   - Verify user has permission to access the forum\n     - Check if the forum exists in the system\n     - Check if the forum's category is accessible to the current user\n     - IF forum doesn't exist OR category is not accessible, THEN deny access and return error message\n   - Determine topic retrieval strategy\n     - IF startIndex is 0 AND topic caching is enabled, THEN attempt to retrieve topics from cache\n     - ELSE retrieve topics directly from the database\n\n4. Core Operation Execution\n   - Retrieve topics from cache (if applicable)\n     - Check if topics for the specified forum exist in the cache\n     - Check if the forum is marked as loaded in the cache\n     - IF topics don't exist in cache OR forum is not loaded:\n       - Synchronize access to prevent multiple simultaneous loads\n       - Retrieve topics from database with pagination limits\n       - Store topics in the cache for future use\n   - Retrieve topics from database (if not using cache)\n     - Query for topics in the specified forum with pagination\n     - Limit results to the configured number of topics per page\n     - Start from the specified index position\n   - Process retrieved topics\n     - For each topic:\n       - Determine if the topic has been read by the current user\n       - Calculate if pagination is needed for the topic's posts\n       - Mark hot topics based on reply count threshold\n       - Set topic status flags (sticky, announcement, locked)\n\n5. Response Generation\n   - Prepare topic listing response\n     - Return the list of processed topics\n     - Include all topic metadata:\n       - Topic ID, title, and description\n       - Post counts and view counts\n       - Last post information\n       - Topic type and status indicators\n       - Read/unread status for current user\n       - Pagination information for topics with many posts\n   - Format response for presentation\n     - Structure data for easy display in forum view\n     - Include all necessary information for topic listing",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum ID must reference an existing forum",
+    "Start index must be a non-negative integer",
+    "User must have access permissions to the forum's category",
+    "Forum must be active and accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this topic belongs to"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "totalReplies": {
+          "type": "number",
+          "description": "Number of replies in the topic"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Number of times the topic has been viewed"
+        },
+        "lastPostDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of the last post"
+        },
+        "lastPostId": {
+          "type": "number",
+          "description": "ID of the last post in the topic"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of topic (normal, sticky, announcement)"
+        },
+        "status": {
+          "type": "number",
+          "description": "Status of the topic (locked, unlocked)"
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "Whether the current user has read this topic"
+        },
+        "isHot": {
+          "type": "boolean",
+          "description": "Whether this is considered a hot topic based on reply count"
+        },
+        "paginate": {
+          "type": "boolean",
+          "description": "Whether pagination is needed for this topic's posts"
+        },
+        "totalPages": {
+          "type": "number",
+          "description": "Total number of pages for this topic's posts"
+        }
+      }
+    }
+  }
+}

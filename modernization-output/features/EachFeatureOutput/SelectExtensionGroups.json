@@ -1,0 +1,24 @@
+{
+  "featureName": "SelectExtensionGroups",
+  "description": "Retrieves all attachment extension groups configured in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will retrieve all extension groups from the data store\n\n2. Data Validation:\n   - No input validation required as this is a read-only operation\n   - System will verify database connection is available\n   - IF database connection is unavailable THEN\n     - Generate appropriate error message\n     - Terminate operation\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view extension groups\n   - IF user lacks required permissions THEN\n     - Generate access denied message\n     - Log access attempt\n     - Terminate operation\n   - Prepare query parameters for retrieving extension groups\n\n4. Core Operation Execution:\n   - Execute query to retrieve all extension groups\n   - For each extension group record:\n     - Extract group information (ID, name, allow status, upload icon, download mode)\n     - Create extension group object with extracted information\n     - Add extension group object to result collection\n   - IF query execution fails THEN\n     - Generate appropriate error message\n     - Log the failure with relevant details\n     - Terminate operation with failure status\n\n5. Response Generation:\n   - Format the collection of extension groups for presentation\n   - Return the formatted collection to the requester\n   - IF collection is empty THEN\n     - Include appropriate message indicating no extension groups are configured\n   - Include operation status (success)\n   - Include timestamp of retrieval",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "User must have permission to view attachment extension groups",
+    "Database connection must be available",
+    "Extension groups must be properly formatted before returning"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtensionGroup": {
+      "id": "number",
+      "name": "string",
+      "allow": "boolean",
+      "uploadIcon": "string",
+      "downloadMode": "number"
+    }
+  }
+}

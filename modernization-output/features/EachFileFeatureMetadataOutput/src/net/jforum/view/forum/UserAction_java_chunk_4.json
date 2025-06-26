@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "LostPassword",
+    "description": "Displays the lost password form for user password recovery"
+  },
+  {
+    "featureName": "PrepareLostPassword",
+    "description": "Prepares password recovery by finding user and generating a recovery hash"
+  },
+  {
+    "featureName": "LostPasswordSend",
+    "description": "Sends password recovery email to user with recovery instructions"
+  },
+  {
+    "featureName": "RecoverPassword",
+    "description": "Displays the password recovery form for users with a valid hash"
+  },
+  {
+    "featureName": "RecoverPasswordValidate",
+    "description": "Validates recovery hash and saves new user password"
+  },
+  {
+    "featureName": "ListUsers",
+    "description": "Displays paginated list of all forum users"
+  },
+  {
+    "featureName": "ListGroupUsers",
+    "description": "Displays paginated list of users belonging to a specific group"
+  },
+  {
+    "featureName": "SearchKarma",
+    "description": "Displays paginated list of users with their karma information"
+  }
+]

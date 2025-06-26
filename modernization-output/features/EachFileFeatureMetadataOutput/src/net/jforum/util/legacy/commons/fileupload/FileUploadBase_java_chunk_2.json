@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "DetectMultipartContent",
+    "description": "Determines if a request contains multipart content based on content type headers"
+  },
+  {
+    "featureName": "ParseMultipartRequest",
+    "description": "Processes RFC 1867 compliant multipart/form-data streams into FileItem instances"
+  },
+  {
+    "featureName": "ConfigureUploadSizeLimit",
+    "description": "Sets and retrieves maximum allowed upload size for file uploads"
+  },
+  {
+    "featureName": "ConfigureHeaderEncoding",
+    "description": "Sets and retrieves character encoding used when reading part headers"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "featureName": "FindUserByEmail",
+  "description": "Locates a user by their email address.",
+  "inputValues": [
+    "email-string-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the email address (string) from the user\n   - Email is a mandatory field\n\n2. Data Validation\n   - Validate email format\n     - Check if the email follows standard email format (contains @ and domain)\n     - Ensure email is not empty\n     - Ensure email length is within acceptable limits\n   - IF validation fails THEN\n     - Generate appropriate error message indicating invalid email format\n     - Return error response\n\n3. Business Rule Processing\n   - Check system access permissions\n     - Verify if the current user has permission to search for users by email\n   - IF user lacks permission THEN\n     - Generate access denied error\n     - Return error response\n\n4. Core Operation Execution\n   - Search for user with the provided email address\n     - Look up user records matching the exact email address (case-insensitive)\n     - IF user is found THEN\n       - Retrieve complete user information including:\n         * User ID\n         * Username\n         * Email address\n         * Account status (active/deleted)\n         * Registration information\n     - ELSE\n       - Set user as null\n\n5. Response Generation\n   - IF user was found THEN\n     - Return success response with user information\n       - Include user ID, username, email, and other non-sensitive user details\n   - ELSE\n     - Return appropriate response indicating no user was found with the provided email\n     - Include suggestion to verify the email address and try again",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Email must not be empty",
+    "Email must follow standard email format",
+    "User must have permission to search users by email"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string",
+      "registrationDate": "date",
+      "active": "boolean",
+      "deleted": "number"
+    }
+  }
+}

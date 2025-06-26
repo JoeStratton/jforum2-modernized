@@ -1,0 +1,40 @@
+{
+  "featureName": "CheckAttachmentThumbnail",
+  "description": "Determines if a thumbnail exists for the attachment based on system configuration.",
+  "inputValues": [
+    "attachment-object-Attachment",
+    "systemConfiguration-object-SystemConfiguration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the attachment object with its information\n   - Retrieve system configuration settings\n     - Thumbnail creation setting (enabled/disabled)\n     - Attachment storage directory path\n\n2. Data Validation:\n   - Validate attachment object exists\n     - IF attachment is NULL THEN\n       - Return error indicating invalid attachment\n     - END IF\n   - Validate attachment info exists\n     - IF attachment info is NULL THEN\n       - Return error indicating incomplete attachment data\n     - END IF\n   - Validate physical filename exists in attachment info\n     - IF physical filename is empty or NULL THEN\n       - Return error indicating missing filename\n     - END IF\n   - Validate system configuration\n     - IF system configuration is NULL THEN\n       - Return error indicating missing configuration\n     - END IF\n\n3. Business Rule Processing:\n   - Check if thumbnail creation is enabled in system configuration\n     - IF thumbnail creation setting is disabled THEN\n       - Return FALSE as thumbnails are not supported\n     - END IF\n   - Determine the expected thumbnail file path\n     - Construct path using storage directory and attachment's physical filename\n     - Append \"_thumb\" suffix to the physical filename\n\n4. Core Operation Execution:\n   - Check for thumbnail file existence\n     - Verify if the file exists at the constructed path\n     - IF file exists at the path THEN\n       - Set thumbnail existence flag to TRUE\n     - ELSE\n       - Set thumbnail existence flag to FALSE\n     - END IF\n   - IF thumbnail exists THEN\n     - Generate the accessible thumbnail path\n     - Construct using upload directory path and physical filename with \"_thumb\" suffix\n   - END IF\n\n5. Response Generation:\n   - Return the thumbnail existence status (TRUE/FALSE)\n   - IF thumbnail exists THEN\n     - Include the accessible thumbnail path in the response\n   - END IF",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Attachment object must not be null",
+    "Attachment info must not be null",
+    "Physical filename must not be empty",
+    "System configuration must be properly initialized",
+    "Thumbnail creation setting must be accessible in system configuration",
+    "Storage directory path must be defined in system configuration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "privmsgsId": "number",
+      "userId": "number",
+      "info": {
+        "type": "object",
+        "properties": {
+          "physicalFilename": "string"
+        }
+      }
+    },
+    "SystemConfiguration": {
+      "thumbnailCreationEnabled": "boolean",
+      "attachmentStorageDirectory": "string",
+      "attachmentUploadDirectory": "string"
+    }
+  }
+}

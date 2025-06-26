@@ -1,0 +1,15 @@
+{
+  "featureName": "GetForumLink",
+  "description": "Retrieves the forum base URL with trailing slash for consistent linking.",
+  "inputValues": [
+    "forumLink-string-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Retrieve the forum link configuration value from the system\n   - This value represents the base URL of the forum\n\n2. Data Validation:\n   - Check if the forum link value exists\n     - IF forum link is null or empty THEN\n       - Return an error indicating the forum link configuration is missing\n     - END IF\n\n3. Business Rule Processing:\n   - Examine the forum link to ensure it ends with a trailing slash\n     - IF the last character of the forum link is not a forward slash ('/') THEN\n       - The link needs to be modified to include the trailing slash\n     - ELSE\n       - The link already has the proper format\n     - END IF\n\n4. Core Operation Execution:\n   - IF the forum link does not end with a trailing slash THEN\n     - Append a forward slash character ('/') to the end of the forum link\n   - END IF\n   - Store the properly formatted forum link for return\n\n5. Response Generation:\n   - Return the formatted forum link with trailing slash\n   - The returned link can now be used as a base URL for constructing complete forum URLs",
+  "databaseEntities": [],
+  "validationRules": [
+    "Forum link configuration value must exist in the system",
+    "Returned forum link must always end with a trailing slash character ('/')"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

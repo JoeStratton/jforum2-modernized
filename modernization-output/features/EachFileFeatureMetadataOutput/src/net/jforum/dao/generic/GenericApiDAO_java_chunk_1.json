@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "ValidateApiKey",
+    "description": "Validates if an API key exists and is valid in the system"
+  }
+]

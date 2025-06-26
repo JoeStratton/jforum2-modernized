@@ -1,0 +1,55 @@
+{
+  "featureName": "ShowForumTopics",
+  "description": "Displays all topics in a specific forum with pagination and moderation options.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "start-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forum_id (mandatory): Numeric identifier of the forum to display\n   - Collect start (optional): Pagination start position, defaults to 0\n\n2. Data Validation:\n   - Validate forum_id:\n     a. Check if forum_id is provided and is a valid number\n     b. Verify forum exists in the system\n     c. If invalid, display appropriate error message\n   - Validate start parameter:\n     a. Ensure start is a non-negative number\n     b. If invalid, default to 0\n\n3. Business Rule Processing:\n   - Check user access permissions:\n     a. Verify if the forum is accessible to the current user\n     b. IF forum is not accessible or does not exist THEN\n        i. Display access denied message\n        ii. Terminate further processing\n     c. Determine user's moderation privileges for this forum:\n        i. Check if user is logged in\n        ii. Check if user has moderator status for this forum\n        iii. Check if user has message approval permissions\n\n4. Core Operation Execution:\n   - Retrieve forum information:\n     a. Get forum details including name, description, and settings\n     b. Get total number of topics in the forum\n   - Retrieve topic list:\n     a. Calculate pagination parameters based on start value and system-defined topics per page\n     b. Retrieve topics for the current page\n     c. IF user has moderation privileges THEN\n        i. Retrieve topics requiring approval\n   - Process topic data:\n     a. Format each topic with required display information\n     b. Calculate unread status based on user's last visit\n     c. Add moderation options for eligible users\n   - Prepare additional context data:\n     a. Forum subscription status for logged-in users\n     b. Forum permission settings (read-only, reply-only)\n     c. Attachment settings and permissions\n     d. RSS availability based on system settings\n\n5. Response Generation:\n   - Generate pagination information:\n     a. Calculate total pages based on topics count and topics per page\n     b. Generate previous/next page links if applicable\n     c. Create page number links\n   - Prepare display data:\n     a. Format the list of topics with their metadata\n     b. Include moderation options if user has privileges\n     c. Include forum subscription status\n     d. Include forum navigation breadcrumbs\n   - Display the forum topics page:\n     a. Show forum name and description\n     b. Display topic listing with pagination\n     c. Show moderation controls for authorized users\n     d. Display forum subscription options",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users",
+    "jforum_categories",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Forum ID must be a valid number",
+    "Forum must exist in the system",
+    "User must have access permissions to view the forum",
+    "Pagination start parameter must be a non-negative number",
+    "Only moderators can see topics pending approval"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number",
+      "totalTopics": "number"
+    },
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "lastPostTime": "date",
+      "totalReplies": "number",
+      "status": "string",
+      "type": "string",
+      "userId": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "registrationDate": "date",
+      "lastVisit": "date"
+    },
+    "Pagination": {
+      "start": "number",
+      "itemsPerPage": "number",
+      "totalItems": "number"
+    }
+  }
+}

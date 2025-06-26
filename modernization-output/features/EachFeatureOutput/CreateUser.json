@@ -1,0 +1,69 @@
+{
+  "featureName": "CreateUser",
+  "description": "Creates a new user with username, email and password with validation checks.",
+  "inputValues": [
+    "username-string-User",
+    "email-string-User",
+    "password-string-User",
+    "activationKey-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. username (string, mandatory): User's login name\n     b. email (string, mandatory): User's email address\n     c. password (string, mandatory): User's account password\n     d. activationKey (string, optional): Key for account activation, system-generated if not provided\n\n2. Data Validation:\n   a. Username Validation:\n      - Verify username is provided and not empty\n      - IF username is empty THEN\n        - Return error message indicating username is required\n        - Terminate process\n      - END IF\n      - Verify username length is within acceptable range (minimum 3 characters, maximum 25 characters)\n      - IF username length is invalid THEN\n        - Return error message indicating username length requirements\n        - Terminate process\n      - END IF\n      - Verify username contains only allowed characters (alphanumeric and underscores)\n      - IF username contains invalid characters THEN\n        - Return error message indicating allowed character set\n        - Terminate process\n      - END IF\n   \n   b. Email Validation:\n      - Verify email is provided and not empty\n      - IF email is empty THEN\n        - Return error message indicating email is required\n        - Terminate process\n      - END IF\n      - Verify email follows valid format (contains @ and proper domain structure)\n      - IF email format is invalid THEN\n        - Return error message indicating proper email format\n        - Terminate process\n      - END IF\n   \n   c. Password Validation:\n      - Verify password is provided and not empty\n      - IF password is empty THEN\n        - Return error message indicating password is required\n        - Terminate process\n      - END IF\n      - Verify password meets minimum complexity requirements (length, character types)\n      - IF password complexity is insufficient THEN\n        - Return error message indicating password requirements\n        - Terminate process\n      - END IF\n\n3. Business Rule Processing:\n   a. Username Uniqueness Check:\n      - Check if the username already exists in the system\n      - IF username already exists THEN\n        - Return error message indicating username is already taken\n        - Terminate process\n      - END IF\n   \n   b. Email Uniqueness Check:\n      - Check if the email already exists in the system\n      - IF email already exists THEN\n        - Return error message indicating email is already registered\n        - Terminate process\n      - END IF\n   \n   c. Activation Key Generation:\n      - IF activationKey is not provided THEN\n        - Generate a unique activation key for the user\n      - END IF\n\n4. Core Operation Execution:\n   a. User Record Creation:\n      - Create a new user record with the following information:\n        - Username\n        - Password (securely stored)\n        - Email\n        - Registration date (current timestamp)\n        - Activation key\n        - Default settings for user preferences\n      - IF record creation fails THEN\n        - Return error message indicating system error\n        - Terminate process\n      - END IF\n   \n   b. Group Assignment:\n      - Assign the user to the default user group\n      - IF group assignment fails THEN\n        - Delete the created user record\n        - Return error message indicating system error\n        - Terminate process\n      - END IF\n\n5. Response Generation:\n   a. Success Response:\n      - Generate success response containing:\n        - User ID of the newly created user\n        - Username\n        - Email\n        - Registration date\n        - Activation status (typically requiring activation)\n        - Message indicating successful account creation\n   \n   b. Error Response (if applicable):\n      - Generate error response containing:\n        - Error message describing the issue\n        - Error code or type\n        - Guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Username must be between 3 and 25 characters",
+    "Username must contain only alphanumeric characters and underscores",
+    "Username must be unique in the system",
+    "Email must not be empty",
+    "Email must follow valid format",
+    "Email must be unique in the system",
+    "Password must not be empty",
+    "Password must meet minimum complexity requirements"
+  ],
+  "dbSeedingOperations": [
+    "Default user group must exist in jforum_groups table"
+  ],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "password": {
+          "type": "string",
+          "description": "User's account password"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "activationKey": {
+          "type": "string",
+          "description": "Key for account activation"
+        },
+        "active": {
+          "type": "integer",
+          "description": "Indicates if the user account is active"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "email"
+      ]
+    }
+  }
+}

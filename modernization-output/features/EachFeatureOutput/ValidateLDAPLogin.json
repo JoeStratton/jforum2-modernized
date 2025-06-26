@@ -1,0 +1,59 @@
+{
+  "featureName": "ValidateLDAPLogin",
+  "description": "Authenticates users against LDAP server using provided credentials.",
+  "inputValues": [
+    "username-string-User",
+    "password-string-User",
+    "extraParams-object-Parameters"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect username (string, mandatory)\n   - Collect password (string, mandatory)\n   - Collect extraParams (object, optional)\n\n2. Data Validation:\n   - Validate username:\n     a. Check if username is not empty\n     b. Check if username follows allowed format\n     c. Generate error message if validation fails\n   - Validate password:\n     a. Check if password is not empty\n     b. Generate error message if validation fails\n\n3. Business Rule Processing:\n   - Prepare LDAP environment:\n     a. Set up initial context factory\n     b. Configure provider URL\n     c. Set security protocol if specified\n     d. Set authentication method if specified\n   - Construct principal identifier:\n     a. Combine login prefix with username\n     b. Append login suffix\n   - Set security credentials:\n     a. Add principal to environment\n     b. Add password to environment\n\n4. Core Operation Execution:\n   - Attempt LDAP authentication:\n     a. Create directory context using environment settings\n     b. IF authentication fails:\n        i. Return authentication failure result\n     c. IF authentication succeeds:\n        i. Determine lookup parameters\n        ii. Set lookup prefix to login prefix if not specified\n        iii. Set lookup suffix to login suffix if not specified\n        iv. Construct lookup principal\n        v. Retrieve user email attribute from directory\n   - Process authenticated user:\n     a. Check if user exists in local system\n     b. IF user does not exist:\n        i. Extract email from attributes (use default if not available)\n        ii. Register new user in the system\n     c. Retrieve complete user information\n\n5. Response Generation:\n   - Success response:\n     a. Return authenticated user object with all relevant details\n   - Error response:\n     a. Return authentication failure indicator\n     b. Include appropriate error message\n   - Cleanup:\n     a. Close directory context connection",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Username must not be empty",
+    "Password must not be empty",
+    "LDAP server connection must be available",
+    "LDAP configuration must be properly set",
+    "User principal must be correctly formatted"
+  ],
+  "dbSeedingOperations": [
+    "Ensure LDAP configuration settings are present in system configuration"
+  ],
+  "schema": {
+    "Parameters": {
+      "type": "object",
+      "properties": {
+        "additionalSettings": {
+          "type": "object",
+          "description": "Optional additional parameters for authentication"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "User identifier"
+        },
+        "username": {
+          "type": "string",
+          "description": "User login name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "groups": {
+          "type": "array",
+          "description": "User group memberships",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

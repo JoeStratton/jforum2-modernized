@@ -1,0 +1,61 @@
+{
+  "featureName": "SelectTopicsByUserWithPagination",
+  "description": "Retrieves topics created by a specific user with pagination support.",
+  "inputValues": [
+    "userId-number-User",
+    "startFrom-number-PaginationParams",
+    "count-number-PaginationParams"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (mandatory): Unique identifier of the user whose topics will be retrieved\n   - Collect startFrom (mandatory): Starting index for pagination\n   - Collect count (mandatory): Number of topics to retrieve\n   - System will use these parameters to fetch a specific range of topics\n\n2. Data Validation:\n   - Validate userId:\n      * Ensure userId is a positive integer\n      * Verify userId exists in the system\n      * IF userId is invalid or not found THEN return appropriate error message\n   - Validate pagination parameters:\n      * Ensure startFrom is a non-negative integer\n      * Ensure count is a positive integer\n      * IF startFrom or count is invalid THEN use default values (startFrom=0, count=10)\n\n3. Business Rule Processing:\n   - Check user access permissions:\n      * Verify the requesting user has permission to view topics\n      * Determine which forums the user has access to view\n      * Build a list of allowed forum IDs for the query\n      * IF user has no forum access THEN return empty result with appropriate message\n   - Check database connection:\n      * Ensure database connection is available\n      * IF connection is unavailable THEN return system error message\n   - Prepare pagination boundaries:\n      * Calculate the end boundary by adding count to startFrom\n      * This accommodates the pagination approach which requires both start and end indices\n\n4. Core Operation Execution:\n   - Query topic records:\n      * Retrieve topics where the poster ID matches the provided userId\n      * Filter topics to only include those from forums the user has access to\n      * Apply pagination using startFrom and count parameters\n      * Sort topics by creation date (newest first)\n   - For each topic retrieved:\n      * Collect basic topic information (id, title, creation date)\n      * Include forum information where the topic was posted\n      * Include topic statistics (views, replies)\n      * Include last post information\n      * Check for attachments and mark topics with attachments accordingly\n      * Format dates according to system's configured date format\n   - Process user information:\n      * Collect IDs of users who created topics and made last posts\n      * Retrieve usernames for all collected user IDs in a single operation\n      * Associate usernames with corresponding topics\n   - Count total number of topics by this user (for pagination information)\n   - IF any database errors occur during retrieval THEN:\n      * Log the error with appropriate details\n      * Handle gracefully with appropriate error message\n      * Close all database resources properly\n\n5. Response Generation:\n   - Prepare paginated result:\n      * Include list of topic objects with their details\n      * Include pagination metadata:\n         > Total number of topics by this user\n         > Current page information\n         > More pages indicator\n   - IF no topics found THEN return empty list with appropriate message\n   - IF operation successful THEN return formatted topic list with pagination details\n   - IF any errors occurred during processing THEN return error details with support information",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Start index must be a non-negative integer",
+    "Count must be a positive integer",
+    "User must have permission to view the requested topics",
+    "Topics must belong to the specified user",
+    "Database connection must be available",
+    "Pagination parameters must be adjusted for database-specific implementation",
+    "All database resources must be properly closed after use",
+    "Access to topics must be restricted to forums the user has permission to view"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "postedBy": "object",
+      "creationDate": "date",
+      "lastPostId": "number",
+      "totalViews": "number",
+      "totalReplies": "number",
+      "type": "number",
+      "isModerated": "boolean",
+      "hasAttach": "boolean",
+      "firstPostTime": "string",
+      "lastPostTime": "string",
+      "lastPostDate": "date"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "PaginationParams": {
+      "startFrom": "number",
+      "count": "number"
+    },
+    "PaginationResult": {
+      "topics": "array",
+      "totalTopics": "number",
+      "currentPage": "number",
+      "hasMorePages": "boolean"
+    }
+  }
+}

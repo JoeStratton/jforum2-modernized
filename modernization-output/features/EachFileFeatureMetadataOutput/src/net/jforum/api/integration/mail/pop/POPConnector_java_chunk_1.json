@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "OpenPopConnection",
+    "description": "Establishes a connection to a POP3 mail server with optional SSL support"
+  },
+  {
+    "featureName": "ListMailMessages",
+    "description": "Retrieves all available messages from the POP3 server inbox"
+  },
+  {
+    "featureName": "ClosePopConnection",
+    "description": "Closes the POP3 server connection with option to delete or retain messages"
+  }
+]

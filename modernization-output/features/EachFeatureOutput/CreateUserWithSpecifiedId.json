@@ -1,0 +1,38 @@
+{
+  "featureName": "CreateUserWithSpecifiedId",
+  "description": "Creates a new user with a predefined ID and assigns them to the default user group.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User",
+    "password-string-User",
+    "email-string-User",
+    "activationKey-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. userId (number): The predefined user ID to be assigned\n     b. username (string): The username for the new account\n     c. password (string): The password for authentication\n     d. email (string): The user's email address\n     e. activationKey (string, optional): Key for account activation\n\n2. Data Validation:\n   - Validate userId:\n     a. IF userId is not provided or is not a positive integer THEN\n        i. Return error: \"User ID must be a valid positive integer\"\n   - Validate username:\n     a. IF username is empty or null THEN\n        i. Return error: \"Username is required\"\n     b. IF username length is less than 3 characters THEN\n        i. Return error: \"Username must be at least 3 characters long\"\n     c. IF username already exists in the system THEN\n        i. Return error: \"Username already exists\"\n   - Validate password:\n     a. IF password is empty or null THEN\n        i. Return error: \"Password is required\"\n     b. IF password does not meet security requirements THEN\n        i. Return error: \"Password does not meet security requirements\"\n   - Validate email:\n     a. IF email is empty or null THEN\n        i. Return error: \"Email is required\"\n     b. IF email format is invalid THEN\n        i. Return error: \"Invalid email format\"\n     c. IF email already exists in the system THEN\n        i. Return error: \"Email already exists\"\n\n3. Business Rule Processing:\n   - Check if user ID is available:\n     a. IF a user with the specified ID already exists THEN\n        i. Return error: \"User ID is already in use\"\n   - Verify system configuration:\n     a. IF login authenticator is not configured THEN\n        i. Return error: \"System configuration error: login authenticator not configured\"\n   - Determine default user group:\n     a. Retrieve the default user group ID from system configuration\n     b. IF default user group does not exist THEN\n        i. Return error: \"Default user group not configured\"\n\n4. Core Operation Execution:\n   - Create new user record:\n     a. Prepare user data with the following fields:\n        i. User ID (as specified in input)\n        ii. Username\n        iii. Password (properly secured)\n        iv. Email\n        v. Registration timestamp (current system time)\n        vi. Activation key (if provided)\n     b. Insert the new user record with the specified ID\n     c. IF insertion fails THEN\n        i. Rollback any changes\n        ii. Return error: \"Failed to create user record\"\n   - Assign user to default group:\n     a. Create association between new user and default user group\n     b. IF group assignment fails THEN\n        i. Rollback user creation\n        ii. Return error: \"Failed to assign user to default group\"\n   - Initialize user properties:\n     a. Set default values for user preferences and settings\n     b. Set initial post count to 0\n     c. Set user status to inactive if activation is required\n\n5. Response Generation:\n   - For successful creation:\n     a. Return success status\n     b. Include created user information:\n        i. User ID\n        ii. Username\n        iii. Email\n        iv. Registration date\n        v. Group membership information\n     c. Include activation instructions if applicable\n   - For failed creation:\n     a. Return failure status\n     b. Include specific error message\n     c. Include any validation errors encountered",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Username is required and must be at least 3 characters long",
+    "Username must be unique in the system",
+    "Password is required and must meet security requirements",
+    "Email is required and must have a valid format",
+    "Email must be unique in the system",
+    "User ID must not already be in use"
+  ],
+  "dbSeedingOperations": [
+    "Ensure default user group exists in jforum_groups"
+  ],
+  "schema": {
+    "User": {
+      "userId": "number",
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "activationKey": "string",
+      "registrationDate": "date"
+    }
+  }
+}

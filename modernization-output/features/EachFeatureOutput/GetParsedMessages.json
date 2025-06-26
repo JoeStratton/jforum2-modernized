@@ -1,0 +1,70 @@
+{
+  "featureName": "GetParsedMessages",
+  "description": "Retrieves the list of parsed POP email messages.",
+  "inputValues": [
+    "connector-object-POPConnector"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect POPConnector object which contains connection details to the email server\n   - The connector must be properly initialized and connected to the email server\n\n2. Data Validation:\n   - Validate that the POPConnector object is not null\n   - Verify the connector has an active connection to the email server\n   - IF connector is null or not connected THEN\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify the system has sufficient permissions to access the mailbox\n   - Check if the connection has timeout constraints\n   - Ensure the system can handle the potential volume of messages\n   - IF any business rule fails THEN\n     - Log the specific failure reason\n     - Generate appropriate error message\n     - Exit process\n   - END IF\n\n4. Core Operation Execution:\n   - Initialize an empty list to store parsed messages\n   - Request the list of raw messages from the connector\n   - FOR each raw message in the retrieved list:\n     - Create a new parsed message object\n     - Extract message metadata (sender, recipient, subject, date)\n     - Extract message content (body, attachments if any)\n     - Add the parsed message to the messages list\n     - Log the successful retrieval of the message\n   - END FOR\n   - IF any error occurs during message parsing THEN\n     - Log the error details\n     - Continue with the next message\n   - END IF\n\n5. Response Generation:\n   - Return the complete list of successfully parsed messages\n   - Include count of successfully parsed messages\n   - Include count of messages that failed parsing (if any)\n   - IF no messages were found or parsed THEN\n     - Return empty list with appropriate status\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "POPConnector must be properly initialized",
+    "Connection to email server must be active",
+    "System must have sufficient permissions to access the mailbox"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "POPConnector": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "type": "object",
+          "description": "Connection details to the POP email server"
+        },
+        "listMessages": {
+          "type": "function",
+          "description": "Method that returns array of raw email messages"
+        }
+      },
+      "required": [
+        "connection",
+        "listMessages"
+      ]
+    },
+    "POPMessage": {
+      "type": "object",
+      "properties": {
+        "sender": {
+          "type": "string",
+          "description": "Email address of the sender"
+        },
+        "recipient": {
+          "type": "string",
+          "description": "Email address of the recipient"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject line of the email"
+        },
+        "content": {
+          "type": "string",
+          "description": "Body content of the email"
+        },
+        "date": {
+          "type": "date",
+          "description": "Date when the email was sent"
+        }
+      },
+      "required": [
+        "sender",
+        "subject",
+        "content",
+        "date"
+      ]
+    }
+  }
+}

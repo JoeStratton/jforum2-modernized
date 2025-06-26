@@ -1,0 +1,55 @@
+{
+  "featureName": "AddGroupRoles",
+  "description": "Adds merged roles for specified groups to the cache.",
+  "inputValues": [
+    "groupIds-object-GroupIds",
+    "roles-object-RoleCollection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. groupIds (mandatory): Array of integer group identifiers\n     b. roles (mandatory): Collection of role definitions to be cached\n     c. cacheKey (system-generated): Generated from the group IDs\n\n2. Data Validation:\n   - Validate group IDs:\n     a. Verify the groupIds array is not null\n     b. Verify the groupIds array is not empty\n     c. Verify each group ID is a positive integer\n     d. IF any validation fails, THEN display appropriate error message\n   - Validate roles collection:\n     a. Verify the roles collection is not null\n     b. Verify the roles collection contains at least one role\n     c. IF validation fails, THEN display appropriate error message\n\n3. Business Rule Processing:\n   - Check cache system availability:\n     a. Verify the cache engine is initialized\n     b. IF cache engine is not available, THEN report system error\n   - Generate cache key:\n     a. Convert the array of group IDs into a string representation\n     b. Use this string as the cache key for storing the roles\n\n4. Core Operation Execution:\n   - Prepare cache storage:\n     a. Identify the cache namespace (FQN) for roles\n     b. Format the cache key using the group IDs string representation\n   - Store roles in cache:\n     a. Add the roles collection to the cache using the namespace and key\n     b. IF cache operation fails, THEN handle the exception and report error\n     c. IF cache operation succeeds, THEN proceed to response generation\n\n5. Response Generation:\n   - Success response:\n     a. Confirm that roles have been successfully cached\n     b. Provide information about the groups whose roles were cached\n   - Error response:\n     a. Provide details about the nature of the error\n     b. Suggest possible remediation steps",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group IDs array must not be null",
+    "Group IDs array must not be empty",
+    "Each group ID must be a positive integer",
+    "Roles collection must not be null",
+    "Roles collection must contain at least one role",
+    "Cache engine must be initialized before storing roles"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "GroupIds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "description": "Unique identifier for a group"
+      }
+    },
+    "RoleCollection": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the role"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "Permission identifier"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

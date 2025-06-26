@@ -1,0 +1,35 @@
+{
+  "featureName": "SelectExtensions",
+  "description": "Retrieves all file extensions configured in the system.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System will retrieve all configured extensions from the database\n\n2. Data Validation:\n   - Verify database connection is available\n   - Validate that the user has appropriate permissions to view extension data\n   - IF connection is unavailable THEN generate appropriate error\n   - IF user lacks permissions THEN return access denied message\n\n3. Business Rule Processing:\n   - Check if extension data should be filtered based on user role\n   - Determine if additional extension metadata should be included in results\n   - Verify system state allows extension data retrieval\n\n4. Core Operation Execution:\n   - Retrieve all extension records from the database\n   - For each extension record:\n     a. Extract extension details (ID, name, group, comment, icon, etc.)\n     b. Format extension information into appropriate structure\n     c. Add to result collection\n   - IF no extensions are found THEN prepare empty result set\n   - IF error occurs during retrieval THEN prepare error response\n\n5. Response Generation:\n   - Format the complete list of extensions\n   - Include relevant metadata for each extension\n   - Return the formatted extension list to the requester\n   - IF operation failed THEN return appropriate error message with reason",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "User must have permission to view extension data",
+    "Database connection must be available",
+    "System must be in operational state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Extension": {
+      "id": "number",
+      "extension": "string",
+      "extensionGroupId": "number",
+      "comment": "string",
+      "uploadIcon": "string",
+      "allow": "boolean"
+    },
+    "AttachmentExtension": {
+      "id": "number",
+      "extension": "string",
+      "extensionGroupId": "number",
+      "comment": "string",
+      "uploadIcon": "string",
+      "allow": "boolean",
+      "unknown": "boolean"
+    }
+  }
+}

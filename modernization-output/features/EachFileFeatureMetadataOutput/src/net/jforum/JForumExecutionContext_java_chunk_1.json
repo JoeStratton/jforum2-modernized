@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "GetExecutionContext",
+    "description": "Retrieves the current thread's execution context for forum operations"
+  },
+  {
+    "featureName": "ManageDatabaseConnection",
+    "description": "Handles database connection lifecycle including transactions and rollbacks"
+  },
+  {
+    "featureName": "HandleRedirection",
+    "description": "Sets and retrieves URL redirection information for forum navigation"
+  },
+  {
+    "featureName": "ManageContentType",
+    "description": "Controls HTTP response content type settings for different forum outputs"
+  },
+  {
+    "featureName": "RequestBasicAuthentication",
+    "description": "Triggers HTTP basic authentication for securing forum access"
+  }
+]

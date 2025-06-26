@@ -1,0 +1,44 @@
+{
+  "featureName": "CreateIndexDirectory",
+  "description": "Creates a new Lucene index directory for search functionality.",
+  "inputValues": [
+    "indexDirectoryPath-string-IndexDirectory"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the index directory path (mandatory):\n       - The path where the search index will be created\n       - System will use default path if not explicitly provided\n   1.2. Verify user has administrative privileges (system-generated)\n\n2. Data Validation:\n   2.1. Validate index directory path:\n       - Check if the path string is not empty\n       - Verify the path format is valid for the operating system\n       - Ensure the path is accessible and has proper permissions\n       - Generate error message if path is invalid or inaccessible\n   2.2. Validate if search functionality is enabled:\n       - Check if the search engine configuration is set to use indexing\n       - Return appropriate error if search indexing is not enabled\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify no indexing operation is currently in progress\n       - IF indexing is in progress THEN\n           - Generate busy state error message\n           - Abort operation\n       - END IF\n   3.2. Check directory status:\n       - IF directory already exists THEN\n           - Determine if overwrite is allowed\n           - IF overwrite not allowed THEN\n               - Generate directory exists error\n               - Abort operation\n           - END IF\n       - END IF\n\n4. Core Operation Execution:\n   4.1. Create index directory structure:\n       - Attempt to create the directory at the specified path\n       - Create any necessary subdirectories for index organization\n       - Set appropriate file permissions for the created directories\n       - IF directory creation fails THEN\n           - Log the specific error reason\n           - Generate directory creation failure message\n           - Abort operation\n       - END IF\n   4.2. Initialize index structure:\n       - Create initial index files and structure\n       - Set up necessary configuration for the index\n       - Record creation timestamp and version information\n       - IF initialization fails THEN\n           - Clean up any partially created files\n           - Log the specific error reason\n           - Generate index initialization failure message\n           - Abort operation\n       - END IF\n\n5. Response Generation:\n   5.1. Create success response:\n       - Generate confirmation message that index directory was created\n       - Include the path where the index was created\n       - Include timestamp of creation\n       - Provide next steps for index population\n   5.2. Update system status:\n       - Update system configuration to reference new index location if needed\n       - Record the index creation in system logs\n   5.3. Return to index management interface:\n       - Display updated index information\n       - Show available index operations",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Index directory path must not be empty",
+    "Index directory path must be accessible with write permissions",
+    "Search functionality must be enabled in the system",
+    "No indexing operation should be currently in progress",
+    "System must have sufficient disk space for index creation"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "IndexDirectory": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "File system path where the index will be created"
+        },
+        "isWritable": {
+          "type": "boolean",
+          "description": "Whether the directory has write permissions"
+        },
+        "exists": {
+          "type": "boolean",
+          "description": "Whether the directory already exists"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    }
+  }
+}

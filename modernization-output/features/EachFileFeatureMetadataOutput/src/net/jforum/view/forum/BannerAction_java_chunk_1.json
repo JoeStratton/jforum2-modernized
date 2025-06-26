@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "RedirectBannerClick",
+    "description": "Redirects users to banner URL and increments click count when a banner is clicked"
+  }
+]

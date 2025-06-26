@@ -1,0 +1,38 @@
+{
+  "featureName": "ReadMultipartStream",
+  "description": "Reads and processes multipart stream data with boundary detection for file uploads.",
+  "inputValues": [
+    "inputStream-object-InputStream",
+    "boundary-object-ByteArray",
+    "bufferSize-number-Integer",
+    "headerEncoding-string-String"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the input stream containing multipart data\n   - Collect the boundary token used for dividing the stream into encapsulations\n   - Collect the buffer size (optional, default is 4096 bytes)\n   - Collect the header encoding (optional, uses platform default if not specified)\n\n2. Data Validation:\n   - Validate that the input stream is not null\n     * IF input stream is null THEN return error \"Input stream cannot be null\"\n   - Validate that the boundary token is not null and not empty\n     * IF boundary is null or empty THEN return error \"Boundary token cannot be null or empty\"\n   - Validate that the buffer size is sufficient\n     * IF buffer size is less than (boundary length + 6) THEN set buffer size to default value\n     * Buffer must be large enough to contain boundary string, plus CR/LF and double dash, plus at least one byte of data\n\n3. Business Rule Processing:\n   - Initialize the multipart stream reader\n     * Create a new buffer with the specified size\n     * Prepare the boundary token by prepending CR/LF/DASH/DASH to the provided boundary\n     * Set the boundary length and keep region values\n     * Initialize head and tail pointers to 0\n   - Set the header encoding if provided\n     * IF header encoding is provided THEN set the encoding for reading part headers\n     * ELSE use the platform default encoding\n\n4. Core Operation Execution:\n   - Read data from the input stream\n     * Fill the buffer with data from the input stream when needed\n     * Track the position within the buffer using head and tail pointers\n     * When buffer is depleted, refill it from the input stream\n   - Process boundaries in the multipart stream\n     * Detect boundary markers that separate different parts of the multipart data\n     * Determine if a boundary indicates another encapsulation follows or if it's the end of the stream\n     * Handle special cases like IE5 Mac bug with input type=image\n   - Handle nested multipart streams\n     * Allow changing the boundary token for processing nested streams\n     * Ensure new boundary tokens have the same length as the original\n\n5. Response Generation:\n   - Provide methods to access the parsed content\n     * Return individual bytes from the stream\n     * Indicate whether more encapsulations are available in the stream\n     * Provide access to the header encoding information\n   - Handle error conditions\n     * Generate appropriate exceptions for malformed streams\n     * Generate appropriate exceptions for unexpected end of stream\n     * Generate appropriate exceptions for invalid boundary changes",
+  "databaseEntities": [],
+  "validationRules": [
+    "Input stream must not be null",
+    "Boundary token must not be null or empty",
+    "Buffer size must be large enough to contain the boundary string plus necessary characters",
+    "Nested stream boundaries must be the same length as the parent boundary",
+    "Stream must follow proper multipart format with valid boundary markers"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "description": "A data source providing bytes of data"
+    },
+    "ByteArray": {
+      "type": "object",
+      "description": "An array of bytes representing the boundary token"
+    },
+    "Integer": {
+      "type": "number",
+      "description": "A numeric value specifying the buffer size"
+    },
+    "String": {
+      "type": "string",
+      "description": "Character encoding used when reading headers"
+    }
+  }
+}

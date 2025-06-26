@@ -1,0 +1,52 @@
+{
+  "featureName": "OpenPOPConnection",
+  "description": "Establishes a connection to a POP3 mail server with optional SSL support.",
+  "inputValues": [
+    "mailIntegration-object-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the MailIntegration object containing:\n       - popHost (mandatory): Server hostname\n       - popPort (mandatory): Server port number\n       - popUsername (mandatory): Username for authentication\n       - popPassword (mandatory): Password for authentication\n       - isSSL (mandatory): Boolean flag indicating whether to use SSL\n\n2. Data Validation:\n   2.1. Validate MailIntegration object:\n       - Check if mailIntegration object is not null\n       - Verify popHost is not empty and has valid hostname format\n       - Ensure popPort is a positive integer within valid port range (1-65535)\n       - Confirm popUsername is not empty\n       - Verify popPassword is provided\n       - Validate isSSL is a boolean value\n   2.2. If any validation fails:\n       - Generate appropriate error message\n       - Abort connection process\n\n3. Business Rule Processing:\n   3.1. Check system state:\n       - Verify no existing connection is active\n       - If connection exists, close it before proceeding\n   3.2. Determine connection protocol:\n       - IF isSSL is TRUE, THEN use secure protocol (pop3s)\n       - ELSE use standard protocol (pop3)\n\n4. Core Operation Execution:\n   4.1. Establish mail session:\n       - Create new mail session with default properties\n   4.2. Connect to mail server:\n       - Initialize store using appropriate protocol (pop3 or pop3s)\n       - Connect to server using provided credentials (host, port, username, password)\n       - IF connection fails, THEN generate connection error\n   4.3. Access mail folder:\n       - Attempt to open the INBOX folder in READ_WRITE mode\n       - IF folder cannot be accessed, THEN generate folder access error\n\n5. Response Generation:\n   5.1. Success response:\n       - Return confirmation that connection has been established\n       - Make connection available for subsequent mail operations\n   5.2. Error response:\n       - Provide detailed error information if connection failed\n       - Include troubleshooting suggestions based on error type",
+  "databaseEntities": [],
+  "validationRules": [
+    "MailIntegration object must not be null",
+    "POP host must be a valid hostname or IP address",
+    "POP port must be a valid port number (1-65535)",
+    "POP username must not be empty",
+    "POP password must not be empty",
+    "SSL flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "type": "object",
+      "properties": {
+        "popHost": {
+          "type": "string",
+          "description": "POP3 server hostname or IP address"
+        },
+        "popPort": {
+          "type": "number",
+          "description": "POP3 server port number"
+        },
+        "popUsername": {
+          "type": "string",
+          "description": "Username for POP3 authentication"
+        },
+        "popPassword": {
+          "type": "string",
+          "description": "Password for POP3 authentication"
+        },
+        "isSSL": {
+          "type": "boolean",
+          "description": "Flag indicating whether to use SSL for connection"
+        }
+      },
+      "required": [
+        "popHost",
+        "popPort",
+        "popUsername",
+        "popPassword",
+        "isSSL"
+      ]
+    }
+  }
+}

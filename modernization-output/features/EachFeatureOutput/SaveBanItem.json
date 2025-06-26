@@ -1,0 +1,33 @@
+{
+  "featureName": "SaveBanItem",
+  "description": "Creates a new ban entry for email, user, or IP address in the system.",
+  "inputValues": [
+    "type-string-Banlist",
+    "value-string-Banlist"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the ban type (mandatory string): email, user, or IP address\n   - Collect the ban value (mandatory string): the actual value to ban\n   - System will generate a unique identifier for the ban entry\n\n2. Data Validation:\n   - Validate ban type:\n     a. Check if type is not empty\n     b. Verify type is one of the allowed values: \"email\", \"user\", or \"ip\"\n     c. If validation fails, prepare error message indicating valid ban types\n   - Validate ban value:\n     a. Check if value is not empty\n     b. IF type is \"email\":\n        i. Verify value follows email format pattern\n     c. IF type is \"user\":\n        i. Verify value can be converted to a valid user identifier\n        ii. Verify user exists in the system\n     d. IF type is \"ip\":\n        i. Verify value follows valid IP address format\n     e. If validation fails, prepare appropriate error message based on type\n\n3. Business Rule Processing:\n   - Check for duplicate ban entries:\n     a. IF type is \"email\":\n        i. Verify the email is not already banned\n     b. IF type is \"user\":\n        i. Verify the user is not already banned\n     c. IF type is \"ip\":\n        i. Verify the IP address is not already banned\n   - Verify current user has permission to create ban entries\n   - If any business rule fails, prepare appropriate error message\n\n4. Core Operation Execution:\n   - Create new ban entry object\n   - Set the appropriate ban property based on type:\n     a. IF type is \"email\":\n        i. Set email property to the provided value\n     b. IF type is \"user\":\n        i. Convert value to integer user ID\n        ii. Set userId property to the converted value\n     c. IF type is \"ip\":\n        i. Set IP property to the provided value\n   - Save the ban entry to the persistent storage\n   - Update the ban list repository with the new entry\n   - IF any operation fails:\n     a. Roll back any partial changes\n     b. Prepare error message indicating failure reason\n\n5. Response Generation:\n   - IF operation successful:\n     a. Prepare success message indicating ban was created\n     b. Include ban entry details in response\n     c. Provide navigation options to view ban list\n   - IF operation failed:\n     a. Include detailed error message\n     b. Provide option to retry with corrected information\n     c. Include support information if needed",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_banlist"
+  ],
+  "validationRules": [
+    "Ban type must not be empty",
+    "Ban type must be one of: email, user, or ip",
+    "Ban value must not be empty",
+    "Email ban value must follow valid email format",
+    "User ban value must be a valid user identifier",
+    "IP ban value must follow valid IP address format",
+    "Ban entry must not be a duplicate of an existing entry"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "id": "number",
+      "type": "string",
+      "value": "string",
+      "email": "string",
+      "userId": "number",
+      "ip": "string"
+    }
+  }
+}

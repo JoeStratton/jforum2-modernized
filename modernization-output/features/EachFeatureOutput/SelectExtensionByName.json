@@ -1,0 +1,30 @@
+{
+  "featureName": "SelectExtensionByName",
+  "description": "Retrieves extension information by its name from the system.",
+  "inputValues": [
+    "extensionName-string-AttachmentExtension"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the extension name (extensionName) as a string\n   - The extension name is mandatory\n   - No default values are provided\n\n2. Data Validation:\n   - Validate the extension name:\n     a. Check if extensionName is not null or empty\n     b. Check if extensionName contains only valid characters\n     c. If validation fails, prepare appropriate error message\n\n3. Business Rule Processing:\n   - Check if the system is configured to handle file extensions\n   - Verify that the extension management feature is enabled\n   - Ensure the user has appropriate permissions to view extension information\n\n4. Core Operation Execution:\n   - Search for the extension in the system database:\n     a. Prepare search parameters using the extension name\n     b. Query the extension repository using the extension name as the search parameter\n     c. IF extension is found:\n        i. Retrieve all extension details including:\n           - Extension ID\n           - Extension name\n           - Associated group ID\n           - Description/comment\n           - Upload icon information\n           - Permission status (allowed/disallowed)\n     d. IF extension is not found:\n        i. Mark the extension as unknown\n        ii. Prepare appropriate response indicating extension was not found\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Format the extension information into a structured response\n     b. Include all extension attributes in the response\n   - For failed retrieval:\n     a. Generate appropriate error message\n     b. Include suggestion for valid extension names if possible\n   - Return the extension information or error message to the caller",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Extension name must not be empty",
+    "Extension name must contain only valid characters",
+    "Extension management feature must be enabled",
+    "User must have permission to view extension information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "AttachmentExtension": {
+      "id": "number",
+      "extension": "string",
+      "extensionGroupId": "number",
+      "comment": "string",
+      "uploadIcon": "string",
+      "allow": "boolean",
+      "unknown": "boolean"
+    }
+  }
+}

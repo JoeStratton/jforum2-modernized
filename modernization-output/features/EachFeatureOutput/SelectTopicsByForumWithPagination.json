@@ -1,0 +1,26 @@
+{
+  "featureName": "SelectTopicsByForumWithPagination",
+  "description": "Retrieves paginated topics for a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "startFrom-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): numeric identifier of the forum\n   - Collect startFrom (mandatory): numeric position to start retrieving records from\n   - Collect count (mandatory): maximum number of records to retrieve\n   - System will use these parameters to fetch a limited set of topics from the specified forum\n\n2. Data Validation:\n   - Validate forumId:\n     a. Must be a positive integer\n     b. Must represent an existing forum in the system\n     c. Return error if forum does not exist\n   - Validate startFrom:\n     a. Must be a non-negative integer\n     b. Return error if negative value provided\n   - Validate count:\n     a. Must be a positive integer\n     b. Must not exceed system-defined maximum page size\n     c. Return error if count is zero or negative\n     d. Return error if count exceeds maximum allowed value\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify if the current user has access to view the specified forum\n     b. IF user does not have permission, THEN return appropriate error message\n   - Check forum status:\n     a. Verify if the forum is active and not archived\n     b. IF forum is inactive or archived, THEN return appropriate status message\n   - Determine pagination strategy:\n     a. For database-specific implementations, adjust the query parameters accordingly\n     b. Calculate the endpoint as startFrom + count for certain database systems\n\n4. Core Operation Execution:\n   - Retrieve topics from the specified forum:\n     a. Query topics associated with the forumId\n     b. Apply pagination using startFrom and count parameters\n        i. Position the result set cursor at the startFrom position\n        ii. Retrieve up to 'count' records from that position\n     c. Sort topics according to system's default sorting criteria (typically by last post date)\n     d. For each topic retrieved:\n        i. Include basic topic information (id, title, creation date)\n        ii. Include topic statistics (view count, reply count)\n        iii. Include information about the topic creator (user_id, username)\n        iv. Include information about the last post (last_user_id, post_time)\n        v. Include attachment information (has_attach flag)\n        vi. Format dates according to system's configured date format\n   - IF no topics found:\n     a. Return empty result set with appropriate metadata\n\n5. Response Generation:\n   - Prepare paginated topic list response:\n     a. Include list of topic objects with their details\n     b. Include pagination metadata:\n        i. Total number of topics in the forum\n        ii. Current page information\n        iii. Information about next/previous pages if applicable\n     c. Include forum information for context\n     d. Format dates in the configured system format\n   - Return the complete response to the caller",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "Count must not exceed system-defined maximum page size",
+    "User must have permission to view the specified forum"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

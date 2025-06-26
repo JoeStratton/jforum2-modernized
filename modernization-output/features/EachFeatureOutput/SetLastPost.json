@@ -1,0 +1,42 @@
+{
+  "featureName": "SetLastPost",
+  "description": "Updates the last post reference for a forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect forumId (mandatory): Identifier of the forum to update\n   - Collect postId (mandatory): Identifier of the post to set as the last post\n\n2. Data Validation\n   - Validate forumId:\n     a. Check if forumId is provided\n     b. Verify forumId is a positive integer\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate postId:\n     a. Check if postId is provided\n     b. Verify postId is a non-negative integer (0 is allowed to clear last post)\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing\n   - Verify forum existence:\n     a. Check if forum with forumId exists in the system\n     b. IF forum does not exist, THEN return error indicating invalid forum\n   - Verify post existence (when postId > 0):\n     a. IF postId > 0, THEN check if post with postId exists in the system\n     b. IF post does not exist, THEN return error indicating invalid post\n   - Verify post belongs to forum (when postId > 0):\n     a. IF postId > 0, THEN check if post belongs to the specified forum\n     b. IF post does not belong to forum, THEN return error indicating post-forum mismatch\n\n4. Core Operation Execution\n   - Update forum record:\n     a. Set the last_post_id field of the forum to the provided postId\n     b. IF update operation fails, THEN:\n        i. Log the error details\n        ii. Revert any partial changes\n        iii. Return appropriate error message\n   - Update related data (if necessary):\n     a. IF postId > 0, THEN update forum's last activity timestamp\n     b. IF postId = 0, THEN this indicates clearing the last post reference\n\n5. Response Generation\n   - Generate success response:\n     a. Indicate successful update of forum's last post reference\n     b. Include forum identifier in response\n   - IF any errors occurred during processing:\n     a. Generate error response with appropriate error code\n     b. Include descriptive error message\n     c. Provide guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Post ID must be a non-negative integer",
+    "Forum must exist in the system",
+    "Post must exist in the system when postId > 0",
+    "Post must belong to the specified forum when postId > 0"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "categoryId": "number",
+      "name": "string",
+      "description": "string",
+      "order": "number",
+      "totalTopics": "number",
+      "lastPostId": "number",
+      "moderated": "boolean",
+      "totalPosts": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "postTime": "date",
+      "text": "string"
+    }
+  }
+}

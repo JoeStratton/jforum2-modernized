@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "InitializeCache",
+    "description": "Initializes the EhCache caching system using configuration properties"
+  },
+  {
+    "featureName": "StopCache",
+    "description": "Shuts down the cache manager and releases resources"
+  },
+  {
+    "featureName": "AddCacheItem",
+    "description": "Adds an object to the cache with a specified key"
+  },
+  {
+    "featureName": "AddNamespacedCacheItem",
+    "description": "Adds an object to a specific namespace in the cache with a key"
+  },
+  {
+    "featureName": "GetCacheItem",
+    "description": "Retrieves a cached object by its namespace and key"
+  },
+  {
+    "featureName": "GetCacheNamespace",
+    "description": "Retrieves an entire cache namespace"
+  },
+  {
+    "featureName": "GetNamespaceValues",
+    "description": "Retrieves all values stored in a specific cache namespace"
+  },
+  {
+    "featureName": "RemoveCacheItem",
+    "description": "Removes a specific item from the cache by namespace and key"
+  },
+  {
+    "featureName": "RemoveCacheNamespace",
+    "description": "Removes an entire namespace from the cache"
+  }
+]

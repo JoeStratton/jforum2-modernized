@@ -1,0 +1,51 @@
+{
+  "featureName": "ManageSessionContext",
+  "description": "Creates and provides access to the session context for managing user session data.",
+  "inputValues": [
+    "sessionData-object-SessionData",
+    "attributeName-string-AttributeName",
+    "attributeValue-object-AttributeValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect sessionData (object) containing session information\n   - Collect attributeName (string) for session attribute operations\n   - Collect attributeValue (object) for session attribute operations\n   - System will generate a unique sessionId if not provided\n\n2. Data Validation:\n   - Validate attributeName:\n     a. Check if attributeName is not null when performing attribute operations\n     b. Verify attributeName is a valid string format\n     c. Return appropriate error message if validation fails\n   - Validate attributeValue:\n     a. Ensure attributeValue is properly formatted for storage\n     b. Convert complex objects to storable format if needed\n     c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Check if session context already exists:\n     a. IF session context exists, retrieve existing context\n     b. IF session context does not exist, determine if new context should be created\n        i. IF create flag is true, create new session context\n        ii. IF create flag is false, return null or empty context based on system configuration\n   - Verify session timeout status:\n     a. IF session has timed out, handle according to system policy\n        i. Either create new session\n        ii. Or return error indicating expired session\n     b. IF session is valid, proceed with requested operation\n\n4. Core Operation Execution:\n   - Session Context Creation:\n     a. Generate new session identifier if creating new context\n     b. Initialize empty data structure for session attributes\n     c. Set default session timeout parameters\n     d. Record session creation time\n   - Session Data Management:\n     a. FOR attribute operations:\n        i. IF operation is getAttribute, retrieve requested attribute value\n           - Return null if attribute doesn't exist\n        ii. IF operation is setAttribute, store attribute with provided value\n           - Replace existing value if attribute already exists\n        iii. IF operation is removeAttribute, delete attribute from session\n           - Ignore if attribute doesn't exist\n     b. Handle session invalidation if requested:\n        i. Clear all session data\n        ii. Mark session as invalid\n        iii. Prepare for garbage collection\n\n5. Response Generation:\n   - For successful operations:\n     a. Return requested attribute value for getAttribute operations\n     b. Return confirmation of success for setAttribute operations\n     c. Return session context object when requested\n   - For error conditions:\n     a. Return appropriate error message for validation failures\n     b. Return session timeout notification if session expired\n     c. Return permissions error if operation not allowed",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "Session attribute names must not be null or empty",
+    "Session must be valid and not expired for operations",
+    "Session timeout must be a positive integer value",
+    "Session creation must generate a unique session identifier"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SessionData": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "creationTime": {
+          "type": "number",
+          "description": "Timestamp when session was created"
+        },
+        "lastAccessTime": {
+          "type": "number",
+          "description": "Timestamp of last session access"
+        },
+        "maxInactiveInterval": {
+          "type": "number",
+          "description": "Maximum time in seconds session can be inactive"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Collection of session attributes"
+        }
+      }
+    },
+    "AttributeValue": {
+      "type": "object",
+      "description": "Generic container for any type of session attribute value"
+    }
+  }
+}

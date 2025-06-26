@@ -1,0 +1,94 @@
+{
+  "featureName": "PerformSearch",
+  "description": "Executes search operations based on provided search arguments and returns filtered results.",
+  "inputValues": [
+    "searchArgs-object-SearchArgs",
+    "results-object-List"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect search arguments from the user\n      1.1.1. Search keywords (mandatory)\n      1.1.2. Search scope (optional, default: all forums)\n      1.1.3. Search filters (optional)\n      1.1.4. Sort options (optional, default: relevance)\n      1.1.5. Pagination parameters (optional, default: page 1, standard page size)\n   1.2. System generates search execution timestamp\n\n2. Data Validation:\n   2.1. Validate search keywords\n      2.1.1. Check if search keywords are provided\n      2.1.2. Verify minimum keyword length requirements\n      2.1.3. IF keywords do not meet requirements, THEN display appropriate error message\n   2.2. Validate search scope\n      2.2.1. IF specific forums are selected, THEN verify user has access to those forums\n      2.2.2. IF user lacks access to selected forums, THEN exclude those forums from search scope\n   2.3. Validate pagination parameters\n      2.3.1. Ensure page number is positive\n      2.3.2. Ensure page size is within allowed limits\n\n3. Business Rule Processing:\n   3.1. Check search frequency limitations\n      3.1.1. Verify if user has performed searches recently\n      3.1.2. IF search frequency exceeds allowed limit, THEN return error message about rate limiting\n   3.2. Apply forum access control\n      3.2.1. Determine forums the user has permission to search in\n      3.2.2. Filter search scope to include only accessible forums\n   3.3. Determine search operation type based on arguments\n      3.3.1. Analyze search arguments to select appropriate search strategy\n      3.3.2. Prepare search execution plan based on selected strategy\n\n4. Core Operation Execution:\n   4.1. Execute the search operation\n      4.1.1. Process search keywords according to search strategy\n      4.1.2. Apply forum scope filters to the search\n      4.1.3. Apply any additional filters specified in search arguments\n      4.1.4. Execute the search and collect initial results\n   4.2. Process search results\n      4.2.1. Filter results based on forum access permissions\n         4.2.1.1. For each result, extract the forum ID\n         4.2.1.2. Check if forum exists and user has access to it\n         4.2.1.3. IF forum is valid, add the result to filtered list\n         4.2.1.4. IF forum is valid, associate forum information with the result\n      4.2.2. Sort filtered results according to specified sort options\n      4.2.3. Apply pagination to the sorted results\n   4.3. Calculate total record count\n      4.3.1. Determine total number of matching records before pagination\n      4.3.2. Store count for pagination display purposes\n\n5. Response Generation:\n   5.1. Prepare results for display\n      5.1.1. Format each result item for presentation\n      5.1.2. Include relevant metadata with each result\n      5.1.3. Add highlighting to matched keywords if applicable\n   5.2. Generate search summary information\n      5.2.1. Include total number of results found\n      5.2.2. Include search execution time\n      5.2.3. Include pagination information\n   5.3. Return search results\n      5.3.1. Package filtered and formatted results\n      5.3.2. Include view template information for display\n      5.3.3. Return complete search result object to caller",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Search keywords must not be empty",
+    "Search keywords must meet minimum length requirements",
+    "User must have access permissions to forums being searched",
+    "Search frequency must not exceed rate limits",
+    "Page number must be positive",
+    "Page size must be within allowed limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Search terms provided by user"
+        },
+        "forumIds": {
+          "type": "array",
+          "description": "List of forum IDs to search within",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "startDate": {
+          "type": "date",
+          "description": "Optional start date for filtering results"
+        },
+        "endDate": {
+          "type": "date",
+          "description": "Optional end date for filtering results"
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "sortOrder": {
+          "type": "string",
+          "description": "Sort direction (ascending or descending)"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "description": "Page number for pagination"
+        },
+        "pageSize": {
+          "type": "integer",
+          "description": "Number of results per page"
+        }
+      },
+      "required": [
+        "keywords"
+      ]
+    },
+    "List": {
+      "type": "array",
+      "description": "Collection of search result items",
+      "items": {
+        "type": "object"
+      }
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "description": "List of search result items"
+        },
+        "totalRecords": {
+          "type": "integer",
+          "description": "Total number of matching records"
+        },
+        "viewTemplate": {
+          "type": "string",
+          "description": "Template identifier for displaying results"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CheckBannerDisplayEligibility",
+    "description": "Determines if a banner should be displayed based on user rights and banner filter settings"
+  },
+  {
+    "featureName": "CheckActiveBannerExistence",
+    "description": "Verifies if any active banner exists at the specified placement position"
+  },
+  {
+    "featureName": "SelectBannerByWeight",
+    "description": "Retrieves the appropriate banner based on weighted random selection and updates view count"
+  }
+]

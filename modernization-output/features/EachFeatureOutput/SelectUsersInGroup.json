@@ -1,0 +1,59 @@
+{
+  "featureName": "SelectUsersInGroup",
+  "description": "Retrieves user IDs associated with a specific group.",
+  "inputValues": [
+    "groupId-number-Group"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following input:\n     a. groupId (number, mandatory): The unique identifier of the group\n\n2. Data Validation\n   - Validate the groupId input:\n     a. Check if groupId is provided\n        IF groupId is null or undefined THEN\n          Return error: \"Group ID is required\"\n     b. Check if groupId is a valid number\n        IF groupId is not a number THEN\n          Return error: \"Group ID must be a numeric value\"\n     c. Check if groupId is a positive integer\n        IF groupId <= 0 THEN\n          Return error: \"Group ID must be a positive integer\"\n\n3. Business Rule Processing\n   - Verify the group exists in the system\n     a. Check if a group with the provided groupId exists\n        IF group does not exist THEN\n          Return error: \"Group not found with the provided ID\"\n   - Verify the current user has permission to view group members\n     a. Check if the current user has appropriate access rights\n        IF user does not have permission THEN\n          Return error: \"Insufficient permissions to view group members\"\n\n4. Core Operation Execution\n   - Retrieve all user IDs associated with the specified group\n     a. Access the user-group relationship records\n     b. Filter records by the provided groupId\n     c. Extract the user IDs from the filtered records\n     d. Create a list of user IDs\n   - Handle empty results appropriately\n     a. IF no users are found in the group THEN\n        Return an empty list with appropriate message\n\n5. Response Generation\n   - Prepare the success response\n     a. Format the list of user IDs\n     b. Include metadata such as:\n        i. Total count of users in the group\n        ii. Group information (name, description) if available\n   - Return the formatted response with the list of user IDs",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Group ID must be provided",
+    "Group ID must be a valid positive integer",
+    "Group must exist in the system",
+    "User must have permission to view group members"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "UserGroup": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "User identifier"
+        },
+        "groupId": {
+          "type": "number",
+          "description": "Group identifier"
+        }
+      },
+      "required": [
+        "userId",
+        "groupId"
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "featureName": "InsertGroup",
+  "description": "Provides interface for creating a new user group in the system.",
+  "inputValues": [
+    "group_name-string-Group",
+    "group_description-string-Group",
+    "parent_id-number-Group"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. group_name (string): The name of the new group\n     b. group_description (string): A description of the group's purpose\n     c. parent_id (number): The ID of the parent group if this is a subgroup\n   - All fields are mandatory except parent_id which defaults to 0 if not specified\n\n2. Data Validation:\n   - Validate group_name:\n     a. Check if group_name is not empty\n     b. Check if group_name is unique in the system\n     c. If validation fails, display appropriate error message\n   - Validate group_description:\n     a. Check if group_description is not empty\n     b. If validation fails, display appropriate error message\n   - Validate parent_id:\n     a. Check if parent_id refers to an existing group\n     b. Check if parent_id is not the same as the current group being created\n     c. If parent_id is invalid, set to 0 (no parent)\n\n3. Business Rule Processing:\n   - Verify user has permission to create groups\n   - Check if maximum number of allowed groups has not been exceeded\n   - Verify parent group exists if parent_id is provided\n   - IF parent_id equals the current group's ID THEN\n     a. Set parent_id to 0 to prevent circular reference\n\n4. Core Operation Execution:\n   - Create a new Group object with the following properties:\n     a. Set the group name from the input\n     b. Set the group description from the input\n     c. Set the parent ID from the input (or 0 if not applicable)\n   - Save the new group to the database\n   - Generate a unique identifier for the new group\n   - Create default permissions for the new group\n   - IF saving fails THEN\n     a. Roll back any partial changes\n     b. Generate appropriate error message\n     c. Return to the group creation form with entered values\n\n5. Response Generation:\n   - IF group creation is successful THEN\n     a. Display success message indicating the group was created\n     b. Redirect user to the group listing page\n     c. Show the newly created group in the list\n   - IF group creation fails THEN\n     a. Display detailed error message\n     b. Maintain entered form values for correction\n     c. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group name must not be empty",
+    "Group name must be unique in the system",
+    "Group description must not be empty",
+    "Parent group must exist in the system if specified",
+    "Parent group ID cannot be the same as the group being created"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "parentId": "number"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "featureName": "GetBoardStatus",
+  "description": "Retrieves forum statistics including posts, users, topics, and activity metrics.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use current date for calculations\n\n2. Data Validation:\n   - Verify system connection is available\n   - Ensure database is accessible\n   - Validate that required tables exist and are accessible\n\n3. Business Rule Processing:\n   - Check user permissions to access board statistics\n   - Verify if statistics caching is enabled\n   - IF statistics are cached AND cache is valid\n     THEN retrieve statistics from cache\n     ELSE proceed with database queries\n\n4. Core Operation Execution:\n   4.1. Retrieve Total Posts Count\n       - Count all messages in the system\n       - Store the count for statistics\n   \n   4.2. Retrieve Total Users Count\n       - Count all registered users in the system\n       - Store the count for statistics\n   \n   4.3. Retrieve Total Topics Count\n       - Count all discussion topics in the system\n       - Store the count for statistics\n   \n   4.4. Calculate Posts Per Day\n       - Retrieve timestamp of first post in the system\n       - IF first post timestamp exists\n         THEN calculate days between first post and current date\n         THEN divide total posts by number of days\n         IF result is less than 1 AND posts exist\n           THEN set posts per day to 1\n         ELSE use calculated value\n       ELSE set posts per day to 0\n   \n   4.5. Calculate Topics Per Day\n       - Use first post timestamp from previous step\n       - IF first post timestamp exists\n         THEN calculate days between first post and current date\n         THEN divide total topics by number of days\n       ELSE set topics per day to 0\n   \n   4.6. Calculate Users Per Day\n       - Retrieve timestamp of first registered user\n       - IF first user timestamp exists\n         THEN calculate days between first registration and current date\n         THEN divide total users by number of days\n       ELSE set users per day to 0\n   \n   4.7. Compile Statistics\n       - Create statistics object with all calculated values\n       - Package data for response\n\n5. Response Generation:\n   - Return compiled statistics object containing:\n     * Total number of posts\n     * Total number of users\n     * Total number of topics\n     * Posts per day average\n     * Topics per day average\n     * Users per day average\n   - IF any errors occurred during processing\n     THEN return appropriate error message\n     ELSE return complete statistics object",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "User must have permission to view board statistics",
+    "Database connection must be available",
+    "First post timestamp must be valid for per-day calculations",
+    "First user registration timestamp must be valid for per-day calculations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ForumStats": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "integer",
+          "description": "Total number of posts in the forum"
+        },
+        "users": {
+          "type": "integer",
+          "description": "Total number of registered users"
+        },
+        "topics": {
+          "type": "integer",
+          "description": "Total number of discussion topics"
+        },
+        "postsPerDay": {
+          "type": "number",
+          "description": "Average number of posts per day"
+        },
+        "topicsPerDay": {
+          "type": "number",
+          "description": "Average number of topics per day"
+        },
+        "usersPerDay": {
+          "type": "number",
+          "description": "Average number of new users per day"
+        }
+      }
+    }
+  }
+}

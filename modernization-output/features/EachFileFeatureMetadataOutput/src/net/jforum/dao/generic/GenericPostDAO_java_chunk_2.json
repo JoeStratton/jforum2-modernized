@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "SelectPostById",
+    "description": "Retrieves a post by its ID with all associated data"
+  },
+  {
+    "featureName": "DeletePost",
+    "description": "Removes a post from the system including its text content"
+  },
+  {
+    "featureName": "DeletePostsByTopic",
+    "description": "Removes all posts associated with a specific topic"
+  },
+  {
+    "featureName": "UpdatePost",
+    "description": "Updates an existing post's content and metadata"
+  },
+  {
+    "featureName": "CreatePost",
+    "description": "Creates a new post with text content and associates it with a topic"
+  },
+  {
+    "featureName": "GetPostsByTopic",
+    "description": "Retrieves all posts for a specific topic"
+  },
+  {
+    "featureName": "GetPostsByTopicWithPagination",
+    "description": "Retrieves posts for a topic with pagination support"
+  },
+  {
+    "featureName": "GetUserPostsWithPagination",
+    "description": "Retrieves posts created by a specific user with pagination"
+  },
+  {
+    "featureName": "CountUserPosts",
+    "description": "Counts the total number of posts created by a specific user"
+  },
+  {
+    "featureName": "CountPreviousPosts",
+    "description": "Counts posts that came before a specific post in its topic"
+  }
+]

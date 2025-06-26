@@ -1,0 +1,59 @@
+{
+  "featureName": "DetectPollChanges",
+  "description": "Identifies differences between two poll instances including label changes and option modifications.",
+  "inputValues": [
+    "originalPoll-object-Poll",
+    "updatedPoll-object-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect originalPoll (mandatory): The original poll instance\n   - Collect updatedPoll (mandatory): The updated poll instance with potential changes\n\n2. Data Validation:\n   - Validate originalPoll:\n     * Verify originalPoll is not null\n     * Verify originalPoll has a valid label\n     * Verify originalPoll has at least one option\n   - Validate updatedPoll:\n     * Verify updatedPoll is not null\n     * Verify updatedPoll has a valid label\n     * Verify updatedPoll has at least one option\n\n3. Business Rule Processing:\n   - Initialize change tracking containers:\n     * Create empty list for changed options\n     * Create empty list for deleted options\n     * Create empty list for new options\n     * Set label change status to false\n   - Check for label changes:\n     * IF originalPoll label does not match updatedPoll label THEN\n       > Set label change status to true\n   - Process option changes:\n     * Create map of original options by ID for efficient lookup\n     * FOR EACH option in updatedPoll:\n       > IF option exists in originalPoll (by ID) THEN\n         * IF option text has changed THEN\n           - Add to changed options list\n       > ELSE\n         * Add to new options list\n     * FOR EACH option in originalPoll:\n       > IF option does not exist in updatedPoll (by ID) THEN\n         * Add to deleted options list\n\n4. Core Operation Execution:\n   - Determine if any changes exist:\n     * IF label has changed OR any options list is not empty THEN\n       > Set hasChanges flag to true\n     * ELSE\n       > Set hasChanges flag to false\n   - Organize change information:\n     * Compile all changes into a structured format\n     * Ensure options in each category (changed, new, deleted) maintain their original properties\n\n5. Response Generation:\n   - Create response with the following information:\n     * hasChanges: Boolean indicating if any changes were detected\n     * labelChanged: Boolean indicating if the poll label changed\n     * changedOptions: List of options that were modified\n     * newOptions: List of options that were added\n     * deletedOptions: List of options that were removed\n   - Return the compiled change information",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Both original and updated polls must not be null",
+    "Both polls must have valid labels",
+    "Both polls must have at least one option",
+    "Poll options must have unique IDs within each poll",
+    "Option text changes are detected by comparing the text while maintaining the same ID"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll"
+        },
+        "label": {
+          "type": "string",
+          "description": "The question or title of the poll"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/PollOption"
+          },
+          "description": "List of available options for the poll"
+        }
+      }
+    },
+    "PollOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the poll option"
+        },
+        "text": {
+          "type": "string",
+          "description": "The text content of the poll option"
+        },
+        "voteCount": {
+          "type": "number",
+          "description": "Number of votes received for this option"
+        }
+      }
+    }
+  }
+}

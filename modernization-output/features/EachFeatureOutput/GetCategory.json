@@ -1,0 +1,39 @@
+{
+  "featureName": "GetCategory",
+  "description": "Retrieves a category by its ID with user access control validation.",
+  "inputValues": [
+    "categoryId-number-Category",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. categoryId (number, mandatory): The unique identifier of the category to retrieve\n     b. userId (number, mandatory): The identifier of the user requesting the category\n     c. System will use current session user ID if userId is not explicitly provided\n\n2. Data Validation\n   - Validate inputs:\n     a. Validate categoryId:\n        i. Ensure categoryId is a positive integer\n        ii. Ensure categoryId exists in the system\n        iii. Return error if categoryId is invalid or not found\n     b. Validate userId:\n        i. Ensure userId is a positive integer\n        ii. Ensure userId exists in the system\n        iii. Use current session user if userId is not provided\n\n3. Business Rule Processing\n   - Check access permissions:\n     a. Retrieve permission control for the user\n     b. IF user has no permission control:\n        i. Create new permission control for the user\n     c. Check if user has access to the requested category:\n        i. IF user does not have access permission to the category:\n           - Return null (indicating category not accessible)\n        ii. ELSE continue with retrieval\n\n4. Core Operation Execution\n   - Retrieve category data:\n     a. Check if category exists in the system cache\n        i. IF category exists in cache:\n           - Retrieve category data from cache\n        ii. ELSE:\n           - Log warning about cache miss\n           - Attempt to reload categories from data source\n           - Check cache again after reload\n           - IF category still not in cache:\n              * Throw exception indicating category cannot be found\n     b. Apply access control filter:\n        i. IF user has access to the category:\n           - Return the complete category data\n        ii. ELSE:\n           - Return null (indicating category not accessible)\n\n5. Response Generation\n   - Format the response:\n     a. IF category was successfully retrieved AND user has access:\n        i. Return complete category object with all associated data\n     b. IF category was not found OR user lacks access permission:\n        i. Return null to indicate category is not available\n     c. IF system error occurred during retrieval:\n        i. Throw appropriate exception with details about the failure",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_user_groups",
+    "jforum_groups",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Category ID must be a positive integer",
+    "Category must exist in the system",
+    "User must have permission to access the requested category",
+    "User ID must be valid if explicitly provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "order": "number",
+      "forums": "array"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "PermissionControl": {
+      "userId": "number",
+      "permissions": "object"
+    }
+  }
+}

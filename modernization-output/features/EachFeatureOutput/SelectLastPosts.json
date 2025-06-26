@@ -1,0 +1,62 @@
+{
+  "featureName": "SelectLastPosts",
+  "description": "Retrieves posts from the database within a specified date range.",
+  "inputValues": [
+    "firstDate-date-Post",
+    "lastDate-date-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the following required inputs:\n       - firstDate: The starting date for the post retrieval period\n       - lastDate: The ending date for the post retrieval period\n   1.2. Validate that both dates are provided and properly formatted\n\n2. Data Validation\n   2.1. Validate firstDate:\n       2.1.1. Check if firstDate is a valid date format\n       2.1.2. IF firstDate is invalid or missing, THEN generate an error message indicating valid date format is required\n   2.2. Validate lastDate:\n       2.2.1. Check if lastDate is a valid date format\n       2.2.2. IF lastDate is invalid or missing, THEN generate an error message indicating valid date format is required\n   2.3. Validate date range:\n       2.3.1. Check if firstDate is before or equal to lastDate\n       2.3.2. IF firstDate is after lastDate, THEN generate an error message indicating invalid date range\n\n3. Business Rule Processing\n   3.1. Check system state:\n       3.1.1. Verify that the post repository is accessible\n       3.1.2. IF post repository is not accessible, THEN generate a system unavailable error\n   3.2. Apply access control:\n       3.2.1. Verify that the current user has permission to view posts\n       3.2.2. IF user lacks permission, THEN generate an access denied error\n   3.3. Check resource constraints:\n       3.3.1. Determine if the date range is within acceptable query limits\n       3.3.2. IF date range exceeds system limits, THEN generate an error message suggesting a narrower date range\n\n4. Core Operation Execution\n   4.1. Prepare post retrieval parameters:\n       4.1.1. Format date parameters to system-required format\n       4.1.2. Set up sorting criteria (default: chronological order, newest first)\n   4.2. Retrieve posts:\n       4.2.1. Query the post repository for posts created between firstDate and lastDate (inclusive)\n       4.2.2. Apply any system-defined filters for retrievable posts\n       4.2.3. IF no posts are found, THEN prepare an empty result set\n   4.3. Process retrieved posts:\n       4.3.1. For each post retrieved:\n           - Extract relevant post information (ID, content, author, timestamp, etc.)\n           - Format post data according to system requirements\n           - Calculate and include karma score for each post\n       4.3.2. Format post timestamps according to system date format preferences\n       4.3.3. Organize posts in the required order\n\n5. Response Generation\n   5.1. Prepare success response:\n       5.1.1. Create a collection of retrieved posts\n       5.1.2. Include metadata about the query (total count, date range used)\n   5.2. Handle error responses:\n       5.2.1. IF any errors occurred during processing, THEN include appropriate error messages\n       5.2.2. For validation errors, include specific field-level error information\n   5.3. Return final response:\n       5.3.1. Package all post data and metadata into the response\n       5.3.2. Include any pagination information if applicable",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_karma"
+  ],
+  "validationRules": [
+    "First date must be a valid date format",
+    "Last date must be a valid date format",
+    "First date must be before or equal to last date",
+    "User must have permission to view posts",
+    "Date range must be within system-defined query limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "topicId": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "time": {
+          "type": "date"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "postUsername": {
+          "type": "string"
+        },
+        "formatedTime": {
+          "type": "string"
+        },
+        "karma": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

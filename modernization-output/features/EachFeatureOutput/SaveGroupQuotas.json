@@ -1,0 +1,34 @@
+{
+  "featureName": "SaveGroupQuotas",
+  "description": "Assigns quota limits to specific user groups for managing attachment size restrictions.",
+  "inputValues": [
+    "groupIds-number-Group",
+    "quotaLimitIds-number-QuotaLimit"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - Group IDs (mandatory): Identifiers for user groups to assign quotas to\n     - Quota Limit IDs (mandatory): Identifiers for quota limits to be assigned\n     - Total number of groups (system-generated): Count of groups to process\n\n2. Data Validation:\n   - Validate Group IDs:\n     - IF any Group ID is less than or equal to 0, THEN reject with error message \"Invalid group ID\"\n     - IF any Group ID does not exist in the system, THEN reject with error message \"Group not found\"\n   - Validate Quota Limit IDs:\n     - IF any Quota Limit ID is empty or null, THEN skip this entry (no quota assigned)\n     - IF any provided Quota Limit ID does not exist, THEN reject with error message \"Invalid quota limit\"\n\n3. Business Rule Processing:\n   - Check user permissions:\n     - IF current user does not have administrative privileges, THEN reject with error message \"Insufficient permissions\"\n   - Verify quota limit compatibility:\n     - FOR EACH quota limit being assigned:\n       - Verify the quota limit is active and available for assignment\n       - IF quota limit is disabled, THEN reject with error message \"Cannot assign inactive quota limit\"\n\n4. Core Operation Execution:\n   - Clean existing group quota assignments:\n     - Remove all current quota assignments for the specified groups\n     - Prepare system for new assignments\n   - Process group quota assignments:\n     - FOR EACH group in the input list:\n       - IF a quota limit is specified for this group:\n         - Create association between group and quota limit\n         - Record the assignment in the system\n       - ELSE:\n         - Skip this group (no quota will be assigned)\n   - Finalize quota assignments:\n     - Commit all changes to ensure data consistency\n     - Update any cached quota information\n\n5. Response Generation:\n   - Success response:\n     - Return confirmation message \"Group quota limits successfully saved\"\n     - Include summary of groups updated and their assigned quotas\n   - Error response:\n     - Return specific error message based on validation or processing failures\n     - Include guidance on how to correct the issue",
+  "databaseEntities": [
+    "jforum_groups",
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Group IDs must be positive integers",
+    "Group IDs must refer to existing groups",
+    "Quota Limit IDs must refer to existing quota limits",
+    "User must have administrative privileges to assign quotas",
+    "Each group can have only one quota limit assigned"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    },
+    "QuotaLimit": {
+      "id": "number",
+      "description": "string",
+      "size": "number",
+      "type": "number"
+    }
+  }
+}

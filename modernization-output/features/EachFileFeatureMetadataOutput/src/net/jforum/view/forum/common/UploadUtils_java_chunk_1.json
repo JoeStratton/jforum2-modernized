@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "SaveUploadedFile",
+    "description": "Saves an uploaded file to the specified location on the server"
+  },
+  {
+    "featureName": "GetFileExtension",
+    "description": "Extracts and returns the file extension from an uploaded file"
+  }
+]

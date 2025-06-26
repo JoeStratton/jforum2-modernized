@@ -1,0 +1,67 @@
+{
+  "featureName": "ManageRequestParameters",
+  "description": "Adds, replaces, and retrieves parameters from the request context.",
+  "inputValues": [
+    "name-string-Parameter",
+    "value-object-ParameterValue",
+    "operation-string-OperationType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect parameter name (string, mandatory)\n   - Collect parameter value (object, mandatory for add/replace operations)\n   - Determine operation type (add, addOrReplace, retrieve, retrieveAsInt, retrieveAsObject, changeAction, getModule, getAction)\n   - System will determine if request is forwarded (for IP address retrieval)\n\n2. Data Validation:\n   - Validate parameter name:\n     * Check if parameter name is not null or empty\n     * Verify parameter name follows naming conventions\n     * Generate error if parameter name is invalid\n   - Validate parameter value:\n     * Check if value is appropriate for the operation\n     * For add/replace operations, value must not be null\n     * For retrieve operations, no value validation needed\n   - Validate operation type:\n     * Must be one of the supported operation types\n     * Some operations require specific parameter names (e.g., \"action\" for changeAction)\n\n3. Business Rule Processing:\n   - Check system state:\n     * Verify request context is initialized\n     * Ensure context is in a valid state for parameter operations\n   - Process based on operation type:\n     * IF operation is add:\n       - Check if parameter already exists\n       - IF parameter exists:\n         * Convert existing value to a list if not already a list\n         * Add new value to the list\n       - ELSE:\n         * Add parameter with provided value\n     * IF operation is addOrReplace:\n       - Add parameter with new value regardless of existing state\n     * IF operation is retrieve:\n       - Check if parameter exists in context\n       - IF parameter exists:\n         * Return parameter value as string\n       - ELSE:\n         * Return null or default value\n     * IF operation is retrieveAsInt:\n       - Retrieve parameter value as string\n       - Convert string value to integer\n       - Handle conversion errors\n     * IF operation is retrieveAsObject:\n       - Return parameter value as object without type conversion\n     * IF operation is changeAction:\n       - Check if \"action\" parameter exists\n       - IF exists:\n         * Replace existing action value\n       - ELSE:\n         * Add new action parameter\n     * IF operation is getAction or getModule:\n       - Return the value of \"action\" or \"module\" parameter respectively\n\n4. Core Operation Execution:\n   - Execute the selected operation on the request context:\n     * For add: Store parameter in context data structure with list handling\n     * For addOrReplace: Update parameter in context data structure\n     * For retrieve operations: Access parameter from context data structure\n     * For changeAction: Update the action parameter\n   - Handle any operation failures:\n     * Log operation failure details\n     * Prepare appropriate error response\n   - Special handling for IP address retrieval:\n     * Check for forwarded requests using \"x-forwarded-for\" header\n     * Process IP address chain to extract the original client IP\n     * Provide fallback value if IP cannot be determined\n\n5. Response Generation:\n   - For add/replace operations:\n     * Confirm successful parameter update\n     * Return success status\n   - For retrieve operations:\n     * Return requested parameter value in appropriate format (string, int, object)\n     * Include parameter type information if needed\n   - For changeAction operation:\n     * Confirm successful action parameter update\n   - For getAction/getModule operations:\n     * Return the corresponding parameter value\n   - For any failures:\n     * Return appropriate error message\n     * Include error details for troubleshooting",
+  "databaseEntities": [],
+  "validationRules": [
+    "Parameter name must not be null or empty",
+    "Request context must be initialized before parameter operations",
+    "Parameter value must be appropriate for the specified operation",
+    "For retrieveAsInt operations, parameter value must be convertible to integer",
+    "For changeAction operations, new action value must not be null",
+    "IP address processing must handle null or empty forwarded headers"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ParameterValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "any",
+          "description": "The actual value of the parameter, can be any type"
+        },
+        "type": {
+          "type": "string",
+          "description": "Optional type information for the parameter"
+        }
+      }
+    },
+    "Parameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the parameter"
+        },
+        "value": {
+          "type": "object",
+          "description": "The value object containing the parameter data",
+          "$ref": "#/ParameterValue"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    },
+    "OperationType": {
+      "type": "string",
+      "enum": [
+        "add",
+        "addOrReplace",
+        "retrieve",
+        "retrieveAsInt",
+        "retrieveAsObject",
+        "changeAction",
+        "getAction",
+        "getModule"
+      ],
+      "description": "The type of operation to perform on the parameter"
+    }
+  }
+}

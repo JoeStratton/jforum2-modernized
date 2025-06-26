@@ -1,0 +1,26 @@
+{
+  "featureName": "CheckActiveBannerExistence",
+  "description": "Verifies if any active banner exists at the specified placement position.",
+  "inputValues": [
+    "placement-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect placement position (number) - mandatory\n   - System will use this placement position to check for active banners\n\n2. Data Validation:\n   - Validate placement position:\n     a. Ensure placement position is a valid number\n     b. Verify placement position is within the allowed range of placement values\n     c. Return appropriate error if validation fails\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Ensure banner management system is operational\n     b. Check if banner data access is available\n     c. IF any system dependencies are unavailable, THEN return appropriate error\n\n4. Core Operation Execution:\n   - Query for active banners:\n     a. Search for all active banners matching the specified placement position\n     b. Collect all matching banners into a result set\n     c. IF query execution fails, THEN handle the error and return appropriate message\n   - Evaluate query results:\n     a. Check if the result set contains any banners\n     b. IF result set is empty or null, THEN set existence flag to false\n     c. ELSE set existence flag to true\n\n5. Response Generation:\n   - Generate response with banner existence status:\n     a. Return boolean value indicating whether active banners exist at the specified placement\n     b. Include placement position in response for reference\n     c. IF error occurred during processing, include appropriate error details",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Placement position must be a valid number",
+    "Placement position must be within allowed range of values",
+    "Banner data access must be available"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "placement": "number",
+      "active": "boolean",
+      "weight": "number",
+      "views": "number"
+    }
+  }
+}

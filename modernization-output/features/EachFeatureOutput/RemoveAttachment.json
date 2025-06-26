@@ -1,0 +1,45 @@
+{
+  "featureName": "RemoveAttachment",
+  "description": "Removes an attachment from a post.",
+  "inputValues": [
+    "attachmentId-number-Attachment",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. attachmentId (mandatory): The unique identifier of the attachment to be removed\n     1.2. postId (mandatory): The identifier of the post containing the attachment\n\n2. Data Validation\n   - Validate all input parameters:\n     2.1. Validate attachmentId:\n         2.1.1. Check if attachmentId is provided\n         2.1.2. Verify attachmentId is a positive integer\n         2.1.3. If validation fails, generate appropriate error message\n     2.2. Validate postId:\n         2.2.1. Check if postId is provided\n         2.2.2. Verify postId is a positive integer\n         2.2.3. If validation fails, generate appropriate error message\n\n3. Business Rule Processing\n   - Verify attachment exists and can be removed:\n     3.1. Check if the attachment with the given attachmentId exists in the system\n         3.1.1. IF attachment does not exist, THEN return error message \"Attachment not found\"\n     3.2. Verify the attachment belongs to the specified post\n         3.2.1. IF attachment does not belong to the specified post, THEN return error message \"Attachment does not belong to the specified post\"\n     3.3. Check if the current user has permission to remove the attachment\n         3.3.1. Determine if user is the post owner, a moderator, or an administrator\n         3.3.2. IF user lacks permission, THEN return error message \"Insufficient permissions to remove this attachment\"\n\n4. Core Operation Execution\n   - Remove the attachment from the system:\n     4.1. Retrieve the physical file information associated with the attachment\n         4.1.1. Get file path and name from attachment record\n     4.2. Delete the attachment information record from the database\n         4.2.1. Remove entry from attachment info table using attachmentId\n         4.2.2. IF database operation fails, THEN generate error and abort process\n     4.3. Delete the attachment record from the database\n         4.3.1. Remove entry from attachment table using attachmentId\n         4.3.2. IF database operation fails, THEN generate error and abort process\n     4.4. Delete the physical file from the storage system\n         4.4.1. Locate the file in the attachment storage location\n         4.4.2. Delete the file from the storage system\n         4.4.3. IF file deletion fails, log warning but continue process\n     4.5. Update post information to reflect attachment removal\n         4.5.1. Count remaining attachments for the post\n         4.5.2. Update attachment count for the post\n\n5. Response Generation\n   - Generate appropriate response based on operation outcome:\n     5.1. IF attachment removal was successful:\n         5.1.1. Return success message indicating attachment was removed\n         5.1.2. Include updated attachment count for the post\n     5.2. IF attachment removal failed:\n         5.2.1. Return error message with details about the failure\n         5.2.2. Include suggestions for resolving the issue\n         5.2.3. Provide support contact information if needed",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Attachment ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Attachment must exist in the system",
+    "Attachment must belong to the specified post",
+    "User must have permission to remove the attachment"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "id": "number",
+      "postId": "number",
+      "privmsgsId": "number",
+      "userId": "number",
+      "physicalFilename": "string",
+      "realFilename": "string",
+      "fileComment": "string",
+      "mimetype": "string",
+      "filesize": "number",
+      "uploadTime": "date",
+      "downloadCount": "number",
+      "extensionId": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "text": "string",
+      "time": "date",
+      "attachmentCount": "number"
+    }
+  }
+}

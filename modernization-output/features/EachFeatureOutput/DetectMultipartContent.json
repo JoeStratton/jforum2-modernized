@@ -1,0 +1,32 @@
+{
+  "featureName": "DetectMultipartContent",
+  "description": "Determines if a request contains multipart content based on content type headers.",
+  "inputValues": [
+    "request-object-RequestContext",
+    "contentType-string-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the request object containing HTTP request information\n   - Extract the content type header from the request\n   - Determine the HTTP method (if applicable to the request type)\n\n2. Data Validation:\n   - Validate that the request object is not null\n      * IF request is null THEN return an error indicating invalid request\n   - Validate that the content type can be retrieved\n      * IF content type cannot be accessed THEN proceed with null content type value\n\n3. Business Rule Processing:\n   - Check if the request method is relevant for multipart content\n      * IF request type supports method checking AND method is not POST\n         THEN return false as multipart content requires POST method\n   - Check if the content type header exists\n      * IF content type is null THEN return false as multipart content requires a content type\n   - Check if the content type starts with \"multipart/\"\n      * Convert content type to lowercase for case-insensitive comparison\n      * IF content type starts with \"multipart/\" THEN mark as multipart content\n      * ELSE mark as non-multipart content\n\n4. Core Operation Execution:\n   - No data modifications are performed in this feature\n   - The determination is made solely based on the request properties\n   - No state changes occur in the system\n\n5. Response Generation:\n   - Return a boolean result:\n      * TRUE if the request contains multipart content\n      * FALSE if the request does not contain multipart content\n   - No additional information needs to be returned",
+  "databaseEntities": [],
+  "validationRules": [
+    "Request object must not be null",
+    "Multipart content requires a content type header",
+    "Content type must start with 'multipart/' to be considered multipart content",
+    "For HTTP requests, only POST method supports multipart content"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string",
+          "description": "The Content-Type header value from the request"
+        },
+        "method": {
+          "type": "string",
+          "description": "The HTTP method used for the request (GET, POST, etc.)"
+        }
+      }
+    }
+  }
+}

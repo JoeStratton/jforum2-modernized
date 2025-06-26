@@ -1,0 +1,30 @@
+{
+  "featureName": "CloseResultSet",
+  "description": "Safely closes a ResultSet object to release database resources.",
+  "inputValues": [
+    "resultSet-object-DatabaseResource"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the ResultSet object to be closed\n   - Determine if the ResultSet is required or optional\n   - Check if associated Statement object is also to be closed\n\n2. Data Validation:\n   - Check if the provided ResultSet object is null\n     * IF ResultSet is null, THEN skip closing operation\n     * IF ResultSet is not null, THEN proceed with closing\n   - Verify the ResultSet object state\n     * Check if ResultSet is already closed\n     * Determine if ResultSet is still in use by other operations\n\n3. Business Rule Processing:\n   - Determine the proper sequence for resource cleanup\n     * IF both ResultSet and Statement are provided, THEN close ResultSet first\n     * Ensure proper resource management according to database connection lifecycle\n   - Handle any dependencies between resources\n     * Verify no active operations are using the ResultSet\n     * Check for any pending data fetches\n\n4. Core Operation Execution:\n   - Attempt to close the ResultSet\n     * Execute the close operation on the ResultSet object\n     * Capture any exceptions that occur during closing\n     * Suppress exceptions to prevent operation interruption\n   - Handle any cleanup of related resources\n     * IF Statement object is provided, THEN:\n       * Clear any warnings from the Statement\n       * Close the Statement object\n       * Suppress any exceptions from Statement closing\n   - Verify resources are properly released\n     * Ensure database cursors are released\n     * Confirm memory resources are freed\n\n5. Response Generation:\n   - Determine operation success status\n     * IF closing operations completed without errors, THEN mark as success\n     * IF exceptions were caught but suppressed, THEN log information\n   - Return appropriate response\n     * No explicit return value needed as operation is void\n     * Ensure calling process can continue regardless of close operation result",
+  "databaseEntities": [],
+  "validationRules": [
+    "ResultSet object may be null, which should be handled gracefully",
+    "Statement object may be null, which should be handled gracefully",
+    "Exceptions during closing operations should be caught and suppressed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseResource": {
+      "type": "object",
+      "properties": {
+        "resultSet": {
+          "type": "object",
+          "description": "Database result set object that needs to be closed"
+        },
+        "statement": {
+          "type": "object",
+          "description": "Optional associated statement object that may also need closing"
+        }
+      }
+    }
+  }
+}

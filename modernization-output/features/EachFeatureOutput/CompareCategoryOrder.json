@@ -1,0 +1,37 @@
+{
+  "featureName": "CompareCategoryOrder",
+  "description": "Compares two Category objects by their order and name for sorting purposes.",
+  "inputValues": [
+    "firstCategory-object-Category",
+    "secondCategory-object-Category"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect two Category objects for comparison:\n     - firstCategory (mandatory): The first Category object to compare\n     - secondCategory (mandatory): The second Category object to compare\n   - No default values are provided\n   - Both inputs must be valid Category objects\n\n2. Data Validation:\n   - Validate firstCategory input:\n     - Check if firstCategory is not null\n     - Verify that firstCategory has valid order property (numeric value)\n     - Verify that firstCategory has valid name property (non-empty string)\n     - If validation fails, return error message indicating invalid first category\n   - Validate secondCategory input:\n     - Check if secondCategory is not null\n     - Verify that secondCategory has valid order property (numeric value)\n     - Verify that secondCategory has valid name property (non-empty string)\n     - If validation fails, return error message indicating invalid second category\n\n3. Business Rule Processing:\n   - No additional system state validations required\n   - No dependencies to verify\n   - No resource availability checks needed\n   - No additional business constraints to validate\n\n4. Core Operation Execution:\n   - Compare the order property of both categories:\n     - IF firstCategory.order > secondCategory.order THEN\n       - Return positive value (1) indicating firstCategory should come after secondCategory\n     - ELSE IF firstCategory.order < secondCategory.order THEN\n       - Return negative value (-1) indicating firstCategory should come before secondCategory\n     - ELSE (when order values are equal)\n       - Compare the name property of both categories lexicographically\n       - Return the result of name comparison (negative if first comes before second alphabetically, positive if after, zero if identical)\n   - No rollback procedures needed as this is a read-only comparison operation\n\n5. Response Generation:\n   - Success response:\n     - Return comparison result as an integer value:\n       - Positive value (1): firstCategory should be placed after secondCategory\n       - Negative value (-1): firstCategory should be placed before secondCategory\n       - Zero (0): Categories are equivalent in sorting order (same order and name)\n   - No error responses needed beyond initial validation failures",
+  "databaseEntities": [
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Both category objects must not be null",
+    "Both category objects must have valid order properties",
+    "Both category objects must have valid name properties"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "number",
+          "description": "The display order of the category"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the category"
+        }
+      },
+      "required": [
+        "order",
+        "name"
+      ]
+    }
+  }
+}

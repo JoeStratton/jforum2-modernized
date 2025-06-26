@@ -1,0 +1,30 @@
+{
+  "featureName": "DeleteTopic",
+  "description": "Deletes a specific topic with moderation flag.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "forumId-number-Forum",
+    "fromModeration-boolean-Topic"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topicId (mandatory): Unique identifier of the topic to be deleted\n   - Collect forumId (mandatory): Identifier of the forum containing the topic\n   - Collect fromModeration flag (mandatory): Boolean indicating if deletion is initiated from moderation panel\n   - System will use current user context for authorization\n\n2. Data Validation:\n   - Validate topicId:\n      a. Check if topicId is provided and is a positive integer\n      b. Verify topicId exists in the system\n      c. Return error if topic does not exist: \"Topic not found\"\n   - Validate forumId:\n      a. Check if forumId is provided and is a positive integer\n      b. Verify forumId exists in the system\n      c. Return error if forum does not exist: \"Forum not found\"\n   - Validate user permissions:\n      a. Check if current user has permission to delete the topic\n      b. If fromModeration is true, verify user has moderation privileges\n      c. Return error if unauthorized: \"Insufficient permissions to delete topic\"\n   - Validate forum accessibility:\n      a. Check if the forum is accessible to the current user\n      b. Verify if the category containing the forum is accessible\n      c. Return error if inaccessible: \"Access denied to this forum\"\n\n3. Business Rule Processing:\n   - Check topic state:\n      a. Verify if topic is not already in deletion process\n      b. Check if topic is locked and if locked topics can be deleted\n   - Verify dependencies:\n      a. Check if topic has associated posts\n      b. Determine if associated content should be deleted\n      c. Check if topic has associated polls\n   - Prepare notification data:\n      a. Identify users to notify about topic deletion\n      b. Prepare notification content based on deletion context\n   - Verify system cache status:\n      a. Check if topic is cached in recent topics list\n      b. Check if topic is cached in hottest topics list\n\n4. Core Operation Execution:\n   - Begin deletion transaction:\n      a. Remove all user subscriptions for the topic\n      b. Delete all associated notifications\n      c. If fromModeration is true, follow moderation deletion process:\n         i. Archive topic content if required by moderation rules\n         ii. Log moderation action with reason and moderator information\n      d. If fromModeration is false, follow standard deletion process:\n         i. Delete all posts associated with the topic\n         ii. Remove topic from user bookmarks\n         iii. Delete any polls associated with the topic\n      e. Update forum statistics:\n         i. Decrement total topics count if not from moderation\n         ii. Recalculate last post information\n      f. Remove topic record from database\n      g. If any step fails, rollback transaction and log error\n   - Update system caches:\n      a. If not from moderation:\n         i. Reload most recent topics list\n         ii. Reload hottest topics list\n         iii. Clear forum-specific topic cache\n\n5. Response Generation:\n   - If deletion successful:\n      a. Return success status\n      b. Include summary of deleted content (number of posts removed)\n      c. Provide forum information where topic was deleted from\n   - If deletion fails:\n      a. Return error status\n      b. Include specific error message explaining failure reason\n      c. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_bookmarks",
+    "jforum_polls",
+    "jforum_categories"
+  ],
+  "validationRules": [
+    "Topic ID must exist in the system",
+    "Forum ID must exist in the system",
+    "User must have permission to delete the topic",
+    "If fromModeration is true, user must have moderation privileges",
+    "Topic must not be in deletion process already",
+    "Forum must be accessible to the current user",
+    "Category containing the forum must be accessible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

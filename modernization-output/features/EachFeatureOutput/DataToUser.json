@@ -1,0 +1,29 @@
+{
+  "featureName": "DataToUser",
+  "description": "Updates user session with information from a user profile including user ID, username, private message count, session start time, and language preferences.",
+  "inputValues": [
+    "user-object-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the User object containing user profile information\n     - User ID (mandatory)\n     - Username (mandatory)\n     - Private message count (mandatory)\n     - Language preference (mandatory)\n     - System will generate current timestamp for session start time\n\n2. Data Validation:\n   - Validate User object\n     - Verify User object is not null\n     - Verify User ID is a positive integer\n     - Verify Username is not empty\n     - Verify Private message count is a non-negative integer\n     - Verify Language preference is a valid language code\n   - IF any validation fails THEN\n     - Generate appropriate error message\n     - Abort the operation\n\n3. Business Rule Processing:\n   - Verify user session exists\n     - IF session does not exist THEN\n       - Create new session\n     - ELSE\n       - Use existing session\n   - Check user permissions and roles\n     - Determine if user has administrator privileges\n     - Determine if user has moderator privileges\n\n4. Core Operation Execution:\n   - Update user session with user information\n     - Set user ID in the session\n     - Set username in the session\n     - Set private message count in the session\n     - Set session start time to current timestamp\n     - Set language preference in the session\n   - Update session status\n     - Mark session as authenticated\n     - Update last activity timestamp\n\n5. Response Generation:\n   - Return success status\n     - Indicate session was successfully updated\n   - IF any errors occurred during the process THEN\n     - Return error details\n     - Include guidance for resolving the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions",
+    "jforum_privmsgs"
+  ],
+  "validationRules": [
+    "User object must not be null",
+    "User ID must be a positive integer",
+    "Username must not be empty",
+    "Private message count must be a non-negative integer",
+    "Language preference must be a valid language code"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "id": "number",
+      "username": "string",
+      "privateMessagesCount": "number",
+      "lang": "string"
+    }
+  }
+}

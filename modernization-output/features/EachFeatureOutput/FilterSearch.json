@@ -1,0 +1,62 @@
+{
+  "featureName": "FilterSearch",
+  "description": "Displays search filters interface with categories for forum search.",
+  "inputValues": [
+    "categories-object-Category",
+    "searchKeywords-string-Search",
+    "searchAuthor-number-User",
+    "sortBy-string-Search",
+    "sortDirection-string-Search",
+    "matchType-string-Search",
+    "fromDate-date-Search",
+    "toDate-date-Search",
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect search filter parameters from the user:\n       1.1.1. Gather optional search keywords text input\n       1.1.2. Gather optional author identifier\n       1.1.3. Gather optional sort criteria (field to sort by)\n       1.1.4. Gather optional sort direction (ascending or descending)\n       1.1.5. Gather optional match type (all keywords or any keyword)\n       1.1.6. Gather optional date range (from date and to date)\n       1.1.7. Gather optional forum identifier for limiting search scope\n   1.2. System retrieves all available categories and forums for selection\n       1.2.1. Load category hierarchy information\n       1.2.2. Load forums within each category\n\n2. Data Validation:\n   2.1. Validate search keywords if provided\n       2.1.1. IF keywords are provided, ensure they contain valid searchable text\n       2.1.2. IF keywords contain special characters, validate they are properly formatted\n   2.2. Validate author identifier if provided\n       2.2.1. IF author ID is provided, verify it represents a valid user in the system\n   2.3. Validate sort parameters if provided\n       2.3.1. IF sort field is provided, verify it is one of the allowed sort fields\n       2.3.2. IF sort direction is provided, verify it is either ascending or descending\n   2.4. Validate date range if provided\n       2.4.1. IF from date is provided, verify it is a valid date format\n       2.4.2. IF to date is provided, verify it is a valid date format\n       2.4.3. IF both dates are provided, verify from date is before or equal to to date\n   2.5. Validate forum ID if provided\n       2.5.1. IF forum ID is provided, verify it represents a valid forum in the system\n\n3. Business Rule Processing:\n   3.1. Process match type selection\n       3.1.1. IF match type is \"all\", configure search to match all provided keywords\n       3.1.2. IF match type is not specified or is \"any\", configure search to match any provided keyword\n   3.2. Process forum selection scope\n       3.2.1. IF specific forum is selected, limit search scope to that forum only\n       3.2.2. IF no forum is selected, configure search to include all accessible forums\n   3.3. Process date range filtering\n       3.3.1. IF date range is provided, configure search to filter content within that range\n       3.3.2. IF no date range is provided, configure search to include all time periods\n\n4. Core Operation Execution:\n   4.1. Prepare search filter interface display\n       4.1.1. Organize categories in hierarchical structure\n       4.1.2. Organize forums within their respective categories\n       4.1.3. Prepare input fields for all search parameters\n       4.1.4. Set default values for search parameters where appropriate\n   4.2. Generate search form with all available filter options\n       4.2.1. Create keyword input field\n       4.2.2. Create author selection field\n       4.2.3. Create forum selection dropdown with category grouping\n       4.2.4. Create date range selection fields\n       4.2.5. Create sort options and direction selectors\n       4.2.6. Create match type selection options\n   4.3. Prepare page display elements\n       4.3.1. Set page title to search-related text\n       4.3.2. Organize filter sections in logical groupings\n       4.3.3. Prepare form submission controls\n\n5. Response Generation:\n   5.1. Display the search filters interface to the user\n       5.1.1. Show category and forum selection options\n       5.1.2. Show keyword and author search fields\n       5.1.3. Show date range selection options\n       5.1.4. Show sorting and matching options\n       5.1.5. Show search submission button\n   5.2. Provide clear instructions for using search filters\n       5.2.1. Include helpful text explaining filter options\n       5.2.2. Include placeholder text in input fields as examples\n   5.3. Ensure accessibility of all filter elements\n       5.3.1. Provide proper labeling for all form fields\n       5.3.2. Ensure logical tab order through the form\n       5.3.3. Provide clear visual indication of selected filters",
+  "databaseEntities": [
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Search keywords must contain valid searchable text if provided",
+    "Author ID must represent a valid user in the system if provided",
+    "Sort field must be one of the allowed sort fields if provided",
+    "Sort direction must be either ascending or descending if provided",
+    "From date must be a valid date format if provided",
+    "To date must be a valid date format if provided",
+    "From date must be before or equal to to date if both are provided",
+    "Forum ID must represent a valid forum in the system if provided"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Category": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "forums": "array"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "categoryId": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "Search": {
+      "keywords": "string",
+      "authorId": "number",
+      "sortBy": "string",
+      "sortDirection": "string",
+      "matchType": "string",
+      "fromDate": "date",
+      "toDate": "date",
+      "forumId": "number"
+    }
+  }
+}

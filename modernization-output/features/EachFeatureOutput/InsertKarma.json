@@ -1,0 +1,38 @@
+{
+  "featureName": "InsertKarma",
+  "description": "Allows users to vote on posts by adding karma points with validation for permissions and voting rules.",
+  "inputValues": [
+    "post_id-number-Post",
+    "points-number-Karma"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect post_id (mandatory): The identifier of the post to receive karma\n   - Collect points (mandatory): The number of karma points to assign\n   - System-generated values:\n     * fromUserId: The identifier of the current user\n\n2. Data Validation:\n   2.1. Permission Validation:\n       - IF user does not have karma permission THEN\n         * Display error message \"Karma feature is disabled\"\n         * Terminate process\n       - END IF\n\n   2.2. User Status Validation:\n       - IF current user is anonymous THEN\n         * Display error message \"Anonymous users cannot vote\"\n         * Terminate process\n       - END IF\n\n   2.3. Self-Voting Validation:\n       - Retrieve post details using post_id\n       - IF post author is the same as current user THEN\n         * Display error message \"Users cannot vote on their own posts\"\n         * Terminate process\n       - END IF\n\n   2.4. Previous Vote Validation:\n       - Check if current user has already voted on this post\n       - IF user has already voted THEN\n         * Display error message \"User has already voted on this post\"\n         * Terminate process\n       - END IF\n\n   2.5. Points Range Validation:\n       - IF points is less than minimum allowed karma points THEN\n         * Display error message \"Points below allowed minimum\"\n         * Terminate process\n       - END IF\n       - IF points is greater than maximum allowed karma points THEN\n         * Display error message \"Points above allowed maximum\"\n         * Terminate process\n       - END IF\n\n3. Business Rule Processing:\n   3.1. Prepare Karma Data:\n       - Create new karma record with:\n         * From user ID: Current user's ID\n         * Post user ID: ID of the post author\n         * Post ID: ID of the post receiving karma\n         * Topic ID: ID of the topic containing the post\n         * Points: Number of karma points assigned\n\n4. Core Operation Execution:\n   4.1. Save Karma Record:\n       - Add karma record to the database\n\n   4.2. Update Post Karma Status:\n       - Update the post's karma status with the new points\n       - IF post caching is enabled THEN\n         * Update the post in the cache repository\n       - END IF\n\n5. Response Generation:\n   5.1. Success Response:\n       - Redirect user to the topic page showing the post that received karma\n       - Position the view to show the specific post\n   5.2. Error Response:\n       - Display appropriate error message based on validation failure\n       - Provide link to return to the topic",
+  "databaseEntities": [
+    "jforum_karma",
+    "jforum_posts",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must have karma permission enabled",
+    "Anonymous users cannot vote",
+    "Users cannot vote on their own posts",
+    "Users can only vote once per post",
+    "Karma points must be within the configured minimum and maximum range"
+  ],
+  "dbSeedingOperations": [
+    "System configuration for minimum karma points",
+    "System configuration for maximum karma points"
+  ],
+  "schema": {
+    "Karma": {
+      "fromUserId": "number",
+      "postUserId": "number",
+      "postId": "number",
+      "topicId": "number",
+      "points": "number"
+    },
+    "KarmaStatus": {
+      "postId": "number",
+      "karmaPoints": "number"
+    }
+  }
+}

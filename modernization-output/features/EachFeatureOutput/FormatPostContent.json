@@ -1,0 +1,52 @@
+{
+  "featureName": "FormatPostContent",
+  "description": "Converts phpBB formatting codes to JForum compatible markup using regex patterns.",
+  "inputValues": [
+    "postText-string-Post",
+    "regexPatterns-object-RegexPatternSet"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postText (string): The original text with phpBB formatting\n   - Collect regexPatterns (object): Set of regex patterns and replacements\n     - Each pattern consists of a search regex and a replacement string\n     - Patterns are organized in pairs for different formatting elements (bold, italic, etc.)\n\n2. Data Validation:\n   - Validate postText:\n     - IF postText is null THEN\n       - Set postText to empty string\n     - ENDIF\n   - Validate regexPatterns:\n     - Ensure regexPatterns contains valid pattern pairs\n     - Each pair must have a search pattern and replacement pattern\n     - IF regexPatterns is empty or invalid THEN\n       - Return original postText without modifications\n     - ENDIF\n\n3. Business Rule Processing:\n   - Check system configuration for additional formatting rules\n   - Determine if any special formatting should be preserved\n   - Identify any formatting codes that should be ignored\n\n4. Core Operation Execution:\n   - Initialize formattedText variable with the original postText\n   - FOR EACH pattern pair in regexPatterns:\n     - Extract search pattern from the pair\n     - Extract replacement pattern from the pair\n     - Apply regex replacement to formattedText:\n       - Replace all occurrences of search pattern with replacement pattern\n     - Update formattedText with the result\n   - END FOR\n   - Process special formatting cases:\n     - Handle nested formatting tags\n     - Process quote blocks with usernames\n     - Format code blocks with proper syntax\n     - Process list items and bullet points\n     - Handle image tags and links\n     - Process text size and color attributes\n\n5. Response Generation:\n   - Return the fully formatted text with all phpBB codes converted to JForum format\n   - IF any formatting errors occurred THEN\n     - Log the specific formatting issues\n     - Return best-effort formatted text\n   - ENDIF",
+  "databaseEntities": [
+    "jforum_posts_text",
+    "jforum_privmsgs_text",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Post text must be properly processed even if null or empty",
+    "All phpBB formatting codes must be correctly converted to JForum format",
+    "Nested formatting tags must be properly handled",
+    "User signatures must maintain proper formatting after conversion",
+    "Private message text must maintain proper formatting after conversion"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RegexPatternSet": {
+      "type": "object",
+      "properties": {
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "searchPattern": {
+                "type": "string",
+                "description": "Regular expression pattern to search for"
+              },
+              "replacementPattern": {
+                "type": "string",
+                "description": "String to replace matched content with"
+              }
+            },
+            "required": [
+              "searchPattern",
+              "replacementPattern"
+            ]
+          }
+        }
+      },
+      "required": [
+        "patterns"
+      ]
+    }
+  }
+}

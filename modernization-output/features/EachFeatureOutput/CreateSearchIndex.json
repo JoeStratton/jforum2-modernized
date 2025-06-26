@@ -1,0 +1,67 @@
+{
+  "featureName": "CreateSearchIndex",
+  "description": "Creates a search index entry for a forum post.",
+  "inputValues": [
+    "post-object-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Post object containing:\n     - Post ID (system-generated)\n     - Post content (mandatory)\n     - Post title (mandatory)\n     - Author information (mandatory)\n     - Creation timestamp (system-generated)\n     - Forum and topic references (mandatory)\n\n2. Data Validation:\n   - Validate Post object:\n     - Verify Post object is not null\n     - Check that Post ID is valid\n     - Ensure post content is not empty\n     - Verify post belongs to a valid topic and forum\n     - Confirm author information is present\n   - IF any validation fails THEN:\n     - Generate appropriate error message\n     - Abort indexing process\n     - Log validation failure\n\n3. Business Rule Processing:\n   - Check if search indexing is enabled in system settings\n     - IF indexing is disabled THEN:\n       - Skip the indexing process\n       - Log that indexing was skipped due to system settings\n       - Return without creating index\n   - Verify search manager is properly initialized\n     - IF search manager is not initialized THEN:\n       - Log error about search manager unavailability\n       - Abort indexing process\n   - Check post visibility and permissions\n     - IF post is in a restricted forum THEN:\n       - Include appropriate access control information in the index\n\n4. Core Operation Execution:\n   - Extract indexable content from the post:\n     - Parse post content to extract plain text\n     - Include post title in indexable content\n     - Add metadata (author, date, forum, topic)\n   - Create search document:\n     - Generate unique document ID based on post ID\n     - Structure document with all extracted content\n     - Add relevance boosting factors where appropriate\n   - Add document to search index:\n     - Pass document to search manager for indexing\n     - Handle any indexing errors that occur\n     - Ensure document is properly committed to the index\n   - Update index statistics:\n     - Increment document count if necessary\n     - Update last indexed timestamp\n\n5. Response Generation:\n   - For successful indexing:\n     - Log successful index creation\n     - Return success status\n   - For failed indexing:\n     - Log detailed error information\n     - Return failure status with reason\n     - Provide information for potential retry",
+  "databaseEntities": [
+    "Post",
+    "Topic",
+    "Forum",
+    "User"
+  ],
+  "validationRules": [
+    "Post object must not be null",
+    "Post ID must be a valid identifier",
+    "Post content must not be empty",
+    "Post must belong to a valid topic",
+    "Post must have valid author information",
+    "Search indexing must be enabled in system settings",
+    "Search manager must be properly initialized"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Title or subject of the post"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the post author"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic this post belongs to"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this post belongs to"
+        },
+        "time": {
+          "type": "date",
+          "description": "Timestamp when the post was created"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "userId",
+        "topicId",
+        "forumId",
+        "time"
+      ]
+    }
+  }
+}

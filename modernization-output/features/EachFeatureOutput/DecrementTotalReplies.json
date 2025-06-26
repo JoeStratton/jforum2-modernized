@@ -1,0 +1,19 @@
+{
+  "featureName": "DecrementTotalReplies",
+  "description": "Decreases the reply counter for a topic when a reply is removed.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - topicId (mandatory): Unique identifier of the topic whose reply count needs to be decremented\n\n2. Data Validation\n   - Validate the topic ID:\n     - Check if topicId is provided\n     - Verify topicId is a positive integer\n     - Verify the topic exists in the system\n     - If any validation fails, generate appropriate error message\n\n3. Business Rule Processing\n   - Check if the topic is in a valid state for decrementing replies:\n     - Verify the topic has at least one reply (total replies > 0)\n     - IF total replies count is already 0, THEN\n       - Log warning about attempting to decrement below zero\n       - Exit process without making changes\n     - END IF\n\n4. Core Operation Execution\n   - Decrement the total replies count for the specified topic:\n     - Retrieve the current reply count for the topic\n     - Subtract one from the current reply count\n     - Update the topic record with the new reply count\n     - IF update operation fails, THEN\n       - Log the error details\n       - Revert any partial changes\n       - Generate appropriate error response\n     - END IF\n\n5. Response Generation\n   - IF operation is successful, THEN\n     - Return success status\n     - Include the updated reply count in the response\n   - ELSE\n     - Return error status\n     - Include error details and suggestions for resolution\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Topic ID must be provided",
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "Topic should have at least one reply before decrementing"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

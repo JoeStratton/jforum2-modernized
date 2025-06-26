@@ -1,0 +1,99 @@
+{
+  "featureName": "CreateTopicDataAccess",
+  "description": "Provides data access functionality for forum topics in SQL Server environment.",
+  "inputValues": [
+    "topicData-object-Topic",
+    "forumId-number-Forum",
+    "userId-number-User",
+    "subject-string-Topic",
+    "message-string-Post",
+    "priority-number-Topic",
+    "attachments-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect required topic information:\n       - topicData (mandatory): Contains core topic properties\n       - forumId (mandatory): Identifier of the forum where topic will be created\n       - userId (mandatory): Identifier of the user creating the topic\n       - subject (mandatory): Title of the topic\n       - message (mandatory): Initial post content\n       - priority (optional): Topic priority level, default is normal (0)\n       - attachments (optional): Any files attached to the initial post\n   1.2. System will generate:\n       - topicId: Unique identifier for the new topic\n       - creationDate: Current timestamp\n       - lastPostDate: Same as creation date initially\n       - status: Default to unlocked (0)\n\n2. Data Validation:\n   2.1. Validate forumId:\n       - IF forumId is null or invalid THEN\n         - Generate error: \"Forum identifier is required\"\n   2.2. Validate userId:\n       - IF userId is null or invalid THEN\n         - Generate error: \"User identifier is required\"\n   2.3. Validate subject:\n       - IF subject is empty or null THEN\n         - Generate error: \"Topic subject is required\"\n       - IF subject length exceeds maximum allowed characters THEN\n         - Generate error: \"Subject exceeds maximum length\"\n   2.4. Validate message:\n       - IF message is empty or null THEN\n         - Generate error: \"Message content is required\"\n       - IF message length exceeds maximum allowed characters THEN\n         - Generate error: \"Message exceeds maximum length\"\n   2.5. Validate attachments (if provided):\n       - FOR EACH attachment:\n         - Check if file type is allowed\n         - Verify file size is within limits\n         - IF any validation fails THEN\n           - Generate error: \"Invalid attachment: [specific reason]\"\n\n3. Business Rule Processing:\n   3.1. Check user permissions:\n       - Verify user has permission to create topics in the specified forum\n       - IF user lacks permission THEN\n         - Generate error: \"User does not have permission to create topics in this forum\"\n   3.2. Check forum status:\n       - Verify forum is not locked or archived\n       - IF forum is locked or archived THEN\n         - Generate error: \"Cannot create topic in locked or archived forum\"\n   3.3. Check user status:\n       - Verify user account is active and not banned\n       - IF user is banned or inactive THEN\n         - Generate error: \"User account is not active or is banned\"\n   3.4. Check for duplicate topics:\n       - IF identical topic was created by same user in last X minutes THEN\n         - Generate warning: \"Similar topic recently created\"\n\n4. Core Operation Execution:\n   4.1. Create new topic record:\n       - Generate unique topic identifier\n       - Set topic creation timestamp\n       - Associate topic with specified forum\n       - Set topic status to normal/unlocked\n       - Set topic type based on priority\n       - Record topic creator (userId)\n   4.2. Create initial post:\n       - Generate unique post identifier\n       - Associate post with new topic\n       - Store message content\n       - Set post timestamp\n       - Associate post with user\n   4.3. Process attachments (if any):\n       - FOR EACH attachment:\n         - Store attachment metadata\n         - Associate attachment with post\n   4.4. Update forum statistics:\n       - Increment topic count for forum\n       - Update last post information for forum\n   4.5. Update user statistics:\n       - Increment post count for user\n   4.6. IF any operation fails THEN:\n       - Rollback all changes\n       - Generate error: \"Failed to create topic: [specific reason]\"\n\n5. Response Generation:\n   5.1. On success:\n       - Return created topic identifier\n       - Include summary of topic details\n       - Include initial post identifier\n   5.2. On failure:\n       - Return appropriate error code\n       - Include detailed error message\n       - Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Forum identifier must be valid",
+    "User identifier must be valid",
+    "Topic subject must not be empty",
+    "Topic subject must not exceed maximum length",
+    "Message content must not be empty",
+    "Message content must not exceed maximum length",
+    "User must have permission to create topics in the specified forum",
+    "Forum must not be locked or archived",
+    "User account must be active and not banned",
+    "Attachments must be of allowed file types",
+    "Attachments must not exceed size limits"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "forumId": {
+          "type": "number"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "number"
+        },
+        "creationDate": {
+          "type": "date"
+        },
+        "lastPostDate": {
+          "type": "date"
+        },
+        "type": {
+          "type": "number"
+        },
+        "status": {
+          "type": "number"
+        },
+        "priority": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "forumId",
+        "subject",
+        "userId"
+      ]
+    },
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "fileSize": {
+          "type": "number"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "fileContent": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "fileName",
+        "fileContent"
+      ]
+    }
+  }
+}

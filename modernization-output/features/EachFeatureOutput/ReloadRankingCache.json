@@ -1,0 +1,56 @@
+{
+  "featureName": "ReloadRankingCache",
+  "description": "Reloads user ranking definitions into the system cache.",
+  "inputValues": [
+    "adminRequest-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - adminRequest: boolean - Indicates if the request is from an authorized administrator (mandatory)\n   - System will use the current user's session information for authorization\n\n2. Data Validation:\n   - Validate user authorization\n     * IF user is not an administrator THEN\n       - Generate authorization error\n       - Terminate process\n     * END IF\n   - Validate system state\n     * IF system is in maintenance mode THEN\n       - Generate system unavailable error\n       - Terminate process\n     * END IF\n\n3. Business Rule Processing:\n   - Check system resources\n     * IF system memory is critically low THEN\n       - Log resource warning\n       - Continue with caution\n     * END IF\n   - Check concurrent operations\n     * IF another cache reload operation is in progress THEN\n       - Generate concurrent operation warning\n       - Wait for completion or terminate based on system policy\n     * END IF\n\n4. Core Operation Execution:\n   - Prepare for cache reload\n     * Lock ranking cache to prevent concurrent access\n     * Create backup of current ranking definitions\n   - Load ranking definitions\n     * Retrieve all ranking definitions from the database\n     * Parse ranking criteria and thresholds\n     * Organize rankings in memory structure\n   - Update system cache\n     * Clear existing ranking cache\n     * Store new ranking definitions in cache\n     * Update timestamp of last cache refresh\n   - Release resources\n     * Unlock ranking cache\n     * Remove temporary backup if operation successful\n\n5. Response Generation:\n   - Generate success response\n     * Include number of ranking definitions loaded\n     * Include timestamp of cache refresh\n     * Return to cache management interface\n   - Handle potential errors\n     * IF any error occurs during reload THEN\n       - Restore from backup if available\n       - Generate detailed error message\n       - Include troubleshooting information\n     * END IF",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User must have administrator privileges to reload cache",
+    "System must not be in maintenance mode",
+    "Ranking definitions must be properly formatted in the database",
+    "Cache reload operation cannot be performed while another reload is in progress"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RankingDefinition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the ranking"
+        },
+        "title": {
+          "type": "string",
+          "description": "Display name of the ranking"
+        },
+        "minPoints": {
+          "type": "number",
+          "description": "Minimum points required for this ranking"
+        },
+        "maxPoints": {
+          "type": "number",
+          "description": "Maximum points for this ranking level"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Optional image associated with the ranking"
+        },
+        "special": {
+          "type": "boolean",
+          "description": "Indicates if this is a special ranking not based on points"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "minPoints",
+        "special"
+      ]
+    }
+  }
+}

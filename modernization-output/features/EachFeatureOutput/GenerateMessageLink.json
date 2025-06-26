@@ -1,0 +1,37 @@
+{
+  "featureName": "GenerateMessageLink",
+  "description": "Creates direct links to specific posts within forum topics with proper pagination.",
+  "inputValues": [
+    "topic-object-Topic",
+    "post-object-Post",
+    "forumLink-string-String"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect Topic object (mandatory) containing topic details\n   - Collect Post object (optional) containing post details\n   - Collect forumLink string (mandatory) containing base URL of the forum\n   - System will use postsPerPage configuration value (mandatory)\n\n2. Data Validation:\n   - Validate Topic object:\n     a. Ensure topic ID is not null or zero\n     b. Ensure topic has valid total replies count\n     c. Return error if topic validation fails\n   - Validate forumLink:\n     a. Ensure forumLink is not empty\n     b. Ensure forumLink is properly formatted\n     c. Return error if forumLink validation fails\n   - Validate Post object (if provided):\n     a. Ensure post ID is not null or zero\n     b. Return error if post validation fails when provided\n\n3. Business Rule Processing:\n   - Determine pagination requirements:\n     a. IF total replies in topic >= postsPerPage THEN\n        i. Calculate page number based on total replies and postsPerPage\n        ii. Set page parameter to (totalReplies / postsPerPage) * postsPerPage\n     b. ELSE\n        i. No pagination required, use default page\n   - Determine message anchor:\n     a. IF post is provided THEN\n        i. Use post ID as anchor reference\n     b. ELSE\n        i. Use topic's lastPostId as anchor reference\n\n4. Core Operation Execution:\n   - Generate message link:\n     a. Start with base forumLink\n     b. Append \"posts/list/\" path\n     c. Append pagination information if required\n     d. Append topic ID\n     e. Append system extension value\n     f. Append anchor reference using '#' followed by post ID\n   - Format final URL ensuring all components are properly joined\n   - Validate generated URL structure\n\n5. Response Generation:\n   - Return the complete message link URL\n   - Include metadata about the link:\n     a. Topic information\n     b. Page information if pagination was applied\n     c. Post reference information\n   - If any errors occurred during generation:\n     a. Return error details\n     b. Include guidance on resolving the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be valid and greater than zero",
+    "Forum link must not be empty",
+    "Post ID must be valid when post is provided",
+    "Generated URL must contain all required components",
+    "Pagination must be correctly calculated based on posts per page setting"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "totalReplies": "number",
+      "forumId": "number",
+      "firstPostId": "number",
+      "lastPostId": "number"
+    },
+    "Post": {
+      "id": "number",
+      "text": "string"
+    }
+  }
+}

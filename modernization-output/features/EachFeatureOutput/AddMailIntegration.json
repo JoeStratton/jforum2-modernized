@@ -1,0 +1,38 @@
+{
+  "featureName": "AddMailIntegration",
+  "description": "Creates a new mail integration configuration for a forum.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "forumEmail-string-MailIntegration",
+    "popHost-string-MailIntegration",
+    "popUsername-string-MailIntegration",
+    "popPassword-string-MailIntegration",
+    "popPort-number-MailIntegration",
+    "ssl-boolean-MailIntegration"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     1.1. forumId (number): Identifier of the forum to configure mail integration for\n     1.2. forumEmail (string): Email address associated with the forum\n     1.3. popHost (string): POP3 server hostname\n     1.4. popUsername (string): Username for POP3 authentication\n     1.5. popPassword (string): Password for POP3 authentication\n     1.6. popPort (number): Port number for POP3 server connection\n     1.7. ssl (boolean): Whether to use SSL for the connection\n\n2. Data Validation\n   2.1. Validate forumId:\n      - Check if forumId is provided and is a positive integer\n      - Verify that the forum exists in the system\n      - IF forum does not exist, THEN return error message \"Forum not found\"\n   \n   2.2. Validate forumEmail:\n      - Check if forumEmail is provided and not empty\n      - Verify forumEmail follows valid email format (contains @ and domain)\n      - IF invalid format, THEN return error message \"Invalid email format\"\n   \n   2.3. Validate POP3 server details:\n      - Check if popHost is provided and not empty\n      - Verify popUsername is provided and not empty\n      - Verify popPassword is provided\n      - Check if popPort is a valid port number (between 1 and 65535)\n      - IF any validation fails, THEN return appropriate error message\n\n3. Business Rule Processing\n   3.1. Check for existing mail integration:\n      - Verify if mail integration already exists for the specified forum\n      - IF exists, THEN return error message \"Mail integration already configured for this forum\"\n   \n   3.2. Check forum permissions:\n      - Verify that the current user has administrator privileges\n      - IF user lacks permissions, THEN return error message \"Insufficient permissions to configure mail integration\"\n\n4. Core Operation Execution\n   4.1. Create mail integration object:\n      - Initialize a new MailIntegration object\n      - Set all provided parameters to the object:\n        - Set forumId\n        - Set forumEmail\n        - Set popHost\n        - Set popUsername\n        - Set popPassword\n        - Set popPort\n        - Set ssl flag\n   \n   4.2. Persist mail integration configuration:\n      - Save the mail integration configuration to the database\n      - IF save operation fails, THEN:\n        - Log the error details\n        - Return error message \"Failed to save mail integration configuration\"\n        - Roll back any partial changes\n\n5. Response Generation\n   5.1. On success:\n      - Return success status\n      - Include confirmation message \"Mail integration successfully configured for forum\"\n      - Include the forumId and forumEmail in the response\n   \n   5.2. On failure:\n      - Return error status\n      - Include specific error message based on the failure point\n      - Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Forum ID must exist in the system",
+    "Forum email must be in valid email format",
+    "POP host must not be empty",
+    "POP username must not be empty",
+    "POP password must not be empty",
+    "POP port must be between 1 and 65535",
+    "SSL flag must be a boolean value"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "MailIntegration": {
+      "forumId": "number",
+      "forumEmail": "string",
+      "popHost": "string",
+      "popUsername": "string",
+      "popPassword": "string",
+      "popPort": "number",
+      "ssl": "boolean"
+    }
+  }
+}

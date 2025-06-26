@@ -1,0 +1,66 @@
+{
+  "featureName": "StoreSessionDataWithConnection",
+  "description": "Persists user session information using a provided database connection.",
+  "inputValues": [
+    "sessionId-string-Session",
+    "connection-object-DatabaseConnection"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect sessionId (mandatory): unique identifier for the user session\n   - Obtain database connection (mandatory): connection object for database operations\n   - System will use these inputs to persist session data\n\n2. Data Validation:\n   - Validate sessionId:\n     a. Check if sessionId is not null or empty\n     b. Verify sessionId format follows system requirements\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate database connection:\n     a. Verify connection object is valid and active\n     b. Check if connection has proper access rights\n     c. IF connection is invalid, THEN generate connection error\n\n3. Business Rule Processing:\n   - Retrieve user session:\n     a. Locate user session data using the provided sessionId\n     b. IF session not found, THEN terminate process and log warning\n     c. IF session exists, THEN proceed with data persistence\n   - Check user type:\n     a. Determine if session belongs to an anonymous user\n     b. IF user is anonymous, THEN skip database update\n     c. IF user is registered, THEN proceed with update operation\n\n4. Core Operation Execution:\n   - Persist session data:\n     a. For non-anonymous users:\n        i. Update user session record in database using provided connection\n        ii. IF update fails, THEN log error details and handle exception\n        iii. IF update succeeds, THEN proceed to security cleanup\n     b. Security cleanup:\n        i. Remove user security information from security repository\n        ii. This ensures fresh security data will be loaded on next access\n   - Handle exceptions:\n     a. Capture any errors during persistence operation\n     b. Log appropriate warning messages with error details\n     c. Ensure process continues gracefully despite errors\n\n5. Response Generation:\n   - Success case:\n     a. No explicit response needed for successful operation\n     b. System continues normal operation\n   - Error case:\n     a. Log appropriate warning messages\n     b. Include error details for troubleshooting\n     c. Allow system to continue despite non-critical errors",
+  "databaseEntities": [
+    "jforum_sessions",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Session ID must not be empty",
+    "Database connection must be valid and active",
+    "User session must exist for the given session ID",
+    "Only non-anonymous user sessions should be persisted to database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "DatabaseConnection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Current status of the database connection"
+        },
+        "accessRights": {
+          "type": "object",
+          "description": "Access permissions for database operations"
+        }
+      },
+      "required": [
+        "status",
+        "accessRights"
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the user session"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "ID of the user associated with this session"
+        },
+        "lastVisit": {
+          "type": "date",
+          "description": "Timestamp of the user's last activity"
+        },
+        "isAnonymous": {
+          "type": "boolean",
+          "description": "Flag indicating if this is an anonymous user session"
+        }
+      },
+      "required": [
+        "sessionId",
+        "userId",
+        "lastVisit",
+        "isAnonymous"
+      ]
+    }
+  }
+}

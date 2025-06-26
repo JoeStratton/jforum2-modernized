@@ -1,0 +1,42 @@
+{
+  "featureName": "DisplayAdminMenu",
+  "description": "Shows the administration menu for authenticated administrators.",
+  "inputValues": [
+    "userSession-object-UserSession"
+  ],
+  "businessLogic": "1. Input Collection\n   - Retrieve current user session information\n     - User ID from the session\n     - Authentication status\n     - User permissions\n\n2. Data Validation\n   - Validate user authentication status\n     - Check if the user is logged in\n     - IF user is not logged in, THEN prepare redirect to login page\n   - Validate administrative permissions\n     - Check if the user has administration access rights\n     - IF user does not have administration permissions, THEN prepare redirect to login page\n\n3. Business Rule Processing\n   - Verify administrative session validity\n     - Check if the security repository contains the user's permission control\n     - Verify the permission control allows administration access\n     - IF any validation fails, THEN prepare login redirect with appropriate return path\n\n4. Core Operation Execution\n   - Prepare administration menu display\n     - Load menu structure based on user's specific administrative permissions\n     - Organize menu items by category (users, forums, configuration, etc.)\n     - Filter menu items based on user's permission level\n   - Load system status information\n     - Current active sessions count\n     - System statistics if applicable\n\n5. Response Generation\n   - Generate administration menu view\n     - Display categorized menu items\n     - Include user information in the view context\n     - Include system status information if applicable\n   - IF any validation failed during processing\n     - Redirect to login page with return path set to administration area\n   - ELSE\n     - Display the administration menu interface",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "User must be logged in to access administration menu",
+    "User must have administration permission to access the menu",
+    "Security repository must contain valid permission control for the user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UserSession": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "The unique identifier of the user"
+        },
+        "isLogged": {
+          "type": "boolean",
+          "description": "Flag indicating if the user is logged in"
+        },
+        "permissions": {
+          "type": "object",
+          "description": "User's permission settings"
+        }
+      },
+      "required": [
+        "userId",
+        "isLogged"
+      ]
+    }
+  }
+}

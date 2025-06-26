@@ -1,0 +1,63 @@
+{
+  "featureName": "CheckUserSessionStatus",
+  "description": "Verifies if a user is in session by username or ID and checks login status.",
+  "inputValues": [
+    "username-string-User",
+    "userId-number-User",
+    "sessionId-string-Session"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect one of the following inputs:\n     - username (string): The username to check in session\n     - userId (number): The user ID to check in session\n     - sessionId (string): The session ID to retrieve user information\n   - Note: At least one of these inputs must be provided\n   - System will use current session ID if none is provided\n\n2. Data Validation:\n   - IF username is provided:\n     - Verify username is not empty\n     - Verify username format is valid (alphanumeric with allowed special characters)\n   - IF userId is provided:\n     - Verify userId is a positive integer\n     - Verify userId is not the anonymous user ID\n   - IF sessionId is provided:\n     - Verify sessionId is not empty\n     - Verify sessionId follows the expected format\n   - IF no input is provided:\n     - Use current user's session ID\n     - Verify current session exists\n\n3. Business Rule Processing:\n   - Check if cache system is initialized and available\n     - IF cache is not available:\n       - Log warning message\n       - Return appropriate error response\n   - Determine which verification method to use based on provided inputs:\n     - IF username is provided:\n       - Use username-based verification\n     - ELSE IF userId is provided:\n       - Use userId-based verification\n     - ELSE:\n       - Use sessionId-based verification\n\n4. Core Operation Execution:\n   - IF using username-based verification:\n     - Retrieve all active sessions from cache\n     - Iterate through each session:\n       - Skip anonymous users\n       - Compare username with each session's username\n       - IF match found:\n         - Store matching session ID\n         - Break iteration\n   - IF using userId-based verification:\n     - Directly query the user ID index in cache\n     - Retrieve associated session ID if exists\n   - IF using sessionId-based verification:\n     - Retrieve user session object from cache using session ID\n     - Extract user information from session object\n   - Check login status:\n     - Verify if session has logged attribute set to \"1\"\n     - Determine if user is anonymous by comparing with system anonymous ID\n\n5. Response Generation:\n   - Prepare session status response with:\n     - isInSession (boolean): Whether user is found in any active session\n     - sessionId (string): The session ID if user is in session, null otherwise\n     - isLoggedIn (boolean): Whether user is authenticated (not anonymous)\n     - lastActivityTime (date): Timestamp of last user activity if available\n     - username (string): Username associated with the session if available\n     - userId (number): User ID associated with the session if available\n   - IF verification failed due to system error:\n     - Include appropriate error message\n     - Include error code for client handling",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "At least one of username, userId, or sessionId must be provided",
+    "Username must not be empty when provided",
+    "UserId must be a positive integer when provided",
+    "UserId must not be the anonymous user ID when verifying login status",
+    "SessionId must not be empty when provided",
+    "Cache system must be initialized before checking session status"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Unique identifier for the session"
+        },
+        "userId": {
+          "type": "number",
+          "description": "User ID associated with this session"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username associated with this session"
+        },
+        "isLogged": {
+          "type": "boolean",
+          "description": "Whether the user is logged in"
+        },
+        "lastActivity": {
+          "type": "date",
+          "description": "Timestamp of the last user activity"
+        }
+      }
+    }
+  }
+}

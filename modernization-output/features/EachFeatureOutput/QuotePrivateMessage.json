@@ -1,0 +1,38 @@
+{
+  "featureName": "QuotePrivateMessage",
+  "description": "Creates a reply with quoted content from the original private message.",
+  "inputValues": [
+    "messageId-number-PrivateMessage",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect messageId (mandatory): Identifier of the private message to quote\n   - Collect userId (mandatory): Identifier of the current user performing the action\n   - System will generate quoteTimestamp (system-generated): Current date and time\n\n2. Data Validation:\n   - Validate messageId:\n      a. Check if messageId is provided and is a valid number\n      b. Verify messageId exists in the system\n      c. Return error if message does not exist: \"The specified message could not be found\"\n   - Validate userId:\n      a. Verify userId is provided and is a valid number\n      b. Confirm user is currently logged in\n      c. Return error if user is not logged in: \"You must be logged in to perform this action\"\n\n3. Business Rule Processing:\n   - Verify message access permissions:\n      a. Retrieve the private message using messageId\n      b. Check if current user is either the sender or recipient of the message\n      c. IF user is neither sender nor recipient THEN\n         i. Deny access with message: \"You do not have permission to access this private message\"\n         ii. Abort operation\n      d. END IF\n   - Prepare message content:\n      a. Format the subject line by adding reply prefix to original subject\n      b. Prepare the quoted content by formatting original message with sender information\n      c. Preserve original message metadata (date, sender information)\n\n4. Core Operation Execution:\n   - Create new reply form:\n      a. Set recipient as the sender of the original message\n      b. Set the prefixed subject line\n      c. Insert the quoted content into the message body\n      d. Mark the message as a quote-reply\n   - Prepare user interface:\n      a. Load user preferences for message composition\n      b. Set form mode to \"quote\"\n      c. Include original message reference\n\n5. Response Generation:\n   - Success response:\n      a. Display message composition form with quoted content\n      b. Show recipient information pre-filled\n      c. Show prefixed subject line pre-filled\n      d. Show quoted content in message body\n   - Error response:\n      a. Display appropriate error message based on validation failures\n      b. Provide navigation options to return to inbox",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "User must be logged in to quote a private message",
+    "User must be either the sender or recipient of the original message",
+    "The private message ID must exist in the system",
+    "The private message must be accessible to the current user"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PrivateMessage": {
+      "id": "number",
+      "fromUser": "object-User",
+      "toUser": "object-User",
+      "post": "object-Post",
+      "type": "string"
+    },
+    "User": {
+      "id": "number",
+      "username": "string"
+    },
+    "Post": {
+      "subject": "string",
+      "text": "string"
+    }
+  }
+}

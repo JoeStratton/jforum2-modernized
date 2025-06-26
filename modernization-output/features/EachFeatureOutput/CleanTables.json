@@ -1,0 +1,78 @@
+{
+  "featureName": "CleanTables",
+  "description": "Prepares JForum database by cleaning target tables before migration.",
+  "inputValues": [
+    "databaseConnection-object-Connection",
+    "tableNames-object-TableList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database connection information\n     1.1. Verify database connection is active\n     1.2. Confirm user has proper database permissions\n   - Identify target tables for cleaning\n     1.3. Determine which tables need to be cleaned\n     1.4. Verify tables exist in the database\n\n2. Data Validation:\n   - Validate database connection\n     2.1. Check if connection is valid and open\n     2.2. Verify connection has write permissions\n     2.3. IF connection is invalid or closed, THEN generate connection error\n   - Validate table list\n     2.4. Verify each table in the list exists in the database\n     2.5. Check if tables are accessible with current permissions\n     2.6. IF any table doesn't exist, THEN generate table not found error\n     2.7. IF tables are not accessible, THEN generate access denied error\n\n3. Business Rule Processing:\n   - Verify system state for cleaning operation\n     3.1. Check if system is in maintenance mode\n     3.2. Verify no active user sessions are present\n     3.3. IF system is not in maintenance mode, THEN warn about potential user impact\n   - Validate dependencies between tables\n     3.4. Identify tables with foreign key relationships\n     3.5. Determine proper cleaning order based on dependencies\n     3.6. IF dependencies exist, THEN establish proper cleaning sequence\n\n4. Core Operation Execution:\n   - Prepare cleaning statements\n     4.1. Generate cleaning statements for each table\n     4.2. Order statements based on dependency requirements\n   - Execute table cleaning\n     4.3. Begin transaction if supported\n     4.4. FOR EACH table in the cleaning sequence:\n        4.4.1. Execute cleaning statement\n        4.4.2. Log cleaning operation\n        4.4.3. IF cleaning fails, THEN record error and continue\n     4.5. Commit transaction if all operations successful\n     4.6. IF any operation fails, THEN rollback transaction if possible\n   - Verify cleaning results\n     4.7. Check that tables are empty\n     4.8. Record any tables that failed to clean properly\n\n5. Response Generation:\n   - Generate cleaning operation summary\n     5.1. Count total tables processed\n     5.2. List successfully cleaned tables\n     5.3. List tables with cleaning errors\n   - Provide next steps information\n     5.4. Indicate system is ready for data migration\n     5.5. Suggest verification steps if needed\n     5.6. IF any errors occurred, THEN provide troubleshooting guidance",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_user_groups",
+    "jforum_banlist",
+    "jforum_ranks",
+    "jforum_smilies",
+    "jforum_topics_watch",
+    "jforum_vote_desc",
+    "jforum_vote_results",
+    "jforum_vote_voters"
+  ],
+  "validationRules": [
+    "Database connection must be valid and active",
+    "User must have DELETE permissions on target tables",
+    "All specified tables must exist in the database",
+    "System should be in maintenance mode during cleaning",
+    "Tables must be cleaned in proper dependency order",
+    "Transaction must be used when supported by database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Database connection URL"
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "TableList": {
+      "type": "object",
+      "properties": {
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of table to be cleaned"
+          }
+        },
+        "cleaningOrder": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Table names in dependency order"
+          }
+        }
+      }
+    }
+  }
+}

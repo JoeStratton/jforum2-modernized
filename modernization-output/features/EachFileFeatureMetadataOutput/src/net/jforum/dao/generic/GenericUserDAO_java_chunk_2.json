@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "GetPendingActivations",
+    "description": "Retrieves a list of users with pending account activations"
+  },
+  {
+    "featureName": "GetUserById",
+    "description": "Retrieves a user by their ID including personal details and group memberships"
+  },
+  {
+    "featureName": "GetUserByUsername",
+    "description": "Retrieves a user by their username with all associated profile information"
+  },
+  {
+    "featureName": "DeleteUser",
+    "description": "Marks a user as deleted in the system by setting their deleted status"
+  },
+  {
+    "featureName": "UpdateUserProfile",
+    "description": "Updates a user's profile information and preferences"
+  },
+  {
+    "featureName": "CreateUser",
+    "description": "Creates a new user account and assigns them to the default user group"
+  },
+  {
+    "featureName": "CreateUserWithSpecifiedId",
+    "description": "Creates a new user with a predefined ID and assigns them to the default user group"
+  },
+  {
+    "featureName": "DecrementUserPostCount",
+    "description": "Decreases the post count for a specific user"
+  },
+  {
+    "featureName": "IncrementUserPostCount",
+    "description": "Increases the post count for a specific user"
+  },
+  {
+    "featureName": "SetUserRanking",
+    "description": "Updates a user's ranking ID in the system"
+  }
+]

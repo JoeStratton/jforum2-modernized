@@ -1,0 +1,48 @@
+{
+  "featureName": "AddCacheItemWithFqn",
+  "description": "Adds a new object to the cache with a fully qualified name and key.",
+  "inputValues": [
+    "fqn-string-CacheNode",
+    "key-string-CacheKey",
+    "value-object-CacheValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     1.1. fqn (string, mandatory): The fully qualified name representing the cache node location\n     1.2. key (string, mandatory): The unique identifier for the cached item\n     1.3. value (object, mandatory): The actual data to be stored in the cache\n\n2. Data Validation:\n   - Validate all input parameters:\n     2.1. Validate fqn:\n         - IF fqn is null THEN generate validation error \"Fully qualified name cannot be null\"\n         - IF fqn is empty THEN use default dummy FQN value\n     2.2. Validate key:\n         - IF key is null THEN generate validation error \"Cache key cannot be null\"\n         - IF key is empty THEN generate validation error \"Cache key cannot be empty\"\n     2.3. Validate value:\n         - IF value is null THEN generate validation error \"Cache value cannot be null\"\n\n3. Business Rule Processing:\n   - Check cache system state:\n     3.1. IF cache system is not initialized THEN:\n         - Generate error \"Cache system not initialized\"\n         - Abort operation\n     3.2. IF cache system is in stopping state THEN:\n         - Generate warning \"Cache system is shutting down, item may not persist\"\n     3.3. Check if cache has capacity:\n         - IF cache is at maximum capacity THEN:\n           - Apply eviction policy to make room for new item\n           - Log eviction event\n\n4. Core Operation Execution:\n   - Add the item to cache:\n     4.1. Determine the appropriate cache node based on fqn\n         - IF node does not exist THEN create new node\n     4.2. Associate the key with the value in the specified node\n         - IF key already exists in the node THEN:\n           - Replace existing value with new value\n           - Log update event\n         - ELSE:\n           - Add new key-value pair to the node\n           - Log addition event\n     4.3. Apply any cache-specific metadata:\n         - Set timestamp for cache entry\n         - Set expiration policy if applicable\n         - Update cache statistics\n\n5. Response Generation:\n   - Generate appropriate response:\n     5.1. IF operation successful THEN:\n         - Return success indicator\n         - Include cache entry information (node, key, timestamp)\n     5.2. IF operation failed THEN:\n         - Return failure indicator\n         - Include error details and reason for failure\n         - Provide suggestion for resolution if applicable",
+  "databaseEntities": [],
+  "validationRules": [
+    "Fully qualified name (fqn) must not be null",
+    "Cache key must not be null or empty",
+    "Cache value must not be null",
+    "Cache system must be initialized before adding items"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "CacheValue": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "description": "The actual data being cached"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Optional metadata about the cached item",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the item was added to cache"
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the item should expire from cache"
+            }
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    }
+  }
+}

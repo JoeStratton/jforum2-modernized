@@ -1,0 +1,34 @@
+[
+  {
+    "featureName": "AddUserSession",
+    "description": "Registers a new user session with appropriate tracking for logged-in or anonymous users"
+  },
+  {
+    "featureName": "ManageSessionAttributes",
+    "description": "Adds, retrieves, and removes attributes from the user's session"
+  },
+  {
+    "featureName": "RemoveUserSession",
+    "description": "Removes a user session from the system and updates relevant counters"
+  },
+  {
+    "featureName": "GetSessionInformation",
+    "description": "Retrieves information about all sessions, logged sessions, and session counts"
+  },
+  {
+    "featureName": "CheckUserSessionStatus",
+    "description": "Verifies if a user is in session by username or ID and checks login status"
+  },
+  {
+    "featureName": "ManageLoginState",
+    "description": "Controls the logged-in state of user sessions with login/logout functionality"
+  },
+  {
+    "featureName": "TrackTopicReadTimes",
+    "description": "Manages tracking information about when topics were last read by users"
+  },
+  {
+    "featureName": "ClearSessions",
+    "description": "Clears all session data and resets session counters"
+  }
+]

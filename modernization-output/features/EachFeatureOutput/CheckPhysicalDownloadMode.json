@@ -1,0 +1,18 @@
+{
+  "featureName": "CheckPhysicalDownloadMode",
+  "description": "Determines if an extension group uses physical download mode.",
+  "inputValues": [
+    "extensionGroupId-number-ExtensionGroup"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect extensionGroupId (mandatory, number)\n   - No optional fields or default values required\n   - System will use the extensionGroupId to query the database\n\n2. Data Validation:\n   - Validate extensionGroupId:\n      * Ensure extensionGroupId is a valid integer\n      * Verify extensionGroupId is greater than zero\n      * IF extensionGroupId is invalid or missing THEN\n         - Generate validation error message \"Extension group ID must be a valid positive integer\"\n         - Halt processing and return error\n\n3. Business Rule Processing:\n   - Verify extension group existence:\n      * Check if the provided extensionGroupId exists in the system\n      * IF extension group does not exist THEN\n         - Generate error message \"Extension group not found\"\n         - Halt processing and return error\n\n4. Core Operation Execution:\n   - Query database for download mode setting:\n      * Retrieve download_mode value for the specified extensionGroupId\n      * IF database error occurs during query THEN\n         - Log error details\n         - Generate system error message\n         - Halt processing and return error\n      * Process download mode value:\n         - IF download_mode equals 2 THEN\n            * Set result to TRUE (physical download mode)\n         - ELSE\n            * Set result to FALSE (not physical download mode)\n\n5. Response Generation:\n   - Success response:\n      * Return boolean result indicating if physical download mode is used\n      * Include extensionGroupId in response for reference\n   - Error response:\n      * Return appropriate error message based on failure point\n      * Include error type and description",
+  "databaseEntities": [
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Extension group ID must be a valid positive integer",
+    "Extension group must exist in the system",
+    "Download mode value of 2 indicates physical download mode is used"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

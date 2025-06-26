@@ -1,0 +1,27 @@
+{
+  "featureName": "RemoveQuotaLimit",
+  "description": "Deletes one or more quota limits from the system.",
+  "inputValues": [
+    "quotaLimitIds-object-QuotaLimitIds"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - quotaLimitIds (mandatory): Array of quota limit identifiers to be removed\n   - System will process these identifiers to locate and remove the corresponding quota limits\n\n2. Data Validation\n   - Validate quotaLimitIds input:\n     - VERIFY that quotaLimitIds is not null or empty\n     - VERIFY that each ID in quotaLimitIds is a valid numeric value\n     - VERIFY that each ID represents an existing quota limit in the system\n     - IF any validation fails, THEN generate appropriate error message indicating which IDs are invalid\n\n3. Business Rule Processing\n   - Check system constraints:\n     - VERIFY that none of the quota limits to be removed are currently in use by any group\n     - IF any quota limit is in use, THEN generate warning message listing the affected groups\n     - VERIFY that removing these quota limits will not leave the system without any quota limits\n     - IF system would be left without quota limits, THEN generate warning message about potential unlimited uploads\n\n4. Core Operation Execution\n   - Process each quota limit ID:\n     - FOR each ID in the quotaLimitIds array:\n       - Locate the quota limit record with the matching ID\n       - Remove any associations between this quota limit and user groups\n       - Delete the quota limit record from the system\n       - Track successful deletions for reporting\n     - IF any deletion fails:\n       - Record the failure reason\n       - Continue processing remaining IDs\n       - Prepare partial success/failure message\n\n5. Response Generation\n   - Generate appropriate response:\n     - IF all quota limits were successfully removed:\n       - Generate success message indicating the number of quota limits removed\n     - IF some quota limits were removed but others failed:\n       - Generate partial success message indicating which were removed and which failed\n     - IF no quota limits could be removed:\n       - Generate failure message with reasons\n     - Include recommendation for next steps (e.g., view remaining quota limits)",
+  "databaseEntities": [
+    "jforum_quota_limit"
+  ],
+  "validationRules": [
+    "Quota limit IDs must be valid numeric values",
+    "Quota limit IDs must exist in the system",
+    "At least one quota limit ID must be provided",
+    "Quota limits in use by groups should trigger a warning before removal"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "QuotaLimitIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "String representation of quota limit ID"
+      }
+    }
+  }
+}

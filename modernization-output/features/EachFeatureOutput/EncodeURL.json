@@ -1,0 +1,54 @@
+{
+  "featureName": "EncodeURL",
+  "description": "Encodes URLs with context path and extension, handling special cases for bots.",
+  "inputValues": [
+    "url-string-URL",
+    "extension-string-Extension",
+    "contextPath-string-ContextPath",
+    "isEncodingDisabled-boolean-EncodingFlag",
+    "isBot-boolean-BotFlag",
+    "redirectAbsolutePaths-boolean-RedirectFlag",
+    "redirectBaseUrl-string-BaseURL"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. url (string, mandatory): The base URL to be encoded\n     b. extension (string, optional): The file extension to append to the URL\n     c. contextPath (string, mandatory): The application context path\n     d. isEncodingDisabled (boolean, optional): Flag indicating if URL encoding should be skipped\n     e. isBot (boolean, optional): Flag indicating if the request is from a bot\n     f. redirectAbsolutePaths (boolean, optional): Flag indicating if redirects should use absolute paths\n     g. redirectBaseUrl (string, optional): Base URL to prepend when creating absolute paths\n\n2. Data Validation:\n   - Validate URL input:\n     a. Check if URL is not null\n     b. Verify URL format is valid\n     c. IF URL is invalid THEN generate error message indicating invalid URL format\n   - Validate extension input:\n     a. IF extension is provided THEN verify it starts with a period or add one if missing\n     b. IF extension is not provided THEN use default extension from system configuration\n   - Validate contextPath:\n     a. Check if contextPath is not null\n     b. Verify contextPath format is valid (starts with '/' if not empty)\n     c. IF contextPath is invalid THEN generate error message\n   - Validate redirectBaseUrl (when redirectAbsolutePaths is TRUE):\n     a. Check if redirectBaseUrl is not null\n     b. Verify redirectBaseUrl is a valid URL format\n     c. IF redirectBaseUrl is invalid THEN generate error message\n\n3. Business Rule Processing:\n   - Determine encoding behavior:\n     a. IF isBot is TRUE THEN set isEncodingDisabled to TRUE\n     b. Check system configuration for global encoding settings\n     c. Verify if the current session supports URL encoding\n     d. IF session does not support encoding THEN set isEncodingDisabled to TRUE\n   - Determine if URL should be absolute:\n     a. IF redirectAbsolutePaths is TRUE THEN\n        i. Check if the URL is already absolute using URI.create(url).isAbsolute()\n        ii. IF URL is not absolute THEN prepare to prepend redirectBaseUrl\n\n4. Core Operation Execution:\n   - Construct the complete URL:\n     a. Combine contextPath with the provided URL\n     b. Append the appropriate extension to the URL\n     c. Create the complete unencoded URL (contextPath + url + extension)\n   - Apply URL encoding based on conditions:\n     a. IF isEncodingDisabled is TRUE THEN\n        i. Return the complete unencoded URL\n     b. ELSE\n        i. Pass the complete URL to the response encoder\n        ii. Retrieve the encoded URL from the response\n        iii. Return the encoded URL\n   - Handle absolute path requirements:\n     a. IF redirectAbsolutePaths is TRUE AND URL is not absolute THEN\n        i. Prepend redirectBaseUrl to the encoded/unencoded URL\n        ii. Ensure proper URL formatting when combining base URL and path\n\n5. Response Generation:\n   - Return the final URL:\n     a. IF encoding was successful THEN return properly encoded URL with context path and extension\n     b. IF encoding was disabled THEN return unencoded URL with context path and extension\n     c. IF absolute path was required THEN return URL with base URL prepended\n     d. IF any errors occurred during the process THEN return error information",
+  "databaseEntities": [],
+  "validationRules": [
+    "URL must not be null",
+    "Context path must be properly formatted",
+    "Bot requests should have encoding disabled",
+    "Extension must be properly formatted if provided",
+    "When using absolute paths, redirectBaseUrl must be valid",
+    "URI must be properly checked for absolute status before prepending base URL"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "URL": {
+      "type": "string",
+      "description": "The base URL to be encoded"
+    },
+    "Extension": {
+      "type": "string",
+      "description": "The file extension to append to the URL"
+    },
+    "ContextPath": {
+      "type": "string",
+      "description": "The application context path"
+    },
+    "EncodingFlag": {
+      "type": "boolean",
+      "description": "Flag indicating if URL encoding should be skipped"
+    },
+    "BotFlag": {
+      "type": "boolean",
+      "description": "Flag indicating if the request is from a bot"
+    },
+    "RedirectFlag": {
+      "type": "boolean",
+      "description": "Flag indicating if redirects should use absolute paths"
+    },
+    "BaseURL": {
+      "type": "string",
+      "description": "Base URL to prepend when creating absolute paths"
+    }
+  }
+}

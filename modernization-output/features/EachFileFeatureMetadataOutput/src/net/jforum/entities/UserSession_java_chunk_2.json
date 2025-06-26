@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "UpdateSessionTime",
+    "description": "Updates the user session time based on the current system time"
+  },
+  {
+    "featureName": "ValidateCaptchaResponse",
+    "description": "Validates user's captcha response against the stored challenge"
+  },
+  {
+    "featureName": "CreateNewCaptcha",
+    "description": "Generates a new image captcha challenge for the user"
+  },
+  {
+    "featureName": "MakeAnonymous",
+    "description": "Converts the current user session to an anonymous session"
+  },
+  {
+    "featureName": "RegisterBasicInfo",
+    "description": "Sets up basic session information for first-time forum visitors"
+  },
+  {
+    "featureName": "DataToUser",
+    "description": "Updates session with user information including messages and preferences"
+  },
+  {
+    "featureName": "CheckModeratorStatus",
+    "description": "Verifies if the user has moderation rights for a specific forum"
+  }
+]

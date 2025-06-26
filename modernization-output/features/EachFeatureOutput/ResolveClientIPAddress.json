@@ -1,0 +1,31 @@
+{
+  "featureName": "ResolveClientIPAddress",
+  "description": "Determines the actual client IP address with support for forwarded requests.",
+  "inputValues": [
+    "request-object-HttpRequest"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the HTTP request object\n     1.1. Access the HTTP request headers\n     1.2. Access the remote address information from the request\n\n2. Data Validation:\n   - Validate the request object\n     2.1. Verify the request object is not null\n     2.2. Check if required header information is accessible\n\n3. Business Rule Processing:\n   - Check for forwarded request scenarios\n     3.1. Check if 'x-forwarded-for' header exists in the request\n     3.2. IF 'x-forwarded-for' header exists THEN\n          3.2.1. Process the header value as a potential proxy chain\n          3.2.2. Determine if the header contains multiple IP addresses\n     3.3. ELSE\n          3.3.1. Prepare to use the direct remote address\n\n4. Core Operation Execution:\n   - Determine the client IP address\n     4.1. IF 'x-forwarded-for' header exists THEN\n          4.1.1. Parse the header value by splitting at commas\n          4.1.2. Extract the last IP address from the chain (representing the original client)\n          4.1.3. Trim any whitespace from the extracted IP\n          4.1.4. IF extracted IP is empty THEN\n                4.1.4.1. Set IP to null\n     4.2. ELSE\n          4.2.1. Get the remote address directly from the request\n     4.3. IF the IP address is null or could not be determined THEN\n          4.3.1. Set IP to a default placeholder value '[REDACTED-IP-ADDRESS]'\n\n5. Response Generation:\n   - Return the resolved client IP address\n     5.1. Return the final determined IP address string\n     5.2. Ensure the returned value is never null",
+  "databaseEntities": [],
+  "validationRules": [
+    "The request object must not be null",
+    "The returned IP address must never be null",
+    "When x-forwarded-for header exists, use the last IP in the chain",
+    "When no valid IP can be determined, return '[REDACTED-IP-ADDRESS]'"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "HttpRequest": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "description": "Collection of HTTP headers"
+        },
+        "remoteAddress": {
+          "type": "string",
+          "description": "Direct IP address of the connecting client"
+        }
+      }
+    }
+  }
+}

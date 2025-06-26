@@ -1,0 +1,47 @@
+{
+  "featureName": "SetCustomMessageId",
+  "description": "Sets a custom Message-ID header for email messages.",
+  "inputValues": [
+    "messageId-string-EmailMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. messageId (string, mandatory): The custom Message-ID value to be set for the email\n\n2. Data Validation:\n   - Validate the messageId input:\n     a. Check if messageId is provided\n        IF messageId is null or empty THEN\n          Return error: \"Message ID cannot be empty\"\n     b. Check if messageId follows proper format\n        IF messageId does not match required format THEN\n          Return error: \"Invalid Message-ID format\"\n\n3. Business Rule Processing:\n   - Verify system state for message handling:\n     a. Check if the email message object exists\n        IF email message object is null THEN\n          Return error: \"Email message not initialized\"\n     b. Verify the message is in editable state\n        IF message is already finalized or sent THEN\n          Return error: \"Cannot modify headers of finalized message\"\n\n4. Core Operation Execution:\n   - Set the custom Message-ID:\n     a. Store the provided messageId in the message object\n     b. When message headers are updated:\n        IF custom messageId is set THEN\n          Add the custom Message-ID header to the email\n        ELSE\n          Use system-generated Message-ID\n     c. Ensure the Message-ID is properly formatted in email headers\n\n5. Response Generation:\n   - Generate appropriate response:\n     a. On success:\n        Return confirmation that Message-ID was successfully set\n     b. On failure:\n        Return specific error message indicating why the operation failed\n        Include guidance on proper Message-ID format if applicable",
+  "databaseEntities": [],
+  "validationRules": [
+    "Message ID must not be empty",
+    "Message ID must follow proper email header format",
+    "Email message must be in editable state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "EmailMessage": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "description": "Custom Message-ID header value for the email"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject"
+        },
+        "content": {
+          "type": "string",
+          "description": "Email content"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Collection of email headers"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "ready",
+            "sent"
+          ],
+          "description": "Current status of the email message"
+        }
+      }
+    }
+  }
+}

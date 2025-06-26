@@ -1,0 +1,55 @@
+{
+  "featureName": "ExecuteDatabaseStructureCreation",
+  "description": "Creates database tables by executing SQL statements from structure files.",
+  "inputValues": [
+    "dbType-string-Database",
+    "connection-object-Connection",
+    "configDirectory-string-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect database type (dbType) from system configuration\n   - Obtain active database connection (connection)\n   - Determine configuration directory path (configDirectory)\n   - All inputs are mandatory for operation\n\n2. Data Validation:\n   - Validate database type:\n     * Verify dbType is not null or empty\n     * Confirm dbType is a supported database type\n     * Generate error if database type is invalid\n   - Validate connection:\n     * Verify connection is active and not null\n     * Check connection has proper access rights\n     * Generate error if connection is invalid\n   - Validate configuration directory:\n     * Verify configDirectory path exists\n     * Confirm system has read access to the directory\n     * Generate error if directory is inaccessible\n\n3. Business Rule Processing:\n   - Check for special database handling requirements:\n     * IF dbType is \"postgresql\" OR dbType is \"oracle\" THEN\n       - Execute special table dropping procedure\n     * END IF\n   - Verify structure file existence:\n     * Construct path to database structure file: configDirectory + \"/database/\" + dbType + \"/\" + dbType + \"_db_struct.sql\"\n     * Confirm file exists and is readable\n     * Generate error if structure file cannot be found\n   - Check for write permissions:\n     * Verify system can write to required directories\n     * Generate error if write permissions are inadequate\n\n4. Core Operation Execution:\n   - Prepare database connection:\n     * Store current auto-commit state\n     * Set auto-commit to false for transaction control\n   - Parse database structure file:\n     * Read SQL statements from structure file\n     * Split file content into individual SQL statements\n   - Execute SQL statements:\n     * FOR EACH statement in parsed statements:\n       - Skip if statement is empty or null\n       - Create new statement object\n       - Execute the SQL statement\n       - IF execution fails THEN\n         - Log error details\n         - Store exception message\n         - Break execution loop\n         - Set operation status to failure\n       - END IF\n     * END FOR\n   - Restore connection state:\n     * Reset auto-commit to original state\n   - Handle any exceptions during process:\n     * Log exception details\n     * Wrap and propagate as system exception\n\n5. Response Generation:\n   - Generate success response:\n     * Return boolean status indicating success or failure\n     * Include details of executed operations\n   - Generate error response:\n     * Include specific error messages for troubleshooting\n     * Provide guidance on resolving structure creation issues\n     * Include details about which statement failed if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_attachments",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_smilies",
+    "jforum_words",
+    "jforum_karma",
+    "jforum_bookmarks",
+    "jforum_quota_limit",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Database type must be a supported value",
+    "Database connection must be active and valid",
+    "Configuration directory must exist and be accessible",
+    "Structure file must exist for the specified database type",
+    "System must have write permissions to required directories",
+    "SQL statements must be valid for the target database"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "autoCommit": {
+          "type": "boolean",
+          "description": "Auto-commit state of the connection"
+        },
+        "status": {
+          "type": "boolean",
+          "description": "Connection status"
+        }
+      }
+    }
+  }
+}

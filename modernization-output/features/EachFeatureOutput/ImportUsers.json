@@ -1,0 +1,103 @@
+{
+  "featureName": "ImportPhpbbUsers",
+  "description": "Imports user accounts from phpBB to JForum with all profile data and settings.",
+  "inputValues": [
+    "sourceDatabase-string-Database",
+    "targetDatabase-string-Database",
+    "tablePrefix-string-Configuration",
+    "baseDirectory-string-FileSystem"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect source phpBB database connection details\n   - Collect target JForum database connection details\n   - Collect phpBB table prefix configuration\n   - Collect base directory path for configuration files\n   - All inputs are mandatory for the import process\n\n2. Data Validation\n   - Validate source database connection parameters\n     * Ensure database connection string is properly formatted\n     * Verify database credentials are valid\n     * Check if the source database contains required phpBB tables\n   - Validate target database connection parameters\n     * Ensure database connection string is properly formatted\n     * Verify database credentials are valid\n     * Check if the target database contains required JForum tables\n   - Validate table prefix\n     * Ensure the table prefix matches the phpBB installation\n   - Validate base directory path\n     * Verify the directory exists\n     * Check if required configuration files are present\n   - Display appropriate error messages for any validation failures\n\n3. Business Rule Processing\n   - Initialize system configuration\n     * Load global system settings\n     * Load database query templates\n     * Configure text conversion rules for formatting\n   - Verify system readiness\n     * Check if target system is prepared for data import\n     * Verify no conflicts exist in the target system\n   - Establish database connections\n     * Connect to source phpBB database\n     * Connect to target JForum database\n   - IF any connection fails THEN\n     * Display connection error message\n     * Abort the import process\n\n4. Core Operation Execution\n   - Clean target tables\n     * Remove existing data from all relevant JForum tables\n     * Reset any sequences or auto-increment counters\n   - Import user accounts\n     * Retrieve all users from phpBB database\n     * For EACH user record:\n       * Extract user profile information\n       * Convert user signature using text formatting rules\n       * Insert user record into JForum database\n   - Import forum structure\n     * Import categories\n     * Import forums\n     * Import topic information\n   - Import user content\n     * Import private messages\n       * Retrieve private message text\n       * Apply text formatting conversions\n       * Store in JForum format\n     * Import posts\n       * Calculate total post count\n       * Process posts in batches\n       * Convert post text formatting\n       * Store in JForum format\n   - Configure permissions\n     * Set up user groups\n     * Configure administrator permissions\n     * Set default user permissions\n   - IF any import operation fails THEN\n     * Log detailed error information\n     * Continue with next import operation when possible\n\n5. Response Generation\n   - Generate import summary\n     * Total number of users imported\n     * Total number of posts processed\n     * Total number of private messages imported\n     * List of any errors encountered\n   - Display completion status\n     * Show success message if import completed\n     * Show partial completion message if some operations failed\n     * Provide recommendations for post-import verification",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_categories",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Source database connection must be valid",
+    "Target database connection must be valid",
+    "Base directory must exist and contain required configuration files",
+    "phpBB table prefix must match the actual prefix in the source database",
+    "Target JForum database tables must exist",
+    "User IDs must be preserved during migration",
+    "Text formatting must be converted from phpBB to JForum format",
+    "All user profile fields must be mapped correctly between systems"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "properties": {
+        "user_id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "user_password": {
+          "type": "string"
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "user_regdate": {
+          "type": "string"
+        },
+        "user_level": {
+          "type": "string"
+        },
+        "user_posts": {
+          "type": "string"
+        },
+        "user_timezone": {
+          "type": "string"
+        },
+        "user_avatar": {
+          "type": "string"
+        },
+        "user_sig": {
+          "type": "string"
+        },
+        "user_website": {
+          "type": "string"
+        }
+      }
+    },
+    "Database": {
+      "properties": {
+        "connectionString": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "driver": {
+          "type": "string"
+        }
+      }
+    },
+    "Configuration": {
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "FileSystem": {
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

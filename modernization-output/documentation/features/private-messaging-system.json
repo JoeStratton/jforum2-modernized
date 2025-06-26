@@ -1,0 +1,220 @@
+{
+  "feature_name": "Private Messaging System",
+  "description": "The Private Messaging System enables users to exchange private messages with other forum members outside of the public discussion areas.",
+  "business_logic": {
+    "message_composition": {
+      "description": "Process for creating and sending private messages",
+      "workflow": [
+        "User selects recipient(s) from available forum members",
+        "User composes message with subject and content",
+        "System validates input (length, recipient limits)",
+        "Message is sent and appears in recipient's inbox",
+        "Copy is stored in sender's sent items folder"
+      ],
+      "message_types": [
+        "Standard - normal message to one or more recipients",
+        "Reply - response to an existing message",
+        "Forward - sending an existing message to new recipients"
+      ]
+    },
+    "message_management": {
+      "description": "Organization and handling of private messages",
+      "folders": [
+        "Inbox - received messages",
+        "Sent - copies of sent messages",
+        "Saved - messages marked for long-term storage",
+        "Trash - deleted messages pending permanent removal"
+      ],
+      "operations": [
+        "Mark as read/unread",
+        "Move between folders",
+        "Delete (move to trash)",
+        "Permanent deletion from trash"
+      ]
+    },
+    "notification": {
+      "description": "Alerting users about new messages",
+      "methods": [
+        "In-app notification badge/counter",
+        "Optional email notification",
+        "Notification on next login"
+      ]
+    },
+    "quota_management": {
+      "description": "Limits on private message storage",
+      "rules": [
+        "Maximum messages per folder based on user group",
+        "Warning when approaching quota limit",
+        "Prevention of new messages when quota reached"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "messages": {
+      "list": {
+        "path": "/api/messages",
+        "method": "GET",
+        "query_params": {
+          "folder": "string",
+          "page": "integer",
+          "size": "integer"
+        },
+        "responses": {
+          "200": "Paginated list of messages in specified folder"
+        }
+      },
+      "create": {
+        "path": "/api/messages",
+        "method": "POST",
+        "request_body": {
+          "to_user_ids": "array",
+          "subject": "string",
+          "content": "string"
+        },
+        "responses": {
+          "201": "Message sent successfully",
+          "400": "Validation error",
+          "403": "Quota exceeded or permission denied"
+        }
+      },
+      "get": {
+        "path": "/api/messages/{messageId}",
+        "method": "GET",
+        "responses": {
+          "200": "Message details",
+          "403": "Not authorized to view this message",
+          "404": "Message not found"
+        }
+      },
+      "delete": {
+        "path": "/api/messages/{messageId}",
+        "method": "DELETE",
+        "query_params": {
+          "permanent": "boolean"
+        },
+        "responses": {
+          "204": "Message deleted",
+          "403": "Not authorized to delete this message",
+          "404": "Message not found"
+        }
+      },
+      "reply": {
+        "path": "/api/messages/{messageId}/reply",
+        "method": "POST",
+        "request_body": {
+          "content": "string"
+        }
+      },
+      "forward": {
+        "path": "/api/messages/{messageId}/forward",
+        "method": "POST",
+        "request_body": {
+          "to_user_ids": "array",
+          "content": "string"
+        }
+      },
+      "mark_read": {
+        "path": "/api/messages/{messageId}/read",
+        "method": "POST"
+      },
+      "mark_unread": {
+        "path": "/api/messages/{messageId}/unread",
+        "method": "POST"
+      },
+      "move": {
+        "path": "/api/messages/{messageId}/move",
+        "method": "POST",
+        "request_body": {
+          "folder": "string"
+        }
+      }
+    },
+    "folders": {
+      "list": {
+        "path": "/api/messages/folders",
+        "method": "GET",
+        "responses": {
+          "200": "List of folders with message counts"
+        }
+      }
+    },
+    "quota": {
+      "get": {
+        "path": "/api/messages/quota",
+        "method": "GET",
+        "responses": {
+          "200": "Current usage and quota information"
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "private_messages": {
+      "fields": [
+        {"name": "message_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "message_type", "type": "SMALLINT", "constraints": "NOT NULL"},
+        {"name": "from_user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "message_subject", "type": "VARCHAR(255)", "constraints": "NOT NULL"},
+        {"name": "message_text", "type": "TEXT", "constraints": "NOT NULL"},
+        {"name": "message_time", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "parent_message_id", "type": "INTEGER"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (from_user_id) REFERENCES users(user_id)",
+        "FOREIGN KEY (parent_message_id) REFERENCES private_messages(message_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_pm_from_user ON private_messages(from_user_id)",
+        "CREATE INDEX idx_pm_time ON private_messages(message_time)"
+      ]
+    },
+    "private_message_recipients": {
+      "fields": [
+        {"name": "message_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "is_read", "type": "SMALLINT", "constraints": "DEFAULT 0"},
+        {"name": "is_flagged", "type": "SMALLINT", "constraints": "DEFAULT 0"},
+        {"name": "folder_id", "type": "SMALLINT", "constraints": "DEFAULT 1"}
+      ],
+      "constraints": [
+        "PRIMARY KEY (message_id, user_id)",
+        "FOREIGN KEY (message_id) REFERENCES private_messages(message_id)",
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_pmr_user ON private_message_recipients(user_id)",
+        "CREATE INDEX idx_pmr_folder ON private_message_recipients(user_id, folder_id)"
+      ]
+    },
+    "private_message_folders": {
+      "fields": [
+        {"name": "folder_id", "type": "SMALLINT", "constraints": "PRIMARY KEY"},
+        {"name": "folder_name", "type": "VARCHAR(50)", "constraints": "NOT NULL"}
+      ]
+    }
+  },
+  "security_considerations": {
+    "privacy": [
+      "Ensure messages are only visible to sender and recipients",
+      "Implement proper authorization checks for all message operations",
+      "Sanitize message content to prevent XSS attacks"
+    ],
+    "anti_abuse": [
+      "Rate limiting to prevent message flooding",
+      "Allow users to block unwanted senders",
+      "Reporting mechanism for abusive messages",
+      "Administrator ability to review reported messages"
+    ],
+    "data_protection": [
+      "Consider encryption for message content",
+      "Implement proper data retention policies",
+      "Allow users to delete their message history"
+    ]
+  },
+  "integration_points": {
+    "user_management": "Messages are sent between registered users",
+    "notification_system": "Notifications for new messages",
+    "content_formatting": "Message content may use same formatting as forum posts (BBCode, etc.)",
+    "moderation_system": "Reported messages can be reviewed by moderators"
+  }
+}

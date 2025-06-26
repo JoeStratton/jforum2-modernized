@@ -1,0 +1,85 @@
+{
+  "featureName": "ConfigureSearchParameters",
+  "description": "Configures search parameters including keywords, author, forum, date range, and result ordering.",
+  "inputValues": [
+    "keywords-string-SearchArgs",
+    "author-number-SearchArgs",
+    "forumId-number-SearchArgs",
+    "matchAllKeywords-boolean-SearchArgs",
+    "orderBy-string-SearchArgs",
+    "orderDir-string-SearchArgs",
+    "fromDate-date-SearchArgs",
+    "toDate-date-SearchArgs",
+    "matchType-string-SearchArgs",
+    "initialRecord-number-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following search parameters:\n     a. keywords (string, optional): Search terms entered by the user\n     b. author (number, optional): User ID of the content author to filter by\n     c. forumId (number, optional): Specific forum ID to limit search to\n     d. matchAllKeywords (boolean, optional, default: false): Whether to match all keywords or any keyword\n     e. orderBy (string, optional): Field to sort results by\n     f. orderDir (string, optional, default: \"DESC\"): Sort direction (\"ASC\" or \"DESC\")\n     g. fromDate (date, optional): Start date for date range filtering\n     h. toDate (date, optional): End date for date range filtering\n     i. matchType (string, optional): Type of matching to perform\n     j. initialRecord (number, optional, default: 0): Starting record for pagination\n\n2. Data Validation:\n   - Validate keywords parameter:\n     a. IF keywords is provided THEN\n        i. Trim whitespace from beginning and end\n        ii. Check if keywords contains any non-whitespace characters\n     b. IF keywords is empty or contains only whitespace THEN\n        i. Set keywords to empty string or null\n        ii. Note that search will return no keyword-specific results\n   - Validate author parameter:\n     a. IF author is provided THEN\n        i. Verify author is a positive integer\n        ii. Check if author exists in the system\n     b. IF author is invalid THEN\n        i. Set author to default (0 or -1) indicating no author filter\n   - Validate forumId parameter:\n     a. IF forumId is provided THEN\n        i. Verify forumId is a positive integer\n        ii. Check if forum exists in the system\n     b. IF forumId is invalid THEN\n        i. Set forumId to default (0 or -1) indicating no forum filter\n   - Validate orderDir parameter:\n     a. IF orderDir is provided THEN\n        i. Verify orderDir is either \"ASC\" or \"DESC\" (case-sensitive)\n     b. IF orderDir is invalid THEN\n        i. Set orderDir to default \"DESC\"\n   - Validate date range parameters:\n     a. IF fromDate is provided THEN\n        i. Verify fromDate is a valid date\n     b. IF toDate is provided THEN\n        i. Verify toDate is a valid date\n     c. IF both fromDate and toDate are provided THEN\n        i. Verify fromDate is before or equal to toDate\n        ii. IF fromDate is after toDate THEN\n            - Swap fromDate and toDate values\n   - Validate initialRecord parameter:\n     a. IF initialRecord is provided THEN\n        i. Verify initialRecord is a non-negative integer\n     b. IF initialRecord is invalid THEN\n        i. Set initialRecord to 0\n\n3. Business Rule Processing:\n   - Process keyword matching rules:\n     a. IF keywords is provided THEN\n        i. Split keywords into individual terms by whitespace\n        ii. Remove any empty terms\n        iii. IF matchAllKeywords is true THEN\n            - Configure search to require all terms to be present\n        iv. ELSE\n            - Configure search to match any of the terms\n   - Process ordering rules:\n     a. IF orderBy is not provided THEN\n        i. Set orderBy to system default (typically relevance or date)\n     b. Ensure orderDir is properly set to either \"ASC\" or \"DESC\"\n   - Process pagination rules:\n     a. Determine the number of results per page from system configuration\n     b. Calculate the ending record based on initialRecord and results per page\n   - Process date range rules:\n     a. IF date range is provided THEN\n        i. Format dates according to system requirements\n        ii. Prepare date range filter parameters\n\n4. Core Operation Execution:\n   - Create search configuration object:\n     a. Set all validated parameters in the search configuration\n     b. Apply default values for any missing parameters\n     c. Calculate any derived parameters needed for search execution\n   - Prepare search execution context:\n     a. Format keywords according to search engine requirements\n     b. Set up pagination parameters\n     c. Configure sorting parameters\n     d. Set up filtering parameters (author, forum, dates)\n   - Store search configuration:\n     a. Save the configured search parameters for execution\n     b. Prepare for passing to search execution component\n\n5. Response Generation:\n   - Return configured search parameters object:\n     a. Include all processed and validated parameters\n     b. Include any calculated or derived values\n     c. Include pagination information\n     d. Include any warnings about ignored or modified parameters\n   - Provide confirmation of search configuration:\n     a. Indicate that search parameters have been successfully configured\n     b. Return the complete search configuration for execution",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Keywords must be properly formatted and split into individual terms",
+    "Order direction must be either 'ASC' or 'DESC'",
+    "Author ID must be a positive integer if provided",
+    "Forum ID must be a positive integer if provided",
+    "From date must be before or equal to to date if both are provided",
+    "Initial record must be a non-negative integer",
+    "Results per page must match system configuration"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string",
+          "description": "Search terms entered by the user"
+        },
+        "author": {
+          "type": "integer",
+          "description": "User ID of the content author to filter by"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "Specific forum ID to limit search to"
+        },
+        "matchAllKeywords": {
+          "type": "boolean",
+          "description": "Whether to match all keywords or any keyword"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "orderDir": {
+          "type": "string",
+          "description": "Sort direction (ASC or DESC)",
+          "default": "DESC"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date for date range filtering"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date",
+          "description": "End date for date range filtering"
+        },
+        "matchType": {
+          "type": "string",
+          "description": "Type of matching to perform"
+        },
+        "initialRecord": {
+          "type": "integer",
+          "description": "Starting record for pagination",
+          "default": 0
+        }
+      }
+    }
+  }
+}

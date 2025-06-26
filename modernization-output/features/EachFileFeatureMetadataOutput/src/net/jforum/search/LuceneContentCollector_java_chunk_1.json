@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "CollectSearchResults",
+    "description": "Collects and processes search results from Lucene, retrieving post data and highlighting matched content"
+  },
+  {
+    "featureName": "RetrievePostsWithHighlighting",
+    "description": "Retrieves post data from database and applies text highlighting to search matches in post content"
+  }
+]

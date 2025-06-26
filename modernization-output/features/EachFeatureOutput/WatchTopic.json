@@ -1,0 +1,36 @@
+{
+  "featureName": "WatchTopic",
+  "description": "Subscribes a user to receive notifications for a specific topic.",
+  "inputValues": [
+    "topic_id-number-Topic",
+    "user_id-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect topic_id (mandatory): The unique identifier of the topic to watch\n   - Collect user_id (mandatory): The unique identifier of the user who wants to watch the topic\n   - System will determine if this is a new subscription or an existing one\n\n2. Data Validation:\n   - Validate topic_id:\n      * Verify topic_id is a positive integer\n      * Verify topic exists in the system\n      * If topic does not exist, display error message and terminate process\n   - Validate user_id:\n      * Verify user_id is a positive integer\n      * Verify user exists in the system\n      * If user does not exist, display error message and terminate process\n   - Validate user authentication:\n      * Verify user is logged in\n      * If user is not logged in, redirect to login page\n\n3. Business Rule Processing:\n   - Check subscription status:\n      * Verify if the user is already subscribed to this topic\n      * IF user is already subscribed:\n         - Skip the subscription process\n         - Proceed to response generation\n      * ELSE:\n         - Proceed to core operation execution\n   - Check topic accessibility:\n      * Verify user has permission to access the topic\n      * IF user does not have permission:\n         - Display error message\n         - Terminate process\n\n4. Core Operation Execution:\n   - Create new subscription record:\n      * Associate user_id with topic_id in the subscription system\n      * Set subscription status to active\n      * Record subscription timestamp\n   - Update user preferences:\n      * Add topic to user's watched topics list\n      * Update notification settings if necessary\n\n5. Response Generation:\n   - Display confirmation message:\n      * Inform user they are now watching the topic\n      * Explain how they will receive notifications\n   - Provide navigation options:\n      * Return to topic view\n      * Manage watched topics\n      * Modify notification preferences",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User must be logged in to watch a topic",
+    "Topic must exist in the system",
+    "User must have permission to access the topic",
+    "User cannot subscribe to the same topic multiple times"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "title": "string",
+      "forumId": "number",
+      "lastPostId": "number",
+      "firstPostId": "number",
+      "totalReplies": "number"
+    },
+    "User": {
+      "id": "number",
+      "username": "string",
+      "email": "string"
+    }
+  }
+}

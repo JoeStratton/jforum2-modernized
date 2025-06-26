@@ -1,0 +1,31 @@
+{
+  "featureName": "ExtensionsForSecurity",
+  "description": "Retrieves file extensions with their security permissions for attachment validation.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will use internal database configuration\n\n2. Data Validation:\n   - No input validation required as this is a system query operation\n\n3. Business Rule Processing:\n   3.1. Verify database connection is available\n      - IF database connection is not available THEN\n         - Generate appropriate error message\n         - Exit process\n      - END IF\n\n4. Core Operation Execution:\n   4.1. Retrieve extension security settings\n      - Access extension configuration data from database\n      - For each extension record:\n         - Extract the extension name\n         - Extract the group permission setting\n         - Extract the extension's allow status\n         - Determine final permission status by combining group and extension permissions\n         - IF group permission is restrictive (allow = 0) THEN\n            - Use group permission regardless of extension permission\n         - ELSE\n            - Use extension's own permission setting\n         - END IF\n      - Map each extension to its final permission status (allowed or disallowed)\n\n5. Response Generation:\n   5.1. Format security permissions map\n      - Create a mapping structure with extension names as keys\n      - Set boolean permission values as the corresponding values\n      - Return the complete mapping of extensions to their security permissions\n   5.2. Handle error conditions\n      - IF any database errors occur during processing THEN\n         - Generate appropriate error message\n         - Include relevant error details\n      - END IF",
+  "databaseEntities": [
+    "jforum_extension_groups",
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Database connection must be available",
+    "Extension records must contain valid permission settings",
+    "Extension names must be stored in lowercase format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ExtensionSecurity": {
+      "type": "object",
+      "properties": {
+        "extension": {
+          "type": "string",
+          "description": "The file extension name"
+        },
+        "allowed": {
+          "type": "boolean",
+          "description": "Whether the extension is allowed for upload"
+        }
+      }
+    }
+  }
+}

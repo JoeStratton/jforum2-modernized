@@ -1,0 +1,53 @@
+{
+  "featureName": "LoadHottestTopics",
+  "description": "Loads the most popular topics from the database and adds them to the cache.",
+  "inputValues": [
+    "limit-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Retrieve the maximum number of hottest topics to load (limit) from system configuration\n   - System-generated input: cache engine reference for storing results\n\n2. Data Validation\n   - Validate that the limit is a positive integer\n     - IF limit <= 0 THEN\n       - Use default value from system configuration\n     - END IF\n   - Verify cache engine is properly initialized\n     - IF cache engine is null THEN\n       - Initialize cache engine\n     - END IF\n\n3. Business Rule Processing\n   - Check if topic caching is enabled in system configuration\n     - IF topic caching is disabled THEN\n       - Skip caching operations but still retrieve topics\n     - END IF\n   - Determine if hottest topics are already cached\n     - IF hottest topics exist in cache AND cache is valid THEN\n       - Return cached topics without database access\n     - END IF\n\n4. Core Operation Execution\n   - Access data layer to retrieve hottest topics\n     - Create data access object for topics\n     - Query database for topics with highest view or reply counts\n     - Limit results to specified maximum number\n   - Process retrieved topics\n     - Sort topics by popularity metrics (views, replies)\n     - Convert to appropriate data structure for caching\n   - Store topics in cache\n     - Add topics to cache with appropriate cache key\n     - Set expiration time according to system configuration\n   - Update cache status indicators\n     - Mark hottest topics as loaded in cache\n\n5. Response Generation\n   - Return the list of hottest topics\n   - Include metadata about cache status (freshly loaded or from cache)\n   - IF error occurs during processing THEN\n     - Return empty list\n     - Log error details\n   - END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic limit must be a positive integer",
+    "Cache engine must be properly initialized before use",
+    "Topic caching must be enabled in system configuration for caching operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "Forum identifier the topic belongs to"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "postCount": {
+          "type": "number",
+          "description": "Number of posts in the topic"
+        },
+        "viewCount": {
+          "type": "number",
+          "description": "Number of views the topic has received"
+        },
+        "lastPostDate": {
+          "type": "date",
+          "description": "Date of the last post in the topic"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type classification of the topic"
+        }
+      }
+    }
+  }
+}

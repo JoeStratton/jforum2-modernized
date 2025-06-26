@@ -1,0 +1,35 @@
+{
+  "featureName": "ProcessMultipartFormData",
+  "description": "Processes multipart form data requests, extracting file items and form fields.",
+  "inputValues": [
+    "contentType-string-Request",
+    "requestSize-number-Request",
+    "sizeMax-number-Configuration",
+    "headerEncoding-string-Configuration",
+    "inputStream-object-InputStream"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. contentType (mandatory): The content type header value from the request\n     b. requestSize (mandatory): The size of the request in bytes\n     c. sizeMax (mandatory): The maximum allowed request size in bytes\n     d. headerEncoding (optional): Character encoding for headers\n     e. inputStream (mandatory): The input stream containing the multipart data\n\n2. Data Validation:\n   - Validate request size:\n     a. IF requestSize is -1 (unknown)\n        THEN generate error: \"Request was rejected because its size is unknown\"\n     b. IF sizeMax is greater than or equal to 0 AND requestSize exceeds sizeMax\n        THEN generate error: \"Request was rejected because its size exceeds allowed range\"\n   - Validate content type:\n     a. Extract boundary from contentType\n     b. IF boundary is not found\n        THEN generate error: \"Request was rejected because no multipart boundary was found\"\n\n3. Business Rule Processing:\n   - Prepare for multipart processing:\n     a. Create an empty collection to store processed items\n     b. Set up multipart stream with input stream and boundary\n     c. IF headerEncoding is provided\n        THEN apply the encoding to the multipart stream\n\n4. Core Operation Execution:\n   - Process multipart data:\n     a. Skip preamble to reach first part\n     b. WHILE more parts exist:\n        i. Read and parse headers for current part\n        ii. Extract field name from headers\n        iii. IF field name exists:\n             1. Check if content type indicates nested multipart (multipart/mixed):\n                a. IF nested multipart:\n                   i. Extract sub-boundary\n                   ii. Process each sub-part:\n                       - Read sub-part headers\n                       - IF file name exists in headers:\n                         * Create file item\n                         * Read body data into item\n                         * Add item to collection\n                       - ELSE:\n                         * Discard body data (non-file items in multipart/mixed are ignored)\n                b. ELSE (regular part):\n                   i. Determine if part is a form field or file based on presence of filename\n                   ii. Create appropriate item\n                   iii. Read body data into item\n                   iv. Add item to collection\n        iv. ELSE (no field name):\n             1. Skip this part by discarding body data\n        v. Check for next boundary\n   - Handle processing errors:\n     a. IF any I/O errors occur during processing\n        THEN generate appropriate error message with details\n\n5. Response Generation:\n   - Return the collection of processed items:\n     a. Each item contains:\n        i. Field name\n        ii. Content type (for file items)\n        iii. Whether it's a form field or file\n        iv. File name (for file items)\n        v. The actual data content\n   - For error conditions:\n     a. Return appropriate error information including:\n        i. Error type (size limit, unknown size, invalid format, etc.)\n        ii. Detailed message explaining the issue",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Request size must be known (not -1)",
+    "Request size must not exceed maximum allowed size if specified",
+    "Content type must contain a valid multipart boundary",
+    "Headers in multipart data must be properly formatted",
+    "Field names must be extracted from Content-disposition headers",
+    "File names must be extracted from Content-disposition headers when present"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "InputStream": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "binary",
+          "description": "The binary content of the input stream"
+        }
+      }
+    }
+  }
+}

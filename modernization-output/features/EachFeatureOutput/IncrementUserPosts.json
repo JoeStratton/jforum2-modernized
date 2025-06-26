@@ -1,0 +1,20 @@
+{
+  "featureName": "IncrementUserPosts",
+  "description": "Increases the post count for a user in the system.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the userId (number) of the user whose post count needs to be incremented\n   - Verify the userId is provided and not null\n   - System will not require any additional inputs for this operation\n\n2. Data Validation:\n   - Validate that userId is a positive integer\n      * IF userId is not a positive integer THEN\n        - Generate an error message indicating invalid user ID format\n        - Abort the operation\n   - Verify the user exists in the system\n      * Query the user record using the provided userId\n      * IF user not found THEN\n        - Generate an error message indicating user does not exist\n        - Abort the operation\n   - Verify the user account is active and not deleted\n      * IF user is marked as deleted THEN\n        - Generate an error message indicating operation cannot be performed on deleted accounts\n        - Abort the operation\n\n3. Business Rule Processing:\n   - Check if the user has permission to have their post count updated\n      * Verify user is not in a special group that is exempt from post counting\n      * IF user is in an exempt group THEN\n        - Log the attempt but do not increment the counter\n        - Skip to Response Generation with appropriate message\n   - Check if any post count limits apply to this user\n      * IF user has reached maximum allowed post count THEN\n        - Log the attempt\n        - Generate a notification for administrators\n        - Continue with the increment operation\n\n4. Core Operation Execution:\n   - Retrieve the current post count for the user\n   - Increment the post count by one\n   - Update the user record with the new post count\n      * IF update operation fails THEN\n        - Log the error details\n        - Attempt to rollback the operation\n        - Generate an error message about the failure\n        - Abort the operation\n   - Record the timestamp of this update in the user activity log\n   - IF the new post count reaches a threshold for rank promotion\n      * Update the user's rank accordingly\n      * Generate a notification for the user about their new rank\n\n5. Response Generation:\n   - Return success status indicating the post count was incremented\n   - Include the new post count value in the response\n   - Include any rank change information if applicable\n   - IF any warnings occurred during processing, include them in the response\n   - Provide information about the next rank threshold if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "User account must not be deleted",
+    "User must have permission to have their post count updated"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

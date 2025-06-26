@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "ExecuteAutoKeysQuery",
+    "description": "Executes SQL queries with support for auto-generated keys and retrieves the generated ID"
+  },
+  {
+    "featureName": "GetStatementForAutoKeys",
+    "description": "Creates prepared statements configured for auto-generated keys based on system configuration"
+  }
+]

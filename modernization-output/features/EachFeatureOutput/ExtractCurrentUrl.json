@@ -1,0 +1,30 @@
+{
+  "featureName": "ExtractCurrentUrl",
+  "description": "Retrieves and formats the current request URL for inclusion in error reports.",
+  "inputValues": [
+    "request-object-RequestContext"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the RequestContext object\n   - Check if the RequestContext is available or null\n\n2. Data Validation:\n   - Validate that the RequestContext object is accessible\n     - IF RequestContext is null THEN\n       - Return an empty string as the URL information\n     - ELSE\n       - Proceed to URL extraction\n\n3. Business Rule Processing:\n   - Determine how to handle null RequestContext scenarios\n     - System should gracefully handle null RequestContext by returning empty string\n     - No additional business constraints apply\n\n4. Core Operation Execution:\n   - Extract URL components from the RequestContext\n     - Retrieve the request URI from the RequestContext\n     - Retrieve the query string from the RequestContext\n     - Format the extracted information into a readable string\n       - Start with a newline character and \"URL is: \" prefix\n       - Append the request URI\n       - Append a question mark character\n       - Append the query string\n\n5. Response Generation:\n   - Return the formatted URL string\n   - The returned string should follow the format: \"\\nURL is: {requestURI}?{queryString}\"\n   - If RequestContext was null, return an empty string",
+  "databaseEntities": [],
+  "validationRules": [
+    "RequestContext may be null and must be handled gracefully",
+    "The returned URL string must include both the URI and query string when available",
+    "The URL string must be properly formatted with a newline and prefix"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestContext": {
+      "type": "object",
+      "properties": {
+        "requestURI": {
+          "type": "string",
+          "description": "The URI portion of the request URL"
+        },
+        "queryString": {
+          "type": "string",
+          "description": "The query string portion of the request URL"
+        }
+      }
+    }
+  }
+}

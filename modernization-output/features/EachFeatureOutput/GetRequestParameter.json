@@ -1,0 +1,57 @@
+{
+  "featureName": "GetRequestParameter",
+  "description": "Retrieves parameter values from web requests with support for different data types.",
+  "inputValues": [
+    "parameter-string-RequestParameter",
+    "value-object-ParameterValue"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the parameter name (string) to retrieve\n   - Determine the expected data type (string, integer, object)\n   - Note if the operation is for retrieving or setting a parameter\n\n2. Data Validation:\n   - Validate parameter name is provided and not null\n     * IF parameter name is null or empty THEN return appropriate error\n   - For setting parameters:\n     * Validate the value to be set is appropriate for the context\n     * Check if value meets any format requirements based on parameter type\n\n3. Business Rule Processing:\n   - Determine the appropriate retrieval method based on data type:\n     * IF requesting string parameter THEN prepare for string retrieval\n     * IF requesting integer parameter THEN prepare for numeric conversion\n     * IF requesting object parameter THEN prepare for object retrieval\n   - For special parameters like 'action' and 'module':\n     * Apply specific business rules for handling these system parameters\n     * Ensure proper context is maintained when changing these values\n   - For parameter addition:\n     * Check if parameter already exists\n     * IF parameter exists THEN determine if it should be replaced or added to a collection\n     * IF parameter should be collected THEN convert existing value to a list if needed\n\n4. Core Operation Execution:\n   - For parameter retrieval:\n     * Access the parameter from the query collection\n     * Apply any necessary type conversions based on requested type\n     * Handle special cases for system parameters\n   - For parameter setting:\n     * IF adding parameter THEN check if parameter already exists\n       * IF parameter exists THEN convert to list and append new value\n       * IF parameter doesn't exist THEN add directly\n     * IF replacing parameter THEN update existing value regardless of current state\n   - For special operations:\n     * Handle action changes with proper context updates\n     * Process IP address retrieval with proxy awareness\n\n5. Response Generation:\n   - Return the parameter value in the requested format:\n     * For string parameters: return string value\n     * For integer parameters: return parsed integer value\n     * For object parameters: return the raw object\n   - For parameter setting operations:\n     * Confirm successful parameter addition or replacement\n     * Return updated parameter state if needed\n   - Handle special cases:\n     * For IP address: return properly formatted remote address with proxy handling\n     * For context path: return appropriate path based on system configuration",
+  "databaseEntities": [],
+  "validationRules": [
+    "Parameter name must not be null or empty",
+    "Integer parameters must be convertible to numeric values",
+    "When adding to an existing parameter, proper list conversion must occur",
+    "IP addresses must be properly extracted from forwarded requests",
+    "Context paths must respect system configuration for proxied environments"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RequestParameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the parameter to retrieve or set"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "string",
+            "integer",
+            "object"
+          ],
+          "description": "The expected data type of the parameter"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ParameterValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "description": "The value to be set for a parameter"
+        },
+        "replace": {
+          "type": "boolean",
+          "description": "Whether to replace an existing parameter or add to a collection"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

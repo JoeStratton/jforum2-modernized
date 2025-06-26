@@ -1,0 +1,23 @@
+{
+  "featureName": "DeletePostsByTopic",
+  "description": "Removes all posts associated with a specific topic.",
+  "inputValues": [
+    "topicId-number-Topic"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following required inputs:\n     a. topicId (number): The unique identifier of the topic whose posts will be deleted\n\n2. Data Validation\n   - Validate the topicId input:\n     a. Check if topicId is provided\n        IF topicId is missing or null THEN\n          Return error message: \"Topic ID is required\"\n     b. Verify topicId is a positive integer\n        IF topicId is not a positive integer THEN\n          Return error message: \"Topic ID must be a positive integer\"\n     c. Verify the topic exists in the system\n        IF topic with topicId does not exist THEN\n          Return error message: \"Topic not found\"\n\n3. Business Rule Processing\n   - Check user permissions:\n     a. Verify the current user has permission to delete posts in this topic\n        IF user does not have delete permission THEN\n          Return error message: \"Insufficient permissions to delete posts\"\n   - Check topic state:\n     a. Verify the topic is in a state that allows post deletion\n        IF topic is locked or in a protected state THEN\n          Return error message: \"Cannot delete posts from a locked or protected topic\"\n\n4. Core Operation Execution\n   - Retrieve all posts associated with the topic:\n     a. Query the database to get all posts belonging to the specified topic\n     b. For each post found:\n        i. Store the post ID and user ID for reference\n   - Delete the posts:\n     a. For each post in the collection:\n        i. Remove the post content from the posts text storage\n        ii. Remove the post entry from the posts storage\n        iii. Remove any search indexes related to the post\n        iv. Update user post count statistics if necessary\n   - Update topic statistics:\n     a. Update the post count for the topic\n     b. If all posts are removed, mark the topic for potential cleanup\n   - Update forum statistics:\n     a. Decrease the post count in the parent forum\n\n5. Response Generation\n   - On successful deletion:\n     a. Return success status\n     b. Include the number of posts deleted\n     c. Include the topic ID that was processed\n   - On failure:\n     a. Return error status\n     b. Include specific error message explaining the failure reason\n     c. Include any partial results if some posts were deleted before the error occurred",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Topic ID must be provided",
+    "Topic ID must be a positive integer",
+    "Topic must exist in the system",
+    "User must have permission to delete posts",
+    "Topic must not be in a locked or protected state"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

@@ -1,0 +1,34 @@
+{
+  "featureName": "SetContentType",
+  "description": "Sets the content type of the HTTP response.",
+  "inputValues": [
+    "type-string-ContentType"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the content type string parameter\n     1.1. Receive the content type string (e.g., \"text/html\", \"application/json\")\n     1.2. Determine if the content type is system-provided or user-specified\n     1.3. Check if character encoding information is included in the content type\n\n2. Data Validation\n   - Validate the content type string\n     2.1. Check if the content type string is not null or empty\n        IF content type is null or empty THEN\n          Generate validation error: \"Content type cannot be empty\"\n     2.2. Verify the content type follows standard MIME type format\n        IF content type format is invalid THEN\n          Generate validation error: \"Invalid content type format\"\n     2.3. Check if the content type is supported by the system\n        IF content type is not supported THEN\n          Generate warning: \"Content type may not be recognized by all clients\"\n\n3. Business Rule Processing\n   - Process content type related business rules\n     3.1. Check if response headers have already been sent\n        IF headers already sent THEN\n          Generate error: \"Cannot set content type after response headers have been sent\"\n     3.2. Check if content type conflicts with any previously set response properties\n        IF conflict exists THEN\n          Generate warning: \"Content type conflicts with previous response settings\"\n     3.3. Determine if character encoding needs to be preserved or updated\n        IF character encoding exists AND should be preserved THEN\n          Ensure content type doesn't override existing character encoding\n\n4. Core Operation Execution\n   - Set the content type on the response\n     4.1. Apply the content type to the response object\n     4.2. Update any related response metadata if necessary\n     4.3. Log the content type change if system logging is enabled\n     4.4. IF operation fails THEN\n          Record failure reason\n          Generate appropriate error message\n\n5. Response Generation\n   - Complete the content type setting operation\n     5.1. IF content type was successfully set THEN\n          Return success status\n          Prepare system for subsequent response operations\n     5.2. IF content type setting failed THEN\n          Return error status with details\n          Provide guidance on resolving the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "Content type string must not be null or empty",
+    "Content type should follow standard MIME type format",
+    "Content type must be set before response headers are sent",
+    "Content type should be compatible with the response data"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ContentType": {
+      "type": "object",
+      "properties": {
+        "mimeType": {
+          "type": "string",
+          "description": "The MIME type of the content"
+        },
+        "charset": {
+          "type": "string",
+          "description": "Optional character encoding for the content"
+        }
+      },
+      "required": [
+        "mimeType"
+      ]
+    }
+  }
+}

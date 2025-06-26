@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CalculateTotalVotes",
+    "description": "Calculates the total number of votes across all options in a poll"
+  },
+  {
+    "featureName": "CheckPollStatus",
+    "description": "Determines if a poll is open based on its start time and duration"
+  },
+  {
+    "featureName": "ManagePollOptions",
+    "description": "Adds and removes options from a poll with proper relationship management"
+  }
+]

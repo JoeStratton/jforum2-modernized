@@ -1,0 +1,31 @@
+{
+  "featureName": "GetPostTextFromResultSet",
+  "description": "Retrieves post text content from database result set using specialized text extraction.",
+  "inputValues": [
+    "resultSet-object-ResultSet"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the database result set object containing post data\n   - Identify the column name containing the post text (\"post_text\")\n   - Determine the appropriate text extraction method based on data storage format\n\n2. Data Validation:\n   - Verify the result set is not null\n   - Ensure the result set is positioned at a valid row\n   - Confirm the required column \"post_text\" exists in the result set\n   - Check if the post_text field contains null value\n     IF post_text is null THEN\n       Return empty string\n     END IF\n\n3. Business Rule Processing:\n   - Determine the character encoding format of the stored text\n   - Select appropriate text extraction method based on storage format\n   - Prepare memory buffers for text extraction if needed\n   - Set up any required conversion parameters for character encoding\n\n4. Core Operation Execution:\n   - Access the binary data stream from the post_text column\n   - Read the binary content from the stream\n   - Convert the binary data to text using the appropriate character encoding\n   - Handle any potential data truncation or corruption\n   - Close any resources used during text extraction\n   - Perform any necessary post-processing on the extracted text\n\n5. Response Generation:\n   - Return the extracted post text as a string\n   - IF extraction fails THEN\n     Generate appropriate error information\n     Return empty string or error placeholder\n   - Include metadata about the extraction process if needed\n   - Ensure proper memory cleanup after text extraction",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Result set must not be null",
+    "Result set must be positioned at a valid row",
+    "Post text column must exist in the result set",
+    "Binary data must be properly converted to text using correct character encoding"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ResultSet": {
+      "type": "object",
+      "description": "Database result set containing query results",
+      "properties": {
+        "post_text": {
+          "type": "binary",
+          "description": "Binary data containing the post text content"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "featureName": "DecrementTotalTopics",
+  "description": "Decreases the topic count for a forum by a specified amount.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "count-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): Unique identifier for the forum\n   - Collect count (mandatory): Number of topics to decrement\n   - System will use database connection from context\n\n2. Data Validation:\n   - Validate forumId:\n     a. Check if forumId is a positive integer\n     b. Check if forumId is not null\n     c. IF validation fails, THEN generate appropriate error message\n   - Validate count:\n     a. Check if count is a positive integer\n     b. Check if count is not null\n     c. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check forum existence:\n     a. Verify the forum with the provided forumId exists in the system\n     b. IF forum does not exist, THEN generate error message indicating invalid forum\n   - Check current topic count:\n     a. Retrieve current topic count for the forum\n     b. Verify that decrementing by count will not result in negative topic count\n     c. IF resulting count would be negative, THEN adjust count to match current topic count\n\n4. Core Operation Execution:\n   - Update forum record:\n     a. Decrement the total topics count by the specified amount\n     b. Save the updated forum information\n   - Check if topics remain:\n     a. Retrieve the updated total topics count\n     b. IF total topics count is less than 1, THEN:\n        i. Reset the last post information for the forum\n        ii. Set last post ID to 0\n\n5. Response Generation:\n   - Success response:\n     a. Indicate successful topic count update\n     b. Include the new topic count in the response\n   - Error response:\n     a. Provide detailed error message based on the specific validation or processing failure\n     b. Include error code and suggested resolution steps",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Count must be a positive integer",
+    "Forum must exist in the system",
+    "Resulting topic count must not be negative"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

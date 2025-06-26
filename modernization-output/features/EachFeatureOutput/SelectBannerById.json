@@ -1,0 +1,34 @@
+{
+  "featureName": "SelectBannerById",
+  "description": "Retrieves a specific banner by its ID.",
+  "inputValues": [
+    "bannerId-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the banner ID (mandatory, numeric)\n   - System will use this ID to locate the specific banner\n\n2. Data Validation:\n   - Validate banner ID:\n     a. Check if banner ID is provided\n     b. Verify banner ID is a positive integer\n     c. Generate appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify if current user has permission to view banner information\n     b. If permission check fails, generate appropriate error message\n   - Check banner existence:\n     a. Verify if a banner with the provided ID exists in the system\n     b. If banner does not exist, prepare appropriate not-found response\n\n4. Core Operation Execution:\n   - Retrieve banner information:\n     a. Locate the banner record using the provided ID\n     b. Extract all banner details including:\n        i. Banner name/title\n        ii. Banner description\n        iii. Display settings (placement, dimensions - width and height)\n        iv. Activity status (active/inactive)\n        v. Click and view tracking information\n        vi. URL information\n        vii. Weight value\n        viii. Type information\n        ix. Comments\n   - Handle potential retrieval issues:\n     a. If database access fails, prepare system error response\n     b. If banner data is corrupted, prepare data integrity error response\n\n5. Response Generation:\n   - For successful retrieval:\n     a. Format banner data in appropriate structure\n     b. Include all banner attributes and metadata\n     c. Include banner status information\n   - For failed retrieval:\n     a. Generate appropriate error message\n     b. Include error code and description\n     c. Provide guidance for resolution if applicable",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner ID must be a positive integer",
+    "Banner ID must reference an existing banner",
+    "User must have permission to view banner information"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "url": "string",
+      "placement": "number",
+      "active": "boolean",
+      "width": "number",
+      "height": "number",
+      "clicks": "number",
+      "views": "number",
+      "weight": "number",
+      "comment": "string",
+      "type": "number"
+    }
+  }
+}

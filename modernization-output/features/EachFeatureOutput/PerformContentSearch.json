@@ -1,0 +1,66 @@
+{
+  "featureName": "PerformContentSearch",
+  "description": "Executes a search operation based on provided keywords and returns matching posts.",
+  "inputValues": [
+    "keywords-string-SearchArgs",
+    "searchArgs-object-SearchArgs"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - keywords (string array): Search terms provided by the user (mandatory)\n     - searchArgs (object): Contains search configuration parameters including:\n       - Forum selection criteria (optional)\n       - Date range filters (optional)\n       - User filters (optional)\n       - Sort order preference (optional)\n       - Results per page (optional, system default if not provided)\n\n2. Data Validation:\n   - Validate search keywords:\n     - IF keywords array is empty THEN\n       - Return empty result set with count of 0\n       - Skip search execution\n     - ELSE\n       - Verify keywords meet minimum length requirements\n       - Remove any special characters that could cause search issues\n       - Normalize keywords for consistent searching\n   - Validate search arguments:\n     - Ensure date ranges are valid (start date before end date)\n     - Verify forum IDs exist in the system\n     - Confirm user IDs are valid if user filtering is applied\n\n3. Business Rule Processing:\n   - Check user permissions:\n     - Verify current user has permission to search content\n     - Filter out forums the user doesn't have access to view\n   - Apply content visibility rules:\n     - Exclude private content not accessible to the current user\n     - Apply forum-specific visibility rules\n   - Prepare search execution parameters:\n     - Format keywords for optimal search performance\n     - Set up pagination parameters if applicable\n     - Configure result ordering based on user preferences\n\n4. Core Operation Execution:\n   - Execute the search operation:\n     - IF keywords array has content THEN\n       - Perform search using the search facility\n       - Collect matching posts that meet all criteria\n       - Track total number of matching records\n     - ELSE\n       - Return empty result set\n   - Process search results:\n     - Store the result collection for later use\n     - Organize results according to requested sort order\n     - Apply pagination if required\n\n5. Response Generation:\n   - Prepare posts for display:\n     - Format post content for proper rendering\n     - Highlight matching keywords in results\n     - Include relevant metadata (author, date, forum)\n   - Generate response:\n     - Include list of matching posts\n     - Include total record count\n     - Provide pagination information if applicable\n     - Return appropriate view template reference\n     - Include forum IDs for each result for permission checking",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_forums",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Search keywords must be provided for search execution",
+    "User must have permission to view the forums being searched",
+    "Search results must only include posts from forums the user has access to",
+    "Posts must be prepared for display before being returned to the user",
+    "Forum IDs must be extractable from search results"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchArgs": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of search terms"
+        },
+        "forumId": {
+          "type": "integer",
+          "description": "Optional forum ID to restrict search"
+        },
+        "startDate": {
+          "type": "date",
+          "description": "Optional start date for filtering results"
+        },
+        "endDate": {
+          "type": "date",
+          "description": "Optional end date for filtering results"
+        },
+        "userId": {
+          "type": "integer",
+          "description": "Optional user ID to filter results by author"
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "Field to sort results by"
+        },
+        "sortOrder": {
+          "type": "string",
+          "description": "Direction of sort (ascending/descending)"
+        },
+        "resultsPerPage": {
+          "type": "integer",
+          "description": "Number of results to return per page"
+        }
+      }
+    }
+  }
+}

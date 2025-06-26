@@ -1,0 +1,26 @@
+{
+  "featureName": "UpdateMessageID",
+  "description": "Updates the Message-ID header using either a custom ID or the default implementation.",
+  "inputValues": [
+    "messageId-string-Message"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - messageId (string, optional): Custom Message-ID to be used in the email header\n   - System will use the current email message context\n\n2. Data Validation:\n   - Validate messageId input if provided:\n     - IF messageId is provided but empty:\n       - Log a warning about empty Message-ID\n       - Proceed with default Message-ID generation\n     - IF messageId is provided and contains invalid characters:\n       - Check that messageId follows proper email header format\n       - IF invalid format detected:\n         - Log validation error\n         - Proceed with default Message-ID generation\n\n3. Business Rule Processing:\n   - Check system configuration for Message-ID handling:\n     - IF system is configured to always use default Message-ID generation:\n       - Ignore custom messageId even if provided\n       - Flag system to use default generation\n     - ELSE:\n       - Determine if custom or default Message-ID should be used:\n         - IF messageId is provided and valid:\n           - Flag system to use custom Message-ID\n         - ELSE:\n           - Flag system to use default Message-ID generation\n\n4. Core Operation Execution:\n   - Process the Message-ID update:\n     - IF using custom Message-ID:\n       - Store the provided messageId in the message object\n       - Prepare message header with custom ID\n     - ELSE:\n       - Set messageId to null in the message object\n       - System will generate default Message-ID during message processing\n   - Update the email message headers:\n     - IF custom Message-ID is being used:\n       - Add or replace the \"Message-ID\" header with the custom value\n     - ELSE:\n       - Allow system to generate and set the default Message-ID\n\n5. Response Generation:\n   - Return status of Message-ID update operation:\n     - IF operation completed successfully:\n       - Return success status\n       - Include information about which Message-ID type was used (custom or default)\n     - ELSE:\n       - Return error status\n       - Include error details and suggestions for resolution",
+  "databaseEntities": [],
+  "validationRules": [
+    "Message-ID must follow proper email header format if provided",
+    "System must fall back to default Message-ID generation if custom ID is invalid",
+    "Message-ID header must be properly set in the email message"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Message": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "description": "Custom Message-ID to be used in the email header"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "featureName": "AuthenticateApiRequest",
+  "description": "Validates API requests using API key authentication.",
+  "inputValues": [
+    "api_key-string-Authentication"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect API key from the request\n     1.1. Extract the 'api_key' parameter from the incoming request\n     1.2. Mark 'api_key' as mandatory input\n     1.3. No default value is provided for API key\n\n2. Data Validation:\n   - Validate the API key parameter\n     2.1. Check if the API key parameter exists in the request\n     2.2. Verify the API key is not empty or only whitespace\n     2.3. IF API key is missing or empty THEN\n          2.3.1. Generate an authentication error message\n          2.3.2. Halt further processing\n     2.4. Format validation is not required as API keys can have various formats\n\n3. Business Rule Processing:\n   - Validate the API key against authorized keys\n     3.1. Retrieve the list of valid API keys from the system\n     3.2. Compare the provided API key with the stored valid keys\n     3.3. IF the API key does not match any valid key THEN\n          3.3.1. Generate an invalid authentication error message\n          3.3.2. Log the failed authentication attempt with request details\n          3.3.3. Halt further processing\n     3.4. IF the API key is valid but expired THEN\n          3.4.1. Generate an expired key error message\n          3.4.2. Log the expired key usage attempt\n          3.4.3. Halt further processing\n\n4. Core Operation Execution:\n   - Process successful authentication\n     4.1. Identify the API key owner/account\n     4.2. Record the successful authentication in system logs\n     4.3. Set the authentication context for the current request\n     4.4. Allow the request to proceed to the requested operation\n     4.5. IF any errors occur during authentication context setup THEN\n          4.5.1. Generate a system error message\n          4.5.2. Log the error details\n          4.5.3. Halt further processing\n\n5. Response Generation:\n   - No direct response is generated for authentication\n     5.1. IF authentication is successful THEN\n          5.1.1. Allow the request to continue to the requested operation\n     5.2. IF authentication fails THEN\n          5.2.1. Return an authentication error response\n          5.2.2. Include appropriate error code and message\n          5.2.3. Do not expose sensitive information about the authentication system",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "API key must not be empty",
+    "API key must match a valid key in the system",
+    "API key must not be expired",
+    "Authentication must be performed before accessing API operations"
+  ],
+  "dbSeedingOperations": [
+    "Initial valid API keys must be created in the system"
+  ],
+  "schema": {
+    "Authentication": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "type": "string",
+          "description": "Unique key used to authenticate API requests"
+        }
+      },
+      "required": [
+        "api_key"
+      ]
+    }
+  }
+}

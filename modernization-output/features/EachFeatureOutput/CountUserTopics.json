@@ -1,0 +1,21 @@
+{
+  "featureName": "CountUserTopics",
+  "description": "Counts the number of topics created by a specific user.",
+  "inputValues": [
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) to identify the user whose topics will be counted\n\n2. Data Validation:\n   - Validate userId:\n     a. Check if userId is provided\n     b. Verify userId is a positive integer\n     c. IF userId is invalid or missing, THEN return appropriate error message\n   - Validate user existence:\n     a. Check if the user with the provided userId exists in the system\n     b. IF user does not exist, THEN return appropriate error message indicating user not found\n\n3. Business Rule Processing:\n   - Verify system access permissions:\n     a. Check if the current user has permission to view topic statistics\n     b. IF permission is denied, THEN return access denied error\n   - Verify forum access permissions:\n     a. Determine which forums the requesting user has access to view\n     b. Only count topics from forums the user has permission to access\n     c. IF user has no forum access, THEN return zero count with appropriate message\n   - Verify system state:\n     a. Ensure the topic tracking system is operational\n     b. IF system is in maintenance mode, THEN notify user and abort operation\n\n4. Core Operation Execution:\n   - Retrieve topic count:\n     a. Access the topic repository\n     b. Count all topics where the creator/author ID matches the provided userId\n     c. Include only non-deleted topics in the count\n     d. Filter topics based on forum access permissions\n     e. IF database access fails, THEN handle the error and provide appropriate message\n\n5. Response Generation:\n   - Success response:\n     a. Return the total count of topics created by the user\n     b. Include user identification information for reference\n   - Error response:\n     a. Return specific error details if any step failed\n     b. Provide guidance on how to resolve the issue",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User must exist in the system",
+    "Requesting user must have permission to view topic statistics",
+    "Only count topics from forums the user has permission to access"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

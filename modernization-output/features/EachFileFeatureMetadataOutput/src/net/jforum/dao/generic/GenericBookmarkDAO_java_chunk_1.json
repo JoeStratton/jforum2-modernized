@@ -1,0 +1,30 @@
+[
+  {
+    "featureName": "AddBookmark",
+    "description": "Creates a new bookmark for a user with specified relation and visibility settings"
+  },
+  {
+    "featureName": "UpdateBookmark",
+    "description": "Updates an existing bookmark's visibility, title and description"
+  },
+  {
+    "featureName": "RemoveBookmark",
+    "description": "Deletes a bookmark by its ID"
+  },
+  {
+    "featureName": "SelectBookmarksByUser",
+    "description": "Retrieves all bookmarks for a specific user filtered by relation type"
+  },
+  {
+    "featureName": "SelectAllUserBookmarks",
+    "description": "Retrieves all bookmarks belonging to a specific user regardless of type"
+  },
+  {
+    "featureName": "SelectBookmarkById",
+    "description": "Retrieves a specific bookmark by its ID"
+  },
+  {
+    "featureName": "SelectBookmarkForUpdate",
+    "description": "Finds a bookmark by relation ID, type and user ID for updating"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "SendTestMail",
+    "description": "Sends a test email with configurable SMTP settings and restores original configuration"
+  },
+  {
+    "featureName": "IsPostIndexed",
+    "description": "Checks if a forum post is indexed in the Lucene search engine"
+  },
+  {
+    "featureName": "LoadPostContents",
+    "description": "Retrieves and displays the content of a specific forum post"
+  },
+  {
+    "featureName": "SavePost",
+    "description": "Updates a forum post's content with moderation logging and search index updates"
+  },
+  {
+    "featureName": "PreviewPost",
+    "description": "Generates a preview of a forum post with HTML safety, BBCode, and smilies processing"
+  }
+]

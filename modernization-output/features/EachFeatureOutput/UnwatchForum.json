@@ -1,0 +1,20 @@
+{
+  "featureName": "UnwatchForum",
+  "description": "Unsubscribes a user from forum notifications.",
+  "inputValues": [
+    "forum_id-number-Forum",
+    "userId-number-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forum_id (mandatory): The identifier of the forum to unsubscribe from\n   - Collect userId (system-generated): The identifier of the current user\n\n2. Data Validation:\n   - Validate forum_id:\n     a. Check if forum_id is provided\n     b. Verify forum_id is a valid number\n     c. Verify forum_id exists in the system\n     d. If validation fails, display appropriate error message\n   - Validate user authentication:\n     a. Check if user is logged in\n     b. If user is not logged in, redirect to login page\n     c. If validation fails, display appropriate error message\n\n3. Business Rule Processing:\n   - Verify subscription status:\n     a. Check if the user is currently subscribed to the forum\n     b. If user is not subscribed, display appropriate message\n     c. If verification fails, display appropriate error message\n\n4. Core Operation Execution:\n   - Remove subscription:\n     a. Delete the subscription record linking the user to the forum\n     b. Update user notification preferences for the specific forum\n     c. If operation fails, display appropriate error message and rollback changes\n\n5. Response Generation:\n   - Success response:\n     a. Generate confirmation message that user has been unsubscribed\n     b. Provide link to return to forum view\n     c. Update user interface to reflect unsubscribed status\n   - Error response:\n     a. Display specific error message based on failure point\n     b. Provide guidance on how to resolve the issue\n     c. Offer support contact information if needed",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User must be logged in to unsubscribe from a forum",
+    "Forum ID must be valid and exist in the system",
+    "User must be currently subscribed to the forum to unsubscribe"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

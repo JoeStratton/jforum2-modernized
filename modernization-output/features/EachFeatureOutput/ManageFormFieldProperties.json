@@ -1,0 +1,44 @@
+{
+  "featureName": "ManageFormFieldProperties",
+  "description": "Gets and sets form field properties for file items.",
+  "inputValues": [
+    "fieldName-string-FileItem",
+    "formFieldState-boolean-FileItem",
+    "fileContent-object-FileContent"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. fieldName (string, mandatory): The name of the form field\n     b. formFieldState (boolean, mandatory): Whether the item is a simple form field\n     c. fileContent (object, optional): The content of the file if applicable\n   - System will determine if the file is stored in memory or on disk\n\n2. Data Validation:\n   - Validate fieldName:\n     a. Check if fieldName is not null or empty\n     b. IF fieldName is null or empty THEN\n        i. Return error message indicating field name is required\n     c. ENDIF\n   - Validate formFieldState:\n     a. Ensure formFieldState is a valid boolean value\n     b. IF formFieldState is invalid THEN\n        i. Return error message indicating invalid form field state\n     c. ENDIF\n   - Validate fileContent (when applicable):\n     a. IF fileContent is provided THEN\n        i. Verify content format is valid\n        ii. Check if content size is within acceptable limits\n        iii. IF validation fails THEN\n            1. Return appropriate error message\n        iv. ENDIF\n     b. ENDIF\n\n3. Business Rule Processing:\n   - Determine file storage location:\n     a. Check if file content is stored in memory or on disk\n     b. IF stored on disk THEN\n        i. Verify temporary file exists and is accessible\n        ii. IF file is not accessible THEN\n            1. Return error indicating file storage issue\n        iii. ENDIF\n     c. ENDIF\n   - Verify system permissions:\n     a. Check if current user has permission to manage this file item\n     b. IF permission check fails THEN\n        i. Return error message indicating insufficient permissions\n     c. ENDIF\n\n4. Core Operation Execution:\n   - Set field properties:\n     a. Set the field name property to the provided fieldName\n     b. Set the form field state property to the provided formFieldState\n     c. IF fileContent is provided THEN\n        i. Update the file content based on storage type\n        ii. IF in-memory storage THEN\n            1. Update cached content\n        iii. ELSE\n            1. Write to temporary file location\n        iv. ENDIF\n     d. ENDIF\n   - Update related properties:\n     a. Update any dependent properties based on changes\n     b. Ensure consistency across all related properties\n     c. IF any update fails THEN\n        i. Revert changes to maintain consistency\n        ii. Return error message indicating update failure\n     d. ENDIF\n\n5. Response Generation:\n   - Prepare success response:\n     a. Include updated field properties in response\n     b. Include file metadata (name, size, storage location)\n     c. Include form field status\n   - IF any errors occurred THEN\n     a. Generate error response with specific error details\n     b. Include guidance on how to resolve the issue\n   - ENDIF\n   - Return final response to caller",
+  "databaseEntities": [
+    "jforum_attachments"
+  ],
+  "validationRules": [
+    "Field name must not be empty",
+    "Form field state must be a valid boolean value",
+    "File content must be in a valid format when provided",
+    "File size must be within system limits",
+    "User must have permission to manage file properties"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "FileContent": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The content of the file as a string"
+        },
+        "encoding": {
+          "type": "string",
+          "description": "Character encoding of the file content"
+        },
+        "size": {
+          "type": "number",
+          "description": "Size of the file content in bytes"
+        },
+        "inMemory": {
+          "type": "boolean",
+          "description": "Whether the file is stored in memory or on disk"
+        }
+      }
+    }
+  }
+}

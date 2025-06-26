@@ -1,0 +1,25 @@
+{
+  "featureName": "WriteBlobUTF16BinaryStream",
+  "description": "Writes UTF-16 encoded string data to a database BLOB field using binary streams.",
+  "inputValues": [
+    "query-string-Database",
+    "idForQuery-number-Database",
+    "value-string-Content"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. query (string): SQL query statement for locating the BLOB field\n     b. idForQuery (number): Identifier to locate the specific record\n     c. value (string): The text content to be stored in UTF-16 encoding\n   - System will use the current database connection from the execution context\n\n2. Data Validation:\n   - Validate query parameter:\n     a. Verify query is not empty\n     b. Verify query contains proper SQL syntax for updating a BLOB field\n     c. Verify query includes a parameter placeholder for the record identifier\n     d. IF validation fails, THEN generate appropriate error message\n   - Validate idForQuery parameter:\n     a. Verify idForQuery is a positive integer\n     b. IF validation fails, THEN generate appropriate error message\n   - Validate value parameter:\n     a. Verify value is not null\n     b. IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Verify database connection availability:\n     a. Check if a valid database connection exists in the execution context\n     b. IF no valid connection exists, THEN generate connection error\n   - Verify record existence and locking:\n     a. Ensure the query includes FOR UPDATE clause to lock the record during update\n     b. Verify the target table has been properly initialized with EMPTY_BLOB() for the field\n\n4. Core Operation Execution:\n   - Prepare database statement:\n     a. Create a prepared statement using the provided query\n     b. Set the idForQuery as a parameter in the prepared statement\n   - Execute query and retrieve result:\n     a. Execute the query to locate the target BLOB field\n     b. Move to the first result record\n     c. Retrieve the BLOB object from the result set\n   - Write data to BLOB:\n     a. Obtain binary output stream from the BLOB object\n     b. Convert the input string value to UTF-16 byte format\n     c. Write the converted bytes to the BLOB via the output stream\n     d. Close the binary output stream to complete the write operation\n   - Handle potential failures:\n     a. IF any I/O errors occur during writing, THEN capture error details\n     b. IF database errors occur, THEN ensure proper cleanup of resources\n     c. Ensure all resources are properly closed even if exceptions occur\n\n5. Response Generation:\n   - Success response:\n     a. Return confirmation that the data was successfully written\n     b. Include information about the updated record\n   - Error response:\n     a. Provide detailed error information if the operation fails\n     b. Include specific error codes and messages for troubleshooting\n     c. Suggest possible remediation steps based on the error type",
+  "databaseEntities": [
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "SQL query must not be empty",
+    "SQL query must contain FOR UPDATE clause",
+    "Record identifier must be a positive integer",
+    "Input string value must not be null",
+    "Database connection must be available",
+    "Target BLOB field must be initialized with EMPTY_BLOB()"
+  ],
+  "dbSeedingOperations": [
+    "Ensure target tables have BLOB fields initialized with EMPTY_BLOB() function"
+  ],
+  "schema": {}
+}

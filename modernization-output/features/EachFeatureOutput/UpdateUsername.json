@@ -1,0 +1,25 @@
+{
+  "featureName": "UpdateUsername",
+  "description": "Changes the username for an existing user.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. userId (number, mandatory): The unique identifier of the user whose username needs to be updated\n     b. username (string, mandatory): The new username to be assigned to the user\n     c. currentUsername (string, system-generated): The existing username of the user\n\n2. Data Validation\n   - Validate userId:\n     a. Verify userId is a positive integer\n     b. IF userId is not a positive integer, THEN\n        i. Generate error message: \"User ID must be a positive integer\"\n        ii. Return validation error\n   - Validate new username:\n     a. Verify username is not empty\n     b. IF username is empty, THEN\n        i. Generate error message: \"Username cannot be empty\"\n        ii. Return validation error\n     c. Verify username length is between 3 and 25 characters\n     d. IF username length is invalid, THEN\n        i. Generate error message: \"Username must be between 3 and 25 characters long\"\n        ii. Return validation error\n     e. Verify username contains only allowed characters (alphanumeric, underscore)\n     f. IF username contains invalid characters, THEN\n        i. Generate error message: \"Username can only contain letters, numbers, and underscores\"\n        ii. Return validation error\n\n3. Business Rule Processing\n   - Verify user exists:\n     a. Check if a user with the provided userId exists in the system\n     b. IF user does not exist, THEN\n        i. Generate error message: \"User not found\"\n        ii. Return business rule error\n   - Verify username uniqueness:\n     a. Check if the new username is already registered in the system\n     b. IF username is already registered (by another user), THEN\n        i. Generate error message: \"Username already taken\"\n        ii. Return business rule error\n   - Verify username change:\n     a. Retrieve current username for the user\n     b. Compare new username with current username\n     c. IF usernames are identical, THEN\n        i. Generate notification: \"No changes detected - new username is the same as current username\"\n        ii. Return early with no changes made\n\n4. Core Operation Execution\n   - Update username:\n     a. Store the previous username for audit purposes\n     b. Update the user record with the new username\n     c. IF update operation fails, THEN\n        i. Generate error message: \"Failed to update username\"\n        ii. Revert any partial changes\n        iii. Return operation error\n   - Update related records:\n     a. Identify any system records that reference the username directly\n     b. Update those references to maintain system integrity\n     c. IF related updates fail, THEN\n        i. Generate error message: \"Failed to update username references\"\n        ii. Revert all changes\n        iii. Return operation error\n\n5. Response Generation\n   - Success response:\n     a. Generate success message: \"Username successfully updated from [oldUsername] to [newUsername]\"\n     b. Include user identifier in response\n     c. Include timestamp of the update\n   - Error response:\n     a. Include specific error message from the failed step\n     b. Include error code for tracking\n     c. Include suggestions for resolving common errors",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_privmsgs"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Username cannot be empty",
+    "Username must be between 3 and 25 characters long",
+    "Username can only contain letters, numbers, and underscores",
+    "Username must not already be registered by another user",
+    "User must exist in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

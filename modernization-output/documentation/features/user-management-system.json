@@ -1,0 +1,203 @@
+{
+  "feature_name": "User Management System",
+  "description": "The User Management System handles user registration, authentication, profile management, and user sessions.",
+  "business_logic": {
+    "registration": {
+      "description": "Process for creating new user accounts",
+      "workflow": [
+        "User fills registration form with required information",
+        "System validates input data (username uniqueness, email format, etc.)",
+        "Optional email validation can be configured",
+        "User account is created with default permissions",
+        "User is assigned to default user group"
+      ],
+      "validation_rules": [
+        "Username must be unique and meet length/character requirements",
+        "Email must be valid format and optionally unique",
+        "Password must meet minimum complexity requirements"
+      ]
+    },
+    "authentication": {
+      "description": "Process for verifying user identity and managing sessions",
+      "workflow": [
+        "User provides credentials (username/email and password)",
+        "System validates credentials against stored data",
+        "On success, creates user session and sets authentication cookies",
+        "On failure, returns appropriate error message",
+        "Tracks login attempts and can implement account lockout"
+      ],
+      "session_management": [
+        "Sessions tracked in database for online users list",
+        "Session timeout configurable in application settings",
+        "Last activity time updated on user actions"
+      ]
+    },
+    "profile_management": {
+      "description": "User profile data management capabilities",
+      "editable_fields": [
+        "Personal information (name, location, occupation, etc.)",
+        "Contact information (email, website)",
+        "Avatar/user image",
+        "Signature for forum posts",
+        "Preferences (language, timezone, notification settings)"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "registration": {
+      "path": "/api/users/register",
+      "method": "POST",
+      "request_body": {
+        "username": "string",
+        "email": "string",
+        "password": "string",
+        "additional_fields": "object"
+      },
+      "responses": {
+        "201": "User created successfully",
+        "400": "Validation error",
+        "409": "Username/email already exists"
+      }
+    },
+    "authentication": {
+      "path": "/api/users/login",
+      "method": "POST",
+      "request_body": {
+        "username": "string",
+        "password": "string",
+        "remember_me": "boolean"
+      },
+      "responses": {
+        "200": "Authentication successful with JWT token",
+        "401": "Invalid credentials",
+        "403": "Account locked/inactive"
+      }
+    },
+    "profile": {
+      "get": {
+        "path": "/api/users/{userId}",
+        "method": "GET",
+        "responses": {
+          "200": "User profile data",
+          "404": "User not found"
+        }
+      },
+      "update": {
+        "path": "/api/users/{userId}",
+        "method": "PUT",
+        "request_body": {
+          "email": "string",
+          "profile_data": "object"
+        },
+        "responses": {
+          "200": "Profile updated",
+          "400": "Validation error",
+          "404": "User not found"
+        }
+      }
+    },
+    "password_management": {
+      "change": {
+        "path": "/api/users/{userId}/password",
+        "method": "PUT",
+        "request_body": {
+          "current_password": "string",
+          "new_password": "string"
+        }
+      },
+      "reset_request": {
+        "path": "/api/users/password/reset-request",
+        "method": "POST",
+        "request_body": {
+          "email": "string"
+        }
+      },
+      "reset_confirm": {
+        "path": "/api/users/password/reset-confirm",
+        "method": "POST",
+        "request_body": {
+          "token": "string",
+          "new_password": "string"
+        }
+      }
+    }
+  },
+  "database_schema": {
+    "users": {
+      "fields": [
+        {"name": "user_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "username", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE"},
+        {"name": "user_password", "type": "VARCHAR(128)", "constraints": "NOT NULL"},
+        {"name": "user_email", "type": "VARCHAR(255)", "constraints": "NOT NULL"},
+        {"name": "user_regdate", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "user_active", "type": "SMALLINT", "constraints": "DEFAULT 1"},
+        {"name": "user_activation_key", "type": "VARCHAR(32)"},
+        {"name": "user_posts", "type": "INTEGER", "constraints": "DEFAULT 0"},
+        {"name": "user_avatar", "type": "VARCHAR(255)"},
+        {"name": "user_signature", "type": "TEXT"},
+        {"name": "user_last_visit", "type": "TIMESTAMP"}
+      ],
+      "indexes": [
+        "CREATE INDEX idx_users_username ON users(username)",
+        "CREATE INDEX idx_users_email ON users(user_email)"
+      ]
+    },
+    "user_groups": {
+      "fields": [
+        {"name": "group_id", "type": "INTEGER", "constraints": "PRIMARY KEY"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "group_id", "type": "INTEGER", "constraints": "NOT NULL"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)",
+        "FOREIGN KEY (group_id) REFERENCES groups(group_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_ug_user_id ON user_groups(user_id)",
+        "CREATE INDEX idx_ug_group_id ON user_groups(group_id)"
+      ]
+    },
+    "user_sessions": {
+      "fields": [
+        {"name": "session_id", "type": "VARCHAR(50)", "constraints": "PRIMARY KEY"},
+        {"name": "user_id", "type": "INTEGER", "constraints": "NOT NULL"},
+        {"name": "session_start", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "session_last_access", "type": "TIMESTAMP", "constraints": "NOT NULL"},
+        {"name": "session_ip", "type": "VARCHAR(45)"}
+      ],
+      "constraints": [
+        "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+      ],
+      "indexes": [
+        "CREATE INDEX idx_sessions_user_id ON user_sessions(user_id)"
+      ]
+    }
+  },
+  "security_considerations": {
+    "authentication": [
+      "Store passwords using modern hashing algorithms (bcrypt/argon2)",
+      "Implement rate limiting for login attempts",
+      "Use secure, HttpOnly, SameSite cookies for session tokens",
+      "Implement JWT with appropriate expiration for API authentication"
+    ],
+    "authorization": [
+      "Role-based access control for different user levels",
+      "Group-based permissions system",
+      "Permission checks before all sensitive operations"
+    ],
+    "data_protection": [
+      "Input validation and sanitization for all user-provided data",
+      "Protection against SQL injection through parameterized queries",
+      "XSS protection for user-generated content",
+      "CSRF protection for state-changing operations"
+    ]
+  },
+  "integration_points": {
+    "forum_structure": "Users have permissions to access specific forums based on group membership",
+    "post_system": "Users can create, edit, and delete their own posts according to permissions",
+    "private_messaging": "Users can send and receive private messages to/from other users",
+    "karma_system": "Users can receive karma points from other users",
+    "moderation": "Users with moderator permissions can perform moderation actions",
+    "notification_system": "Users can subscribe to topics/forums and receive notifications"
+  }
+}

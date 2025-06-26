@@ -1,0 +1,21 @@
+{
+  "featureName": "GetTotalMessages",
+  "description": "Retrieves the total count of messages across the forum system.",
+  "inputValues": [
+    "fromDb-boolean-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - fromDb (boolean): Determines whether to fetch from database or cache\n     - If true: Data will be retrieved directly from the database\n     - If false: Data will be retrieved from cache if available\n   - No other user inputs required\n\n2. Data Validation:\n   - Verify system access permissions\n   - Validate that the database connection is available\n   - Check if the user has appropriate viewing rights\n   - Validate the fromDb parameter:\n     - IF fromDb is null, THEN use default value (false)\n     - Ensure fromDb is a valid boolean value\n\n3. Business Rule Processing:\n   - Verify that the forum system is operational\n   - Check if message counting is enabled in system settings\n   - Determine cache validity:\n     - IF fromDb is true, THEN bypass cache check\n     - IF fromDb is false, THEN check if cache contains valid count\n   - Check if count should include all message types or only specific categories\n   - Determine if any message filtering rules should be applied:\n     - IF message filtering is enabled, THEN prepare to apply filters\n     - ELSE proceed with total count retrieval\n\n4. Core Operation Execution:\n   - Access the message repository\n   - Check cache status:\n     - Attempt to retrieve cached message count\n     - IF cached count exists AND is greater than zero AND fromDb is false:\n       - Use the cached count value\n     - ELSE:\n       - Query the database for total message count across all forums\n       - Store the retrieved count in cache for future use\n   - IF counting operation fails:\n     - Log the failure reason\n     - Prepare error response\n     - Attempt recovery if possible\n   - ELSE:\n     - Ensure the count is properly stored for future reference\n     - Prepare success response\n\n5. Response Generation:\n   - Format the total message count for display\n   - IF operation was successful:\n     - Return the total message count as an integer\n     - Include timestamp of when count was generated\n   - ELSE:\n     - Return appropriate error message\n     - Include troubleshooting information\n     - Suggest alternative actions",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "User must have permission to view forum statistics",
+    "Database connection must be available",
+    "Forum system must be operational",
+    "Cache must be properly initialized before use"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

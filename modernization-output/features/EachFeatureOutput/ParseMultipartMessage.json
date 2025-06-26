@@ -1,0 +1,66 @@
+{
+  "featureName": "ParseMultipartMessage",
+  "description": "Parses multipart email messages to extract text content from different parts.",
+  "inputValues": [
+    "message-object-EmailMessage"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the email message object with all its components\n   - Required fields include:\n     * Subject (string)\n     * Content (object)\n     * Content Type (string)\n     * From addresses (array)\n     * Recipients (array)\n     * Reply-To addresses (array)\n     * Sent Date (date)\n     * Headers (map/dictionary)\n\n2. Data Validation:\n   - Validate message object existence\n     * IF message is null or empty THEN\n       > Return error indicating invalid message\n     * END IF\n   - Validate required message components\n     * IF subject is null THEN\n       > Set subject to empty string\n     * END IF\n     * IF content is null THEN\n       > Return error indicating empty message content\n     * END IF\n     * IF sender information is missing THEN\n       > Return error indicating missing sender information\n     * END IF\n\n3. Business Rule Processing:\n   - Determine message content type\n     * Extract content type from message headers\n     * IF content type contains \"multipart\" THEN\n       > Flag message as multipart message\n     * ELSE\n       > Flag message as single part message\n     * END IF\n   - Process message headers\n     * Extract all headers into a structured collection\n     * Specifically identify important headers:\n       > In-Reply-To\n       > References\n       > List-related headers\n   - Determine reply chain information\n     * IF In-Reply-To header exists THEN\n       > Extract message reference identifier\n     * END IF\n     * IF References header exists THEN\n       > Extract thread reference information\n     * END IF\n\n4. Core Operation Execution:\n   - Extract basic message metadata\n     * Subject from message subject field\n     * Sender from From address field\n     * List email from recipient field\n     * Send date from message date field\n     * Reply-To from Reply-To field or fallback to sender if not present\n   - Process message content based on type\n     * IF message is multipart THEN\n       > Identify the first body part\n       > Determine content type of first body part\n     * ELSE\n       > Use main message content directly\n     * END IF\n   - Extract text content from appropriate part\n     * IF content type is text/plain or text/html THEN\n       > Open input stream to message part\n       > Read content stream into buffer\n       > Convert stream to string representation\n       > Close all resources properly\n     * END IF\n   - Organize extracted data\n     * Combine metadata and content into structured message object\n     * Include all extracted headers\n     * Include all reference information\n\n5. Response Generation:\n   - Create structured message object with:\n     * Subject\n     * Sender information\n     * Reply-To address\n     * References information\n     * In-Reply-To information\n     * Content type\n     * Message text content\n     * Send date\n     * All headers\n   - Return complete parsed message object\n   - IF any errors occurred during processing THEN\n     > Return error information with details about the failure point\n   - END IF",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_privmsgs",
+    "jforum_privmsgs_text"
+  ],
+  "validationRules": [
+    "Message object must not be null",
+    "Message content must be accessible",
+    "Sender information must be present",
+    "Content type must be identified",
+    "Message text must be extracted if content is text/plain or text/html"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "EmailMessage": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Email subject line"
+        },
+        "content": {
+          "type": "object",
+          "description": "Raw message content"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME content type of the message"
+        },
+        "from": {
+          "type": "array",
+          "description": "Sender addresses"
+        },
+        "recipients": {
+          "type": "array",
+          "description": "Recipient addresses"
+        },
+        "replyTo": {
+          "type": "array",
+          "description": "Reply-To addresses"
+        },
+        "sentDate": {
+          "type": "date",
+          "description": "Date when message was sent"
+        },
+        "headers": {
+          "type": "object",
+          "description": "Map of all message headers"
+        }
+      },
+      "required": [
+        "content",
+        "from",
+        "recipients"
+      ]
+    }
+  }
+}

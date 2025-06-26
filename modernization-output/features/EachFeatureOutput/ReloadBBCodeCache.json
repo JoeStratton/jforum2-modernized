@@ -1,0 +1,17 @@
+{
+  "featureName": "ReloadBBCodeCache",
+  "description": "Reloads BBCode definitions from storage into the system cache.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this operation\n   - System-generated request to reload BBCode cache\n\n2. Data Validation:\n   - Verify user has administrative permissions\n   - IF user does not have administrative permissions THEN\n     - Generate access denied error\n     - Terminate process\n   - END IF\n\n3. Business Rule Processing:\n   - Verify system is in a state where cache reload is possible\n   - Check if BBCode repository is accessible\n   - IF BBCode repository is not accessible THEN\n     - Generate system error message\n     - Terminate process\n   - END IF\n\n4. Core Operation Execution:\n   - Retrieve all BBCode definitions from storage\n   - Clear existing BBCode cache\n   - Parse BBCode definitions\n     - Process each BBCode pattern\n     - Process each BBCode replacement\n     - Validate BBCode syntax\n   - Load parsed BBCode definitions into cache\n   - Update cache timestamp\n   - Record cache reload event in system log\n\n5. Response Generation:\n   - Generate success message indicating BBCode cache was reloaded\n   - Display updated cache statistics:\n     - Number of BBCode definitions loaded\n     - Cache last updated timestamp\n   - Provide navigation options to return to cache management interface",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "User must have administrative permissions to reload cache",
+    "BBCode repository must be accessible",
+    "System must be in a state where cache reload is possible"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

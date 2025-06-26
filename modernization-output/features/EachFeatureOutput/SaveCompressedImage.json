@@ -1,0 +1,50 @@
+{
+  "featureName": "SaveCompressedImage",
+  "description": "Compresses and saves JPEG images with specified quality settings.",
+  "inputValues": [
+    "image-object-BufferedImage",
+    "toFileName-string-FilePath",
+    "type-number-ImageType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. image (BufferedImage): The image to be compressed and saved\n     b. toFileName (String): The complete file path where the image will be saved\n     c. type (Integer): The image type identifier (JPEG or PNG)\n   - All inputs are mandatory for this operation\n\n2. Data Validation:\n   - Validate image input:\n     a. Check if the image object is not null\n     b. IF image is null THEN\n        i. Generate an error indicating invalid image input\n     c. Verify image has valid dimensions and content\n   - Validate toFileName input:\n     a. Check if the file path is not empty\n     b. Verify the file path is valid and accessible\n     c. Ensure the directory exists or can be created\n     d. Check if the user has write permissions to the specified location\n   - Validate type input:\n     a. Verify type is a valid image format identifier\n     b. IF type is not supported THEN\n        i. Generate an error indicating unsupported image format\n\n3. Business Rule Processing:\n   - Check image format compatibility:\n     a. IF type is PNG THEN\n        i. Verify PNG compression is supported\n        ii. IF PNG compression is not supported THEN\n            1. Generate an unsupported operation error\n     b. IF type is JPEG THEN\n        i. Proceed with JPEG compression\n     c. IF type is neither JPEG nor PNG THEN\n        i. Generate an unsupported format error\n   - Determine appropriate compression settings:\n     a. For JPEG images, set compression quality to 0.7 (70%)\n     b. For other formats, use default settings if applicable\n\n4. Core Operation Execution:\n   - Prepare image writer based on format:\n     a. Obtain appropriate image writer for the specified format\n     b. IF no suitable writer is found THEN\n        i. Generate an error indicating missing writer support\n     c. Create output stream for the destination file\n     d. Configure the writer with the output stream\n   - Configure compression parameters:\n     a. Create appropriate parameter object for the image format\n     b. Set compression mode to explicit\n     c. Set compression quality value\n   - Execute image compression and saving:\n     a. Write the image data to the output stream using configured parameters\n     b. Flush the output stream to ensure all data is written\n     c. Release resources by disposing the writer\n     d. Close the output stream\n   - Handle potential errors:\n     a. IF any I/O errors occur during saving THEN\n        i. Clean up any partially written files\n        ii. Generate appropriate error with details\n\n5. Response Generation:\n   - For successful operation:\n     a. Return confirmation that the image was successfully compressed and saved\n     b. Include the file path where the image was saved\n     c. Include the compression quality that was applied\n   - For failed operation:\n     a. Return detailed error information\n     b. Include suggestions for resolving the issue\n     c. Provide information about supported formats and compression options",
+  "databaseEntities": [],
+  "validationRules": [
+    "Image input must not be null",
+    "File path must be valid and accessible",
+    "Image type must be supported (currently only JPEG compression is fully supported)",
+    "Write permissions must exist for the target file location",
+    "PNG compression is not supported and will throw an exception"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BufferedImage": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number",
+          "description": "Width of the image in pixels"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the image in pixels"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of the buffered image (RGB, ARGB, etc.)"
+        }
+      }
+    },
+    "FilePath": {
+      "type": "string",
+      "description": "String representing the complete file path where the image will be saved"
+    },
+    "ImageType": {
+      "type": "number",
+      "description": "Integer constant representing image format (0 for JPEG, 1 for PNG)",
+      "enum": [
+        0,
+        1
+      ]
+    }
+  }
+}

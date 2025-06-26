@@ -1,0 +1,22 @@
+[
+  {
+    "featureName": "ManageRolePermissions",
+    "description": "Manages security roles and permissions for forum users and groups"
+  },
+  {
+    "featureName": "CheckAccessPermission",
+    "description": "Verifies if a user has access to specific forum features based on assigned roles"
+  },
+  {
+    "featureName": "ValidateRoleValueAccess",
+    "description": "Checks if a user has permission for specific role values within a role category"
+  },
+  {
+    "featureName": "AddSecurityRole",
+    "description": "Adds security roles to users or groups with optional role values"
+  },
+  {
+    "featureName": "DeleteAllRoles",
+    "description": "Removes all security roles from a user or group"
+  }
+]

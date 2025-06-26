@@ -1,0 +1,78 @@
+{
+  "featureName": "CreateThumbnailImages",
+  "description": "Generates thumbnail versions of image attachments for preview purposes.",
+  "inputValues": [
+    "imagePath-string-Attachment",
+    "maxWidth-number-Configuration",
+    "maxHeight-number-Configuration",
+    "imageFormat-string-Configuration",
+    "attachment-object-Attachment"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     - imagePath: Path to the original image file (mandatory)\n     - maxWidth: Maximum width for the thumbnail (mandatory)\n     - maxHeight: Maximum height for the thumbnail (mandatory)\n     - imageFormat: Format for the thumbnail image (mandatory)\n     - attachment: The attachment object containing metadata (mandatory)\n\n2. Data Validation:\n   - Validate image path:\n     - Check if the image path is not empty\n     - Verify the image file exists at the specified path\n     - Return error if file does not exist\n   - Validate image format:\n     - Ensure the image format is supported (jpg, jpeg, gif, png)\n     - Return error if format is not supported\n   - Validate dimensions:\n     - Ensure maxWidth and maxHeight are positive integers\n     - Ensure dimensions are within system limits\n     - Return error if dimensions are invalid\n   - Validate attachment object:\n     - Verify the attachment contains required metadata\n     - Check if the attachment is an image type\n     - Return error if attachment is not a valid image\n\n3. Business Rule Processing:\n   - Check if thumbnail generation is enabled in system settings\n     - IF thumbnail generation is disabled, THEN exit process\n   - Determine if the attachment should have a thumbnail:\n     - Check file extension (must be jpg, jpeg, gif, or png)\n     - Verify file size is within processable limits\n     - IF not eligible for thumbnail, THEN exit process\n   - Determine thumbnail filename:\n     - Generate thumbnail filename by appending \"_thumb\" to original filename\n     - Ensure the target directory exists and is writable\n     - Create directory structure if it doesn't exist\n\n4. Core Operation Execution:\n   - Load the original image file:\n     - Open the image file from the provided path\n     - Verify image data is valid and can be processed\n     - IF image cannot be loaded, THEN log error and exit\n   - Calculate thumbnail dimensions:\n     - Determine original image dimensions\n     - Calculate proportional dimensions that fit within maxWidth and maxHeight\n     - Preserve aspect ratio of the original image\n   - Generate the thumbnail:\n     - Resize the original image to the calculated dimensions\n     - Apply any necessary image quality settings\n     - IF resizing fails, THEN log error and exit\n   - Save the thumbnail:\n     - Write the thumbnail to the designated path\n     - Set appropriate file permissions\n     - IF saving fails, THEN log error and exit\n\n5. Response Generation:\n   - Success response:\n     - Return success status\n     - Include path to the generated thumbnail\n     - Include dimensions of the generated thumbnail\n   - Error response:\n     - Return error status\n     - Include specific error message\n     - Log detailed error information for troubleshooting\n     - Provide suggestions for resolving common issues",
+  "databaseEntities": [
+    "jforum_attachments",
+    "jforum_extension_groups"
+  ],
+  "validationRules": [
+    "Image file must exist at the specified path",
+    "Image format must be one of: jpg, jpeg, gif, png",
+    "Maximum width must be a positive integer",
+    "Maximum height must be a positive integer",
+    "Thumbnail generation must be enabled in system settings",
+    "Target directory must be writable",
+    "Original image must be valid and processable"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the attachment"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post this attachment belongs to"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who uploaded the attachment"
+        },
+        "info": {
+          "type": "object",
+          "properties": {
+            "physicalFilename": {
+              "type": "string",
+              "description": "The name of the file on the server"
+            },
+            "realFilename": {
+              "type": "string",
+              "description": "The original name of the uploaded file"
+            },
+            "comment": {
+              "type": "string",
+              "description": "User comment about the attachment"
+            },
+            "mimetype": {
+              "type": "string",
+              "description": "MIME type of the attachment"
+            },
+            "filesize": {
+              "type": "number",
+              "description": "Size of the file in bytes"
+            },
+            "uploadTimeInMillis": {
+              "type": "number",
+              "description": "Upload timestamp in milliseconds"
+            },
+            "extension": {
+              "type": "object",
+              "description": "Information about the file extension"
+            }
+          }
+        }
+      }
+    }
+  }
+}

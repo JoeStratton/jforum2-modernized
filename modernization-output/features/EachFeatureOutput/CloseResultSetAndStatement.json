@@ -1,0 +1,26 @@
+{
+  "featureName": "CloseResultSetAndStatement",
+  "description": "Safely closes both ResultSet and Statement objects to prevent resource leaks in database operations.",
+  "inputValues": [
+    "resultSet-object-ResultSet",
+    "statement-object-Statement"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect ResultSet object (optional)\n   - Collect Statement object (optional)\n   - Both inputs may be null, which indicates no action is needed for that resource\n\n2. Data Validation:\n   - Check if ResultSet object is null\n     - IF ResultSet is null, skip ResultSet closing operations\n     - IF ResultSet is not null, proceed with ResultSet closing\n   - Check if Statement object is null\n     - IF Statement is null, skip Statement closing operations\n     - IF Statement is not null, proceed with Statement closing\n\n3. Business Rule Processing:\n   - Verify system state allows for resource closing\n   - Ensure closing resources won't impact ongoing operations\n   - Determine proper closing sequence (ResultSet must be closed before its associated Statement)\n\n4. Core Operation Execution:\n   - Close ResultSet (if not null):\n     a. Attempt to close the ResultSet object\n     b. Suppress and handle any exceptions that occur during closing\n     c. Ensure ResultSet is properly released regardless of exceptions\n   - Close Statement (if not null):\n     a. Clear any warnings associated with the Statement\n     b. Attempt to close the Statement object\n     c. Suppress and handle any exceptions that occur during closing\n     d. Ensure Statement is properly released regardless of exceptions\n\n5. Response Generation:\n   - No explicit response is generated as this is a resource cleanup operation\n   - System should maintain internal state indicating resources have been properly released\n   - Any critical errors during closing should be logged for system administrators",
+  "databaseEntities": [],
+  "validationRules": [
+    "ResultSet and Statement objects may be null",
+    "ResultSet must be closed before its associated Statement",
+    "Exceptions during closing operations must be suppressed to ensure all resources are attempted to be closed"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ResultSet": {
+      "type": "object",
+      "description": "Database result set containing query results"
+    },
+    "Statement": {
+      "type": "object",
+      "description": "Database statement used for executing SQL queries"
+    }
+  }
+}

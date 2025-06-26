@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "FilterClickstreamRequests",
+    "description": "Processes HTTP requests to track clickstream data and identify bot traffic"
+  }
+]

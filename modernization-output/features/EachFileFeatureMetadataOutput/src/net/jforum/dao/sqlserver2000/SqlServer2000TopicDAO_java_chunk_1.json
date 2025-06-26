@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "SelectTopicsByForumWithPagination",
+    "description": "Retrieves topics from a specific forum with pagination support"
+  },
+  {
+    "featureName": "SelectTopicsByUserWithPagination",
+    "description": "Retrieves topics created by a specific user with pagination support"
+  },
+  {
+    "featureName": "SelectRecentTopics",
+    "description": "Retrieves a limited number of the most recent topics across forums"
+  },
+  {
+    "featureName": "SelectHottestTopics",
+    "description": "Retrieves a limited number of the most popular topics based on activity"
+  }
+]

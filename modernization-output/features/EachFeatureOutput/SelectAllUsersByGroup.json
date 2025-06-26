@@ -1,0 +1,95 @@
+{
+  "featureName": "SelectAllUsersByGroup",
+  "description": "Retrieves a paginated list of users belonging to a specific group.",
+  "inputValues": [
+    "groupId-number-Group",
+    "startPosition-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect the following required inputs:\n       - groupId (number): The unique identifier of the group to filter users by\n       - startPosition (number): The starting position for pagination\n       - count (number): The maximum number of records to return\n\n2. Data Validation:\n   2.1. Validate groupId:\n       - IF groupId is null or not a positive integer THEN\n           - Return error: \"Group ID must be a valid positive integer\"\n   2.2. Validate pagination parameters:\n       - IF startPosition is negative THEN\n           - Return error: \"Start position must be a non-negative integer\"\n       - IF count is not a positive integer THEN\n           - Return error: \"Count must be a positive integer\"\n\n3. Business Rule Processing:\n   3.1. Check if the specified group exists:\n       - Verify that a group with the provided groupId exists in the system\n       - IF group does not exist THEN\n           - Return error: \"The specified group does not exist\"\n   3.2. Check user access permissions:\n       - Verify if the current user has permission to view users in this group\n       - IF user lacks permission THEN\n           - Return error: \"Insufficient permissions to view users in this group\"\n\n4. Core Operation Execution:\n   4.1. Retrieve user records:\n       - Find all users associated with the specified group\n       - Apply pagination using startPosition and count parameters\n       - Sort users according to the system's default sorting criteria (typically by username or registration date)\n   4.2. Process user data:\n       - For each user record retrieved:\n           - Extract only the necessary user information for display\n           - Filter out any sensitive information based on viewing permissions\n       - Count the total number of users in the group (for pagination information)\n\n5. Response Generation:\n   5.1. Prepare success response:\n       - Create a collection of user records with relevant information\n       - Include pagination metadata:\n           - Total number of users in the group\n           - Current page information\n           - Whether more records exist\n   5.2. Handle empty results:\n       - IF no users found in the specified group THEN\n           - Return an empty collection with appropriate metadata\n       - ELSE\n           - Return the collection of user records with pagination metadata",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups"
+  ],
+  "validationRules": [
+    "Group ID must be a valid positive integer",
+    "Start position must be a non-negative integer",
+    "Count must be a positive integer",
+    "The specified group must exist in the system",
+    "User must have permission to view users in the specified group"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "User's login name"
+        },
+        "registrationDate": {
+          "type": "date",
+          "description": "Date when user registered"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the user account is active"
+        }
+      }
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        }
+      }
+    },
+    "PaginationResult": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/User"
+          },
+          "description": "List of users belonging to the group"
+        },
+        "totalUsers": {
+          "type": "number",
+          "description": "Total number of users in the group"
+        },
+        "startPosition": {
+          "type": "number",
+          "description": "Starting position of the current page"
+        },
+        "count": {
+          "type": "number",
+          "description": "Number of users in the current page"
+        },
+        "hasMore": {
+          "type": "boolean",
+          "description": "Whether more users exist beyond the current page"
+        }
+      }
+    }
+  }
+}

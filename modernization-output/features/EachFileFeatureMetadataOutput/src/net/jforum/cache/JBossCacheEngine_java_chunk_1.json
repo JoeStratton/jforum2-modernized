@@ -1,0 +1,42 @@
+[
+  {
+    "featureName": "InitializeCache",
+    "description": "Initializes the JBoss cache system using configuration properties"
+  },
+  {
+    "featureName": "StopCacheService",
+    "description": "Stops the JBoss cache service when no longer needed"
+  },
+  {
+    "featureName": "AddCacheEntry",
+    "description": "Adds or updates an entry in the cache with a key and value"
+  },
+  {
+    "featureName": "AddNamespacedCacheEntry",
+    "description": "Adds an entry to the cache with a specific namespace (FQN) and key"
+  },
+  {
+    "featureName": "GetCacheEntry",
+    "description": "Retrieves a cached entry by its key"
+  },
+  {
+    "featureName": "GetNamespacedCacheEntry",
+    "description": "Retrieves a cached entry using namespace (FQN) and key"
+  },
+  {
+    "featureName": "GetCacheNamespace",
+    "description": "Retrieves an entire cache namespace by its FQN"
+  },
+  {
+    "featureName": "GetNamespaceValues",
+    "description": "Retrieves all values stored within a specific cache namespace"
+  },
+  {
+    "featureName": "RemoveCacheEntry",
+    "description": "Removes a specific entry from the cache by namespace and key"
+  },
+  {
+    "featureName": "RemoveCacheNamespace",
+    "description": "Removes an entire namespace and all its entries from the cache"
+  }
+]

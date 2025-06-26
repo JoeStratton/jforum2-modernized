@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "DeleteBanlistEntry",
+    "description": "Removes a ban entry from the system by its ID"
+  },
+  {
+    "featureName": "InsertBanlistEntry",
+    "description": "Creates a new ban entry with user ID, IP address, and email information"
+  },
+  {
+    "featureName": "GetAllBanlistEntries",
+    "description": "Retrieves all ban entries including user IDs, emails, and IP addresses"
+  }
+]

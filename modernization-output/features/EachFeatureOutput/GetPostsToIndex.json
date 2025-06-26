@@ -1,0 +1,38 @@
+{
+  "featureName": "GetPostsToIndex",
+  "description": "Retrieves posts for indexing based on post ID range.",
+  "inputValues": [
+    "fromPostId-number-Post",
+    "toPostId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     1.1. fromPostId (mandatory): The starting post ID for the range\n     1.2. toPostId (mandatory): The ending post ID for the range\n\n2. Data Validation\n   - Validate all input parameters:\n     2.1. Validate fromPostId:\n         2.1.1. Check IF fromPostId is provided\n         2.1.2. Verify IF fromPostId is a positive integer\n         2.1.3. IF validation fails, generate appropriate error message\n     2.2. Validate toPostId:\n         2.2.1. Check IF toPostId is provided\n         2.2.2. Verify IF toPostId is a positive integer\n         2.2.3. IF validation fails, generate appropriate error message\n     2.3. Validate relationship between IDs:\n         2.3.1. Verify IF fromPostId is less than or equal to toPostId\n         2.3.2. IF validation fails, generate error message indicating invalid range\n\n3. Business Rule Processing\n   - Process business rules related to post retrieval:\n     3.1. Check system state for indexing availability:\n         3.1.1. Verify IF the system is in a state that allows indexing operations\n         3.1.2. IF system is not available for indexing, generate appropriate error\n     3.2. Verify post existence:\n         3.2.1. Check IF posts exist within the specified range\n         3.2.2. IF no posts exist in the range, prepare for empty result set\n     3.3. Apply access control rules:\n         3.3.1. Determine which posts within the range are accessible for indexing\n         3.3.2. Filter out posts that should not be indexed based on forum rules\n\n4. Core Operation Execution\n   - Retrieve posts within the specified range:\n     4.1. Query the post repository:\n         4.1.1. Construct query parameters using fromPostId and toPostId\n         4.1.2. Execute query to retrieve posts within the specified range\n         4.1.3. IF query execution fails, handle the error appropriately\n     4.2. Process retrieved posts:\n         4.2.1. For EACH post retrieved:\n             4.2.1.1. Extract post ID, forum ID, topic ID, and user ID\n             4.2.1.2. Extract post creation timestamp and convert to appropriate date format\n             4.2.1.3. Extract post text content\n             4.2.1.4. Determine if BBCode is enabled for the post\n             4.2.1.5. Determine if smilies are enabled for the post\n             4.2.1.6. Extract post subject or use topic title if subject is empty\n         4.2.2. Organize posts in appropriate structure for return\n\n5. Response Generation\n   - Prepare and return the response:\n     5.1. For successful retrieval:\n         5.1.1. Compile list of posts with their content and metadata\n         5.1.2. Return the compiled list of posts\n     5.2. For error scenarios:\n         5.2.1. Generate appropriate error response with details\n         5.2.2. Include guidance on how to resolve the issue\n         5.2.3. Return error information",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "fromPostId must be a positive integer",
+    "toPostId must be a positive integer",
+    "fromPostId must be less than or equal to toPostId",
+    "Posts must exist within the specified ID range",
+    "System must be available for indexing operations"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "forumId": "number",
+      "topicId": "number",
+      "userId": "number",
+      "time": "date",
+      "text": "string",
+      "subject": "string",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean",
+      "postUsername": "string"
+    }
+  }
+}

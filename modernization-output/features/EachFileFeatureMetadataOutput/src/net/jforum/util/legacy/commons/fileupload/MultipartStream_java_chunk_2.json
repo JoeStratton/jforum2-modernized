@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ReadMultipartStream",
+    "description": "Reads and processes multipart stream data with boundary detection for file uploads"
+  },
+  {
+    "featureName": "ReadBoundary",
+    "description": "Detects boundary tokens in multipart streams to separate content encapsulations"
+  },
+  {
+    "featureName": "SetBoundary",
+    "description": "Changes boundary tokens for nested multipart stream processing"
+  },
+  {
+    "featureName": "ConfigureHeaderEncoding",
+    "description": "Sets character encoding used when reading headers of individual parts"
+  }
+]

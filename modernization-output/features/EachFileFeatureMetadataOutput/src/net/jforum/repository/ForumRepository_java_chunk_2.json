@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "GetCategory",
+    "description": "Retrieves a category by its ID with user access control validation"
+  },
+  {
+    "featureName": "GetAllCategories",
+    "description": "Retrieves all categories accessible to the current user"
+  },
+  {
+    "featureName": "CheckCategoryAccessibility",
+    "description": "Validates if a user has permission to access a specific category"
+  },
+  {
+    "featureName": "StartForumRepository",
+    "description": "Initializes the forum repository by loading categories, forums and user information"
+  }
+]

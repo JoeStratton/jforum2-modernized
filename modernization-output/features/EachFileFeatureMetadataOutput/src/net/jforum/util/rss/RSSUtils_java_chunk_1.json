@@ -1,0 +1,10 @@
+[
+  {
+    "featureName": "FormatDateToRSS",
+    "description": "Formats a date object to the expected RSS format using system configuration"
+  },
+  {
+    "featureName": "FormatStringDateToRSS",
+    "description": "Converts a string date to RSS format, handling parsing exceptions gracefully"
+  }
+]

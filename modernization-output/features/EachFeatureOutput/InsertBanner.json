@@ -1,0 +1,50 @@
+{
+  "featureName": "InsertBanner",
+  "description": "Displays form for creating a new banner and processes the form submission.",
+  "inputValues": [
+    "comment-string-Banner",
+    "active-boolean-Banner",
+    "type-number-Banner",
+    "name-string-Banner",
+    "description-string-Banner",
+    "width-number-Banner",
+    "height-number-Banner",
+    "url-string-Banner",
+    "placement-number-Banner",
+    "weight-number-Banner",
+    "views-number-Banner",
+    "clicks-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following banner information from the user:\n     a. Name (mandatory): Banner name identifier\n     b. Description (mandatory): Detailed description of the banner\n     c. Comment (optional): Additional notes about the banner\n     d. Active status (mandatory): Whether the banner is active (true/false)\n     e. Type (mandatory): Numeric code representing banner type\n     f. Width (mandatory): Width dimension in pixels\n     g. Height (mandatory): Height dimension in pixels\n     h. URL (mandatory): Target URL for the banner\n     i. Placement (mandatory): Numeric code for banner placement location\n     j. Weight (mandatory): Priority weight for display frequency\n     k. Views (optional): Initial view count, defaults to 0\n     l. Clicks (optional): Initial click count, defaults to 0\n\n2. Data Validation:\n   - Validate banner name:\n     a. Check if name is not empty\n     b. Verify name length is within acceptable limits\n     c. IF validation fails, display error message and retain form data\n   - Validate banner description:\n     a. Check if description is not empty\n     b. Verify description length is within acceptable limits\n     c. IF validation fails, display error message and retain form data\n   - Validate dimensions:\n     a. Ensure width is a positive integer\n     b. Ensure height is a positive integer\n     c. IF validation fails, display error message and retain form data\n   - Validate URL:\n     a. Check if URL is not empty\n     b. Verify URL format is valid\n     c. IF validation fails, display error message and retain form data\n   - Validate placement and type:\n     a. Ensure placement value is within valid range\n     b. Ensure type value is within valid range\n     c. IF validation fails, display error message and retain form data\n   - Validate weight:\n     a. Ensure weight is a non-negative integer\n     b. IF validation fails, display error message and retain form data\n\n3. Business Rule Processing:\n   - Check system constraints:\n     a. Verify system has sufficient storage capacity for new banner\n     b. Check if user has permission to create banners\n     c. IF any constraint fails, display appropriate error message\n   - Evaluate banner placement availability:\n     a. Check if the selected placement location can accommodate another banner\n     b. IF placement is unavailable, suggest alternative placement options\n   - Assess banner type compatibility:\n     a. Verify the selected type is compatible with the provided dimensions\n     b. IF incompatible, suggest appropriate dimensions for the selected type\n\n4. Core Operation Execution:\n   - Prepare banner data:\n     a. Format all input values according to system requirements\n     b. Set default values for any missing optional fields\n   - Create banner record:\n     a. Generate a unique identifier for the new banner\n     b. Store all banner information in the system\n     c. IF storage operation fails, display error message and allow retry\n   - Initialize banner metrics:\n     a. Set up tracking for banner views and clicks\n     b. Initialize any required monitoring systems\n     c. IF initialization fails, log warning but proceed\n\n5. Response Generation:\n   - For successful creation:\n     a. Display success message confirming banner creation\n     b. Show summary of created banner details\n     c. Provide options to view all banners or create another banner\n   - For failed creation:\n     a. Display detailed error message explaining the failure\n     b. Retain all entered form data for correction\n     c. Provide guidance on resolving the issue",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner name must not be empty",
+    "Banner description must not be empty",
+    "Banner width must be a positive integer",
+    "Banner height must be a positive integer",
+    "Banner URL must be valid and not empty",
+    "Banner placement must be within valid range",
+    "Banner type must be within valid range",
+    "Banner weight must be a non-negative integer"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "comment": "string",
+      "active": "boolean",
+      "type": "number",
+      "width": "number",
+      "height": "number",
+      "url": "string",
+      "placement": "number",
+      "weight": "number",
+      "views": "number",
+      "clicks": "number"
+    }
+  }
+}

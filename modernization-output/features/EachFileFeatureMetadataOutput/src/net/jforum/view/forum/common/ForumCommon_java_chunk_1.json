@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "CheckUnreadPosts",
+    "description": "Checks if a forum has unread messages based on user tracking and last visit time"
+  },
+  {
+    "featureName": "GetAllCategoriesAndForums",
+    "description": "Retrieves all forums available to the user with optional unread post checking"
+  },
+  {
+    "featureName": "NotifyUsers",
+    "description": "Sends notification emails to users watching a forum when a new topic is created"
+  }
+]

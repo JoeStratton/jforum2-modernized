@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "GetGroupRoles",
+    "description": "Retrieves role collections for a specific group from the cache"
+  },
+  {
+    "featureName": "GetMergedGroupRoles",
+    "description": "Retrieves merged role collections from multiple groups"
+  },
+  {
+    "featureName": "AddGroupRoles",
+    "description": "Adds merged roles for specified groups to the cache"
+  },
+  {
+    "featureName": "ClearRolesCache",
+    "description": "Clears the roles cache"
+  }
+]

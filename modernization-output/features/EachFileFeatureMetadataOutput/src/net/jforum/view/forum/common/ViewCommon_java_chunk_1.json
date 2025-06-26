@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "ContextToPagination",
+    "description": "Prepares user context for data pagination with page counts and navigation variables"
+  },
+  {
+    "featureName": "ContextToLogin",
+    "description": "Prepares template context for login page with return path handling and SSO redirect support"
+  },
+  {
+    "featureName": "GetStartPage",
+    "description": "Determines the initial page number for record pagination from request parameters"
+  },
+  {
+    "featureName": "GetForumLink",
+    "description": "Retrieves the forum base URL with trailing slash for consistent linking"
+  },
+  {
+    "featureName": "ToUtf8String",
+    "description": "Converts strings to UTF-8 encoded format for proper character handling"
+  },
+  {
+    "featureName": "FormatDate",
+    "description": "Formats dates using system-defined date/time pattern from configuration"
+  },
+  {
+    "featureName": "EscapeHtml",
+    "description": "Escapes HTML special characters to prevent security vulnerabilities"
+  },
+  {
+    "featureName": "ReplaceAll",
+    "description": "Performs string replacement operations for content transformation"
+  },
+  {
+    "featureName": "PrepareUserSignature",
+    "description": "Formats user signatures for display with proper HTML formatting and security"
+  }
+]

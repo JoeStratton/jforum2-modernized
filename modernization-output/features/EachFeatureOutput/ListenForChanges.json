@@ -1,0 +1,59 @@
+{
+  "featureName": "ListenForChanges",
+  "description": "Sets up file monitoring for configuration files to detect and apply changes.",
+  "inputValues": [
+    "configFiles-object-ConfigurationFiles",
+    "fileChangesDelay-number-SystemSetting"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect configFiles (object): List of configuration files to monitor\n     - Required properties: filePath (string), fileType (string)\n     - Optional properties: priority (number)\n   - Collect fileChangesDelay (number): Time interval in milliseconds between file checks\n     - System may provide default value if not specified\n     - Must be a positive integer\n\n2. Data Validation:\n   - Validate fileChangesDelay:\n     - IF fileChangesDelay is not a number, THEN return error \"File changes delay must be a number\"\n     - IF fileChangesDelay <= 0, THEN disable file monitoring and exit process\n     - IF fileChangesDelay < minimumAllowedDelay, THEN set to minimumAllowedDelay and log warning\n   - Validate configFiles:\n     - FOR EACH file in configFiles:\n       - Check if file exists\n       - IF file does not exist, THEN log warning but continue process\n       - Verify file has read permissions\n       - IF file lacks read permissions, THEN log error and skip this file\n\n3. Business Rule Processing:\n   - Determine appropriate file listeners based on file types:\n     - FOR EACH file in configFiles:\n       - IF file is a query file (SQL), THEN assign QueryFileListener\n       - IF file is a system properties file, THEN assign SystemPropertiesListener\n       - IF file is a custom configuration file, THEN assign appropriate custom listener\n   - Check system resources:\n     - Verify system has sufficient resources for file monitoring\n     - IF resources are insufficient, THEN log warning and adjust monitoring frequency\n\n4. Core Operation Execution:\n   - Initialize file monitoring system:\n     - Create file monitor instance if not already created\n     - Configure monitoring parameters based on system capabilities\n   - Register file listeners:\n     - FOR EACH file in configFiles:\n       - Register appropriate listener for the file\n       - Set monitoring interval to fileChangesDelay\n       - Initialize baseline file state (timestamp, checksum)\n   - Start monitoring process:\n     - Activate all registered file monitors\n     - Log successful activation of monitoring for each file\n   - Set up notification system:\n     - Configure how changes will be reported\n     - Define actions to take when changes are detected\n\n5. Response Generation:\n   - Return monitoring status:\n     - List of successfully monitored files\n     - List of files that couldn't be monitored (with reasons)\n     - Current monitoring interval\n   - Provide management interface details:\n     - How to manually trigger reloads\n     - How to temporarily disable monitoring\n     - How to adjust monitoring parameters",
+  "databaseEntities": [],
+  "validationRules": [
+    "File changes delay must be greater than zero to enable monitoring",
+    "Configuration files must exist and be readable",
+    "Each file type must have an appropriate listener assigned",
+    "System must have sufficient resources for file monitoring"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ConfigurationFiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filePath": {
+            "type": "string",
+            "description": "Path to the configuration file"
+          },
+          "fileType": {
+            "type": "string",
+            "description": "Type of configuration file (SQL, properties, etc.)"
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority level for processing changes (optional)"
+          }
+        },
+        "required": [
+          "filePath",
+          "fileType"
+        ]
+      }
+    },
+    "SystemSetting": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Value of the system setting"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement for the setting"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    }
+  }
+}

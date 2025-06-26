@@ -1,0 +1,85 @@
+{
+  "featureName": "FillTopicsData",
+  "description": "Populates topic objects with complete data including user information.",
+  "inputValues": [
+    "preparedStatement-object-PreparedStatement",
+    "dateTimeFormat-string-SystemConfig"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect prepared statement containing topic query\n   - Retrieve system date time format configuration\n   - Prepare data structures for collecting user IDs\n\n2. Data Validation:\n   - Verify prepared statement is not null\n     IF prepared statement is null THEN\n       Return empty result list\n     END IF\n   - Ensure database connection is active\n     IF connection is not active THEN\n       Throw appropriate exception\n       Exit process\n     END IF\n\n3. Business Rule Processing:\n   - Initialize result collection for topics\n   - Initialize string buffers for collecting user IDs\n     Create first poster ID collection buffer\n     Create last poster ID collection buffer\n   - Prepare date formatter using system configuration\n     IF date format is invalid THEN\n       Use default date format\n     END IF\n\n4. Core Operation Execution:\n   - Execute query and process result set\n     Execute the prepared statement query\n     WHILE results available DO\n       Extract base topic data (ID, title, etc.)\n       Create topic poster user object with ID\n       Create last post user object with ID\n       Set attachment flag based on attach count\n       Format and set first post timestamp\n       Format and set last post timestamp\n       Add topic to result collection\n       Append user IDs to respective buffers\n     END WHILE\n   - Process user information\n     IF any topics were found THEN\n       Prepare user ID list from collected IDs\n       Query database for user information using ID list\n       Create mapping of user IDs to usernames\n       FOR each topic in result collection\n         Set poster username from user mapping\n         Set last poster username from user mapping\n       END FOR\n     END IF\n   - Handle resources properly\n     Close result set\n     Close prepared statement\n     Handle any exceptions during processing\n\n5. Response Generation:\n   - Return populated topic collection\n     IF operation successful THEN\n       Return complete list of topic objects with all data populated\n     ELSE\n       Throw appropriate exception with error details\n     END IF",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_users",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Prepared statement must not be null",
+    "Database connection must be active",
+    "Date format must be valid for timestamp formatting",
+    "Topic creator information must be populated",
+    "Last post author information must be populated"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PreparedStatement": {
+      "type": "object",
+      "description": "Database prepared statement containing the topic query to execute"
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the topic"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the topic"
+        },
+        "postedBy": {
+          "type": "object",
+          "description": "User who created the topic",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "User ID of the topic creator"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the topic creator"
+            }
+          }
+        },
+        "lastPostBy": {
+          "type": "object",
+          "description": "User who made the last post in the topic",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "User ID of the last poster"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username of the last poster"
+            }
+          }
+        },
+        "hasAttach": {
+          "type": "boolean",
+          "description": "Indicates if the topic has attachments"
+        },
+        "firstPostTime": {
+          "type": "string",
+          "description": "Formatted date/time when the topic was created"
+        },
+        "lastPostTime": {
+          "type": "string",
+          "description": "Formatted date/time of the last post"
+        },
+        "lastPostDate": {
+          "type": "object",
+          "description": "Date object representing the last post time"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "featureName": "GetFirstPostIdByDate",
+  "description": "Finds the ID of the first post created after a specific date.",
+  "inputValues": [
+    "date-date-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. date (mandatory): The reference date to find posts created after\n\n2. Data Validation\n   - Validate the date input:\n     a. Check if date is not null\n        IF date is null THEN\n          Return error message indicating date is required\n     b. Check if date is a valid date format\n        IF date format is invalid THEN\n          Return error message indicating invalid date format\n     c. Check if date is within acceptable range\n        IF date is in the future THEN\n          Return error message indicating date cannot be in the future\n\n3. Business Rule Processing\n   - Verify system state requirements:\n     a. Check if the post repository is accessible\n        IF repository is not accessible THEN\n          Return error message indicating system unavailability\n     b. Check if search functionality is enabled\n        IF search functionality is disabled THEN\n          Return error message indicating feature unavailability\n\n4. Core Operation Execution\n   - Process the search operation:\n     a. Format the input date to system standard format\n     b. Query the post repository for posts created after the specified date\n     c. Sort the matching posts by creation date in ascending order\n     d. Select the post with the earliest creation date after the input date\n     e. Extract the ID of the selected post\n        IF no posts are found after the specified date THEN\n          Return 0 or appropriate null indicator\n        ELSE\n          Return the ID of the first post\n\n5. Response Generation\n   - Generate appropriate response:\n     a. IF operation was successful THEN\n        Return the post ID as an integer value\n     b. IF operation failed THEN\n        Return error details with appropriate message\n        Include suggestion for troubleshooting if applicable",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Date input must not be null",
+    "Date must be in a valid format",
+    "Date should not be in the future",
+    "System must have access to post repository",
+    "Search functionality must be enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}

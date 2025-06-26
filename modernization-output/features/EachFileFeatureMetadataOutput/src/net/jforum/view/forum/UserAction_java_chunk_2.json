@@ -1,0 +1,38 @@
+[
+  {
+    "featureName": "EditUserProfile",
+    "description": "Allows users to edit their own profile information"
+  },
+  {
+    "featureName": "SaveUserProfile",
+    "description": "Saves changes to a user's profile with validation"
+  },
+  {
+    "featureName": "RegisterNewUser",
+    "description": "Handles new user registration with form display and validation"
+  },
+  {
+    "featureName": "SaveNewUser",
+    "description": "Processes and saves new user registration with validation checks"
+  },
+  {
+    "featureName": "DisplayUserAgreement",
+    "description": "Shows terms and conditions agreement for user registration"
+  },
+  {
+    "featureName": "AcceptUserAgreement",
+    "description": "Processes user acceptance of the terms and conditions"
+  },
+  {
+    "featureName": "ActivateUserAccount",
+    "description": "Activates a user account using an email verification hash"
+  },
+  {
+    "featureName": "RequestManualActivation",
+    "description": "Provides interface for manual account activation"
+  },
+  {
+    "featureName": "CompleteRegistration",
+    "description": "Finalizes user registration and shows confirmation message"
+  }
+]

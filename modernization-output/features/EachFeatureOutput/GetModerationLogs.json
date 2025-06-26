@@ -1,0 +1,82 @@
+{
+  "featureName": "GetModerationLogs",
+  "description": "Retrieves a paginated list of moderation log entries.",
+  "inputValues": [
+    "startIndex-number-Pagination",
+    "count-number-Pagination"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. startIndex (number): The starting position for pagination (mandatory)\n     b. count (number): The number of records to retrieve (mandatory)\n\n2. Data Validation\n   - Validate pagination parameters:\n     a. IF startIndex is not provided OR is less than 0 THEN\n        - Set error message: \"Start index must be a non-negative number\"\n        - Return validation error\n     b. IF count is not provided OR is less than or equal to 0 THEN\n        - Set error message: \"Count must be a positive number\"\n        - Return validation error\n     c. IF count exceeds system-defined maximum page size THEN\n        - Set count to system-defined maximum page size\n\n3. Business Rule Processing\n   - Verify user permissions:\n     a. Check if current user has permission to view moderation logs\n     b. IF user does not have required permissions THEN\n        - Set error message: \"Insufficient permissions to view moderation logs\"\n        - Return access denied error\n   - Verify system state:\n     a. Check if the moderation log feature is enabled in system settings\n     b. IF feature is disabled THEN\n        - Set error message: \"Moderation log feature is currently disabled\"\n        - Return feature unavailable error\n\n4. Core Operation Execution\n   - Retrieve total count of moderation log entries\n     a. Query the total number of records in the moderation log\n     b. Store the total count for pagination metadata\n   - Retrieve paginated moderation log entries:\n     a. Fetch moderation log entries starting from startIndex\n     b. Limit results to specified count\n     c. Sort entries by timestamp in descending order (newest first)\n   - For each moderation log entry:\n     a. Retrieve associated user information (username, user ID)\n     b. Retrieve associated content information (post, topic, or forum)\n     c. Format timestamp to user-friendly format\n   - IF no records are found THEN\n     a. Set empty result list\n     b. Set appropriate message indicating no logs were found\n\n5. Response Generation\n   - Prepare success response with:\n     a. List of moderation log entries containing:\n        - Log ID\n        - Timestamp\n        - Moderator information (name, ID)\n        - Action performed\n        - Description of action\n        - Affected content information\n     b. Pagination metadata:\n        - Total record count\n        - Current page information\n        - More records indicator (boolean)\n   - IF any errors occurred during processing THEN\n     a. Generate appropriate error response with:\n        - Error code\n        - Error message\n        - Suggested resolution steps if applicable",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_topics",
+    "jforum_posts",
+    "jforum_forums"
+  ],
+  "validationRules": [
+    "Start index must be a non-negative number",
+    "Count must be a positive number",
+    "Count cannot exceed the maximum allowed page size",
+    "User must have permission to view moderation logs"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ModerationLog": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the moderation log entry"
+        },
+        "timestamp": {
+          "type": "date",
+          "description": "Date and time when the moderation action occurred"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the moderator who performed the action"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username of the moderator who performed the action"
+        },
+        "action": {
+          "type": "string",
+          "description": "Type of moderation action performed"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the moderation action"
+        },
+        "affectedContentId": {
+          "type": "number",
+          "description": "ID of the content affected by the moderation action"
+        },
+        "affectedContentType": {
+          "type": "string",
+          "description": "Type of content affected (post, topic, forum, etc.)"
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "startIndex": {
+          "type": "number",
+          "description": "Starting position for pagination"
+        },
+        "count": {
+          "type": "number",
+          "description": "Number of records to retrieve"
+        },
+        "totalRecords": {
+          "type": "number",
+          "description": "Total number of records available"
+        },
+        "hasMoreRecords": {
+          "type": "boolean",
+          "description": "Indicates if more records are available beyond the current page"
+        }
+      }
+    }
+  }
+}

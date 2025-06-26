@@ -1,0 +1,18 @@
+[
+  {
+    "featureName": "ConfigureLuceneRAMDirectory",
+    "description": "Configures Lucene to use RAM-based directory for indexing operations"
+  },
+  {
+    "featureName": "ConfigureLuceneFSDirectory",
+    "description": "Configures Lucene to use filesystem-based directory for indexing operations"
+  },
+  {
+    "featureName": "CreateLuceneIndexDirectory",
+    "description": "Creates a new Lucene index directory in the filesystem"
+  },
+  {
+    "featureName": "FormatDateTimeForLucene",
+    "description": "Formats date objects into string format suitable for Lucene indexing"
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "featureName": "StartSystemGlobals",
+    "description": "Initializes system configuration by loading properties from configuration files"
+  },
+  {
+    "featureName": "LoadModulesMapping",
+    "description": "Loads module mappings from properties file to configure system modules"
+  },
+  {
+    "featureName": "CreateLoginAuthenticator",
+    "description": "Creates an instance of the configured login authenticator for user authentication"
+  },
+  {
+    "featureName": "LoadUrlPatterns",
+    "description": "Loads URL patterns from configuration file for request routing"
+  },
+  {
+    "featureName": "ListenForChanges",
+    "description": "Sets up file monitoring for configuration files to detect and apply changes"
+  },
+  {
+    "featureName": "LoadDaoImplementation",
+    "description": "Loads and initializes the configured data access driver implementation"
+  },
+  {
+    "featureName": "StartCacheEngine",
+    "description": "Initializes the caching system and associates cacheable objects"
+  },
+  {
+    "featureName": "StopCacheEngine",
+    "description": "Gracefully stops the cache engine when system is shutting down"
+  },
+  {
+    "featureName": "StartSearchIndexer",
+    "description": "Initializes the search indexing system for content searching"
+  },
+  {
+    "featureName": "StartSummaryJob",
+    "description": "Initializes scheduled job for sending post summary emails to users"
+  },
+  {
+    "featureName": "StartPop3Integration",
+    "description": "Initializes POP3 email integration service for the forum"
+  }
+]

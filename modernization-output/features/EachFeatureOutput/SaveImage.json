@@ -1,0 +1,40 @@
+{
+  "featureName": "SaveImage",
+  "description": "Saves an image to disk in specified format (JPEG or PNG).",
+  "inputValues": [
+    "image-object-BufferedImage",
+    "toFileName-string-FilePath",
+    "type-number-ImageType"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. image (BufferedImage): The image data to be saved\n     b. toFileName (String): The complete file path where the image will be saved\n     c. type (Integer): The image format type (0 for JPEG, 1 for PNG)\n   - All fields are mandatory\n\n2. Data Validation:\n   - Validate image input:\n     a. Check if image is not null\n     b. IF image is null THEN\n        i. Generate error message: \"Image data cannot be null\"\n        ii. Terminate process\n   - Validate toFileName input:\n     a. Check if toFileName is not null or empty\n     b. IF toFileName is null or empty THEN\n        i. Generate error message: \"File path cannot be empty\"\n        ii. Terminate process\n     c. Check if the file path is valid and accessible\n     d. IF file path is invalid or inaccessible THEN\n        i. Generate error message: \"Invalid or inaccessible file path\"\n        ii. Terminate process\n   - Validate type input:\n     a. Check if type is a valid image format (0 for JPEG, 1 for PNG)\n     b. IF type is not 0 or 1 THEN\n        i. Generate error message: \"Unsupported image format. Use 0 for JPEG or 1 for PNG\"\n        ii. Terminate process\n\n3. Business Rule Processing:\n   - Determine the appropriate file format string based on type:\n     a. IF type equals 0 THEN\n        i. Set format string to \"jpg\"\n     b. ELSE IF type equals 1 THEN\n        i. Set format string to \"png\"\n   - Check if the destination directory exists:\n     a. Extract directory path from toFileName\n     b. IF directory does not exist THEN\n        i. Create directory structure\n        ii. IF directory creation fails THEN\n           1. Generate error message: \"Unable to create directory structure\"\n           2. Terminate process\n   - Check if a file already exists at the destination:\n     a. IF file exists at toFileName THEN\n        i. Determine if the file should be overwritten based on system settings\n        ii. IF overwrite is not allowed THEN\n           1. Generate error message: \"File already exists and overwrite is not permitted\"\n           2. Terminate process\n\n4. Core Operation Execution:\n   - Prepare the file output destination:\n     a. Create a new File object using toFileName\n   - Write the image data to the file:\n     a. Use the determined format string (\"jpg\" or \"png\")\n     b. Write the image data to the file\n     c. IF writing operation fails THEN\n        i. Generate error message: \"Failed to write image data to file\"\n        ii. Terminate process\n   - Verify the file was created successfully:\n     a. Check if the file exists at the specified location\n     b. IF file does not exist THEN\n        i. Generate error message: \"File creation verification failed\"\n        ii. Terminate process\n\n5. Response Generation:\n   - IF image saving process completes successfully THEN\n     a. Generate success response with:\n        i. Status: Success\n        ii. Message: \"Image successfully saved to [toFileName]\"\n        iii. File path: The complete path where the image was saved\n        iv. Format: The format the image was saved in (JPEG or PNG)\n   - ELSE\n     a. Generate error response with:\n        i. Status: Error\n        ii. Error message: Specific error encountered during the process\n        iii. Suggestion: Recommended action to resolve the issue",
+  "databaseEntities": [],
+  "validationRules": [
+    "Image data must not be null",
+    "File path must not be empty",
+    "File path must be valid and accessible",
+    "Image type must be either 0 (JPEG) or 1 (PNG)",
+    "Destination directory must exist or be creatable",
+    "File must not already exist if overwrite is not permitted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "BufferedImage": {
+      "type": "object",
+      "description": "Represents image data in memory",
+      "properties": {
+        "width": {
+          "type": "number",
+          "description": "Width of the image in pixels"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the image in pixels"
+        },
+        "type": {
+          "type": "number",
+          "description": "Internal representation type of the image"
+        }
+      }
+    }
+  }
+}

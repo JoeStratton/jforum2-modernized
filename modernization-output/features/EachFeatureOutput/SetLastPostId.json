@@ -1,0 +1,41 @@
+{
+  "featureName": "SetLastPostId",
+  "description": "Updates the reference to the most recent post in a topic.",
+  "inputValues": [
+    "topicId-number-Topic",
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     - topicId (mandatory): Unique identifier for the topic to be updated\n     - postId (mandatory): Identifier of the post to be set as the last post\n\n2. Data Validation\n   - Validate topicId:\n     - Check if topicId is provided\n     - Verify topicId is a positive integer\n     - IF topicId is invalid or missing, THEN generate an error message indicating invalid topic identifier\n   - Validate postId:\n     - Check if postId is provided\n     - Verify postId is a positive integer\n     - IF postId is invalid or missing, THEN generate an error message indicating invalid post identifier\n\n3. Business Rule Processing\n   - Verify topic existence:\n     - Check if the topic with the provided topicId exists in the system\n     - IF topic does not exist, THEN generate an error message indicating topic not found\n   - Verify post existence:\n     - Check if the post with the provided postId exists in the system\n     - IF post does not exist, THEN generate an error message indicating post not found\n   - Verify post belongs to topic:\n     - Check if the post with postId belongs to the topic with topicId\n     - IF post does not belong to the topic, THEN generate an error message indicating post-topic mismatch\n\n4. Core Operation Execution\n   - Update topic record:\n     - Locate the topic record using the topicId\n     - Update the last_post_id field with the provided postId\n     - Save the changes to the topic record\n   - Update related information:\n     - Update the topic's last update timestamp to current time\n     - IF update operation fails, THEN rollback any changes and generate an error message\n\n5. Response Generation\n   - Success response:\n     - Generate confirmation message indicating the topic's last post reference was successfully updated\n     - Include the updated topic identifier in the response\n   - Error response:\n     - For validation errors, return appropriate error messages\n     - For database errors, return a system error message\n     - Include error details to help troubleshoot the issue",
+  "databaseEntities": [
+    "jforum_topics",
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Topic ID must be a positive integer",
+    "Post ID must be a positive integer",
+    "Topic must exist in the system",
+    "Post must exist in the system",
+    "Post must belong to the specified topic"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Topic": {
+      "id": "number",
+      "forumId": "number",
+      "title": "string",
+      "firstPostId": "number",
+      "lastPostId": "number",
+      "type": "number",
+      "moderated": "boolean",
+      "totalViews": "number",
+      "totalReplies": "number"
+    },
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "content": "string",
+      "time": "date"
+    }
+  }
+}

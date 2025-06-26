@@ -1,0 +1,44 @@
+{
+  "featureName": "InitializeSearchManager",
+  "description": "Initializes the search manager with analyzer and directory settings.",
+  "inputValues": [
+    "analyzerClassName-string-AnalyzerConfig",
+    "indexDirectoryPath-string-DirectoryConfig",
+    "searchSettings-object-SearchSettings"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect analyzerClassName (mandatory): The fully qualified class name of the analyzer to use\n   - Collect indexDirectoryPath (mandatory): The file system path where search indexes will be stored\n   - Collect searchSettings (optional): Configuration settings for the search functionality\n      - If not provided, use system default settings\n\n2. Data Validation:\n   - Validate analyzerClassName:\n      - Verify it is not empty or null\n      - Verify it represents a valid and accessible class\n      - Verify the class implements the required analyzer interface\n      - IF validation fails, THEN generate appropriate error message\n   - Validate indexDirectoryPath:\n      - Verify it is not empty or null\n      - Verify the path exists or can be created\n      - Verify the system has read/write permissions to the path\n      - IF validation fails, THEN generate appropriate error message\n   - Validate searchSettings if provided:\n      - Verify all required properties are present\n      - Verify property values are within acceptable ranges\n      - IF validation fails, THEN generate appropriate error message\n\n3. Business Rule Processing:\n   - Check if search functionality is enabled in the system\n      - IF search is disabled, THEN exit initialization process\n   - Check for existing lock files in the index directory\n      - IF lock files exist, THEN determine if they should be removed\n         - Check if the lock is stale (system crash or improper shutdown)\n         - IF lock is stale, THEN mark for removal\n   - Verify system resources are sufficient for search operations\n      - Check available disk space for index storage\n      - Check memory allocation for search operations\n      - IF resources are insufficient, THEN generate warning or error\n\n4. Core Operation Execution:\n   - Create analyzer instance:\n      - Instantiate the analyzer class using the provided class name\n      - Configure the analyzer with any provided settings\n   - Initialize search settings:\n      - Create settings object with the instantiated analyzer\n      - Configure the file system directory using the provided path\n   - Remove any stale lock files if identified in step 3\n   - Initialize the indexer component:\n      - Create indexer with the configured settings\n      - Set up document processing rules\n   - Initialize the search component:\n      - Create search processor with the configured settings\n      - Create content collector for search results\n   - Connect indexer and search components:\n      - Set up notification system for new document additions\n   - Store settings in global configuration for system-wide access\n\n5. Response Generation:\n   - IF initialization completes successfully:\n      - Return success status\n      - Provide reference to the initialized search manager\n   - IF initialization fails at any point:\n      - Generate detailed error information\n      - Include specific component that failed\n      - Include troubleshooting suggestions\n      - Return failure status with error details",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Analyzer class must exist and be instantiable",
+    "Index directory path must be valid and accessible",
+    "System must have read/write permissions to the index directory",
+    "Lock files must be checked and removed if stale"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "SearchSettings": {
+      "type": "object",
+      "properties": {
+        "analyzer": {
+          "type": "object",
+          "description": "The text analyzer configuration"
+        },
+        "directory": {
+          "type": "object",
+          "description": "The directory configuration for index storage"
+        },
+        "maxResults": {
+          "type": "number",
+          "description": "Maximum number of search results to return"
+        },
+        "resultCacheSize": {
+          "type": "number",
+          "description": "Size of the search result cache"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "featureName": "MatchBanlistEntry",
+  "description": "Determines if a banlist entry matches another based on user ID, email, or IP address patterns.",
+  "inputValues": [
+    "banlistEntry-object-Banlist",
+    "banlistToCompare-object-Banlist"
+  ],
+  "businessLogic": "1. Input Collection\n   - Collect the following inputs:\n     a. banlistEntry (Banlist object, mandatory) - The reference banlist entry to check against\n     b. banlistToCompare (Banlist object, mandatory) - The banlist entry to be compared\n\n2. Data Validation\n   - Validate banlistEntry:\n     a. Verify banlistEntry is not null\n     b. Check if at least one of the following fields is populated: userId, email, or ip\n   - Validate banlistToCompare:\n     a. Verify banlistToCompare is not null\n     b. Check if at least one of the following fields is populated: userId, email, or ip\n   - IF any validation fails, THEN\n     a. Generate appropriate error message\n     b. Return error response\n\n3. Business Rule Processing\n   - Check for userId match:\n     a. IF both banlistEntry.userId and banlistToCompare.userId are greater than 0, THEN\n        i. Compare if banlistEntry.userId equals banlistToCompare.userId\n        ii. IF equal, set match status to true\n   - Check for email match:\n     a. IF both banlistEntry.email and banlistToCompare.email are not empty, THEN\n        i. Compare if banlistEntry.email equals banlistToCompare.email\n        ii. IF equal, set match status to true\n   - Check for IP address match:\n     a. IF both banlistEntry.ip and banlistToCompare.ip are not empty, THEN\n        i. IF banlistEntry.ip exactly equals banlistToCompare.ip, THEN\n           * Set match status to true\n        ii. ELSE perform pattern matching:\n           * Split both IP addresses into segments using dot (.) as separator\n           * IF both IPs have the same number of segments, THEN\n             - Compare each segment:\n               + IF reference segment is not wildcard (*), THEN\n                 > Compare segment values for equality\n                 > IF any non-wildcard segment doesn't match, set match status to false\n               + Track if all segments are wildcards\n             - IF at least one segment is not a wildcard AND all compared segments match, THEN\n               + Set match status to true\n\n4. Core Operation Execution\n   - Determine final match result:\n     a. IF any of the following conditions are true:\n        i. User IDs match (both greater than 0 and equal)\n        ii. Emails match (both non-empty and equal)\n        iii. IP addresses match (either exact match or pattern match)\n        THEN set final result to true (match found)\n     b. ELSE set final result to false (no match)\n\n5. Response Generation\n   - Return the match result:\n     a. IF match found, THEN return true\n     b. ELSE return false",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "At least one banlist entry field (userId, email, or ip) must be populated",
+    "User ID must be greater than 0 to be considered for matching",
+    "Email addresses must be non-empty to be considered for matching",
+    "IP addresses must be non-empty to be considered for matching",
+    "IP pattern matching requires the same number of segments in both addresses",
+    "IP pattern matching requires at least one non-wildcard segment"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banlist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the banlist entry"
+        },
+        "userId": {
+          "type": "number",
+          "description": "User ID associated with the ban"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP address or pattern associated with the ban"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address associated with the ban"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "featureName": "ListAllGroups",
+  "description": "Retrieves all user groups from the database.",
+  "inputValues": [],
+  "businessLogic": "1. Input Collection:\n   - No user inputs required for this feature\n   - System will retrieve all groups without filtering parameters\n\n2. Data Validation:\n   - No input validation required as there are no user inputs\n   - System validates database connection availability\n     a. IF database connection is unavailable THEN\n        i. Generate appropriate error message\n        ii. Terminate operation\n     b. ELSE continue to next step\n\n3. Business Rule Processing:\n   - Verify user has appropriate permissions to view groups\n     a. IF user lacks required permissions THEN\n        i. Generate access denied message\n        ii. Terminate operation\n     b. ELSE continue to next step\n   - Check system state for any maintenance or read-only conditions\n     a. IF system is in maintenance mode THEN\n        i. Generate maintenance notification\n        ii. Terminate operation\n     b. ELSE continue to next step\n\n4. Core Operation Execution:\n   - Retrieve all group records from the database\n     a. Prepare group collection container\n     b. Query the database for all group records\n     c. FOR each group record found:\n        i. Extract group information (ID, name, description, parent ID)\n        ii. Create group object with extracted information\n        iii. Add group object to collection container\n     d. IF no groups are found THEN\n        i. Return empty collection\n     e. ELSE continue with populated collection\n\n5. Response Generation:\n   - Prepare response with group collection\n     a. Format group data for presentation\n     b. Include total count of groups retrieved\n     c. Return formatted group collection to caller\n   - Handle any exceptions that occurred during processing\n     a. IF exceptions occurred THEN\n        i. Generate appropriate error message\n        ii. Include error details for troubleshooting\n        iii. Return error response\n     b. ELSE return success response with group data",
+  "databaseEntities": [
+    "jforum_groups"
+  ],
+  "validationRules": [
+    "User must have permission to view groups",
+    "Database connection must be available",
+    "System must not be in maintenance mode"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the group"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the group"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the group"
+        },
+        "parentId": {
+          "type": "integer",
+          "description": "ID of the parent group if applicable"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

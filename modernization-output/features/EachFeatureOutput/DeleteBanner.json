@@ -1,0 +1,79 @@
+{
+  "featureName": "DeleteBanner",
+  "description": "Removes a banner from the system.",
+  "inputValues": [
+    "bannerId-number-Banner"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the bannerId (number, mandatory) to identify the banner to be deleted\n   - System will use this identifier to locate the specific banner record\n\n2. Data Validation:\n   - Validate bannerId:\n     a. Check if bannerId is provided\n     b. Verify bannerId is a positive integer\n     c. Return appropriate error message if validation fails\n     d. If bannerId is not provided, system will return to banner listing without deletion\n\n3. Business Rule Processing:\n   - Check if banner exists in the system:\n     a. Search for banner with the provided bannerId\n     b. IF banner not found THEN\n        i. Generate error message \"Banner not found\"\n        ii. Terminate the deletion process\n     c. END IF\n   - Check if banner can be deleted:\n     a. Verify no active dependencies exist for this banner\n     b. IF dependencies exist THEN\n        i. Generate error message \"Cannot delete banner with active dependencies\"\n        ii. Terminate the deletion process and return to banner listing\n     c. END IF\n\n4. Core Operation Execution:\n   - Delete the banner:\n     a. Remove banner record from the system\n     b. IF deletion fails THEN\n        i. Log the error details\n        ii. Attempt to rollback the operation\n        iii. Generate system error message\n     c. END IF\n   - Update related records if necessary:\n     a. Remove any associated files or resources\n     b. Update any placement configurations that referenced this banner\n\n5. Response Generation:\n   - On Success:\n     a. Generate success message \"Banner successfully deleted\"\n     b. Return updated list of remaining banners\n   - On Failure:\n     a. Return specific error message based on the failure point\n     b. Provide guidance on how to resolve the issue if possible\n     c. Display the error message along with the current banner listing",
+  "databaseEntities": [
+    "Banner"
+  ],
+  "validationRules": [
+    "Banner ID must be a positive integer",
+    "Banner must exist in the system to be deleted",
+    "Banner must not have active dependencies to be deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Banner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the banner"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the banner"
+        },
+        "placement": {
+          "type": "number",
+          "description": "Placement position of the banner"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the banner"
+        },
+        "clicks": {
+          "type": "number",
+          "description": "Number of clicks the banner has received"
+        },
+        "views": {
+          "type": "number",
+          "description": "Number of times the banner has been viewed"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL the banner links to"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Weight determining display priority of the banner"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the banner is active or not"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Additional comments about the banner"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type of banner"
+        },
+        "width": {
+          "type": "number",
+          "description": "Width of the banner in pixels"
+        },
+        "height": {
+          "type": "number",
+          "description": "Height of the banner in pixels"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

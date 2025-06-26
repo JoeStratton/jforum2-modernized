@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "HandleSessionDestruction",
+    "description": "Manages user session termination by storing session data and removing the session"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "featureName": "FindUrlPattern",
+  "description": "Retrieves a URL pattern by its name from the patterns collection.",
+  "inputValues": [
+    "name-string-UrlPattern"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the required input field:\n     a. name (string, mandatory): The identifier of the URL pattern to find\n     b. No default values are provided\n     c. No system-generated fields are required\n\n2. Data Validation:\n   - Validate the input field:\n     a. Validate that name is not null\n        i. IF name is null THEN\n           - Generate error message: \"Pattern name cannot be null\"\n           - Return error response\n        ii. END IF\n     b. Validate that name is not empty\n        i. IF name is empty string THEN\n           - Generate error message: \"Pattern name cannot be empty\"\n           - Return error response\n        ii. END IF\n\n3. Business Rule Processing:\n   - Verify system state:\n     a. Check if the patterns collection is initialized\n        i. IF patterns collection is not initialized THEN\n           - Generate error message: \"Patterns collection is not initialized\"\n           - Return error response\n        ii. END IF\n\n4. Core Operation Execution:\n   - Search for the pattern:\n     a. Look up the pattern in the collection using the provided name as key\n     b. Retrieve the UrlPattern object associated with the name\n     c. IF no pattern is found with the given name THEN\n        i. Set result to null\n     d. ELSE\n        i. Set result to the found UrlPattern object\n     e. END IF\n\n5. Response Generation:\n   - Generate appropriate response:\n     a. IF result is not null THEN\n        i. Return success response containing the found UrlPattern object\n           - Include pattern name\n           - Include pattern value\n     b. ELSE\n        i. Return null or appropriate indication that no pattern was found\n     c. END IF",
+  "databaseEntities": [],
+  "validationRules": [
+    "Pattern name must not be null",
+    "Pattern name must not be empty",
+    "Patterns collection must be initialized before searching"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "UrlPattern": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The identifier of the URL pattern"
+        },
+        "value": {
+          "type": "string",
+          "description": "The actual pattern value"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

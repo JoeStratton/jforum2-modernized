@@ -1,0 +1,26 @@
+{
+  "featureName": "RemoveAllForumSubscriptions",
+  "description": "Removes all user subscriptions from a specific forum.",
+  "inputValues": [
+    "forumId-number-Forum"
+  ],
+  "businessLogic": "1. Input Collection\n   1.1. Collect the forum identifier (forumId) from the user request\n       1.1.1. forumId is mandatory and must be provided\n       1.1.2. No default value is available for forumId\n\n2. Data Validation\n   2.1. Validate forum identifier\n       2.1.1. Check if forumId is a positive integer\n       2.1.2. IF forumId is not a positive integer, THEN\n              - Generate an error message: \"Invalid forum identifier provided\"\n              - Terminate the process\n   2.2. Verify forum existence\n       2.2.1. Check if the forum with the provided forumId exists in the system\n       2.2.2. IF forum does not exist, THEN\n              - Generate an error message: \"Forum not found\"\n              - Terminate the process\n\n3. Business Rule Processing\n   3.1. Check forum status\n       3.1.1. Verify if the forum is active and available for subscription management\n       3.1.2. IF forum is inactive or unavailable, THEN\n              - Generate an error message: \"Forum is not available for subscription management\"\n              - Terminate the process\n   3.2. Check subscription existence\n       3.2.1. Verify if there are any subscriptions for the specified forum\n       3.2.2. IF no subscriptions exist, THEN\n              - Generate an informational message: \"No subscriptions found for this forum\"\n              - Skip to Response Generation step\n\n4. Core Operation Execution\n   4.1. Remove all subscriptions\n       4.1.1. Identify all user subscriptions associated with the specified forum\n       4.1.2. Remove all identified subscriptions from the system\n       4.1.3. IF any error occurs during removal, THEN\n              - Log the error details\n              - Attempt to rollback any partial changes\n              - Generate an error message: \"Failed to remove all subscriptions\"\n              - Terminate the process\n   4.2. Update forum subscription status\n       4.2.1. Update any relevant counters or indicators related to forum subscriptions\n       4.2.2. Record the subscription removal action in the system logs\n\n5. Response Generation\n   5.1. Generate success response\n       5.1.1. Create a confirmation message indicating all subscriptions were removed\n       5.1.2. Include the forum name and identifier in the confirmation message\n       5.1.3. Return success status with the confirmation message\n   5.2. In case of failure\n       5.2.1. Return appropriate error status with detailed error message\n       5.2.2. Include suggestions for resolving the issue if applicable",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Forum must be active and available for subscription management"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string",
+      "isActive": "boolean"
+    }
+  }
+}

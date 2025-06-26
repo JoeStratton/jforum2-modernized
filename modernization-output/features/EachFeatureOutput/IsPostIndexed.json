@@ -1,0 +1,29 @@
+{
+  "featureName": "IsPostIndexed",
+  "description": "Checks if a forum post is indexed in the search engine.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the post ID (mandatory) from the user request\n   - System will use this ID to query the search index\n\n2. Data Validation:\n   - Validate that post ID is provided\n     - IF post ID is missing or invalid (not a positive integer)\n       - THEN return an error message indicating invalid post ID\n     - ELSE continue to the next step\n\n3. Business Rule Processing:\n   - Check if the user has permission to view post indexing status\n     - IF user lacks required permissions\n       - THEN return an access denied message\n       - EXIT process\n     - ELSE continue to next step\n   - Verify that the search functionality is enabled in the system\n     - IF search functionality is disabled\n       - THEN return a message indicating search is not available\n       - EXIT process\n     - ELSE continue to next step\n\n4. Core Operation Execution:\n   - Access the search index manager\n   - Query the search index for the document matching the provided post ID\n     - IF an error occurs during the search operation\n       - THEN log the error details\n       - Return an error message indicating search operation failed\n       - EXIT process\n     - ELSE continue to next step\n\n5. Response Generation:\n   - Prepare the response based on the search results\n     - IF the post is found in the search index\n       - THEN include the document information in the response\n       - Set indexing status as \"Indexed\"\n     - ELSE\n       - Set indexing status as \"Not Indexed\"\n   - Return the response with the indexing status and any relevant document information\n   - Include timestamp of when the check was performed",
+  "databaseEntities": [
+    "jforum_posts"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "User must have permission to view post indexing status",
+    "Search functionality must be enabled in the system"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "topicId": "number",
+      "userId": "number",
+      "text": "string",
+      "subject": "string",
+      "htmlEnabled": "boolean",
+      "bbCodeEnabled": "boolean",
+      "smiliesEnabled": "boolean"
+    }
+  }
+}

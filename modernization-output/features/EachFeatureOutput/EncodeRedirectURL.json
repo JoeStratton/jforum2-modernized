@@ -1,0 +1,33 @@
+{
+  "featureName": "EncodeRedirectURL",
+  "description": "Encodes a URL for HTTP redirect with session tracking if needed.",
+  "inputValues": [
+    "url-string-URL",
+    "redirectConfig-object-RedirectConfiguration"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the URL to be encoded (mandatory)\n   - Retrieve redirect configuration settings (system-generated)\n     - Absolute paths flag\n     - Base URL for redirects\n\n2. Data Validation:\n   - Validate URL input\n     - Check if URL is not null or empty\n     - Verify URL format is valid\n     - IF URL is invalid THEN\n       - Generate appropriate error message\n       - Return error response\n     - END IF\n   - Validate redirect configuration\n     - Ensure configuration settings are available\n     - IF configuration is missing THEN\n       - Use system defaults\n     - END IF\n\n3. Business Rule Processing:\n   - Check if session tracking is required\n     - Determine if current user session needs to be maintained\n     - IF session tracking is needed THEN\n       - Mark URL for session encoding\n     - END IF\n   - Check redirect path configuration\n     - IF absolute paths are required THEN\n       - Analyze if the provided URL is already absolute\n       - Parse the URL to determine its structure\n     - END IF\n\n4. Core Operation Execution:\n   - Process URL for session tracking\n     - Apply session encoding to the URL if required\n   - Handle path resolution\n     - IF absolute paths are required AND URL is not absolute THEN\n       - Combine base URL with the provided URL path\n     - END IF\n   - Prepare final encoded URL\n     - Format URL according to system requirements\n     - Ensure proper character encoding\n\n5. Response Generation:\n   - Return the encoded URL\n     - Provide the fully processed URL ready for redirect\n   - IF any errors occurred during processing THEN\n     - Return appropriate error information\n     - Include guidance on correct URL format\n   - END IF",
+  "databaseEntities": [
+    "jforum_sessions"
+  ],
+  "validationRules": [
+    "URL must not be null or empty",
+    "URL must be properly formatted",
+    "Redirect configuration must be available or defaults must be used"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "RedirectConfiguration": {
+      "type": "object",
+      "properties": {
+        "absolutePaths": {
+          "type": "boolean",
+          "description": "Flag indicating if absolute paths should be used for redirects"
+        },
+        "baseUrl": {
+          "type": "string",
+          "description": "Base URL to prepend to relative paths when absolute paths are required"
+        }
+      }
+    }
+  }
+}

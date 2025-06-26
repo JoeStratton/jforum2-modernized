@@ -1,0 +1,101 @@
+{
+  "featureName": "ReadModerationLogDescription",
+  "description": "Reads moderation log description content from storage fields.",
+  "inputValues": [
+    "logId-number-ModerationLog",
+    "resultSet-object-ResultSet"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect moderation log ID (required, system-generated number)\n   - Obtain result set containing moderation log data (required, system-generated object)\n\n2. Data Validation:\n   - Validate moderation log ID:\n     a. Check if log ID is a positive integer\n     b. Verify log ID exists in the system\n     c. Return appropriate error if validation fails\n   - Validate result set:\n     a. Verify result set is not null\n     b. Confirm result set contains required fields (log_description, log_original_message)\n     c. Return appropriate error if validation fails\n\n3. Business Rule Processing:\n   - Check user permissions:\n     a. Verify current user has permission to view moderation logs\n     b. IF user lacks permission, THEN return access denied error\n   - Check system state:\n     a. Verify system is in operational state for data retrieval\n     b. IF system is in maintenance mode, THEN return appropriate error\n\n4. Core Operation Execution:\n   - Retrieve description content:\n     a. Access the binary content field for description\n     b. Convert binary content to readable text format\n     c. Handle any encoding-specific requirements\n     d. IF content retrieval fails, THEN log error and return empty string\n   - Retrieve original message content (if requested):\n     a. Access the binary content field for original message\n     b. Convert binary content to readable text format\n     c. Handle any encoding-specific requirements\n     d. IF content retrieval fails, THEN log error and return empty string\n\n5. Response Generation:\n   - Prepare response with retrieved content:\n     a. Format description text for display\n     b. Include metadata (timestamp, log type, associated users)\n     c. Return complete moderation log entry with readable description\n   - Handle error scenarios:\n     a. Return appropriate error messages for any failures\n     b. Include support information for troubleshooting",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_posts",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "Moderation log ID must be a positive integer",
+    "Result set must not be null",
+    "Result set must contain required fields",
+    "User must have permission to view moderation logs"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "ResultSet": {
+      "type": "object",
+      "properties": {
+        "log_id": {
+          "type": "number",
+          "description": "Unique identifier for the moderation log entry"
+        },
+        "log_description": {
+          "type": "binary",
+          "description": "Binary content field containing the description text"
+        },
+        "log_original_message": {
+          "type": "binary",
+          "description": "Binary content field containing the original message text"
+        },
+        "user_id": {
+          "type": "number",
+          "description": "ID of the user who performed the moderation action"
+        },
+        "log_type": {
+          "type": "number",
+          "description": "Type code indicating the kind of moderation action"
+        },
+        "post_id": {
+          "type": "number",
+          "description": "ID of the post being moderated"
+        },
+        "topic_id": {
+          "type": "number",
+          "description": "ID of the topic being moderated"
+        },
+        "poster_id": {
+          "type": "number",
+          "description": "ID of the user who created the moderated content"
+        },
+        "log_date": {
+          "type": "date",
+          "description": "Timestamp when the moderation action occurred"
+        }
+      }
+    },
+    "ModerationLog": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the moderation log entry"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the moderation action"
+        },
+        "originalMessage": {
+          "type": "string",
+          "description": "Original content before moderation"
+        },
+        "type": {
+          "type": "number",
+          "description": "Type code indicating the kind of moderation action"
+        },
+        "user": {
+          "type": "object",
+          "description": "User who performed the moderation action"
+        },
+        "posterUser": {
+          "type": "object",
+          "description": "User who created the moderated content"
+        },
+        "postId": {
+          "type": "number",
+          "description": "ID of the post being moderated"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic being moderated"
+        }
+      }
+    }
+  }
+}

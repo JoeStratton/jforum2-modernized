@@ -1,0 +1,39 @@
+{
+  "featureName": "ValidateActivationKeyHash",
+  "description": "Validates an activation key hash for a specific user ID.",
+  "inputValues": [
+    "userId-number-User",
+    "hash-string-User"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. userId (number): The unique identifier of the user\n     b. hash (string): The activation key hash to validate\n   - Both fields are mandatory for this operation\n\n2. Data Validation:\n   a. Validate User ID:\n      - Verify that userId is a positive integer\n      - Verify that userId is not null or empty\n      - IF userId is invalid THEN\n        - Generate appropriate error message\n        - Return validation failure\n   b. Validate Hash:\n      - Verify that hash is not null or empty\n      - Verify that hash meets the required format and length\n      - IF hash is invalid THEN\n        - Generate appropriate error message\n        - Return validation failure\n\n3. Business Rule Processing:\n   a. Verify User Existence:\n      - Check if the user with the provided userId exists in the system\n      - IF user does not exist THEN\n        - Generate user not found error\n        - Return validation failure\n   b. Verify Hash Association:\n      - Check if the provided hash is associated with the specified user\n      - IF hash is not associated with the user THEN\n        - Generate invalid association error\n        - Return validation failure\n\n4. Core Operation Execution:\n   a. Validate Activation Key Hash:\n      - Compare the provided hash with the stored hash for the user\n      - Check if the hash is valid and not expired\n      - IF hash matches and is valid THEN\n        - Mark validation as successful\n      - ELSE\n        - Mark validation as failed\n   b. Handle Results:\n      - Record the validation attempt in the system\n      - IF validation was successful THEN\n        - Prepare success response\n      - ELSE\n        - Prepare failure response\n\n5. Response Generation:\n   a. For Successful Validation:\n      - Generate success response indicating the hash is valid\n      - Include any additional information about next steps\n   b. For Failed Validation:\n      - Generate failure response with appropriate error message\n      - Include information about why validation failed\n      - Provide guidance on how to proceed",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "User ID must exist in the system",
+    "Hash must not be empty",
+    "Hash must be associated with the specified user",
+    "Hash must be in valid format"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "description": "Unique identifier for the user"
+        },
+        "hash": {
+          "type": "string",
+          "description": "Activation key hash for user verification"
+        }
+      },
+      "required": [
+        "userId",
+        "hash"
+      ]
+    }
+  }
+}

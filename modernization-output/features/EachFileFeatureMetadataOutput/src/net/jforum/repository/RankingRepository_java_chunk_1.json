@@ -1,0 +1,14 @@
+[
+  {
+    "featureName": "LoadRanks",
+    "description": "Loads all ranking data from the database into the cache"
+  },
+  {
+    "featureName": "GetRankTitle",
+    "description": "Retrieves the appropriate rank title based on user's rank ID or post count"
+  },
+  {
+    "featureName": "GetRankingSize",
+    "description": "Returns the total number of rankings available in the system"
+  }
+]

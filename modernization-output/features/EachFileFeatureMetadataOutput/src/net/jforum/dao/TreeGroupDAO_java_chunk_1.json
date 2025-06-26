@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "SelectGroups",
+    "description": "Retrieves a list of groups based on the specified parent ID"
+  }
+]

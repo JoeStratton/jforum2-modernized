@@ -1,0 +1,33 @@
+{
+  "featureName": "AddNewSmilie",
+  "description": "Creates a new smilie emoticon in the forum system.",
+  "inputValues": [
+    "code-string-Smilie",
+    "url-string-Smilie",
+    "description-string-Smilie",
+    "smilie-object-Smilie"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following required inputs:\n     a. code (string): The text code that triggers the smilie (e.g., ':)' or ':smile:')\n     b. url (string): The path to the smilie image file\n     c. description (string): A brief description of the smilie\n   - All fields are mandatory\n   - No default values are provided\n\n2. Data Validation:\n   a. Validate smilie code:\n      - Check if code is not empty\n      - Verify code follows allowed pattern (special characters and text)\n      - Ensure code length is within acceptable limits (1-20 characters)\n      - IF validation fails, THEN return error message indicating invalid code format\n   \n   b. Validate smilie URL:\n      - Check if URL is not empty\n      - Verify URL points to a valid image file (check file extension)\n      - Ensure URL length is within acceptable limits\n      - IF validation fails, THEN return error message indicating invalid URL format\n   \n   c. Validate description:\n      - Check if description is not empty\n      - Ensure description length is within acceptable limits (1-50 characters)\n      - IF validation fails, THEN return error message indicating invalid description format\n   \n   d. Check for duplicate smilie code:\n      - Verify the smilie code doesn't already exist in the system\n      - IF code already exists, THEN return error message indicating duplicate smilie code\n\n3. Business Rule Processing:\n   a. Check system limits:\n      - Verify that adding a new smilie won't exceed system-defined limits\n      - IF limit would be exceeded, THEN return error message\n   \n   b. Check image file validity:\n      - Verify the image exists at the specified URL\n      - Check that the image format is supported (gif, png, jpg, etc.)\n      - Ensure image dimensions are within acceptable limits\n      - IF any check fails, THEN return appropriate error message\n   \n   c. Check user permissions:\n      - Verify the current user has permission to add smilies\n      - IF user lacks permission, THEN return error message indicating insufficient privileges\n\n4. Core Operation Execution:\n   a. Create new smilie record:\n      - Generate a new smilie object with provided inputs\n      - Assign a unique identifier to the new smilie\n      - Store the smilie in the system database\n      - IF storage operation fails, THEN log error details and return system error message\n   \n   b. Update smilie cache:\n      - Refresh the system's smilie cache to include the new smilie\n      - Ensure the smilie is immediately available for use\n      - IF cache update fails, THEN log warning but continue process\n\n5. Response Generation:\n   a. Success response:\n      - Return success status\n      - Include the ID of the newly created smilie\n      - Provide confirmation message that smilie was successfully added\n   \n   b. Error response:\n      - Return error status if any step failed\n      - Include specific error message describing the issue\n      - Provide guidance on how to resolve the problem",
+  "databaseEntities": [
+    "jforum_smilies"
+  ],
+  "validationRules": [
+    "Smilie code must not be empty",
+    "Smilie code must be unique in the system",
+    "Smilie code must be between 1 and 20 characters",
+    "Smilie URL must not be empty",
+    "Smilie URL must point to a valid image file",
+    "Smilie description must not be empty",
+    "Smilie description must be between 1 and 50 characters",
+    "User must have permission to add smilies"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Smilie": {
+      "id": "number",
+      "code": "string",
+      "url": "string",
+      "description": "string"
+    }
+  }
+}

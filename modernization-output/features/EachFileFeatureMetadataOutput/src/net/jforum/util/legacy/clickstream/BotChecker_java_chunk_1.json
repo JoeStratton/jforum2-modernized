@@ -1,0 +1,6 @@
+[
+  {
+    "featureName": "DetectBotRequests",
+    "description": "Identifies if an HTTP request is from a bot or spider based on user agent or host information"
+  }
+]

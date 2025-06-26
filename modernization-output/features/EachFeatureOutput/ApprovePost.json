@@ -1,0 +1,96 @@
+{
+  "featureName": "ApprovePost",
+  "description": "Approves a post for publication based on its ID.",
+  "inputValues": [
+    "postId-number-Post"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect postId (number, mandatory) from the user input\n   - System will use current user information for authorization checks\n   - System will use current timestamp for approval recording\n\n2. Data Validation:\n   - Validate postId:\n     a. Check if postId is provided and is a positive integer\n     b. Verify the postId exists in the system\n     c. Return appropriate error if validation fails\n   - Validate user permissions:\n     a. Verify current user has moderation privileges for the forum containing this post\n     b. Check if user belongs to moderator groups for the relevant forum\n     c. Return appropriate error if user lacks required permissions\n\n3. Business Rule Processing:\n   - Check post current status:\n     a. Verify the post is in a pending moderation state\n     b. If post is already approved, return appropriate message\n     c. If post is deleted or in another state, return error message\n   - Check forum moderation settings:\n     a. Verify the forum has moderation enabled\n     b. Ensure the post belongs to a forum that requires moderation\n\n4. Core Operation Execution:\n   - Update post status:\n     a. Change post status from 'pending' to 'approved'\n     b. Record the moderator ID who approved the post\n     c. Set approval timestamp to current system time\n   - Update related records:\n     a. If this is the first approved post in a topic, update topic visibility\n     b. Update forum statistics to reflect the newly approved post\n     c. Update user post count for the post author\n   - Notification processing:\n     a. Generate notification to the post author about approval\n     b. Update moderation queue to remove the approved post\n\n5. Response Generation:\n   - Success response:\n     a. Return confirmation message that post was successfully approved\n     b. Include post details (topic, forum) in the response\n     c. Provide link or reference to view the approved post\n   - Error response:\n     a. Return specific error message if operation failed\n     b. Include error code and suggested resolution steps\n     c. Provide contact information for support if needed",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_topics",
+    "jforum_forums",
+    "jforum_users",
+    "jforum_moderator_groups",
+    "jforum_user_groups",
+    "jforum_posts_text"
+  ],
+  "validationRules": [
+    "Post ID must be a positive integer",
+    "Post must exist in the system",
+    "Post must be in pending moderation state",
+    "User must have moderation privileges for the forum",
+    "Forum must have moderation enabled"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "Unique identifier for the post"
+        },
+        "topicId": {
+          "type": "number",
+          "description": "ID of the topic this post belongs to"
+        },
+        "forumId": {
+          "type": "number",
+          "description": "ID of the forum this post belongs to"
+        },
+        "userId": {
+          "type": "number",
+          "description": "ID of the user who created the post"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the post (pending, approved, etc.)"
+        },
+        "creationDate": {
+          "type": "date",
+          "description": "Date when the post was created"
+        },
+        "approvalDate": {
+          "type": "date",
+          "description": "Date when the post was approved"
+        },
+        "moderatorId": {
+          "type": "number",
+          "description": "ID of the moderator who approved the post"
+        },
+        "postUsername": {
+          "type": "string",
+          "description": "Username of the post author"
+        },
+        "bbCodeEnabled": {
+          "type": "boolean",
+          "description": "Whether BBCode is enabled for this post"
+        },
+        "htmlEnabled": {
+          "type": "boolean",
+          "description": "Whether HTML is enabled for this post"
+        },
+        "smiliesEnabled": {
+          "type": "boolean",
+          "description": "Whether smilies are enabled for this post"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject of the post"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content text of the post"
+        }
+      },
+      "required": [
+        "id",
+        "topicId",
+        "forumId",
+        "userId",
+        "status",
+        "creationDate"
+      ]
+    }
+  }
+}

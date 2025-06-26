@@ -1,0 +1,41 @@
+{
+  "featureName": "SelectLatestByForumForRSS",
+  "description": "Retrieves the latest posts from a specific forum for RSS feed generation.",
+  "inputValues": [
+    "forumId-number-Forum",
+    "limit-number-System"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect forumId (mandatory): numeric identifier of the forum\n   - Collect limit (mandatory): maximum number of posts to retrieve\n   - System will generate a list structure to hold the results\n\n2. Data Validation:\n   - Validate forumId:\n      * Check if forumId is a positive integer\n      * Verify forumId exists in the system\n      * IF forumId is invalid or not found, THEN generate appropriate error message\n   - Validate limit:\n      * Ensure limit is a positive integer\n      * IF limit is not positive, THEN use system default value\n\n3. Business Rule Processing:\n   - Check user permissions:\n      * Verify current user has access to the specified forum\n      * IF user lacks permission, THEN return empty result or error message\n   - Check forum status:\n      * Verify forum is active and not archived\n      * IF forum is inactive, THEN return appropriate message\n\n4. Core Operation Execution:\n   - Query preparation:\n      * Prepare to retrieve latest posts from the specified forum\n      * Order posts by timestamp in descending order\n      * Limit results to the specified number\n   - Data retrieval:\n      * Execute the query to fetch posts\n      * FOR each post retrieved:\n         > Extract post details (id, subject, text, topic id, forum id, user id, username, timestamp)\n         > Create post object with extracted information\n         > Add post object to result list\n      * IF no posts found, THEN return empty list\n   - Error handling:\n      * IF any database errors occur during retrieval:\n         > Log the error details\n         > Return appropriate error message\n\n5. Response Generation:\n   - Format the response:\n      * Return the list of post objects\n      * Include metadata about the forum (name, description)\n      * Include timestamp of when the data was retrieved\n   - Success response:\n      * Return the formatted list of posts for RSS generation\n   - Error response:\n      * Return error details if any step failed",
+  "databaseEntities": [
+    "jforum_forums",
+    "jforum_posts",
+    "jforum_posts_text",
+    "jforum_topics",
+    "jforum_users"
+  ],
+  "validationRules": [
+    "Forum ID must be a positive integer",
+    "Forum must exist in the system",
+    "Limit must be a positive integer",
+    "User must have permission to access the forum",
+    "Forum must be active"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Post": {
+      "id": "number",
+      "subject": "string",
+      "text": "string",
+      "topicId": "number",
+      "forumId": "number",
+      "userId": "number",
+      "postUsername": "string",
+      "time": "date"
+    },
+    "Forum": {
+      "id": "number",
+      "name": "string",
+      "description": "string"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "featureName": "GetPollById",
+  "description": "Retrieves a specific poll by its ID with all associated information.",
+  "inputValues": [
+    "pollId-number-Poll"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the Poll ID (pollId) as a mandatory numeric input\n   - No optional fields required\n   - No default values needed\n\n2. Data Validation:\n   - Validate Poll ID:\n     a. Check if Poll ID is provided\n     b. Verify Poll ID is a positive integer\n     c. Return appropriate error message if validation fails\n\n3. Business Rule Processing:\n   - Check system access permissions:\n     a. Verify if the current user has permission to view polls\n     b. If permission check fails, generate appropriate access denied message\n   - Check poll existence:\n     a. Verify if a poll with the provided ID exists in the system\n     b. If poll does not exist, prepare appropriate not found message\n\n4. Core Operation Execution:\n   - Retrieve poll data:\n     a. Fetch the poll record using the provided Poll ID\n     b. Retrieve all poll options associated with this poll\n     c. Retrieve vote counts for each option\n     d. Retrieve total vote count for the poll\n   - Compile poll information:\n     a. Combine poll details with its options\n     b. Calculate percentage of votes for each option\n     c. Determine if the poll is still active or expired\n     d. IF poll has an associated topic, include reference to the topic\n\n5. Response Generation:\n   - Success response:\n     a. Return the complete poll object with all details\n     b. Include poll options and their vote statistics\n     c. Include poll metadata (creation date, expiration status, etc.)\n   - Error response:\n     a. Return appropriate error message if poll was not found\n     b. Return permission denied message if applicable\n     c. Return validation error details if input validation failed",
+  "databaseEntities": [
+    "Poll",
+    "PollOption",
+    "PollVote",
+    "User",
+    "Topic"
+  ],
+  "validationRules": [
+    "Poll ID must be a positive integer",
+    "Poll must exist in the system",
+    "User must have permission to view the poll"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Poll": {
+      "id": "number",
+      "label": "string",
+      "startDate": "date",
+      "length": "number",
+      "options": "array",
+      "topicId": "number",
+      "totalVotes": "number"
+    },
+    "PollOption": {
+      "id": "number",
+      "pollId": "number",
+      "text": "string",
+      "voteCount": "number",
+      "percentage": "number"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "featureName": "PrepareRSSContent",
+  "description": "Formats forum posts into RSS items with links, titles, and HTML content.",
+  "inputValues": [
+    "title-string-RSS",
+    "description-string-RSS",
+    "forumId-number-Forum",
+    "posts-object-PostList"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect the following inputs:\n     a. title (mandatory): The title for the RSS feed\n     b. description (mandatory): The description for the RSS feed\n     c. forumId (mandatory): The identifier of the forum\n     d. posts (mandatory): List of post objects to be formatted as RSS items\n   - System will generate:\n     a. forumLink: The base URL for the forum\n\n2. Data Validation:\n   - Validate title:\n     a. Check if title is not empty\n     b. IF title is empty THEN\n        i. Generate error message \"RSS title cannot be empty\"\n     c. ENDIF\n   - Validate description:\n     a. Check if description is not empty\n     b. IF description is empty THEN\n        i. Generate error message \"RSS description cannot be empty\"\n     c. ENDIF\n   - Validate forumId:\n     a. Check if forumId is a positive integer\n     b. IF forumId is not a positive integer THEN\n        i. Generate error message \"Invalid forum ID\"\n     c. ENDIF\n   - Validate posts:\n     a. Check if posts list is not null\n     b. IF posts list is null THEN\n        i. Generate error message \"Post list cannot be null\"\n     c. ENDIF\n     d. Check if posts list is not empty\n     e. IF posts list is empty THEN\n        i. Generate warning message \"No posts available for RSS feed\"\n     f. ENDIF\n\n3. Business Rule Processing:\n   - Check system configuration:\n     a. Verify encoding setting is available\n     b. IF encoding setting is not available THEN\n        i. Use default encoding (UTF-8)\n     c. ENDIF\n     d. Verify servlet extension setting is available\n     e. IF servlet extension setting is not available THEN\n        i. Use default extension (.page)\n     f. ENDIF\n   - Prepare RSS feed container:\n     a. Create new RSS container with title and description\n     b. Set encoding from system configuration\n     c. Set link to forum using forumId and servlet extension\n\n4. Core Operation Execution:\n   - Process each post in the posts list:\n     a. FOR EACH post in posts list:\n        i. Disable BBCode for post content\n        ii. Disable smilies for post content\n        iii. Create new RSS item\n        iv. Set author to post username\n        v. Format and set publish date from post timestamp\n        vi. Generate and set link to the specific post\n        vii. Set title to post subject\n        viii. Set content type to HTML\n        ix. Prepare post text for display (convert to HTML)\n        x. Set description to prepared post text\n        xi. Add item to RSS container\n     b. END FOR\n   - Finalize RSS feed:\n     a. Set the prepared RSS container as the output\n\n5. Response Generation:\n   - Success response:\n     a. Return the complete RSS feed object containing all items\n     b. Include metadata about the feed (title, description, link)\n     c. Include count of items processed\n   - Error response:\n     a. Return specific error message for validation failures\n     b. Include information about which validation failed\n     c. Provide guidance on correct input format",
+  "databaseEntities": [
+    "jforum_posts",
+    "jforum_forums",
+    "jforum_topics"
+  ],
+  "validationRules": [
+    "RSS title must not be empty",
+    "RSS description must not be empty",
+    "Forum ID must be a positive integer",
+    "Post list must not be null",
+    "Each post must have a valid subject",
+    "Each post must have a valid timestamp",
+    "Each post must have a valid username",
+    "Each post must have valid content"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "PostList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Unique identifier for the post"
+          },
+          "topicId": {
+            "type": "number",
+            "description": "Identifier of the topic this post belongs to"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line of the post"
+          },
+          "text": {
+            "type": "string",
+            "description": "Content of the post"
+          },
+          "postUsername": {
+            "type": "string",
+            "description": "Username of the post author"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the post was created"
+          }
+        },
+        "required": [
+          "id",
+          "topicId",
+          "subject",
+          "text",
+          "postUsername",
+          "time"
+        ]
+      }
+    }
+  }
+}

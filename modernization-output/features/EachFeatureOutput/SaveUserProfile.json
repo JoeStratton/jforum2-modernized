@@ -1,0 +1,87 @@
+{
+  "featureName": "SaveUserProfile",
+  "description": "Saves changes to user profile information.",
+  "inputValues": [
+    "userId-number-User",
+    "username-string-User",
+    "email-string-User",
+    "currentPassword-string-User",
+    "newPassword-string-User",
+    "avatar-object-Avatar",
+    "avatarUrl-string-User",
+    "avatarDelete-boolean-User",
+    "signature-string-User",
+    "website-string-User",
+    "location-string-User",
+    "biography-string-User",
+    "icq-string-User",
+    "aim-string-User",
+    "msn-string-User",
+    "yim-string-User",
+    "occupation-string-User",
+    "interests-string-User",
+    "viewEmailEnabled-boolean-User",
+    "viewOnlineEnabled-boolean-User",
+    "notifyPrivateMessages-boolean-User",
+    "notifyOnMessages-boolean-User",
+    "attachSignature-boolean-User",
+    "htmlEnabled-boolean-User",
+    "language-string-User",
+    "bbCodeEnabled-boolean-User",
+    "smiliesEnabled-boolean-User",
+    "notifyAlways-boolean-User",
+    "notifyText-boolean-User",
+    "specialRankId-number-Rank"
+  ],
+  "businessLogic": "1. Input Collection:\n   1.1. Collect user profile information:\n       - userId (mandatory): Numeric identifier of the user\n       - username (optional): String containing user's display name\n       - email (optional): String containing user's email address\n       - currentPassword (optional): String containing user's current password\n       - newPassword (optional): String containing user's new password\n       - avatar (optional): Object containing avatar image file\n       - avatarUrl (optional): String containing URL to external avatar image\n       - avatarDelete (optional): Boolean indicating if avatar should be deleted\n       - signature (optional): String containing user's forum signature\n       - website (optional): String containing user's website URL\n       - location (optional): String containing user's geographical location\n       - biography (optional): String containing user's personal information\n       - icq (optional): String containing user's ICQ identifier\n       - aim (optional): String containing user's AIM identifier\n       - msn (optional): String containing user's MSN identifier\n       - yim (optional): String containing user's Yahoo Messenger identifier\n       - occupation (optional): String containing user's occupation\n       - interests (optional): String containing user's interests\n       - viewEmailEnabled (optional): Boolean indicating if email is visible to others\n       - viewOnlineEnabled (optional): Boolean indicating if online status is visible\n       - notifyPrivateMessages (optional): Boolean for private message notifications\n       - notifyOnMessages (optional): Boolean for message reply notifications\n       - attachSignature (optional): Boolean for attaching signature to posts\n       - htmlEnabled (optional): Boolean for allowing HTML in posts\n       - language (optional): String containing user's preferred language\n       - bbCodeEnabled (optional): Boolean for enabling BBCode in posts\n       - smiliesEnabled (optional): Boolean for enabling smilies in posts\n       - notifyAlways (optional): Boolean for always receiving notifications\n       - notifyText (optional): Boolean for receiving text notifications\n       - specialRankId (optional): Numeric identifier for special rank assignment\n\n2. Data Validation:\n   2.1. Validate userId:\n       - Verify userId is a positive integer\n       - Verify userId corresponds to an existing user in the system\n       - Verify current user has permission to edit this profile\n       - IF userId is invalid or not found, THEN generate error message \"Invalid user identifier\"\n       - IF current user lacks permission, THEN generate error message \"Insufficient permissions\"\n   2.2. Validate username (if provided and user is admin):\n       - Verify username is not empty\n       - Verify username meets minimum and maximum length requirements\n       - Verify username contains only allowed characters\n       - Verify username does not contain HTML tags\n       - IF username validation fails, THEN generate appropriate error message\n   2.3. Validate email address (if provided):\n       - Verify email is not empty\n       - Verify email follows standard email format (contains @ and domain)\n       - Verify email domain appears valid\n       - IF email validation fails, THEN generate error message \"Invalid email format\"\n   2.4. Validate password information (if provided):\n       - IF new password is provided, THEN verify current password is also provided\n       - Verify current password matches the stored password for the user\n       - Verify new password meets security requirements\n       - IF password validation fails, THEN generate error message \"Current password is invalid\"\n   2.5. Validate avatar (if provided):\n       - IF avatar file is uploaded, THEN verify file type is supported (JPG, JPEG, GIF, PNG)\n       - Verify avatar dimensions do not exceed maximum allowed size\n       - IF external avatar URL is provided, THEN verify URL format is valid and starts with \"http://\"\n       - IF avatar validation fails, THEN generate appropriate error message\n   2.6. Validate signature (if provided):\n       - Verify signature does not exceed maximum allowed length\n       - Verify signature does not contain disallowed content\n       - IF signature validation fails, THEN generate error message\n   2.7. Validate website URL (if provided):\n       - Verify URL format is valid\n       - Ensure URL starts with \"http://\"\n       - IF website validation fails, THEN generate error message\n   2.8. Validate special rank (if provided and user is admin):\n       - Verify specialRankId exists in the system\n       - Verify user is eligible for the specified rank\n       - IF rank validation fails, THEN generate error message\n\n3. Business Rule Processing:\n   3.1. Check user account status:\n       - Verify user account is active and not deleted\n       - Verify user has permission to update their profile\n       - Verify current user is the same as the profile being edited or has admin rights\n       - IF user account is inactive or deleted, THEN generate error message \"Account is inactive or deleted\"\n       - IF user lacks permission, THEN generate error message \"Insufficient permissions\"\n   3.2. Check for duplicate information:\n       - IF username is changed, THEN verify new username is not already taken\n       - IF email is changed, THEN verify new email is not already registered\n       - IF duplicates found, THEN generate error message \"Username or email already in use\"\n   3.3. Check content policy compliance:\n       - Verify signature, biography, and other user-provided content comply with system policies\n       - Sanitize all text inputs to prevent security issues\n       - IF content violates policies, THEN generate error message \"Content violates system policies\"\n   3.4. Determine if email verification is required:\n       - IF email address has changed, THEN determine if verification is required\n       - IF verification required, THEN prepare verification process\n   3.5. Check avatar processing requirements:\n       - IF avatar file is uploaded, THEN verify system can process the image type\n       - IF external avatar URL is provided, THEN verify system allows external URLs\n       - IF avatar deletion is requested, THEN verify avatar file exists\n       - IF any avatar requirements fail, THEN generate appropriate error message\n\n4. Core Operation Execution:\n   4.1. Prepare user data for update:\n       - Retrieve user object with current values based on userId\n       - Update user object with new values from input\n       - Sanitize all text inputs to prevent security issues\n   4.2. Process password changes:\n       - IF new password is provided AND current password is valid, THEN\n           - Encrypt the new password\n           - Update the user's password in the system\n       - ELSE IF new password is provided but current password is invalid, THEN\n           - Add error to the list of errors\n           - Continue processing other fields\n   4.3. Process avatar changes:\n       - IF avatar deletion is requested, THEN\n           - Locate and delete the avatar file from the system\n           - Set user's avatar field to null\n       - ELSE IF avatar file is uploaded, THEN\n           - Generate unique filename for the avatar\n           - Process and resize avatar to meet system requirements\n           - Save the processed avatar file\n           - Update user's avatar field with new filename\n       - ELSE IF external avatar URL is provided AND external URLs are allowed, THEN\n           - Verify the image at the URL exists and meets size requirements\n           - Update user's avatar field with the URL\n       - IF any avatar processing fails, THEN add error to the list but continue with other updates\n   4.4. Update user profile in the system:\n       - Save all updated user information to the database\n       - Update any related user settings or preferences\n       - Update special rank assignment if changed and user is admin\n       - IF any database operation fails, THEN rollback all changes and generate error message\n   4.5. Process security implications:\n       - IF username changed, THEN update references in the system\n       - Clear any cached user information in the system\n       - Update session information if necessary\n       - IF current user's language preference changed, THEN update session language\n\n5. Response Generation:\n   5.1. Generate success response:\n       - IF no errors occurred, THEN\n           - Prepare confirmation message \"User profile successfully updated\"\n           - Include summary of changes made\n           - Redirect user to confirmation page or updated profile view\n   5.2. Handle error responses:\n       - IF any errors occurred, THEN\n           - Provide detailed error messages for each validation or processing failure\n           - Include guidance on how to correct the errors\n           - Preserve valid input values for resubmission\n           - Return user to the edit form with errors highlighted\n   5.3. Provide next steps:\n       - Suggest related actions (view updated profile, etc.)\n       - IF email verification is pending, THEN provide instructions",
+  "databaseEntities": [
+    "jforum_users",
+    "jforum_groups",
+    "jforum_user_groups",
+    "jforum_sessions",
+    "jforum_ranks"
+  ],
+  "validationRules": [
+    "User ID must be a positive integer",
+    "Username must not be empty",
+    "Username must be unique in the system",
+    "Username must not contain HTML tags",
+    "Username must not exceed maximum length",
+    "Email must be in valid format",
+    "Email must be unique in the system",
+    "Current password must match stored password when changing email or password",
+    "New password must meet security requirements",
+    "Avatar file must be of supported type (JPG, JPEG, GIF, PNG)",
+    "Avatar dimensions must not exceed maximum allowed size",
+    "External avatar URL must start with http:// if provided",
+    "Signature must not exceed maximum allowed length",
+    "Website URL must start with http:// if provided",
+    "Special rank must exist in the system if specified",
+    "User account must be active",
+    "User can only edit their own profile unless they have administrative privileges"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {
+    "Avatar": {
+      "type": "object",
+      "properties": {
+        "fileItem": {
+          "type": "object",
+          "description": "File upload item containing avatar image data"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Original filename of the uploaded avatar"
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "Size of the uploaded avatar file in bytes"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of the uploaded avatar file"
+        }
+      }
+    }
+  }
+}

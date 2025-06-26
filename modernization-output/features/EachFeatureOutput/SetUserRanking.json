@@ -1,0 +1,21 @@
+{
+  "featureName": "SetUserRanking",
+  "description": "Sets the ranking for a user in the system.",
+  "inputValues": [
+    "userId-number-User",
+    "rankingId-number-Ranking"
+  ],
+  "businessLogic": "1. Input Collection:\n   - Collect userId (number, mandatory) - Identifier of the user to update\n   - Collect rankingId (number, mandatory) - Identifier of the ranking to assign to the user\n   - System will not generate any values for this operation\n\n2. Data Validation:\n   - Validate userId:\n      a. Verify userId is a positive integer\n      b. Verify userId is not null or undefined\n      c. Return error message if validation fails: \"User ID must be a valid positive integer\"\n   - Validate rankingId:\n      a. Verify rankingId is a positive integer\n      b. Verify rankingId is not null or undefined\n      c. Return error message if validation fails: \"Ranking ID must be a valid positive integer\"\n\n3. Business Rule Processing:\n   - Verify user exists in the system:\n      a. Check if user with provided userId exists in the database\n      b. IF user does not exist, THEN return error: \"User not found\"\n   - Verify ranking exists in the system:\n      a. Check if ranking with provided rankingId exists in the database\n      b. IF ranking does not exist, THEN return error: \"Ranking not found\"\n   - Verify user is not deleted:\n      a. Check if user is marked as deleted in the system\n      b. IF user is deleted, THEN return error: \"Cannot set ranking for a deleted user\"\n\n4. Core Operation Execution:\n   - Update user record with new ranking:\n      a. Set the user's ranking field to the provided rankingId\n      b. Save the updated user information to the database\n      c. IF update fails, THEN rollback changes and return error: \"Failed to update user ranking\"\n   - Record ranking change in system logs:\n      a. Log the ranking change with timestamp, user ID, old ranking ID, and new ranking ID\n      b. IF logging fails, continue with operation (non-critical)\n\n5. Response Generation:\n   - Success response:\n      a. Return success status indicator\n      b. Include message: \"User ranking successfully updated\"\n      c. Include updated user information with new ranking details\n   - Error response:\n      a. Return error status indicator\n      b. Include specific error message from validation or processing steps\n      c. Include support reference information if needed",
+  "databaseEntities": [
+    "jforum_users"
+  ],
+  "validationRules": [
+    "User ID must be a valid positive integer",
+    "Ranking ID must be a valid positive integer",
+    "User must exist in the system",
+    "Ranking must exist in the system",
+    "User must not be deleted"
+  ],
+  "dbSeedingOperations": [],
+  "schema": {}
+}
